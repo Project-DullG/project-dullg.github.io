@@ -3,22 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>〈뱀이 죽은 축제〉 엔딩</title>
+  <title>〈뱀이 죽은 축제〉 엔딩 선택</title>
   <style>
-    body { margin:0; font-family: system-ui, -apple-system, sans-serif; background:#0b0b0f; color:#eaeaea; }
-    .wrap { max-width: 920px; margin: 0 auto; padding: 56px 20px; text-align:center; }
-    h1 { font-size: 36px; margin: 6px 0 16px; }
-    p { line-height: 1.75; color:#cfcfcf; }
-    .btn { display:inline-block; margin-top:28px; padding:12px 18px; border-radius:12px; text-decoration:none; background:#eaeaea; color:#111; }
-    .note { margin-top:24px; font-size:14px; opacity:.8; }
+    body {
+      margin:0; font-family:'Pretendard',sans-serif;
+      background: radial-gradient(circle at top, #141416, #050507);
+      color:#f4f4f4; text-align:center; min-height:100vh;
+      display:flex; flex-direction:column; justify-content:center;
+    }
+    h1 { font-size:2em; margin-bottom:6px; letter-spacing:-0.5px; }
+    .subtitle { opacity:.7; margin-bottom:40px; font-size:.95em; }
+    .endings { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; }
+    .card {
+      width:230px; height:140px; background:#18181b;
+      border-radius:16px; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      box-shadow:0 0 10px rgba(255,255,255,.06);
+      transition:transform .2s, background .3s;
+    }
+    .card:hover { transform:translateY(-5px); background:#222226; }
+    .tag { font-size:.8em; color:#888; margin-bottom:6px; }
+    a { color:#f4f4f4; text-decoration:none; font-weight:600; }
+    footer { margin-top:60px; opacity:.6; font-size:.85em; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>〈뱀이 죽은 축제〉</h1>
-    <p>엔딩 페이지에 오신 것을 환영합니다.<br>후원자 여러분께 깊이 감사드립니다.</p>
-    <a class="btn" href="https://project-dullg.github.io/">Project DullG 메인으로</a>
-    <div class="note">© Project DullG</div>
+  <h1>〈뱀이 죽은 축제〉 엔딩</h1>
+  <div class="subtitle">당신의 선택이 향한 결말을 선택하세요.</div>
+
+  <div class="endings">
+    <div class="card">
+      <div class="tag">SNAKE CARNIVAL · ENDING A</div>
+      <a href="ending-a.html">엔딩 A : 뱀의 축복</a>
+    </div>
+    <div class="card">
+      <div class="tag">SNAKE CARNIVAL · ENDING B</div>
+      <a href="ending-b.html">엔딩 B : 잃어버린 제전</a>
+    </div>
+    <div class="card">
+      <div class="tag">SNAKE CARNIVAL · ENDING C</div>
+      <a href="ending-c.html">엔딩 C : 불길한 서약</a>
+    </div>
   </div>
+
+  <footer>© Project DullG · Snake Carnival</footer>
 </body>
 </html>
