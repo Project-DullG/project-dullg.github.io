@@ -44,6 +44,7 @@
     .go {
       flex:0 0 auto; padding:10px 14px; border-radius:12px;
       background:#2a2a2d; text-decoration:none; color:var(--text); font-weight:600;
+      transition:background .3s;
     }
     .go:hover{background:#3a3a3e}
     footer { text-align:center; margin-top:40px; opacity:.6; font-size:.85em; }
@@ -54,7 +55,7 @@
     <h1>〈뱀이 죽은 축제〉 엔딩</h1>
     <p class="subtitle">당신의 선택이 향한 결말을 선택하세요.</p>
 
-    <!-- 케이스별 안내 (목업 문구, 자유 수정) -->
+    <!-- 케이스별 안내 -->
     <section class="cases">
       <h2>내 플레이 기준 추천 엔딩</h2>
       <ul>
@@ -64,7 +65,7 @@
       </ul>
     </section>
 
-    <!-- 엔딩 카드 (세로 정렬) -->
+    <!-- 엔딩 카드 -->
     <section class="endings">
       <article class="card" id="ending-a">
         <div>
@@ -94,9 +95,14 @@
       </article>
     </section>
 
-    <p style="text-align:center; margin-top:24px;">
+    <!-- 사건의 전말 & 메인페이지 이동 -->
+    <div style="text-align:center; margin-top:32px;">
       <a class="go" href="story.html">🕯 사건의 전말 보기</a>
-    </p>
+    </div>
+
+    <div style="text-align:center; margin-top:14px;">
+      <a class="go" href="https://project-dullg.github.io/">🏠 Project DullG 메인으로</a>
+    </div>
 
     <footer>© Project DullG · Snake Carnival</footer>
   </main>
