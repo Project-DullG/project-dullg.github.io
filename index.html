@@ -1,92 +1,169 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Project DullG · 암호 입력</title>
-<meta name="color-scheme" content="dark" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>〈뱀이 죽은 축제〉 엔딩 | Project DullG</title>
 <style>
-  :root {
-    --bg:#0a0a0c; --bg2:#1b1b20;
-    --panel:#141416; --ink:#eaeaea; --dim:#9a9aa0;
-    --chip:#232326; --chipH:#2d2d33; --line:rgba(255,255,255,.06);
+  :root{
+    --bg:#0a0a0c;--panel:#141416;--ink:#eaeaea;--dim:#9a9aa0;
+    --chip:#232326;--chipH:#2d2d33;--line:rgba(255,255,255,.06);
   }
-  * { box-sizing:border-box; }
-  html, body { height:100%; }
-  body {
-    margin:0;
-    background:radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0, var(--bg) 55%);
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:radial-gradient(1200px 800px at 50% -10%,#1c1c21 0,#0a0a0c 55%);
     color:var(--ink);
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;
-    display:flex; justify-content:center; align-items:center;
+    display:flex;justify-content:center;
   }
-  .card {
+  .wrap{max-width:860px;width:100%;padding:64px 20px 72px}
+  h1{margin:0 0 6px;text-align:center;font-size:26px}
+  .subtitle{text-align:center;color:var(--dim);margin-bottom:24px}
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    max-width:720px;margin:0 auto 18px;padding:18px;
+  }
+  .panel h2{margin:0 0 10px;font-size:1rem;color:#d6d6da}
+  .panel ul{margin:0;padding-left:18px}
+  .panel li{margin:8px 0;line-height:1.6;color:#dcdce0}
+  .panel strong{color:#fff}
+
+  .endings{display:flex;flex-direction:column;gap:12px;align-items:center}
+  .card{
+    width:100%;max-width:720px;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;
+    padding:16px 16px;display:flex;justify-content:space-between;align-items:center
+  }
+  .meta{display:flex;flex-direction:column;gap:4px}
+  .tag{color:var(--dim);font-size:.86em}
+  .title{font-weight:700}
+  .desc{color:#dcdce0;font-size:.95em}
+  .btn{
+    background:var(--chip);color:var(--ink);
+    text-decoration:none;border-radius:12px;
+    padding:10px 14px;font-weight:600;transition:background .3s
+  }
+  .btn:hover{background:var(--chipH)}
+  .rowBtns{display:flex;gap:10px;justify-content:center;margin-top:20px}
+  footer{text-align:center;margin-top:32px;color:var(--dim);font-size:.9em}
+
+  /* 🔒 비밀 페이지 접근 영역 */
+  .secret-box{
     background:var(--panel);
     border:1px solid var(--line);
     border-radius:16px;
-    width:100%; max-width:420px;
-    padding:28px 24px;
-    box-shadow:0 0 20px rgba(0,0,0,.3);
+    max-width:420px;
+    margin:60px auto 0;
+    padding:24px 28px;
+    text-align:center;
   }
-  h1 { margin:0 0 10px; font-size:1.4rem; }
-  p { margin:0 0 18px; color:var(--dim); }
-  input[type=password] {
-    width:100%; padding:12px 14px; border-radius:12px;
-    border:1px solid var(--line); background:#0f0f12; color:var(--ink);
-    font-size:15px; margin-bottom:12px;
+  .secret-box h2{margin:0 0 12px;font-size:1.2em;}
+  .secret-box p{margin:0 0 18px;color:var(--dim);font-size:.95em;}
+  .secret-box input{
+    width:100%;padding:10px 12px;border-radius:10px;
+    border:1px solid var(--line);background:#0f0f12;color:var(--ink);
+    font-size:15px;margin-bottom:12px;
   }
-  button {
-    width:100%; border:none; border-radius:12px;
-    padding:12px 14px; font-weight:700;
-    background:var(--chip); color:var(--ink);
-    cursor:pointer; transition:background .3s;
+  .secret-box button{
+    width:100%;background:var(--chip);color:var(--ink);
+    border:none;border-radius:10px;padding:10px 12px;font-weight:600;
+    cursor:pointer;transition:background .3s;
   }
-  button:hover { background:var(--chipH); }
-  .msg { margin-top:12px; color:#ff9aa5; min-height:1.2em; font-size:.9em; }
-  footer { text-align:center; margin-top:20px; color:var(--dim); font-size:.85em; }
+  .secret-box button:hover{background:var(--chipH);}
+  .secret-msg{margin-top:10px;color:#ff9aa5;font-size:.9em;min-height:1.2em;}
 </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🔒 Project DullG</h1>
-    <p>비밀 페이지에 들어가기 위해 암호를 입력하세요.</p>
-    <input id="pw" type="password" placeholder="암호 입력" autocomplete="off" />
-    <button id="btn">입장</button>
-    <div id="msg" class="msg"></div>
-    <footer>© Project DullG</footer>
-  </div>
+  <main class="wrap">
+    <h1>〈뱀이 죽은 축제〉 엔딩</h1>
+    <p class="subtitle">당신의 선택이 향한 결말을 선택하세요.</p>
 
-<script>
-  // 이동할 페이지
-  const TARGET_PAGE = "mystery.html";
+    <section class="panel">
+      <h2>내 플레이 기준 추천</h2>
+      <ul>
+        <li>의식을 <strong>중단</strong>했고 핵심 증거를 <strong>보존</strong>했다면 → 엔딩 A</li>
+        <li>의식을 <strong>완수</strong>했지만 희생을 <strong>감수</strong>했다면 → 엔딩 B</li>
+        <li>거래(서약)를 <strong>수락</strong>했거나 금서를 <strong>개봉</strong>했다면 → 엔딩 C</li>
+      </ul>
+    </section>
 
-  // "1234" 의 SHA-256 해시값
-  const PASSWORD_HASH_HEX = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+    <section class="endings">
+      <article class="card" id="ending-a">
+        <div class="meta">
+          <div class="tag">SNAKE CARNIVAL · ENDING A</div>
+          <div class="title">엔딩 A : 뱀의 축복</div>
+          <div class="desc">의식을 멈추고 기록을 지켜낸 선택의 귀결.</div>
+        </div>
+        <a class="btn" href="ending-a.html">바로 보기</a>
+      </article>
 
-  async function sha256Hex(text) {
-    const enc = new TextEncoder().encode(text);
-    const buf = await crypto.subtle.digest("SHA-256", enc);
-    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,"0")).join("");
-  }
+      <article class="card" id="ending-b">
+        <div class="meta">
+          <div class="tag">SNAKE CARNIVAL · ENDING B</div>
+          <div class="title">엔딩 B : 잃어버린 제전</div>
+          <div class="desc">제전을 완수했으나 대가를 치른 결말.</div>
+        </div>
+        <a class="btn" href="ending-b.html">바로 보기</a>
+      </article>
 
-  async function tryLogin() {
-    const pw = document.getElementById("pw").value.trim();
-    const msg = document.getElementById("msg");
-    msg.textContent = "";
-    if (!pw) { msg.textContent = "암호를 입력하세요."; return; }
+      <article class="card" id="ending-c">
+        <div class="meta">
+          <div class="tag">SNAKE CARNIVAL · ENDING C</div>
+          <div class="title">엔딩 C : 불길한 서약</div>
+          <div class="desc">서약을 받아들여 어둠과 손잡은 결말.</div>
+        </div>
+        <a class="btn" href="ending-c.html">바로 보기</a>
+      </article>
+    </section>
 
-    const hash = await sha256Hex(pw);
-    if (hash === PASSWORD_HASH_HEX) {
-      location.href = TARGET_PAGE;
-    } else {
-      msg.textContent = "비밀번호가 올바르지 않습니다.";
+    <div class="rowBtns">
+      <a class="btn" href="story.html">🕯 사건의 전말 보기</a>
+      <a class="btn" href="/">🏠 메인 페이지로 돌아가기</a>
+    </div>
+
+    <!-- 🔒 비밀 페이지 접근 섹션 -->
+    <section class="secret-box">
+      <h2>🔒 비밀 페이지</h2>
+      <p>암호를 입력하면 미스터리 페이지로 이동합니다.</p>
+      <input id="secret-pw" type="password" placeholder="비밀번호 입력" />
+      <button id="secret-btn">입장</button>
+      <div id="secret-msg" class="secret-msg"></div>
+    </section>
+
+    <footer>© Project DullG · Snake Carnival</footer>
+  </main>
+
+  <script>
+    // "1234" 의 SHA-256 해시
+    const SECRET_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+    const TARGET_PAGE = "mystery.html";
+
+    async function sha256Hex(txt){
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(txt));
+      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
     }
-  }
 
-  document.getElementById("btn").addEventListener("click", tryLogin);
-  document.getElementById("pw").addEventListener("keydown", e => {
-    if (e.key === "Enter") tryLogin();
-  });
-</script>
+    async function checkSecret(){
+      const input = document.getElementById("secret-pw").value.trim();
+      const msg = document.getElementById("secret-msg");
+      msg.textContent = "";
+      if(!input){ msg.textContent = "비밀번호를 입력하세요."; return; }
+
+      const hash = await sha256Hex(input);
+      if(hash === SECRET_HASH){
+        location.href = TARGET_PAGE;
+      }else{
+        msg.textContent = "비밀번호가 올바르지 않습니다.";
+      }
+    }
+
+    document.getElementById("secret-btn").addEventListener("click", checkSecret);
+    document.getElementById("secret-pw").addEventListener("keydown", e=>{
+      if(e.key === "Enter") checkSecret();
+    });
+  </script>
 </body>
 </html>
