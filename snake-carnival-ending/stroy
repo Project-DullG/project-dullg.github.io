@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[Snake Carnival] 사건의 전말</title>
+<style>
+body {
+  margin:0; padding:80px 20px;
+  background:#0c0c0e; color:#f5f5f5;
+  font-family:'Pretendard',sans-serif;
+  line-height:1.8; text-align:center;
+}
+.container { max-width:780px; margin:0 auto; text-align:left; }
+h1 { text-align:center; margin-bottom:40px; font-size:2em; }
+h2 { margin-top:40px; font-size:1.2em; color:#b8b8b8; }
+p { opacity:.9; margin-bottom:20px; }
+a { display:inline-block; margin-top:50px; color:#aaa; text-decoration:none; }
+a:hover { color:#fff; }
+.tag { text-align:center; font-size:.8em; opacity:.6; margin-bottom:6px; }
+</style>
+</head>
+<body>
+  <div class="tag">SNAKE CARNIVAL · 사건의 전말</div>
+  <h1>사건의 전말</h1>
+
+  <div class="container">
+    <h2>1. 축제의 시작</h2>
+    <p>도시의 한복판에서 열린 ‘뱀의 축제’는 처음엔 모두의 축복으로 시작되었습니다.  
+    그러나 개막과 동시에 이상한 징후가 감지되기 시작했습니다.  
+    밤마다 울리는 북소리, 사라지는 사람들, 그리고 축제장에 남겨진 뱀의 흔적들…</p>
+
+    <h2>2. 진실의 실마리</h2>
+    <p>플레이어들은 각자의 과거와 관계 속에서 단서를 찾아 나섭니다.  
+    오래된 편지, 금지된 의식, 그리고 ‘제전’이라 불리던 의문의 행사.  
+    이 모든 것은 하나의 인물을 향하고 있었습니다.  
+    그 이름은— <strong>칸</strong>.</p>
+
+    <h2>3. 결말로 향하는 선택</h2>
+    <p>모든 단서가 모였을 때, 플레이어는 결정을 내려야 했습니다.  
+    축제를 끝낼 것인가, 아니면 그 의미를 계승할 것인가.  
+    각자의 선택은 서로 다른 엔딩으로 이어졌고,  
+    그 결과는 이제 당신의 손에 달려 있습니다.</p>
+
+    <h2>4. 기록의 끝</h2>
+    <p>‘뱀의 축제’는 끝났지만, 제전의 불빛은 완전히 꺼지지 않았습니다.  
+    어딘가에서 여전히 누군가는 이 의식을 기억하고 있을지도 모릅니다.</p>
+  </div>
+
+  <a href="index.html">← 엔딩 선택으로 돌아가기</a>
+</body>
+</html>
