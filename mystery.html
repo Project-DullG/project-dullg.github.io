@@ -26,13 +26,15 @@
   /* 잠금 UI */
   .lock-ui{max-width:420px;margin:18px auto 0;text-align:center}
   input[type=password]{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0f0f12;color:var(--ink);margin-bottom:12px}
-  button{width:100%;padding:12px;border-radius:10px;border:none;background:var(--chip);color:var(--ink);font-weight:700;cursor:pointer}
+  button{width:100%;padding:12px;border-radius:10px;border:none;background:var(--chip);color:var(--ink);font-weight:700;cursor:pointer;transition:background .3s}
   button:hover{background:var(--chipH)}
   .msg{margin-top:10px;color:#ff9aa5;min-height:1.1em}
-  /* 실제 비밀 콘텐츠 (초기엔 숨김) */
+  /* 비밀 콘텐츠 (초기 숨김) */
   .secret-content{display:none;margin-top:22px}
   .secret-content.visible{display:block}
-  .back{display:inline-block;margin-top:16px;color:var(--dim);text-decoration:none}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn{display:inline-block;text-align:center;background:var(--chip);color:var(--ink);padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+  .btn:hover{background:var(--chipH)}
   footer{margin-top:28px;text-align:center;color:var(--dim)}
 </style>
 </head>
@@ -42,35 +44,34 @@
       <h1>🔎 Mystery Archive</h1>
       <p class="lead">이 페이지는 암호로 보호되어 있습니다. 올바른 암호를 입력하면 내부 기록을 열람할 수 있습니다.</p>
 
-      <!-- 잠금 UI: 암호가 없으면 이 영역이 보이고, 성공 시 hidden 되며 secret-content 보임 -->
+      <!-- 잠금 UI -->
       <div class="lock-ui" id="lock-ui" aria-live="polite">
         <input id="pw" type="password" placeholder="암호 입력" autocomplete="off" />
         <button id="unlock">잠금 해제</button>
         <div id="msg" class="msg"></div>
       </div>
 
-      <!-- 비밀 콘텐츠 (초기 숨김). 실제 민감한 내용은 정적 호스팅 상 완전 비공개 되지 않음 -->
+      <!-- 비밀 콘텐츠 (초기 숨김) -->
       <div id="secret" class="secret-content" aria-hidden="true">
-        <!-- 실제 보여주고 싶은 내용을 이곳에 넣으세요 -->
         <h2>비밀 문서: 제전의 기록</h2>
-        <p style="color:var(--dim)">(이하 내용은 데모용 목업입니다 — 실제 텍스트로 교체하세요.)</p>
-
+        <p style="color:var(--dim)">(데모용 목업입니다 — 실제 텍스트로 교체하세요.)</p>
         <section style="text-align:left;margin-top:14px">
           <h3 style="margin:6px 0">요약</h3>
           <p style="color:#ddd;line-height:1.6">밤이 되자 장터의 북소리가 멈추고, 축제장 가장자리에 뱀의 문장이 나타났다. 기록은 부분적으로 훼손되었고, 남은 단서들은 아래와 같다.</p>
-
           <h3 style="margin:10px 0 6px">단서</h3>
           <ul style="color:#ddd">
             <li>제전의 제단에서 발견된 의식의 목록</li>
             <li>사라진 참가자들의 마지막 위치 기록</li>
             <li>금서(파편)의 짧은 인용문</li>
           </ul>
-
           <h3 style="margin:10px 0 6px">해설</h3>
           <p style="color:#ddd;line-height:1.6">플레이어의 선택이 축제의 결과를 갈랐다. 기록을 통해 특정 선택 조합이 제전의 성공/실패로 이어지는 패턴이 관찰된다.</p>
         </section>
 
-        <a class="back" href="/">🏠 메인으로 돌아가기</a>
+        <div class="actions">
+          <a class="btn" href="/">🏠 메인으로</a>
+          <a class="btn" href="#" id="relock">🔒 다시 잠그기</a>
+        </div>
       </div>
     </div>
 
@@ -79,15 +80,14 @@
 
 <script>
 /*
-  동작 요약:
+  설계:
+  - 영구/세션 저장 사용하지 않음 → 페이지를 다시 열면 항상 암호 요구
+  - "다시 잠그기" 버튼으로 즉시 잠금화면 복귀
   - 허용 암호: "1234" (SHA-256 해시로 비교)
-  - 성공 시: lock-ui 숨기고 secret-content 보임
-  - 세션 유지: sessionStorage에 토큰 저장 (탭/브라우저 닫으면 사라짐)
-  주의: 클라이언트 단락(정적) 방식이므로 소스보기로 내용을 볼 수 있습니다.
+  - 정적(클라이언트) 방식이라 완전 보안은 아님 (소스보기로 내용 열람 가능)
 */
 
 const HASH_1234 = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
-const TOKEN_KEY = "mystery_unlocked_v1";
 
 async function sha256Hex(text){
   const enc = new TextEncoder().encode(text);
@@ -102,38 +102,43 @@ function showSecret(){
   s.setAttribute("aria-hidden","false");
 }
 
-function showError(msg){
-  document.getElementById("msg").textContent = msg;
+function showLock(){
+  const s = document.getElementById("secret");
+  s.classList.remove("visible");
+  s.setAttribute("aria-hidden","true");
+  document.getElementById("lock-ui").style.display = "block";
+  document.getElementById("pw").value = "";
+  document.getElementById("msg").textContent = "";
+  document.getElementById("pw").focus();
 }
 
 async function tryUnlock(){
   const pw = document.getElementById("pw").value || "";
   const msg = document.getElementById("msg");
   msg.textContent = "";
-  if(!pw){ showError("암호를 입력하세요."); return; }
+  if(!pw){ msg.textContent = "암호를 입력하세요."; return; }
+
   try{
     const h = await sha256Hex(pw);
     if(h === HASH_1234){
-      try { sessionStorage.setItem(TOKEN_KEY,"1"); } catch(e){}
       showSecret();
     } else {
-      showError("비밀번호가 올바르지 않습니다.");
+      msg.textContent = "비밀번호가 올바르지 않습니다.";
     }
   }catch(e){
-    showError("오류가 발생했습니다. 다시 시도해주세요.");
+    msg.textContent = "오류가 발생했습니다. 다시 시도해주세요.";
     console.error(e);
   }
 }
 
-// 페이지 로드 시 토큰 확인
-if(sessionStorage.getItem(TOKEN_KEY) === "1"){
-  showSecret();
-}
-
 // 이벤트
 document.getElementById("unlock").addEventListener("click", tryUnlock);
-document.getElementById("pw").addEventListener("keydown", (e)=>{
+document.getElementById("pw").addEventListener("keydown", e=>{
   if(e.key === "Enter") tryUnlock();
+});
+document.getElementById("relock").addEventListener("click", e=>{
+  e.preventDefault();
+  showLock();
 });
 </script>
 </body>
