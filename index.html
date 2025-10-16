@@ -1,102 +1,92 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Project DullG</title>
-  <meta name="description" content="보드게임 × 스토리. 선택으로 완성되는 결말." />
-  <style>
-    :root{
-      --bg:#0a0a0c; --bg2:#1b1b20; --panel:#141416; --ink:#eaeaea; --dim:#9a9aa0;
-      --chip:#232326; --chipH:#2d2d33; --line:rgba(255,255,255,.06);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;
-      color:var(--ink);
-      background:radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0, var(--bg) 55%);
-      display:flex; justify-content:center;
-    }
-    .wrap{width:100%; max-width:1040px; padding:64px 20px 72px}
-    header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:24px}
-    .brand{font-weight:800; letter-spacing:.2px; font-size:20px}
-    nav a{color:var(--ink); text-decoration:none; opacity:.85; margin-left:14px}
-    nav a:hover{opacity:1}
-    .hero{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:28px; text-align:center}
-    .hero h1{margin:0 0 6px; font-size:28px}
-    .hero p{margin:0; color:var(--dim)}
-    .grid{display:grid; gap:14px; margin-top:22px}
-    @media(min-width:760px){ .grid{grid-template-columns:1fr 1fr} }
-    .card{
-      background:var(--panel); border:1px solid var(--line); border-radius:16px;
-      padding:18px; display:flex; align-items:center; justify-content:space-between; gap:14px;
-    }
-    .meta{display:flex; flex-direction:column; gap:6px}
-    .title{font-weight:700}
-    .note{color:var(--dim); font-size:.95em}
-    .btn{background:var(--chip); color:var(--ink); text-decoration:none; border-radius:12px; padding:10px 14px; font-weight:700}
-    .btn:hover{background:var(--chipH)}
-    .btn--ghost{background:transparent; border:1px solid var(--line)}
-    .section-title{margin:26px 0 10px; font-size:16px; color:#d6d6da; font-weight:700}
-    footer{margin-top:36px; text-align:center; color:var(--dim); font-size:.9em}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Project DullG · 암호 입력</title>
+<meta name="color-scheme" content="dark" />
+<style>
+  :root {
+    --bg:#0a0a0c; --bg2:#1b1b20;
+    --panel:#141416; --ink:#eaeaea; --dim:#9a9aa0;
+    --chip:#232326; --chipH:#2d2d33; --line:rgba(255,255,255,.06);
+  }
+  * { box-sizing:border-box; }
+  html, body { height:100%; }
+  body {
+    margin:0;
+    background:radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0, var(--bg) 55%);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;
+    display:flex; justify-content:center; align-items:center;
+  }
+  .card {
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    width:100%; max-width:420px;
+    padding:28px 24px;
+    box-shadow:0 0 20px rgba(0,0,0,.3);
+  }
+  h1 { margin:0 0 10px; font-size:1.4rem; }
+  p { margin:0 0 18px; color:var(--dim); }
+  input[type=password] {
+    width:100%; padding:12px 14px; border-radius:12px;
+    border:1px solid var(--line); background:#0f0f12; color:var(--ink);
+    font-size:15px; margin-bottom:12px;
+  }
+  button {
+    width:100%; border:none; border-radius:12px;
+    padding:12px 14px; font-weight:700;
+    background:var(--chip); color:var(--ink);
+    cursor:pointer; transition:background .3s;
+  }
+  button:hover { background:var(--chipH); }
+  .msg { margin-top:12px; color:#ff9aa5; min-height:1.2em; font-size:.9em; }
+  footer { text-align:center; margin-top:20px; color:var(--dim); font-size:.85em; }
+</style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <div class="brand">Project DullG</div>
-      <nav>
-        <a href="/">홈</a>
-  
-      </nav>
-    </header>
-
-    <section class="hero">
-      <h1>보드게임 × 스토리</h1>
-      <p>플레이어의 선택으로 완성되는 엔딩. DullG의 세계로 오세요.</p>
-    </section>
-
-    <h2 class="section-title">게임 목록</h2>
-    <section class="grid">
-      <!-- 공개작 -->
-      <article class="card">
-        <div class="meta">
-          <div class="title">〈뱀이 죽은 축제〉</div>
-          <div class="note">Snake Carnival · 엔딩 페이지 공개 중</div>
-        </div>
-        <a class="btn" href="/snake-carnival-ending/">바로 가기</a>
-      </article>
-
-      <!-- 준비중 1 -->
-      <article class="card" aria-disabled="true">
-        <div class="meta">
-          <div class="title">〈잿빛 소녀가 죽은 추억〉</div>
-          <div class="note">Gray Girl Memory · Coming soon</div>
-        </div>
-        <span class="btn btn--ghost" style="opacity:.65; pointer-events:none;">준비 중</span>
-      </article>
-
-      <!-- 준비중 2 -->
-      <article class="card" aria-disabled="true">
-        <div class="meta">
-          <div class="title">〈탐사 대장이 죽은 저택〉</div>
-          <div class="note">Explorer’s Mansion · Coming soon</div>
-        </div>
-        <span class="btn btn--ghost" style="opacity:.65; pointer-events:none;">준비 중</span>
-      </article>
-
-      <!-- 준비중 3 (예비) -->
-      <article class="card" aria-disabled="true">
-        <div class="meta">
-          <div class="title">〈기묘한 사건 파견일지〉</div>
-          <div class="note">Pohang Incident Files · Coming soon</div>
-        </div>
-        <span class="btn btn--ghost" style="opacity:.65; pointer-events:none;">준비 중</span>
-      </article>
-    </section>
-
+  <div class="card">
+    <h1>🔒 Project DullG</h1>
+    <p>비밀 페이지에 들어가기 위해 암호를 입력하세요.</p>
+    <input id="pw" type="password" placeholder="암호 입력" autocomplete="off" />
+    <button id="btn">입장</button>
+    <div id="msg" class="msg"></div>
     <footer>© Project DullG</footer>
-  </main>
+  </div>
+
+<script>
+  // 이동할 페이지
+  const TARGET_PAGE = "mystery.html";
+
+  // "1234" 의 SHA-256 해시값
+  const PASSWORD_HASH_HEX = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+
+  async function sha256Hex(text) {
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2,"0")).join("");
+  }
+
+  async function tryLogin() {
+    const pw = document.getElementById("pw").value.trim();
+    const msg = document.getElementById("msg");
+    msg.textContent = "";
+    if (!pw) { msg.textContent = "암호를 입력하세요."; return; }
+
+    const hash = await sha256Hex(pw);
+    if (hash === PASSWORD_HASH_HEX) {
+      location.href = TARGET_PAGE;
+    } else {
+      msg.textContent = "비밀번호가 올바르지 않습니다.";
+    }
+  }
+
+  document.getElementById("btn").addEventListener("click", tryLogin);
+  document.getElementById("pw").addEventListener("keydown", e => {
+    if (e.key === "Enter") tryLogin();
+  });
+</script>
 </body>
 </html>
