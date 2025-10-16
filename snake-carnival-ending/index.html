@@ -1,38 +1,93 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>〈뱀이 죽은 축제〉 엔딩</title>
-<style>
-  :root{--bg:#0a0a0c;--panel:#141416;--ink:#eaeaea;--dim:#9a9aa0;--chip:#232326;--chipH:#2d2d33;}
-  *{box-sizing:border-box}
-  body{margin:0;background:radial-gradient(1200px 800px at 50% -10%,#1c1c21 0,#0a0a0c 55%);color:var(--ink);
-       font-family:system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;display:flex;justify-content:center}
-  .wrap{max-width:860px;width:100%;padding:64px 20px 72px}
-  h1{margin:0 0 6px;text-align:center;font-size:26px}
-  .subtitle{text-align:center;color:var(--dim);margin-bottom:24px}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>〈뱀이 죽은 축제〉 엔딩 | Project DullG</title>
+  <style>
+    :root {
+      --bg:#0a0a0c; --bg2:#1b1b20;
+      --panel:#141416; --ink:#eaeaea; --dim:#9a9aa0;
+      --chip:#232326; --chipH:#2d2d33; --line:rgba(255,255,255,.06);
+    }
+    * { box-sizing: border-box; }
+    html, body { height:100%; }
+    body {
+      margin:0;
+      background: radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0, var(--bg) 55%);
+      color: var(--ink);
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;
+      display:flex; justify-content:center;
+    }
+    .wrap { width:100%; max-width:860px; padding:64px 20px 72px; }
 
-  .panel{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;max-width:720px;margin:0 auto 18px;padding:18px}
-  .panel h2{margin:0 0 10px;font-size:1rem;color:#d6d6da}
-  .panel ul{margin:0;padding-left:18px}
-  .panel li{margin:8px 0;line-height:1.6;color:#dcdce0}
+    /* Header */
+    header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:30px;
+    }
+    .brand { font-weight:800; letter-spacing:.2px; }
+    .nav a {
+      color:var(--ink); opacity:.85; text-decoration:none; font-size:.95em;
+    }
+    .nav a:hover { opacity:1; }
 
-  .endings{display:flex;flex-direction:column;gap:12px;align-items:center}
-  .card{width:100%;max-width:720px;background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;
-        padding:16px 16px;display:flex;justify-content:space-between;align-items:center}
-  .meta{display:flex;flex-direction:column;gap:4px}
-  .tag{color:var(--dim);font-size:.86em}
-  .title{font-weight:700}
-  .desc{color:#dcdce0;font-size:.95em}
-  .btn{background:var(--chip);color:var(--ink);text-decoration:none;border-radius:12px;padding:10px 14px;font-weight:600}
-  .btn:hover{background:var(--chipH)}
-  .rowBtns{display:flex;gap:10px;justify-content:center;margin-top:20px}
-  footer{text-align:center;margin-top:32px;color:var(--dim);font-size:.9em}
-</style>
+    /* Title */
+    h1 { margin:0 0 6px; text-align:center; font-size:26px; }
+    .subtitle { text-align:center; color:var(--dim); margin-bottom:24px; }
+
+    /* 안내 패널 */
+    .panel {
+      background:var(--panel); border:1px solid var(--line);
+      border-radius:14px; max-width:720px;
+      margin:0 auto 22px; padding:18px;
+    }
+    .panel h2 { margin:0 0 10px; font-size:1rem; color:#d6d6da; }
+    .panel ul { margin:0; padding-left:18px; }
+    .panel li { margin:8px 0; line-height:1.6; color:#dcdce0; }
+
+    /* 엔딩 카드 */
+    .endings { display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .card {
+      width:100%; max-width:720px; background:var(--panel);
+      border:1px solid var(--line); border-radius:14px;
+      padding:16px; display:flex; justify-content:space-between; align-items:center;
+    }
+    .meta { display:flex; flex-direction:column; gap:4px; }
+    .tag { color:var(--dim); font-size:.86em; }
+    .title { font-weight:700; }
+    .desc { color:#dcdce0; font-size:.95em; }
+
+    /* 버튼 */
+    .btn {
+      background:var(--chip); color:var(--ink);
+      text-decoration:none; border-radius:12px;
+      padding:10px 14px; font-weight:600;
+      transition:background .3s;
+    }
+    .btn:hover { background:var(--chipH); }
+    .rowBtns {
+      display:flex; flex-wrap:wrap;
+      gap:10px; justify-content:center; margin-top:26px;
+    }
+
+    /* Footer */
+    footer {
+      text-align:center; margin-top:36px;
+      color:var(--dim); font-size:.9em;
+      opacity:.8;
+    }
+  </style>
 </head>
 <body>
   <main class="wrap">
+    <header>
+      <div class="brand">Project DullG</div>
+      <div class="nav">
+        <a href="/">← 메인으로</a>
+      </div>
+    </header>
+
     <h1>〈뱀이 죽은 축제〉 엔딩</h1>
     <p class="subtitle">당신의 선택이 향한 결말을 선택하세요.</p>
 
@@ -75,8 +130,8 @@
     </section>
 
     <div class="rowBtns">
-      <a class="btn" href="story.html">사건의 전말 보기</a>
-      <a class="btn" href="/">Project DullG 메인으로</a>
+      <a class="btn" href="story.html">🕯 사건의 전말 보기</a>
+      <a class="btn" href="/">🏠 메인 페이지로 돌아가기</a>
     </div>
 
     <footer>© Project DullG · Snake Carnival</footer>
