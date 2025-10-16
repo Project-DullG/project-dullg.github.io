@@ -1,63 +1,43 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>〈뱀이 죽은 축제〉 엔딩 선택</title>
-  <style>
-    :root{
-      --bg:#0a0a0c; --bg2:#141416; --card:#18181b; --cardH:#222226;
-      --text:#f4f4f4; --dim:#888;
-    }
-    *{box-sizing:border-box}
-    body {
-      margin:0; font-family:'Pretendard',sans-serif;
-      background: radial-gradient(circle at top, var(--bg2), var(--bg));
-      color:var(--text); min-height:100vh; display:flex; justify-content:center;
-    }
-    .wrap{width:100%; max-width:860px; padding:72px 20px 56px}
-    h1 { font-size:2em; margin:0 0 6px; letter-spacing:-0.5px; text-align:center; }
-    .subtitle { text-align:center; opacity:.7; margin-bottom:32px; font-size:.95em; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>〈뱀이 죽은 축제〉 엔딩</title>
+<style>
+  :root{--bg:#0a0a0c;--panel:#141416;--ink:#eaeaea;--dim:#9a9aa0;--chip:#232326;--chipH:#2d2d33;}
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 800px at 50% -10%,#1c1c21 0,#0a0a0c 55%);color:var(--ink);
+       font-family:system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;display:flex;justify-content:center}
+  .wrap{max-width:860px;width:100%;padding:64px 20px 72px}
+  h1{margin:0 0 6px;text-align:center;font-size:26px}
+  .subtitle{text-align:center;color:var(--dim);margin-bottom:24px}
 
-    /* 케이스 안내 */
-    .cases{
-      background:#121215; border:1px solid rgba(255,255,255,.06);
-      border-radius:16px; padding:20px; margin:0 auto 24px; max-width:720px;
-    }
-    .cases h2{margin:0 0 10px; font-size:1rem; opacity:.85}
-    .cases ul{margin:0; padding-left:18px}
-    .cases li{margin:8px 0; line-height:1.6; color:#d8d8d8}
-    .cases a{color:#cfcfcf; text-decoration:underline; font-weight:600}
+  .panel{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;max-width:720px;margin:0 auto 18px;padding:18px}
+  .panel h2{margin:0 0 10px;font-size:1rem;color:#d6d6da}
+  .panel ul{margin:0;padding-left:18px}
+  .panel li{margin:8px 0;line-height:1.6;color:#dcdce0}
 
-    /* 엔딩 카드: 세로(column) 배치 */
-    .endings { display:flex; flex-direction:column; align-items:center; gap:14px; }
-    .card {
-      width:100%; max-width:720px; min-height:84px; background:var(--card);
-      border-radius:16px; padding:18px 20px; display:flex; justify-content:space-between; align-items:center;
-      box-shadow:0 0 10px rgba(255,255,255,.06);
-      transition:transform .2s, background .3s;
-    }
-    .card:hover { transform:translateY(-4px); background:var(--cardH); }
-    .tag { font-size:.8em; color:var(--dim); margin:0 0 6px; }
-    .title { font-weight:700; font-size:1.05em; }
-    .desc { font-size:.9em; opacity:.85; margin-top:4px }
-    .go {
-      flex:0 0 auto; padding:10px 14px; border-radius:12px;
-      background:#2a2a2d; text-decoration:none; color:var(--text); font-weight:600;
-      transition:background .3s;
-    }
-    .go:hover{background:#3a3a3e}
-    footer { text-align:center; margin-top:40px; opacity:.6; font-size:.85em; }
-  </style>
+  .endings{display:flex;flex-direction:column;gap:12px;align-items:center}
+  .card{width:100%;max-width:720px;background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;
+        padding:16px 16px;display:flex;justify-content:space-between;align-items:center}
+  .meta{display:flex;flex-direction:column;gap:4px}
+  .tag{color:var(--dim);font-size:.86em}
+  .title{font-weight:700}
+  .desc{color:#dcdce0;font-size:.95em}
+  .btn{background:var(--chip);color:var(--ink);text-decoration:none;border-radius:12px;padding:10px 14px;font-weight:600}
+  .btn:hover{background:var(--chipH)}
+  .rowBtns{display:flex;gap:10px;justify-content:center;margin-top:20px}
+  footer{text-align:center;margin-top:32px;color:var(--dim);font-size:.9em}
+</style>
 </head>
 <body>
   <main class="wrap">
     <h1>〈뱀이 죽은 축제〉 엔딩</h1>
     <p class="subtitle">당신의 선택이 향한 결말을 선택하세요.</p>
 
-    <!-- 케이스별 안내 -->
-    <section class="cases">
-      <h2>내 플레이 기준 추천 엔딩</h2>
+    <section class="panel">
+      <h2>내 플레이 기준 추천</h2>
       <ul>
         <li>의식을 <strong>중단</strong>했고 핵심 증거를 <strong>보존</strong>했다면 → <a href="#ending-a">엔딩 A</a></li>
         <li>의식을 <strong>완수</strong>했지만 희생을 <strong>감수</strong>했다면 → <a href="#ending-b">엔딩 B</a></li>
@@ -65,43 +45,38 @@
       </ul>
     </section>
 
-    <!-- 엔딩 카드 -->
     <section class="endings">
       <article class="card" id="ending-a">
-        <div>
+        <div class="meta">
           <div class="tag">SNAKE CARNIVAL · ENDING A</div>
           <div class="title">엔딩 A : 뱀의 축복</div>
           <div class="desc">의식을 멈추고 기록을 지켜낸 선택의 귀결.</div>
         </div>
-        <a class="go" href="ending-a.html">바로 보기</a>
+        <a class="btn" href="ending-a.html">바로 보기</a>
       </article>
 
       <article class="card" id="ending-b">
-        <div>
+        <div class="meta">
           <div class="tag">SNAKE CARNIVAL · ENDING B</div>
           <div class="title">엔딩 B : 잃어버린 제전</div>
           <div class="desc">제전을 완수했으나 대가를 치른 결말.</div>
         </div>
-        <a class="go" href="ending-b.html">바로 보기</a>
+        <a class="btn" href="ending-b.html">바로 보기</a>
       </article>
 
       <article class="card" id="ending-c">
-        <div>
+        <div class="meta">
           <div class="tag">SNAKE CARNIVAL · ENDING C</div>
           <div class="title">엔딩 C : 불길한 서약</div>
           <div class="desc">서약을 받아들여 어둠과 손잡은 결말.</div>
         </div>
-        <a class="go" href="ending-c.html">바로 보기</a>
+        <a class="btn" href="ending-c.html">바로 보기</a>
       </article>
     </section>
 
-    <!-- 사건의 전말 & 메인페이지 이동 -->
-    <div style="text-align:center; margin-top:32px;">
-      <a class="go" href="story.html">🕯 사건의 전말 보기</a>
-    </div>
-
-    <div style="text-align:center; margin-top:14px;">
-      <a class="go" href="https://project-dullg.github.io/">🏠 Project DullG 메인으로</a>
+    <div class="rowBtns">
+      <a class="btn" href="story.html">사건의 전말 보기</a>
+      <a class="btn" href="/">Project DullG 메인으로</a>
     </div>
 
     <footer>© Project DullG · Snake Carnival</footer>
