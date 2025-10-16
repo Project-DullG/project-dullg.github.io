@@ -10,7 +10,7 @@
       --panel:#141416; --ink:#eaeaea; --dim:#9a9aa0;
       --chip:#232326; --chipH:#2d2d33; --line:rgba(255,255,255,.06);
     }
-    * { box-sizing: border-box; }
+    * { box-sizing:border-box; }
     html, body { height:100%; }
     body {
       margin:0;
@@ -43,8 +43,11 @@
       margin:0 auto 22px; padding:18px;
     }
     .panel h2 { margin:0 0 10px; font-size:1rem; color:#d6d6da; }
-    .panel ul { margin:0; padding-left:18px; }
-    .panel li { margin:8px 0; line-height:1.6; color:#dcdce0; }
+    .panel ul { margin:0; padding-left:18px; list-style-type:disc; }
+    .panel li {
+      margin:8px 0; line-height:1.6; color:#dcdce0;
+    }
+    .panel strong { color:#fff; font-weight:600; }
 
     /* 엔딩 카드 */
     .endings { display:flex; flex-direction:column; gap:12px; align-items:center; }
@@ -94,9 +97,9 @@
     <section class="panel">
       <h2>내 플레이 기준 추천</h2>
       <ul>
-        <li>의식을 <strong>중단</strong>했고 핵심 증거를 <strong>보존</strong>했다면 → <a href="#ending-a">엔딩 A</a></li>
-        <li>의식을 <strong>완수</strong>했지만 희생을 <strong>감수</strong>했다면 → <a href="#ending-b">엔딩 B</a></li>
-        <li>거래(서약)를 <strong>수락</strong>했거나 금서를 <strong>개봉</strong>했다면 → <a href="#ending-c">엔딩 C</a></li>
+        <li>의식을 <strong>중단</strong>했고 핵심 증거를 <strong>보존</strong>했다면 → 엔딩 A</li>
+        <li>의식을 <strong>완수</strong>했지만 희생을 <strong>감수</strong>했다면 → 엔딩 B</li>
+        <li>거래(서약)를 <strong>수락</strong>했거나 금서를 <strong>개봉</strong>했다면 → 엔딩 C</li>
       </ul>
     </section>
 
