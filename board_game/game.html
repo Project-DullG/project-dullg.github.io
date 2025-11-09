@@ -1,42 +1,373 @@
-<!-- ...중략 (head/스타일/Firebase 로딩 동일) ... -->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>울릉 한 접시 · 게임(game)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Firebase -->
+<script type="module" id="fb-sdk">
+  const firebaseConfig = {
+    apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
+    authDomain: "boardgame-1a3dd.firebaseapp.com",
+    projectId: "boardgame-1a3dd",
+    storageBucket: "boardgame-1a3dd.firebasestorage.app",
+    messagingSenderId: "278191503167",
+    appId: "1:278191503167:web:a02892e0d742e12339058a",
+    measurementId: "G-0EQB5WN6QE"
+  };
+  const ready=(async()=>{
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
+    const app = initializeApp(firebaseConfig);
+    const fs  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
+    const au  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
+    try { const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js"); getAnalytics(app); } catch {}
+    window.__fb = { app, ...fs, ...au };
+  })();
+  window.firebaseReady = ready;
+</script>
+
+<style>
+  .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .badge{font-size:.75rem;padding:.125rem .5rem;border-radius:.375rem}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+<div class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+
+  <header class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl md:text-2xl font-bold">울릉 한 접시 <span class="text-slate-500">· 게임</span></h1>
+      <div class="text-sm text-slate-600 mt-1">
+        Room <span id="roomId" class="mono">—</span> · Round <span id="round" class="mono">0</span>
+        · You: <span id="you" class="font-medium"></span>
+        · Role: <span id="role" class="font-medium">guest</span>
+      </div>
+    </div>
+    <span id="badge" class="badge bg-slate-200">연결 준비중…</span>
+  </header>
+
+  <!-- 종료/안내 -->
+  <div id="endedBox" class="hidden p-4 rounded border bg-rose-50 border-rose-200 text-rose-800 text-sm">
+    <span id="endMsg">방이 종료(삭제)되었습니다.</span>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-4">
+    <!-- 내 정보 + 입찰 + 소지품 -->
+    <section class="bg-white rounded-xl shadow p-4 md:p-6">
+      <h2 class="font-semibold mb-3">내 정보</h2>
+      <div class="text-sm">닉네임: <span id="myName" class="font-medium"></span></div>
+      <div class="text-sm mt-1">소지금: <span id="myBalance" class="mono font-bold">0</span>원</div>
+      <div class="text-sm mt-1">보류금(확정된 입찰): <span id="myHold" class="mono font-bold">0</span>원</div>
+      <div class="text-xs text-slate-500 mt-1">※ 다른 사람의 소지금은 보이지 않습니다.</div>
+
+      <hr class="my-4">
+
+      <h3 class="font-semibold mb-2">입찰</h3>
+      <div class="flex items-center gap-2 mb-2">
+        <button data-delta="-1000000" class="px-2 py-1 rounded bg-slate-200 text-sm">-100만</button>
+        <button data-delta="-100000"  class="px-2 py-1 rounded bg-slate-200 text-sm">-10만</button>
+        <button data-delta="-10000"   class="px-2 py-1 rounded bg-slate-200 text-sm">-1만</button>
+        <div class="px-3 py-2 border rounded mono" id="bidView">0</div>
+        <button data-delta="10000"    class="px-2 py-1 rounded bg-slate-200 text-sm">+1만</button>
+        <button data-delta="100000"   class="px-2 py-1 rounded bg-slate-200 text-sm">+10만</button>
+        <button data-delta="1000000"  class="px-2 py-1 rounded bg-slate-200 text-sm">+100만</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnConfirmBid"  class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">확정</button>
+        <button id="btnCancelBid"   class="btn bg-slate-300 hover:bg-slate-400 rounded px-4 py-2">확정 취소</button>
+        <span id="myStatus" class="badge bg-slate-100">대기중</span>
+      </div>
+
+      <hr class="my-4">
+
+      <h3 class="font-semibold mb-2">내 소지품</h3>
+      <ul id="myItems" class="mt-2 space-y-2 text-sm"></ul>
+
+      <div class="mt-4 p-3 rounded border bg-slate-50 text-sm">
+        <div class="font-semibold mb-1">승리 조건</div>
+        <ul class="list-disc ml-5 space-y-1">
+          <li>같은 종류 <b>3장</b></li>
+          <li>서로 다른 종류 <b>4장</b></li>
+          <li>아무거나 <b>5장</b></li>
+        </ul>
+        <div class="text-xs text-slate-500 mt-2">※ 소지품은 라운드 종료 시 낙찰자에게 자동 추가됩니다.</div>
+      </div>
+    </section>
+
+    <!-- 플레이어 현황(잔액 비공개) -->
+    <section class="bg-white rounded-xl shadow p-4 md:p-6">
+      <h2 class="font-semibold mb-3">플레이어 현황</h2>
+      <div class="text-sm text-slate-600 mb-2">
+        참가자 <span id="pCount" class="font-bold">0</span>명 · 최근 상품: <span id="lastItem" class="font-medium">-</span>
+      </div>
+      <ul id="players" class="space-y-2 text-sm"></ul>
+      <div class="text-xs text-slate-500 mt-2">※ 잔액은 각자만 확인합니다.</div>
+    </section>
+
+    <!-- 방장 컨트롤 -->
+    <section id="hostPanel" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+      <h2 class="font-semibold mb-3">방장 컨트롤</h2>
+
+      <label class="text-sm block mb-1">이번 상품</label>
+      <select id="roundItem" class="w-full border rounded px-3 py-2 mb-3">
+        <option value="">— 선택 —</option>
+        <option>오징어</option>
+        <option>독도새우</option>
+        <option>호박</option>
+        <option>명이나물</option>
+      </select>
+
+      <div class="text-sm mb-3">라운드 수당: <b class="mono">50,000</b>원</div>
+
+      <button id="btnEndRound" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2 mb-2" disabled>
+        라운드 종료 · 정산 + 수당 지급
+      </button>
+
+      <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">
+        게임 종료(방 삭제)
+      </button>
+
+      <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
+    </section>
+  </div>
+
+  <!-- 라운드 결과 알림 -->
+  <div id="toast" class="hidden fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded">
+    <span id="toastMsg"></span>
+  </div>
+</div>
+
 <script type="module">
   const $=s=>document.querySelector(s);
   const fmt=n=>Number(n||0).toLocaleString("ko-KR");
   const show=(id,yes)=>$(id).classList.toggle("hidden",!yes);
-  const toast=(msg)=>{ $("#toastMsg").textContent=msg; $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2000); };
+  const toast=(msg)=>{ $("#toastMsg").textContent=msg; $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2200); };
 
+  // URL 파라미터
   const params=new URL(location.href).searchParams;
   const roomId=(params.get("room")||"").toUpperCase();
   const myName=(params.get("name")||"").trim();
+  $("#roomId").textContent=roomId||"—"; $("#you").textContent=myName||"—"; $("#myName").textContent=myName||"—";
 
+  // Firebase 준비
   await window.firebaseReady;
-  const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
+  const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp,
+          getAuth, signInAnonymously } = window.__fb;
+
   const db=getFirestore(), auth=getAuth();
-  if(!auth.currentUser) await signInAnonymously(auth);
+  try{
+    if(!auth.currentUser) await signInAnonymously(auth);
+    $("#badge").textContent="연결됨"; $("#badge").className="badge bg-indigo-600 text-white";
+  }catch(e){
+    $("#badge").textContent="연결 실패"; $("#badge").className="badge bg-rose-600 text-white";
+  }
 
   const ref=doc(db,"rooms",roomId);
 
-  let isHost=false, currentPlayers=[], currentMe=null, stagedBid=0, lastSeenResultRound=0;
+  // 입찰 스테이징
+  let stagedBid=0; const renderBid=()=>$("#bidView").textContent=fmt(stagedBid);
+  renderBid();
+  document.querySelectorAll("[data-delta]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const delta = Number(btn.getAttribute("data-delta"));
+      const avail = (currentMe?.balance||0) + (currentMe?.hold||0);
+      let next = stagedBid + delta;
+      next = Math.max(0, Math.min(next, avail));
+      next = Math.floor(next/10000)*10000;
+      stagedBid = next; renderBid();
+    });
+  });
 
+  // 상태
+  let isHost=false;
+  let currentPlayers=[], currentMe=null;
+  let lastSeenResultRound=0;
+
+  // 초기 로딩
   async function init() {
     const s=await getDoc(ref);
-    if(!s.exists()){ endUI("방이 삭제되었습니다."); return; }
+    if(!s.exists()){
+      endUI("방이 존재하지 않습니다.");
+      return;
+    }
     const r=s.data();
+    if (!r.started) {
+      // 실수로 바로 game.html로 온 경우 방장/참가자 모두 대기
+      // 그냥 진행해도 되지만 안내 배너만 표시
+      toast("아직 대기실입니다. 방장에서 시작하기를 눌러야 해요.");
+    }
     isHost=(r.hostName===myName);
+    $("#role").textContent=isHost?"host":"guest";
     show("#hostPanel", isHost);
     lastSeenResultRound = r.resultRound || 0;
-
-    // ❌ (삭제됨) 호스트 beforeunload 자동 삭제
-    // window.addEventListener("beforeunload", async ()=>{ try{ await deleteDoc(ref); }catch(_){ } });
   }
   await init();
 
-  // ... 이하 onSnapshot/입찰/라운드 종료/종료 버튼 로직은 기존 본문과 동일 ...
-  // 종료 버튼만 문서 삭제 실행
+  // 스냅샷 구독
+  onSnapshot(ref,(s)=>{
+    if(!s.exists()){
+      endUI("방이 종료(삭제)되었습니다.");
+      return;
+    }
+    const d=s.data();
+
+    $("#round").textContent=d.round??0;
+    $("#lastItem").textContent = d.lastItem || "-";
+
+    currentPlayers = Array.isArray(d.players) ? d.players : [];
+    currentMe = currentPlayers.find(p=>p.name===myName) || null;
+
+    // 내 패널
+    $("#myBalance").textContent = fmt(currentMe?.balance||0);
+    $("#myHold").textContent = fmt(currentMe?.hold||0);
+    $("#myStatus").textContent = currentMe?.ready ? "준비됨" : "대기중";
+    $("#myStatus").className = "badge " + (currentMe?.ready ? "bg-emerald-100" : "bg-slate-100");
+
+    // 내 소지품
+    const myItems = Array.isArray(currentMe?.items) ? currentMe.items : [];
+    const ulItems=$("#myItems"); ulItems.innerHTML="";
+    myItems.forEach((it,i)=>{
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.textContent = `${i+1}. ${it}`;
+      ulItems.appendChild(li);
+    });
+
+    // 플레이어(잔액 비공개)
+    $("#pCount").textContent = currentPlayers.length.toString();
+    const ul=$("#players"); ul.innerHTML="";
+    currentPlayers.forEach((p,i)=>{
+      const status = p.ready ? "준비" : "대기";
+      const stClass = p.ready ? "bg-emerald-100" : "bg-slate-100";
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span>${i+1}. ${p.name}</span>
+          <span class="badge ${stClass}">${status}</span>
+        </div>
+      `;
+      ul.appendChild(li);
+    });
+
+    // 라운드 결과 알림(개인화)
+    if ((d.resultRound||0) > lastSeenResultRound) {
+      const winners = Array.isArray(d.lastWinners) ? d.lastWinners : [];
+      const bidders = Array.isArray(d.lastBidders) ? d.lastBidders : [];
+      if (winners.includes(myName)) {
+        toast(`낙찰되었습니다! (${d.lastItem})`);
+      } else if (bidders.includes(myName)) {
+        toast(`낙찰 실패! 입찰 금액이 환불되었습니다.`);
+      } else {
+        toast(`라운드 종료: ${d.lastItem}`);
+      }
+      lastSeenResultRound = d.resultRound||0;
+    }
+
+    // 방장: 라운드 종료 버튼 활성화
+    if (isHost) {
+      const everyoneReady = currentPlayers.length>0 && currentPlayers.every(p=>p.ready===true);
+      const itemChosen = !!$("#roundItem").value;
+      $("#btnEndRound").disabled = !(everyoneReady && itemChosen);
+    }
+  });
+
+  function endUI(msg){
+    $("#endMsg").textContent = msg;
+    $("#endedBox").classList.remove("hidden");
+    $("#btnEndRound")?.setAttribute("disabled","true");
+    $("#btnEndGame")?.setAttribute("disabled","true");
+  }
+  function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
+
+  // --- 입찰 확정/취소 ---
+  $("#btnConfirmBid").addEventListener("click", async ()=>{
+    if(!currentMe) return;
+    const avail = Number(currentMe.balance||0) + Number(currentMe.hold||0);
+    if (stagedBid > avail) { alert("잔액을 초과했습니다."); return; }
+    const newHold = stagedBid;
+    const newBalance = avail - newHold;
+    const players = currentPlayers.map(p => p.name===myName
+      ? { ...p, hold:newHold, balance:newBalance, bid:newHold, committed:true, ready:true }
+      : p
+    );
+    try{
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`확정 실패: ${err.message||err}`); }
+  });
+
+  $("#btnCancelBid").addEventListener("click", async ()=>{
+    if(!currentMe) return;
+    const refund = Number(currentMe.hold||0);
+    const players = currentPlayers.map(p=> p.name===myName
+      ? { ...p, balance:Number(p.balance||0)+refund, hold:0, bid:0, committed:false, ready:true }
+      : p
+    );
+    stagedBid = 0; $("#bidView").textContent = "0";
+    try{
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`확정 취소 실패: ${err.message||err}`); }
+  });
+
+  // --- 방장: 라운드 종료 (정산 + 아이템 지급 + 환불 + 수당 5만원 + 결과 필드)
+  $("#btnEndRound").addEventListener("click", async ()=>{
+    if(!isHost) return;
+    const itemSel = $("#roundItem").value;
+    if(!itemSel) { alert("이번 상품을 선택하세요."); return; }
+
+    try{
+      const snap = await getDoc(ref); if(!snap.exists()) return;
+      const r = snap.data();
+      let players = (r.players||[]).map(p=>({...p}));
+
+      if (!players.every(p=>p.ready===true)) { alert("모든 플레이어가 확정/확정 취소를 완료해야 합니다."); return; }
+
+      const maxHold = Math.max(0, ...players.map(p=>Number(p.hold||0)));
+      const winners = players.filter(p=>Number(p.hold||0)===maxHold && maxHold>0).map(p=>p.name);
+      const bidders = players.filter(p=>Number(p.hold||0)>0).map(p=>p.name);
+
+      players = players.map(p=>{
+        const hold = Number(p.hold||0);
+        let balance = Number(p.balance||0);
+        // 환불/지불
+        if (hold>0 && !winners.includes(p.name)) balance += hold; // 환불
+        // 수당 5만원
+        balance += 50000;
+        // 아이템 지급
+        const items = Array.isArray(p.items)? [...p.items] : [];
+        if (winners.includes(p.name)) items.push(itemSel);
+
+        return { ...p, balance, hold:0, bid:0, committed:false, ready:false, items };
+      });
+
+      await updateDoc(ref, {
+        players,
+        round: Number(r.round||0) + 1,
+        lastItem: itemSel,
+        lastWinners: winners,
+        lastBidders: bidders,
+        resultRound: Number(r.round||0) + 1,
+        updatedAt: serverTimestamp()
+      });
+
+      $("#roundItem").value = ""; // 다음 라운드 준비
+    }catch(err){
+      showErr(`라운드 종료 실패: ${err.message||err}`);
+    }
+  });
+
+  // 방장: 게임 종료(방 삭제)
   $("#btnEndGame").onclick = async ()=>{
     if(!isHost) return;
     const ok = confirm("정말 게임을 종료하고 방을 삭제할까요?");
     if(!ok) return;
-    try{ await deleteDoc(ref); }catch(err){ /* 에러 표시 */ }
+    try{
+      await deleteDoc(ref);
+    }catch(err){ showErr(`삭제 실패: ${err.message||err}`); }
   };
 </script>
+</body>
+</html>
