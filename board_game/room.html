@@ -116,8 +116,19 @@
       link: joinUrl.toString(),
       started: false,
       round: 0,
-      stipend: 200000,
-      players: [], // join.html에서 추가됨
+      stipend: 200000, // 수당은 그대로 20만원
+      // 🔽 방장도 참가자에 포함 (P1)
+      players: [
+        {
+          id: "P1",
+          name: name,
+          balance: 1000000,  // 기본금 100만원
+          hold: 0,
+          bid: 0,
+          committed: false,
+          ready: false
+        }
+      ],
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
