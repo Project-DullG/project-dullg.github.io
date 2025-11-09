@@ -145,4 +145,308 @@
   </div>
 </div>
 
-<scrip
+<script type="module">
+  const $=s=>document.querySelector(s);
+  const fmt=n=>Number(n||0).toLocaleString("ko-KR");
+  const show=(id,yes)=>$(id).classList.toggle("hidden",!yes);
+  const toast=(msg)=>{ $("#toastMsg").textContent=msg; $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2200); };
+
+  // URL 파라미터
+  const params=new URL(location.href).searchParams;
+  const roomId=(params.get("room")||"").toUpperCase();
+  const myName=(params.get("name")||"").trim();
+  $("#roomId").textContent=roomId||"—"; $("#you").textContent=myName||"—"; $("#myName").textContent=myName||"—";
+
+  // Firebase 준비
+  await window.firebaseReady;
+  const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp,
+          getAuth, signInAnonymously } = window.__fb;
+
+  const db=getFirestore(), auth=getAuth();
+  try{
+    if(!auth.currentUser) await signInAnonymously(auth);
+    $("#badge").textContent="연결됨"; $("#badge").className="badge bg-indigo-600 text-white";
+  }catch(e){
+    $("#badge").textContent="연결 실패"; $("#badge").className="badge bg-rose-600 text-white";
+  }
+
+  const ref=doc(db,"rooms",roomId);
+
+  // ===== 입찰 상태 =====
+  let stagedBid=0;
+  const bidInput=$("#bidInput");
+  const formatMoney = (n)=>fmt(Math.max(0, Math.floor(Number(n||0)/10000)*10000));
+  const parseMoney  = (s)=>Number((s||"0").replace(/[^\d]/g,""))||0;
+  function syncBidInput(){ bidInput.value = formatMoney(stagedBid); }
+  syncBidInput();
+
+  document.querySelectorAll("[data-delta]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const delta = Number(btn.getAttribute("data-delta"));
+      const avail = (currentMe?.balance||0) + (currentMe?.hold||0);
+      let next = stagedBid + delta;
+      next = Math.max(0, Math.min(next, avail));
+      next = Math.floor(next/10000)*10000;
+      stagedBid = next; syncBidInput();
+    });
+  });
+  bidInput.addEventListener("input", ()=>{ stagedBid = parseMoney(bidInput.value); });
+  bidInput.addEventListener("blur", ()=>{
+    const avail = (currentMe?.balance||0) + (currentMe?.hold||0);
+    stagedBid = Math.max(0, Math.min(stagedBid, avail));
+    stagedBid = Math.floor(stagedBid/10000)*10000;
+    syncBidInput();
+  });
+
+  // ===== 실시간 상태 =====
+  let isHost=false;
+  let currentPlayers=[], currentMe=null;
+  let lastSeenResultRound=0;
+
+  function endUI(msg, winners=[]) {
+    $("#endMsg").textContent = winners.length ? `게임 종료! 우승: ${winners.join(", ")}` : msg;
+    $("#endedBox").classList.remove("hidden");
+    $("#btnEndRound")?.setAttribute("disabled","true");
+    $("#btnEndGame")?.setAttribute("disabled","true");
+    $("#btnConfirmBid")?.setAttribute("disabled","true");
+    $("#btnCancelBid")?.setAttribute("disabled","true");
+    $("#roundItem")?.setAttribute("disabled","true");
+  }
+
+  // 방장 판별 강화
+  function guessHost(roomData){
+    const a = (roomData?.hostName||"").trim().toLowerCase();
+    const b = (myName||"").trim().toLowerCase();
+    const p1 = Array.isArray(roomData?.players) ? roomData.players[0] : null;
+    const p1name = (p1?.name||"").trim().toLowerCase();
+    return (a && a===b) || (p1name && p1name===b);
+  }
+
+  function applyLayout() {
+    if (isHost) {
+      $("#hostPanel").classList.remove("hidden");
+      $("#panelMe").classList.remove("lg:col-span-6","xl:col-span-6");
+      $("#panelPlayers").classList.remove("lg:col-span-6","xl:col-span-6");
+      $("#panelMe").classList.add("lg:col-span-5","xl:col-span-4");
+      $("#panelPlayers").classList.add("lg:col-span-7","xl:col-span-5");
+    } else {
+      $("#hostPanel").classList.add("hidden");
+      $("#panelMe").classList.remove("lg:col-span-5","xl:col-span-4");
+      $("#panelPlayers").classList.remove("lg:col-span-7","xl:col-span-5");
+      $("#panelMe").classList.add("lg:col-span-6","xl:col-span-6");
+      $("#panelPlayers").classList.add("lg:col-span-6","xl:col-span-6");
+    }
+  }
+
+  // 승리 판정 (items: string[])
+  function checkWin(items=[]) {
+    const total = items.length;
+    if (total >= 5) return "any5";
+    const counts = {};
+    for (const it of items) counts[it] = (counts[it]||0)+1;
+    if (Object.values(counts).some(c=>c>=3)) return "same3";
+    if (new Set(items).size >= 4) return "diff4";
+    return "";
+  }
+
+  // 초기 로딩
+  async function init() {
+    const s=await getDoc(ref);
+    if(!s.exists()){ endUI("방이 존재하지 않습니다."); return; }
+    const r=s.data();
+    if (r.gameOver) { endUI("게임이 종료되었습니다.", r.winners||[]); return; }
+    isHost = guessHost(r);
+    $("#role").textContent=isHost?"host":"guest";
+    applyLayout();
+    lastSeenResultRound = r.resultRound || 0;
+
+    // 방장: 상품 선택 시 currentItem 실시간 반영
+    if (isHost) {
+      $("#hostPanel").classList.remove("hidden");
+      $("#roundItem").addEventListener("change", async ()=>{
+        const val = $("#roundItem").value;
+        try{ await updateDoc(ref, { currentItem: val, updatedAt: serverTimestamp() }); }catch(_){}
+      });
+    }
+  }
+  await init();
+
+  // 스냅샷 구독
+  onSnapshot(ref, async (s)=>{
+    if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
+    const d=s.data();
+
+    // 게임 종료 처리 공통
+    if (d.gameOver) { endUI("게임이 종료되었습니다.", d.winners||[]); }
+
+    $("#round").textContent=d.round??0;
+    $("#currentItem").textContent = d.currentItem || "-";
+    $("#lastItem").textContent    = d.lastItem || "-";
+
+    currentPlayers = Array.isArray(d.players) ? d.players : [];
+    currentMe = currentPlayers.find(p=>p.name===myName) || null;
+
+    // 내 패널
+    $("#myBalance").textContent = fmt(currentMe?.balance||0);
+    $("#myHold").textContent = fmt(currentMe?.hold||0);
+    $("#myStatus").textContent = currentMe?.ready ? "준비됨" : "대기중";
+    $("#myStatus").className = "badge " + (currentMe?.ready ? "bg-emerald-100" : "bg-slate-100");
+
+    // 내 소지품
+    const myItems = Array.isArray(currentMe?.items) ? currentMe.items : [];
+    const ulItems=$("#myItems"); ulItems.innerHTML="";
+    myItems.forEach((it,i)=>{
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.textContent = `${i+1}. ${it}`;
+      ulItems.appendChild(li);
+    });
+
+    // 플레이어(잔액 비공개)
+    $("#pCount").textContent = currentPlayers.length.toString();
+    const ul=$("#players"); ul.innerHTML="";
+    currentPlayers.forEach((p,i)=>{
+      const status = p.ready ? "준비" : "대기";
+      const stClass = p.ready ? "bg-emerald-100" : "bg-slate-100";
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span>${i+1}. ${p.name}</span>
+          <span class="badge ${stClass}">${status}</span>
+        </div>
+      `;
+      ul.appendChild(li);
+    });
+
+    // 라운드 결과 알림(개인화)
+    if (!d.gameOver && (d.resultRound||0) > lastSeenResultRound) {
+      const winners = Array.isArray(d.lastWinners) ? d.lastWinners : [];
+      const bidders = Array.isArray(d.lastBidders) ? d.lastBidders : [];
+      if (winners.includes(myName)) {
+        toast(`낙찰되었습니다! (${d.lastItem})`);
+      } else if (bidders.includes(myName)) {
+        toast(`낙찰 실패! 입찰 금액이 환불되었습니다.`);
+      } else {
+        toast(`라운드 종료: ${d.lastItem}`);
+      }
+      lastSeenResultRound = d.resultRound||0;
+    }
+
+    // 방장: 드롭다운 동기화 + 종료 버튼 활성화
+    if (!d.gameOver) {
+      isHost = guessHost(d);
+      $("#role").textContent = isHost ? "host" : "guest";
+      applyLayout();
+
+      if (isHost) {
+        if (d.currentItem !== undefined) $("#roundItem").value = d.currentItem || "";
+        const everyoneReady = (Array.isArray(d.players) && d.players.length>0 && d.players.every(p=>p.ready===true));
+        const itemChosen = !!(d.currentItem || $("#roundItem").value);
+        $("#btnEndRound").disabled = !(everyoneReady && itemChosen);
+      }
+    }
+
+    // 자동 승리 감지
+    if (!d.gameOver) {
+      const reason = checkWin(myItems);
+      if (reason) {
+        try{
+          await updateDoc(ref, {
+            gameOver: true,
+            winners: Array.isArray(d.winners)&&d.winners.length ? d.winners : [myName],
+            winReason: reason,
+            updatedAt: serverTimestamp()
+          });
+          endUI("게임 종료!", [myName]);
+        }catch(_){}
+      }
+    }
+  });
+
+  function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
+
+  // --- 입찰 확정/취소 ---
+  $("#btnConfirmBid").addEventListener("click", async ()=>{
+    if(!currentMe) return;
+    const avail = Number(currentMe.balance||0) + Number(currentMe.hold||0);
+    let val = parseMoney($("#bidInput").value);
+    val = Math.max(0, Math.min(val, avail));
+    val = Math.floor(val/10000)*10000;
+    stagedBid = val; syncBidInput();
+
+    const newHold = stagedBid;
+    const newBalance = avail - newHold;
+    const players = currentPlayers.map(p => p.name===myName
+      ? { ...p, hold:newHold, balance:newBalance, bid:newHold, committed:true, ready:true }
+      : p
+    );
+    try{
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`확정 실패: ${err.message||err}`); }
+  });
+
+  $("#btnCancelBid").addEventListener("click", async ()=>{
+    if(!currentMe) return;
+    const refund = Number(currentMe.hold||0);
+    const players = currentPlayers.map(p=> p.name===myName
+      ? { ...p, balance:Number(p.balance||0)+refund, hold:0, bid:0, committed:false, ready:true }
+      : p
+    );
+    stagedBid = 0; syncBidInput();
+    try{
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`확정 취소 실패: ${err.message||err}`); }
+  });
+
+  // --- 방장: 라운드 종료 (정산 + 아이템 지급 + 환불 + 수당 5만원 + 결과 필드 + currentItem 정리) ---
+  $("#btnEndRound").addEventListener("click", async ()=>{
+    const snap = await getDoc(ref); if(!snap.exists()) return;
+    const r = snap.data();
+    const uiSel = ($("#roundItem").value || "").trim();
+    const current = (r.currentItem && r.currentItem.trim()) || uiSel;
+    if(!current) { alert("이번 상품을 선택하세요."); return; }
+
+    try{
+      let players = (r.players||[]).map(p=>({...p}));
+      if (!players.every(p=>p.ready===true)) { alert("모든 플레이어가 확정/확정 취소를 완료해야 합니다."); return; }
+
+      const maxHold = Math.max(0, ...players.map(p=>Number(p.hold||0)));
+      const winners = players.filter(p=>Number(p.hold||0)===maxHold && maxHold>0).map(p=>p.name);
+      const bidders = players.filter(p=>Number(p.hold||0)>0).map(p=>p.name);
+
+      players = players.map(p=>{
+        const hold = Number(p.hold||0);
+        let balance = Number(p.balance||0);
+        if (hold>0 && !winners.includes(p.name)) balance += hold; // 환불
+        balance += 50000; // 수당
+        const items = Array.isArray(p.items)? [...p.items] : [];
+        if (winners.includes(p.name)) items.push(current);
+        return { ...p, balance, hold:0, bid:0, committed:false, ready:false, items };
+      });
+
+      await updateDoc(ref, {
+        players,
+        round: Number(r.round||0) + 1,
+        lastItem: current,
+        currentItem: "",                // 다음 라운드를 위해 비움
+        lastWinners: winners,
+        lastBidders: bidders,
+        resultRound: Number(r.round||0) + 1,
+        updatedAt: serverTimestamp()
+      });
+      $("#roundItem").value = "";
+    }catch(err){
+      showErr(`라운드 종료 실패: ${err.message||err}`);
+    }
+  });
+
+  // 방장: 게임 종료(방 삭제)
+  $("#btnEndGame").onclick = async ()=>{
+    const ok = confirm("정말 게임을 종료하고 방을 삭제할까요?");
+    if(!ok) return;
+    try{ await deleteDoc(ref); }catch(err){ showErr(`삭제 실패: ${err.message||err}`); }
+  };
+</script>
+</body>
+</html>
