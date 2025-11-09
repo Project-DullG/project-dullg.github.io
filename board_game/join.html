@@ -162,7 +162,16 @@
       if (players.length >= 6) throw new Error("정원이 가득 찼습니다(6명).");
       if (players.some(p => p.name === name)) throw new Error("같은 닉네임이 이미 있습니다.");
 
-      players.push({ id: `P${players.length+1}`, name, balance: 0, hold: 0, bid: 0, committed: false, ready: false });
+      players.push({
+        id: `P${players.length+1}`,
+        name,
+        balance: 1000000,  // 기본금 100만원
+        hold: 0,
+        bid: 0,
+        committed: false,
+        ready: false
+      });
+
       await updateDoc(roomRef, { players, updatedAt: serverTimestamp() });
 
       // 대기실로 전환 + 실시간 구독
