@@ -32,10 +32,11 @@
   .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
   .btn:disabled{opacity:.5;cursor:not-allowed}
   .badge{font-size:.75rem;padding:.125rem .5rem;border-radius:.375rem}
+  .card{background:#fff;border-radius:1rem;box-shadow:0 1px 3px rgb(0 0 0 / .06),0 1px 2px rgb(0 0 0 / .04)}
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-<div class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+<div class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
 
   <header class="flex items-center justify-between">
     <div>
@@ -54,9 +55,11 @@
     <span id="endMsg">방이 종료(삭제)되었습니다.</span>
   </div>
 
-  <div class="grid md:grid-cols-3 gap-4">
+  <!-- 메인 레이아웃: 12 그리드 -->
+  <div id="grid" class="grid gap-4 lg:grid-cols-12">
+
     <!-- 내 정보 + 입찰 + 소지품 -->
-    <section class="bg-white rounded-xl shadow p-4 md:p-6">
+    <section id="panelMe" class="card p-4 md:p-6 lg:col-span-5 xl:col-span-4">
       <h2 class="font-semibold mb-3">내 정보</h2>
       <div class="text-sm">닉네임: <span id="myName" class="font-medium"></span></div>
       <div class="text-sm mt-1">소지금: <span id="myBalance" class="mono font-bold">0</span>원</div>
@@ -66,15 +69,24 @@
       <hr class="my-4">
 
       <h3 class="font-semibold mb-2">입찰</h3>
-      <div class="flex items-center gap-2 mb-2">
-        <button data-delta="-1000000" class="px-2 py-1 rounded bg-slate-200 text-sm">-100만</button>
-        <button data-delta="-100000"  class="px-2 py-1 rounded bg-slate-200 text-sm">-10만</button>
-        <button data-delta="-10000"   class="px-2 py-1 rounded bg-slate-200 text-sm">-1만</button>
-        <div class="px-3 py-2 border rounded mono" id="bidView">0</div>
-        <button data-delta="10000"    class="px-2 py-1 rounded bg-slate-200 text-sm">+1만</button>
-        <button data-delta="100000"   class="px-2 py-1 rounded bg-slate-200 text-sm">+10만</button>
-        <button data-delta="1000000"  class="px-2 py-1 rounded bg-slate-200 text-sm">+100만</button>
+
+      <!-- 금액 입력 + 프리셋 버튼 (wrap) -->
+      <div class="flex items-center gap-2 mb-2 flex-wrap">
+        <button data-delta="-1000000" class="shrink-0 w-14 md:w-16 px-2 py-1 rounded bg-slate-200 text-xs md:text-sm">-100만</button>
+        <button data-delta="-100000"  class="shrink-0 w-14 md:w-16 px-2 py-1 rounded bg-slate-200 text-xs md:text-sm">-10만</button>
+        <button data-delta="-10000"   class="shrink-0 w-14 md:w-16 px-2 py-1 rounded bg-slate-200 text-xs md:text-sm">-1만</button>
+
+        <!-- 직접 입력 -->
+        <div class="flex items-center gap-2">
+          <input id="bidInput" inputmode="numeric" class="mono w-32 md:w-40 border rounded px-3 py-2 text-right"
+                 placeholder="0" aria-label="입찰 금액(원)" />
+        </div>
+
+        <button data-delta="10000"    class="shrink-0 w-14 md:w-16 px-2 py-1 rounded bg-slate-200 text-xs md:text-sm">+1만</button>
+        <button data-delta="100000"   class="shrink-0 w-14 md:w-16 px-2 py-1 rounded bg-slate-200 text-xs md:text-sm">+10만</button>
+        <button data-delta="1000000"  class="shrink-0 w-14 md:w-16 px-2 py-1 rounded bg-slate-200 text-xs md:text-sm">+100만</button>
       </div>
+
       <div class="flex items-center gap-2">
         <button id="btnConfirmBid"  class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">확정</button>
         <button id="btnCancelBid"   class="btn bg-slate-300 hover:bg-slate-400 rounded px-4 py-2">확정 취소</button>
@@ -98,7 +110,7 @@
     </section>
 
     <!-- 플레이어 현황(잔액 비공개) -->
-    <section class="bg-white rounded-xl shadow p-4 md:p-6">
+    <section id="panelPlayers" class="card p-4 md:p-6 lg:col-span-7 xl:col-span-5">
       <h2 class="font-semibold mb-3">플레이어 현황</h2>
       <div class="text-sm text-slate-600 mb-2">
         참가자 <span id="pCount" class="font-bold">0</span>명 · 최근 상품: <span id="lastItem" class="font-medium">-</span>
@@ -108,7 +120,7 @@
     </section>
 
     <!-- 방장 컨트롤 -->
-    <section id="hostPanel" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+    <section id="hostPanel" class="hidden card p-4 md:p-6 lg:col-span-3 xl:col-span-3">
       <h2 class="font-semibold mb-3">방장 컨트롤</h2>
 
       <label class="text-sm block mb-1">이번 상품</label>
@@ -167,9 +179,21 @@
 
   const ref=doc(db,"rooms",roomId);
 
-  // 입찰 스테이징
-  let stagedBid=0; const renderBid=()=>$("#bidView").textContent=fmt(stagedBid);
-  renderBid();
+  // ===== 입찰 상태 =====
+  let stagedBid=0;
+  const bidInput=$("#bidInput");
+  const formatMoney = (n)=>fmt(Math.max(0, Math.floor(Number(n||0)/10000)*10000));
+
+  function syncBidInput(){
+    bidInput.value = formatMoney(stagedBid);
+  }
+  function parseBidInput(){
+    const raw = (bidInput.value||"0").replace(/[^\d]/g,"");
+    return Number(raw||0);
+  }
+  syncBidInput();
+
+  // 증감 버튼(랩/반응형)
   document.querySelectorAll("[data-delta]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const delta = Number(btn.getAttribute("data-delta"));
@@ -177,14 +201,41 @@
       let next = stagedBid + delta;
       next = Math.max(0, Math.min(next, avail));
       next = Math.floor(next/10000)*10000;
-      stagedBid = next; renderBid();
+      stagedBid = next;
+      syncBidInput();
     });
   });
 
-  // 상태
+  // 직접 입력
+  bidInput.addEventListener("input", ()=>{
+    const val = parseBidInput();
+    stagedBid = val;
+  });
+  bidInput.addEventListener("blur", ()=>{
+    // 가용액 제한 및 1만단위 스냅
+    const avail = (currentMe?.balance||0) + (currentMe?.hold||0);
+    stagedBid = Math.max(0, Math.min(stagedBid, avail));
+    stagedBid = Math.floor(stagedBid/10000)*10000;
+    syncBidInput();
+  });
+
+  // ===== 실시간 상태 =====
   let isHost=false;
   let currentPlayers=[], currentMe=null;
   let lastSeenResultRound=0;
+
+  // 게스트일 때 레이아웃 확장 (빈칸 제거)
+  function applyLayout(){
+    if(isHost){
+      $("#panelMe").className = $("#panelMe").className.replace(/lg:col-span-\d+/g,"") + " lg:col-span-5 xl:col-span-4";
+      $("#panelPlayers").className = $("#panelPlayers").className.replace(/lg:col-span-\d+/g,"") + " lg:col-span-7 xl:col-span-5";
+      show("#hostPanel", true);
+    }else{
+      show("#hostPanel", false);
+      $("#panelMe").className = $("#panelMe").className.replace(/lg:col-span-\d+/g,"") + " lg:col-span-6 xl:col-span-6";
+      $("#panelPlayers").className = $("#panelPlayers").className.replace(/lg:col-span-\d+/g,"") + " lg:col-span-6 xl:col-span-6";
+    }
+  }
 
   // 초기 로딩
   async function init() {
@@ -194,14 +245,9 @@
       return;
     }
     const r=s.data();
-    if (!r.started) {
-      // 실수로 바로 game.html로 온 경우 방장/참가자 모두 대기
-      // 그냥 진행해도 되지만 안내 배너만 표시
-      toast("아직 대기실입니다. 방장에서 시작하기를 눌러야 해요.");
-    }
     isHost=(r.hostName===myName);
     $("#role").textContent=isHost?"host":"guest";
-    show("#hostPanel", isHost);
+    applyLayout();
     lastSeenResultRound = r.resultRound || 0;
   }
   await init();
@@ -286,8 +332,13 @@
   // --- 입찰 확정/취소 ---
   $("#btnConfirmBid").addEventListener("click", async ()=>{
     if(!currentMe) return;
+    // 입력창 기준으로 반영
     const avail = Number(currentMe.balance||0) + Number(currentMe.hold||0);
-    if (stagedBid > avail) { alert("잔액을 초과했습니다."); return; }
+    let val = Number((bidInput.value||"0").replace(/[^\d]/g,""));
+    val = Math.max(0, Math.min(val, avail));
+    val = Math.floor(val/10000)*10000;
+    stagedBid = val; syncBidInput();
+
     const newHold = stagedBid;
     const newBalance = avail - newHold;
     const players = currentPlayers.map(p => p.name===myName
@@ -306,7 +357,7 @@
       ? { ...p, balance:Number(p.balance||0)+refund, hold:0, bid:0, committed:false, ready:true }
       : p
     );
-    stagedBid = 0; $("#bidView").textContent = "0";
+    stagedBid = 0; syncBidInput();
     try{
       await updateDoc(ref, { players, updatedAt: serverTimestamp() });
     }catch(err){ alert(`확정 취소 실패: ${err.message||err}`); }
@@ -332,14 +383,10 @@
       players = players.map(p=>{
         const hold = Number(p.hold||0);
         let balance = Number(p.balance||0);
-        // 환불/지불
         if (hold>0 && !winners.includes(p.name)) balance += hold; // 환불
-        // 수당 5만원
-        balance += 50000;
-        // 아이템 지급
+        balance += 50000; // 수당
         const items = Array.isArray(p.items)? [...p.items] : [];
         if (winners.includes(p.name)) items.push(itemSel);
-
         return { ...p, balance, hold:0, bid:0, committed:false, ready:false, items };
       });
 
