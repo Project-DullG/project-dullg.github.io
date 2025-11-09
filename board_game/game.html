@@ -17,16 +17,25 @@
     appId: "1:278191503167:web:a02892e0d742e12339058a",
     measurementId: "G-0EQB5WN6QE"
   };
-  const ready=(async()=>{const{initializeApp}=await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");const app=initializeApp(firebaseConfig);const fs=await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");const au=await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");try{const{getAnalytics}=await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js");getAnalytics(app);}catch{} window.__fb={app,...fs,...au};})();window.firebaseReady=ready;
+  const ready=(async()=>{
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
+    const app = initializeApp(firebaseConfig);
+    const fs  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
+    const au  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
+    try { const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js"); getAnalytics(app); } catch {}
+    window.__fb = { app, ...fs, ...au };
+  })();
+  window.firebaseReady = ready;
 </script>
 
 <style>
   .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
   .btn:disabled{opacity:.5;cursor:not-allowed}
+  .badge{font-size:.75rem;padding:.125rem .5rem;border-radius:.375rem}
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-<div class="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
+<div class="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
 
   <header class="flex items-center justify-between">
     <div>
@@ -37,33 +46,73 @@
         · Role: <span id="role" class="font-medium">guest</span>
       </div>
     </div>
-    <span id="badge" class="text-xs px-2 py-1 rounded bg-slate-200">연결 준비중…</span>
+    <span id="badge" class="badge bg-slate-200">연결 준비중…</span>
   </header>
 
-  <div id="endedBox" class="hidden p-4 rounded border bg-rose-50 border-rose-200 text-rose-700 text-sm">
-    이 방은 종료되었습니다. (문서가 삭제됨)
+  <!-- 종료/승자 안내 -->
+  <div id="endedBox" class="hidden p-4 rounded border bg-emerald-50 border-emerald-200 text-emerald-800 text-sm">
+    <span id="winnerText">게임이 종료되었습니다.</span>
+    <div class="text-xs text-slate-600 mt-1">방장은 “방 삭제(정리)”로 문서를 삭제할 수 있습니다.</div>
   </div>
 
   <div class="grid md:grid-cols-3 gap-4">
-    <!-- 내 정보 + 인벤토리(비공개/로컬) -->
+    <!-- 내 정보 + 인벤토리 + 입찰 -->
     <section class="bg-white rounded-xl shadow p-4 md:p-6">
       <h2 class="font-semibold mb-3">내 정보</h2>
       <div class="text-sm">닉네임: <span id="myName" class="font-medium"></span></div>
-      <div class="text-sm mt-1">소지금: <span id="myBalance" class="mono font-bold">0</span></div>
-      <div class="text-xs text-slate-500 mt-1">※ 인벤토리는 비공개(로컬 저장), 소지금은 공용.</div>
+      <div class="text-sm mt-1">소지금: <span id="myBalance" class="mono font-bold">0</span>원</div>
+      <div class="text-sm mt-1">보류금(확정된 입찰): <span id="myHold" class="mono font-bold">0</span>원</div>
+      <div class="text-xs text-slate-500 mt-1">※ 입찰 확정 시 보류금이 잡히며, 확정 취소/낙찰 실패 시 환불됩니다.</div>
+
       <hr class="my-4">
-      <h3 class="font-semibold mb-2">내 인벤토리</h3>
+
+      <h3 class="font-semibold mb-2">입찰</h3>
+      <div class="flex items-center gap-2 mb-2">
+        <button data-delta="-1000000" class="px-2 py-1 rounded bg-slate-200 text-sm">-100만</button>
+        <button data-delta="-100000"  class="px-2 py-1 rounded bg-slate-200 text-sm">-10만</button>
+        <button data-delta="-10000"   class="px-2 py-1 rounded bg-slate-200 text-sm">-1만</button>
+        <div class="px-3 py-2 border rounded mono" id="bidView">0</div>
+        <button data-delta="10000"    class="px-2 py-1 rounded bg-slate-200 text-sm">+1만</button>
+        <button data-delta="100000"   class="px-2 py-1 rounded bg-slate-200 text-sm">+10만</button>
+        <button data-delta="1000000"  class="px-2 py-1 rounded bg-slate-200 text-sm">+100만</button>
+      </div>
       <div class="flex items-center gap-2">
+        <button id="btnConfirmBid"  class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">확정</button>
+        <button id="btnCancelBid"   class="btn bg-slate-300 hover:bg-slate-400 rounded px-4 py-2">확정 취소</button>
+        <span id="myStatus" class="badge bg-slate-100">대기중</span>
+      </div>
+
+      <hr class="my-4">
+
+      <h3 class="font-semibold mb-2">내 인벤토리 (비공개)</h3>
+      <div class="flex items-center gap-2 mb-2">
         <input id="itemInput" type="text" placeholder="예: 오징어" class="w-full border rounded px-3 py-2" />
         <button id="btnAddItem" class="btn bg-slate-800 text-white rounded px-3 py-2">추가</button>
       </div>
+      <div class="flex flex-wrap gap-2 mb-2">
+        <button data-add="오징어" class="px-2 py-1 rounded bg-slate-200 text-sm">+ 오징어</button>
+        <button data-add="독도새우" class="px-2 py-1 rounded bg-slate-200 text-sm">+ 독도새우</button>
+        <button data-add="호박" class="px-2 py-1 rounded bg-slate-200 text-sm">+ 호박</button>
+        <button data-add="명이나물" class="px-2 py-1 rounded bg-slate-200 text-sm">+ 명이나물</button>
+      </div>
       <ul id="invList" class="mt-3 space-y-2 text-sm"></ul>
+
+      <div class="mt-4 p-3 rounded border bg-slate-50 text-sm">
+        <div class="font-semibold mb-1">승리 조건</div>
+        <ul class="list-disc ml-5 space-y-1">
+          <li>같은 종류 <b>3장</b></li>
+          <li>서로 다른 종류 <b>4장</b></li>
+          <li>아무거나 <b>5장</b></li>
+        </ul>
+      </div>
     </section>
 
     <!-- 플레이어 현황 -->
     <section class="bg-white rounded-xl shadow p-4 md:p-6">
       <h2 class="font-semibold mb-3">플레이어 현황</h2>
-      <div id="pCount" class="text-sm text-slate-600 mb-2">참가자 0명</div>
+      <div class="text-sm text-slate-600 mb-2">
+        참가자 <span id="pCount" class="font-bold">0</span>명 · 최근 상품: <span id="lastItem" class="font-medium">-</span>
+      </div>
       <ul id="players" class="space-y-2 text-sm"></ul>
       <div class="text-xs text-slate-500 mt-2">※ 각자 인벤토리는 비공개입니다.</div>
     </section>
@@ -71,67 +120,314 @@
     <!-- 방장 컨트롤 -->
     <section id="hostPanel" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
       <h2 class="font-semibold mb-3">방장 컨트롤</h2>
+      <label class="text-sm block mb-1">이번 상품</label>
+      <select id="roundItem" class="w-full border rounded px-3 py-2 mb-3">
+        <option value="">— 선택 —</option>
+        <option>오징어</option>
+        <option>독도새우</option>
+        <option>호박</option>
+        <option>명이나물</option>
+      </select>
+
       <label class="text-sm block mb-1">라운드 수당(원)</label>
       <input id="stipend" type="number" step="10000" min="0" value="200000" class="w-full border rounded px-3 py-2 mb-3 mono" />
-      <button id="btnEndRound" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2 mb-2">라운드 종료 · 수당 지급</button>
-      <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">게임 종료</button>
-      <p class="text-xs text-slate-500 mt-3">· 라운드 종료 시 모든 플레이어에게 수당이 더해지고 라운드는 +1 됩니다.<br>· 게임 종료는 확인 후 방 문서를 삭제합니다.</p>
+
+      <button id="btnEndRound" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2 mb-2" disabled>
+        라운드 종료 · 정산 + 수당 지급
+      </button>
+
+      <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">
+        게임 종료
+      </button>
+      <button id="btnDeleteRoom" class="hidden mt-2 btn w-full bg-slate-800 hover:bg-slate-900 text-white rounded px-4 py-2">
+        방 삭제(정리)
+      </button>
+
+      <div class="text-xs text-slate-500 mt-3 space-y-1">
+        <div>· 모든 플레이어가 <b>확정/확정 취소</b>를 눌러 <b>대기 완료</b>되어야 라운드를 종료할 수 있습니다.</div>
+        <div>· 종료 시 최고 보류금만 지불되고, 나머지는 자동 환불됩니다.</div>
+      </div>
+
       <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
     </section>
   </div>
 </div>
 
 <script type="module">
-  const $=s=>document.querySelector(s); const fmt=n=>Number(n||0).toLocaleString("ko-KR");
+  const $=s=>document.querySelector(s);
+  const fmt=n=>Number(n||0).toLocaleString("ko-KR");
   const show=(id,yes)=>$(id).classList.toggle("hidden",!yes);
-  const params=new URL(location.href).searchParams; const roomId=(params.get("room")||"").toUpperCase(); const myName=(params.get("name")||"").trim();
+
+  const params=new URL(location.href).searchParams;
+  const roomId=(params.get("room")||"").toUpperCase();
+  const myName=(params.get("name")||"").trim();
   $("#roomId").textContent=roomId||"—"; $("#you").textContent=myName||"—"; $("#myName").textContent=myName||"—";
 
   await window.firebaseReady;
-  const { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp, getAuth, signInAnonymously }=window.__fb;
-  const db=getFirestore(), auth=getAuth(); try{ if(!auth.currentUser) await signInAnonymously(auth); $("#badge").textContent="연결됨"; $("#badge").className="text-xs px-2 py-1 rounded bg-indigo-600 text-white"; }catch{}
+  const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp,
+          getAuth, signInAnonymously } = window.__fb;
+  const db=getFirestore(), auth=getAuth();
+  try{ if(!auth.currentUser) await signInAnonymously(auth); $("#badge").textContent="연결됨"; $("#badge").className="badge bg-indigo-600 text-white"; }catch{}
+
   const ref=doc(db,"rooms",roomId);
 
-  // 인벤토리(로컬 비공개)
-  const INV_KEY=`ull_inv_${roomId}_${myName}`; let inv=[]; try{inv=JSON.parse(localStorage.getItem(INV_KEY)||"[]");}catch{}
+  // 로컬(비공개) 인벤토리
+  const INV_KEY=`ull_inv_${roomId}_${myName}`;
+  let inv=[]; try{inv=JSON.parse(localStorage.getItem(INV_KEY)||"[]");}catch{}
   function saveInv(){ localStorage.setItem(INV_KEY, JSON.stringify(inv)); }
-  function renderInv(){ const ul=$("#invList"); ul.innerHTML=""; inv.forEach((it,i)=>{const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.innerHTML=`<span>${i+1}. ${it}</span><button class="text-xs bg-slate-200 rounded px-2 py-1">삭제</button>`; li.querySelector("button").onclick=()=>{inv.splice(i,1);saveInv();renderInv();}; ul.appendChild(li);}); }
-  renderInv(); $("#btnAddItem").onclick=()=>{const v=($("#itemInput").value||"").trim(); if(!v) return; inv.push(v); $("#itemInput").value=""; saveInv(); renderInv(); };
+  function renderInv(){
+    const ul=$("#invList"); ul.innerHTML="";
+    inv.forEach((it,i)=>{
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.innerHTML=`<span>${i+1}. ${it}</span><button class="text-xs bg-slate-200 rounded px-2 py-1">삭제</button>`;
+      li.querySelector("button").onclick=()=>{inv.splice(i,1);saveInv();renderInv();checkWinAndDeclare();};
+      ul.appendChild(li);
+    });
+  }
+  renderInv();
+  $("#btnAddItem").onclick=()=>{const v=($("#itemInput").value||"").trim(); if(!v) return; inv.push(v); $("#itemInput").value=""; saveInv(); renderInv(); checkWinAndDeclare(); };
+  document.querySelectorAll("[data-add]").forEach(b=> b.addEventListener("click", ()=>{ inv.push(b.getAttribute("data-add")); saveInv(); renderInv(); checkWinAndDeclare(); }));
 
-  // 초기화 & 역할
-  let isHost=false; let stipendVal=200000;
+  // 내 입찰(로컬 스테이징) & 서버 반영 로직
+  let stagedBid = 0; // 화면에서 조정하는 값
+  function renderBidView(){ $("#bidView").textContent = fmt(stagedBid); }
+  renderBidView();
+
+  // 증감 버튼
+  document.querySelectorAll("[data-delta]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const delta = Number(btn.getAttribute("data-delta"));
+      // 현재 사용 가능액 = 내 balance + 현재 hold(보류금)  (보류금 변경/재확정 시 재배치 허용)
+      const avail = (currentMe?.balance||0) + (currentMe?.hold||0);
+      let next = stagedBid + delta;
+      next = Math.max(0, Math.min(next, avail)); // 0원 이하 금지, 가용액 초과 금지
+      // 1만 단위 스냅 (UI는 이미 1만/10만/100만 단위)
+      next = Math.floor(next/10000)*10000;
+      stagedBid = next;
+      renderBidView();
+    });
+  });
+
+  // 서버 상태
+  let isHost=false, stipendVal=200000;
+  let currentPlayers=[], currentMe=null;
+
   async function init() {
     const s=await getDoc(ref);
-    if(!s.exists()){ $("#endedBox").classList.remove("hidden"); return; }
+    if(!s.exists()){ endUI("이 방은 삭제되었습니다."); return; }
     const r=s.data();
-    isHost = (r.hostName === myName);
-    $("#role").textContent = isHost ? "host" : "guest";
+    isHost=(r.hostName===myName);
+    $("#role").textContent=isHost?"host":"guest";
     show("#hostPanel", isHost);
-    // 스키마 보정
-    const upd={}; let need=false; if(typeof r.round!=="number"){upd.round=0;need=true;}
+
+    // 스키마 보정: round, stipend, lastItem, ended, winnerName, players[].balance/hold/bid/committed/ready
+    const upd={}; let need=false;
+    if(typeof r.round!=="number"){upd.round=0;need=true;}
     if(typeof r.stipend!=="number"){upd.stipend=200000;need=true;}
-    const players=Array.isArray(r.players)?r.players.map(p=>({...p})):[];
-    for(const p of players){ if(typeof p.balance!=="number"){p.balance=0; need=true;} }
-    if(need){ upd.players=players; upd.updatedAt=serverTimestamp(); await updateDoc(ref,upd); }
+    if(typeof r.lastItem!=="string"){upd.lastItem="";need=true;}
+    if(typeof r.ended!=="boolean"){upd.ended=false;need=true;}
+    if(!("winnerName" in r)){upd.winnerName="";need=true;}
+    const players = Array.isArray(r.players)? r.players.map(p=>({
+      id:p.id, name:p.name,
+      balance: Number(p.balance||0),
+      hold: Number(p.hold||0),
+      bid: Number(p.bid||0),
+      committed: !!p.committed,
+      ready: !!p.ready
+    })) : [];
+    if(JSON.stringify(players)!==JSON.stringify(r.players||[])){ upd.players=players; need=true; }
+    if(need){ upd.updatedAt=serverTimestamp(); await updateDoc(ref,upd); }
   }
   await init();
 
-  // 실시간
   onSnapshot(ref,(s)=>{
-    if(!s.exists()){ $("#endedBox").classList.remove("hidden"); return; }
-    const d=s.data(); $("#round").textContent=d.round??0; stipendVal=typeof d.stipend==="number"?d.stipend:200000; $("#stipend").value=stipendVal;
-    const players=Array.isArray(d.players)?d.players:[];
-    $("#pCount").textContent=`참가자 ${players.length}명`;
-    const ul=$("#players"); ul.innerHTML=""; players.forEach((p,i)=>{const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.innerHTML=`<span>${i+1}. ${p.name}</span><span class="mono">${fmt(p.balance||0)}원</span>`; ul.appendChild(li);});
-    const me=players.find(p=>p.name===myName); $("#myBalance").textContent=fmt(me?.balance||0);
+    if(!s.exists()){ endUI("이 방은 삭제되었습니다."); return; }
+    const d=s.data();
+    $("#round").textContent=d.round??0;
+    stipendVal = typeof d.stipend==="number" ? d.stipend : 200000;
+    $("#stipend").value = stipendVal;
+    $("#lastItem").textContent = d.lastItem || "-";
+
+    currentPlayers = Array.isArray(d.players) ? d.players : [];
+    currentMe = currentPlayers.find(p=>p.name===myName) || null;
+
+    // 내 표시
+    $("#myBalance").textContent = fmt(currentMe?.balance||0);
+    $("#myHold").textContent = fmt(currentMe?.hold||0);
+    const myReady = currentMe?.ready ? "준비됨" : "대기중";
+    $("#myStatus").textContent = myReady;
+    $("#myStatus").className = "badge " + (currentMe?.ready ? "bg-emerald-100" : "bg-slate-100");
+
+    // 플레이어 리스트
+    $("#pCount").textContent = currentPlayers.length.toString();
+    const ul=$("#players"); ul.innerHTML="";
+    currentPlayers.forEach((p,i)=>{
+      const status = p.ready ? "준비" : "대기";
+      const stClass = p.ready ? "bg-emerald-100" : "bg-slate-100";
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span>${i+1}. ${p.name}</span>
+          <span class="badge ${stClass}">${status}</span>
+        </div>
+        <span class="mono">${fmt(p.balance)}원</span>
+      `;
+      ul.appendChild(li);
+    });
+
+    // 종료 상태 안내
+    if (d.ended) {
+      const winner = d.winnerName ? `승자: ${d.winnerName}` : "게임이 종료되었습니다.";
+      endUI(winner);
+    }
+
+    // 호스트: 라운드 종료 버튼 활성화 조건
+    if (isHost) {
+      const everyoneReady = currentPlayers.length>0 && currentPlayers.every(p=>p.ready===true);
+      const itemChosen = !!($("#roundItem").value || d.lastItem); // 이번 라운드용 선택값 우선
+      $("#btnEndRound").disabled = !(everyoneReady && itemChosen && !d.ended);
+    }
   });
 
-  // 방장 컨트롤
-  $("#stipend").addEventListener("change", async (e)=>{ if(!isHost) return; const v=Math.max(0,Math.floor(Number(e.target.value||0)/10000)*10000); stipendVal=v; $("#stipend").value=v; try{ await updateDoc(ref,{ stipend:v, updatedAt:serverTimestamp() }); }catch(err){ const b=$("#errHost"); b.textContent=`수당 변경 실패: ${err.message||err}`; b.classList.remove("hidden"); } });
+  function endUI(msg){
+    $("#winnerText").textContent = msg;
+    $("#endedBox").classList.remove("hidden");
+    $("#btnEndRound")?.setAttribute("disabled","true");
+    $("#btnEndGame")?.setAttribute("disabled","true");
+    if (isHost) $("#btnDeleteRoom").classList.remove("hidden");
+  }
+  function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
 
-  $("#btnEndRound").onclick=async()=>{ if(!isHost) return; try{ const s=await getDoc(ref); if(!s.exists()) return; const r=s.data(); const v=typeof r.stipend==="number"?r.stipend:stipendVal; const players=(r.players||[]).map(p=>({...p,balance:Number(p.balance||0)+Number(v||0)})); await updateDoc(ref,{ round:Number(r.round||0)+1, players, updatedAt:serverTimestamp() }); }catch(err){ const b=$("#errHost"); b.textContent=`라운드 종료 실패: ${err.message||err}`; b.classList.remove("hidden"); } };
+  // --- 입찰 확정/취소 ---
+  $("#btnConfirmBid").addEventListener("click", async ()=>{
+    if(!currentMe) return;
+    // 가용액 = balance + hold (재조정 허용). 확정 시 hold를 stagedBid로 업데이트, 잔액을 그만큼 차감/환불해 균형 맞춤
+    const avail = Number(currentMe.balance||0) + Number(currentMe.hold||0);
+    if (stagedBid > avail) { alert("잔액을 초과했습니다."); return; }
+    const newHold = stagedBid;
+    const newBalance = avail - newHold; // balance' = (old balance + old hold) - newHold
+    const players = currentPlayers.map(p => {
+      if (p.name !== myName) return p;
+      return { ...p, hold: newHold, balance: newBalance, bid: newHold, committed: true, ready: true };
+    });
+    try{
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`확정 실패: ${err.message||err}`); }
+  });
 
-  $("#btnEndGame").onclick=async()=>{ if(!isHost) return; const ok=confirm("정말 게임을 종료하고 방을 삭제할까요? (되돌릴 수 없음)"); if(!ok) return; try{ await deleteDoc(ref); $("#endedBox").classList.remove("hidden"); }catch(err){ const b=$("#errHost"); b.textContent=`종료 실패: ${err.message||err}`; b.classList.remove("hidden"); } };
+  $("#btnCancelBid").addEventListener("click", async ()=>{
+    if(!currentMe) return;
+    // 보류금 환불 후 0으로
+    const refund = Number(currentMe.hold||0);
+    const players = currentPlayers.map(p=>{
+      if (p.name !== myName) return p;
+      return { ...p, balance: Number(p.balance||0) + refund, hold: 0, bid: 0, committed: false, ready: true }; // ready=true: '확정 취소'로 대기 완료
+    });
+    stagedBid = 0; $("#bidView").textContent = "0";
+    try{
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`확정 취소 실패: ${err.message||err}`); }
+  });
+
+  // 호스트: 수당/상품 설정
+  $("#stipend").addEventListener("change", async (e)=>{
+    if(!isHost) return;
+    const v=Math.max(0,Math.floor(Number(e.target.value||0)/10000)*10000);
+    $("#stipend").value = v;
+    try{ await updateDoc(ref,{ stipend:v, updatedAt:serverTimestamp() }); }
+    catch(err){ showErr(`수당 변경 실패: ${err.message||err}`); }
+  });
+
+  // 라운드 종료: 정산(낙찰/환불) + 수당 지급 + 초기화
+  $("#btnEndRound").addEventListener("click", async ()=>{
+    if(!isHost) return;
+    const itemSel = $("#roundItem").value;
+    const snap = await getDoc(ref); if(!snap.exists()) return;
+    const r = snap.data();
+
+    const everyoneReady = (r.players||[]).every(p=>p.ready===true);
+    if (!everyoneReady) { alert("모든 플레이어가 확정/확정 취소를 완료해야 합니다."); return; }
+
+    const lastItem = itemSel || r.lastItem || "";
+    if (!lastItem) { alert("이번 상품을 선택하세요."); return; }
+
+    const stipend = Number(r.stipend||0);
+    const players = (r.players||[]).map(p=>({...p}));
+
+    // 최고가 판정: hold 기준
+    const holds = players.map(p=>Number(p.hold||0));
+    const maxHold = holds.length? Math.max(...holds) : 0;
+    const winners = players.filter(p=>Number(p.hold||0)===maxHold && maxHold>0).map(p=>p.name);
+
+    // 환불/지불 확정: losers는 hold 환불, winners는 hold 유지(이미 balance 차감된 상태)
+    for (const p of players) {
+      const hold = Number(p.hold||0);
+      if (hold>0 && !winners.includes(p.name)) {
+        p.balance = Number(p.balance||0) + hold; // 환불
+      }
+      // 모두 초기화 공통
+      p.hold = 0;
+      p.bid = 0;
+      p.committed = false;
+      p.ready = false;
+      // 수당 지급
+      p.balance = Number(p.balance||0) + stipend;
+    }
+
+    try{
+      await updateDoc(ref, {
+        players,
+        round: Number(r.round||0) + 1,
+        lastItem,
+        updatedAt: serverTimestamp()
+      });
+      // 호스트 UI: 상품 선택 초기화
+      $("#roundItem").value = "";
+    }catch(err){
+      showErr(`라운드 종료 실패: ${err.message||err}`);
+    }
+  });
+
+  // 방장: 게임 종료(확인 후 종료 상태)
+  $("#btnEndGame").onclick = async ()=>{
+    if(!isHost) return;
+    const ok = confirm("정말 게임을 종료할까요? (승자 안내용 종료 상태로 고정)");
+    if(!ok) return;
+    try{
+      await updateDoc(ref,{ ended:true, winnerName:"", updatedAt:serverTimestamp() });
+    }catch(err){ showErr(`종료 실패: ${err.message||err}`); }
+  };
+
+  // 방장: 종료 후 문서 삭제
+  $("#btnDeleteRoom").onclick = async ()=>{
+    if(!isHost) return;
+    const ok = confirm("방 문서를 삭제할까요? (되돌릴 수 없음)");
+    if(!ok) return;
+    try{ await deleteDoc(ref); }catch(err){ showErr(`삭제 실패: ${err.message||err}`); }
+  };
+
+  // ---------------- 승리 조건 체크 & 선언 ----------------
+  function checkWinAndDeclare(){
+    const allowed = ["오징어","독도새우","호박","명이나물"];
+    const counts = {}; let total=0;
+    inv.forEach(it=>{ const key=allowed.includes(it)?it:`기타:${it}`; counts[key]=(counts[key]||0)+1; total+=1; });
+    const same3 = allowed.some(k=>(counts[k]||0)>=3);
+    const diff4 = allowed.every(k=>(counts[k]||0)>=1);
+    const any5  = total>=5;
+    if (same3 || diff4 || any5) {
+      const reason = same3 ? "같은 종류 3장" : diff4 ? "서로 다른 4장" : "아무거나 5장";
+      if (confirm(`승리 조건(${reason})을 달성했습니다. 승리 선언 후 게임을 종료할까요?`)) {
+        declareWin(myName, reason);
+      }
+    }
+  }
+  async function declareWin(name, reason){
+    try{
+      await updateDoc(ref, { winnerName: `${name} (${reason})`, ended: true, updatedAt: serverTimestamp() });
+    }catch(err){ alert(`승리 선언 실패: ${err.message||err}`); }
+  }
 </script>
 </body>
 </html>
