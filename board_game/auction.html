@@ -12,14 +12,12 @@
   <script type="module" id="firebase-sdk">
     // ⚠️ 실시간 동기화가 필요하면 아래 설정을 채우세요 (없으면 자동으로 '로컬 모드'로 동작)
     const firebaseConfig = {
-      apiKey: "",           // 예: "AIzaSyA…"
-      authDomain: "",       // 예: "myapp.firebaseapp.com"
-      projectId: "",        // 예: "myapp"
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
       appId: "",
-      // Firestore만 쓰므로 나머지는 비워도 OK
     };
 
-    // SDK 로드를 시도하되, 설정이 비어 있으면 아무 것도 하지 않음(로컬 모드)
     const hasConfig = Object.values(firebaseConfig).some(Boolean);
     if (hasConfig) {
       import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js").then(async ({ initializeApp }) => {
@@ -63,7 +61,8 @@
             <label class="text-sm block mb-1">인원 (3–6명)</label>
             <input id="create-count" type="number" min="3" max="6" value="4"
                    class="w-full border rounded px-3 py-2 mb-3" />
-            <button id="btn-create-room" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
+            <button id="btn-create-room" type="button"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
               새 방 생성
             </button>
             <p class="text-xs text-slate-500 mt-3">※ Firebase 설정을 채우면 여러 기기에서 동기화됩니다. 비워두면 한 기기에서만 사용합니다.</p>
@@ -75,7 +74,8 @@
             <input id="join-room-id" type="text" placeholder="예: UL6J2A" class="w-full border rounded px-3 py-2 mb-2" />
             <label class="text-sm block mb-1">닉네임</label>
             <input id="join-name" type="text" placeholder="닉네임" class="w-full border rounded px-3 py-2 mb-3" />
-            <button id="btn-join-room" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
+            <button id="btn-join-room" type="button"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
               방 입장
             </button>
             <p class="text-xs text-slate-500 mt-3">또는 방에서 보여주는 <b>QR</b>을 스캔하세요.</p>
@@ -105,7 +105,8 @@
 
         <div class="border rounded-lg p-4 mt-4">
           <div class="flex flex-wrap items-center gap-3">
-            <button id="btn-start-round" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
+            <button id="btn-start-round" type="button"
+                    class="bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
               라운드 시작(+200,000 지급)
             </button>
             <div class="flex items-center gap-2">
@@ -117,10 +118,12 @@
                 <option>명이나물</option>
               </select>
             </div>
-            <button id="btn-open-bids" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
+            <button id="btn-open-bids" type="button"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
               입찰 마감 · 낙찰자 발표
             </button>
-            <button id="btn-next-round" class="bg-slate-200 hover:bg-slate-300 rounded px-4 py-2">
+            <button id="btn-next-round" type="button"
+                    class="bg-slate-200 hover:bg-slate-300 rounded px-4 py-2">
               다음 라운드로
             </button>
           </div>
@@ -161,7 +164,8 @@
             <div class="flex items-center gap-2">
               <input id="seat-bid" type="number" step="10000" min="0" value="0"
                      class="w-full border rounded px-3 py-2 mono" />
-              <button id="btn-submit-bid" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
+              <button id="btn-submit-bid" type="button"
+                      class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
                 입찰 저장
               </button>
             </div>
@@ -336,7 +340,6 @@
     // ------- 로컬 모드: 저장/동기화 -------
     function localSave() {
       LS.write(STATE.room.id, STATE.room);
-      // 렌더 갱신
       renderHost();
       if (STATE.me) renderSeat();
     }
@@ -425,7 +428,6 @@
     }
 
     async function nextRound() {
-      // 다음 라운드로 이동하되, 아이템은 유지/변경 선택 가능 (호스트가 바꿀 수 있음)
       STATE.room.players.forEach(p => p.bid = 0);
       STATE.room.winners = [];
       if (STATE.mode === "firebase") {
@@ -453,24 +455,22 @@
 
         if (STATE.mode === "firebase") {
           try {
-            const { getFirestore, doc, setDoc, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
+            const { getFirestore, doc, setDoc, serverTimestamp, getAuth, signInAnonymously, onSnapshot } = window.__fb;
             const db = getFirestore();
             const auth = getAuth();
             await signInAnonymously(auth);
             await setDoc(doc(db, "rooms", roomId), { ...room, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
-            // 실시간 구독
             onFirebaseRoom(roomId, gotoHost);
           } catch (e) {
             console.error(e);
             alert("Firebase 연결 실패. 로컬 모드로 전환합니다.");
-            gotoHost(room); // 로컬
+            gotoHost(room);
           }
         } else {
           LS.write(roomId, room);
           gotoHost(room);
         }
 
-        // URL 해시에 호스트 표식 남기기
         location.hash = `host=${roomId}`;
       });
 
@@ -491,7 +491,6 @@
             if (!snap.exists()) return alert("해당 Room ID가 없습니다.");
             const room = snap.data();
 
-            // 빈 슬롯(이름이 기본값인 자리)을 찾거나 새 이름 대입
             const free = room.players.find(p => p.name.startsWith("플레이어 "));
             const me = free ? free : room.players[0];
             me.name = name;
@@ -505,7 +504,6 @@
         } else {
           const room = LS.read(roomId);
           if (!room) return alert("로컬 모드: 해당 Room ID가 없습니다(같은 기기에서 만든 방만 가능).");
-          // 로컬에선 첫 '플레이어 X'에 이름 할당
           const free = room.players.find(p => p.name.startsWith("플레이어 "));
           const me = free ? free : room.players[0];
           me.name = name;
@@ -522,7 +520,6 @@
         submitBid(Number($("#seat-bid").value||0));
       });
 
-      // 해시 라우팅(호스트/조인 링크 지원)
       window.addEventListener("hashchange", handleHashRoute);
       handleHashRoute();
     }
@@ -531,7 +528,6 @@
       const h = location.hash.replace(/^#/, "");
       if (!h) return;
 
-      // #host=ROOM
       if (h.startsWith("host=")) {
         const roomId = h.split("=")[1];
         if (STATE.mode === "firebase") {
@@ -542,7 +538,6 @@
         }
       }
 
-      // #join=ROOM
       if (h.startsWith("join=")) {
         $("#join-room-id").value = h.split("=")[1];
       }
@@ -577,8 +572,11 @@
       bind();
       gotoHome();
     }
-    document.addEventListener("DOMContentLoaded", boot);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot);
+    } else {
+      boot();
+    }
   </script>
 </body>
 </html>
-
