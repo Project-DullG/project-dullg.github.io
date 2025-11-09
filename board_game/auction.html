@@ -8,31 +8,52 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- QRCode.js (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-  <!-- Firebase (선택: 멀티기기 동기화용) -->
+
+  <!-- Firebase (멀티기기 동기화 + Analytics) -->
   <script type="module" id="firebase-sdk">
-    // ⚠️ 실시간 동기화가 필요하면 아래 설정을 채우세요 (없으면 자동으로 '로컬 모드'로 동작)
+    // ✅ 네가 제공한 Firebase 구성
     const firebaseConfig = {
-      apiKey: "",
-      authDomain: "",
-      projectId: "",
-      appId: "",
+      apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
+      authDomain: "boardgame-1a3dd.firebaseapp.com",
+      projectId: "boardgame-1a3dd",
+      storageBucket: "boardgame-1a3dd.firebasestorage.app",
+      messagingSenderId: "278191503167",
+      appId: "1:278191503167:web:a02892e0d742e12339058a",
+      measurementId: "G-0EQB5WN6QE"
     };
 
     const hasConfig = Object.values(firebaseConfig).some(Boolean);
-    if (hasConfig) {
-      import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js").then(async ({ initializeApp }) => {
-        const app = initializeApp(firebaseConfig);
-        const { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp } =
-          await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
-        const { getAuth, signInAnonymously } =
-          await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
 
-        window.__fb = { app, getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp, getAuth, signInAnonymously };
-      }).catch(() => {
-        // 실패해도 로컬 모드로 계속
-      });
+    if (hasConfig) {
+      // App
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
+      const app = initializeApp(firebaseConfig);
+
+      // Firestore & Auth (익명 로그인)
+      const {
+        getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp
+      } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
+      const { getAuth, signInAnonymously } =
+        await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
+
+      // Analytics (HTTPS 환경에서만 동작)
+      try {
+        const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js");
+        const analytics = getAnalytics(app);
+        window.__fbAnalytics = analytics; // 참고용
+      } catch (e) {
+        // 로컬 파일/HTTP 환경 등에서 실패 가능 → 무시
+      }
+
+      // 전역 핸들 주입
+      window.__fb = {
+        app,
+        getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp,
+        getAuth, signInAnonymously
+      };
     }
   </script>
+
   <style>
     .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
   </style>
@@ -47,7 +68,7 @@
     </header>
 
     <main id="app" class="mt-4 space-y-6">
-      <!-- 뷰: 홈 -->
+      <!-- 홈 -->
       <section id="view-home" class="bg-white rounded-xl shadow p-4 md:p-6">
         <h2 class="font-semibold mb-3">경매 보조 · 홈</h2>
         <p class="text-sm text-slate-600 mb-4">
@@ -83,7 +104,7 @@
         </div>
       </section>
 
-      <!-- 뷰: 호스트 -->
+      <!-- 호스트 -->
       <section id="view-host" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
         <div class="flex items-center justify-between">
           <h2 class="font-semibold">호스트 · Room <span id="host-room-id" class="mono"></span></h2>
@@ -144,7 +165,7 @@
         </div>
       </section>
 
-      <!-- 뷰: 플레이어 -->
+      <!-- 플레이어 -->
       <section id="view-seat" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
         <div class="flex items-center justify-between">
           <h2 class="font-semibold">플레이어 · <span id="seat-name"></span></h2>
@@ -193,7 +214,6 @@
     const money = n => Number(n||0);
     const fmt = n => money(n).toLocaleString("ko-KR");
 
-    // UI helpers
     const $ = sel => document.querySelector(sel);
     const show = (id, yes) => {
       const el = $(id);
@@ -201,7 +221,7 @@
       el.classList.toggle("hidden", !yes);
     };
 
-    // ------- 로컬 스토리지용 간단 스토어 (백엔드 없는 경우) -------
+    // ------- 로컬 스토어 -------
     const LS = {
       k: roomId => `ull_auction_room_${roomId}`,
       read(roomId) {
@@ -213,7 +233,7 @@
       }
     };
 
-    // Room 생성
+    // ------- 유틸 -------
     function randomRoomId() {
       const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
       let s = "";
@@ -229,7 +249,7 @@
       return { id: roomId, round: 0, item: "-", players, winners: [] };
     }
 
-    // ------- Firebase 모드 감지 -------
+    // ------- 모드 감지 -------
     function detectMode() {
       if (window.__fb && window.__fb.app) {
         STATE.mode = "firebase";
@@ -248,7 +268,6 @@
       show("#view-host", false);
       show("#view-seat", false);
     }
-
     function gotoHost(room) {
       STATE.room = room;
       renderHost();
@@ -256,7 +275,6 @@
       show("#view-host", true);
       show("#view-seat", false);
     }
-
     function gotoSeat(room, me) {
       STATE.room = room;
       STATE.me = me;
@@ -266,13 +284,13 @@
       show("#view-seat", true);
     }
 
-    // ------- 렌더링 (호스트) -------
+    // ------- 렌더(호스트) -------
     function renderHost() {
       $("#host-room-id").textContent = STATE.room.id;
       $("#host-round").textContent = STATE.room.round;
       $("#host-status").textContent = STATE.room.round === 0 ? "대기" : "라운드 진행 중";
 
-      // 참가자 목록
+      // 플레이어
       const ul = $("#host-players");
       ul.innerHTML = "";
       STATE.room.players.forEach(p => {
@@ -312,17 +330,12 @@
 
       // 낙찰 결과
       const winners = STATE.room.winners || [];
-      if (winners.length) {
-        $("#host-winners").textContent = "낙찰: " + winners.map(id => {
-          const pl = STATE.room.players.find(x => x.id === id);
-          return pl ? pl.name : id;
-        }).join(", ");
-      } else {
-        $("#host-winners").textContent = "";
-      }
+      $("#host-winners").textContent = winners.length
+        ? "낙찰: " + winners.map(id => (STATE.room.players.find(x => x.id === id)?.name || id)).join(", ")
+        : "";
     }
 
-    // ------- 렌더링 (플레이어) -------
+    // ------- 렌더(플레이어) -------
     function renderSeat() {
       $("#seat-name").textContent = STATE.me.name;
       $("#seat-round").textContent = STATE.room.round;
@@ -337,14 +350,14 @@
       $("#seat-result").textContent = won ? "이번 라운드 낙찰!" : "";
     }
 
-    // ------- 로컬 모드: 저장/동기화 -------
+    // ------- 저장/동기화 -------
     function localSave() {
       LS.write(STATE.room.id, STATE.room);
       renderHost();
       if (STATE.me) renderSeat();
     }
 
-    // ------- 공용 액션 -------
+    // ------- 액션 -------
     async function startRound() {
       const room = STATE.room;
       room.round += 1;
@@ -397,12 +410,11 @@
 
     async function resolveBids() {
       const room = STATE.room;
-      // 최고가 찾기
       const bids = room.players.map(p => money(p.bid||0));
       const max = Math.max(...bids);
       const winners = room.players.filter(p => money(p.bid||0) === max && max > 0).map(p => p.id);
 
-      // 낙찰자들만 지불
+      // 낙찰자만 지불
       if (winners.length) {
         room.players.forEach(p => {
           if (winners.includes(p.id)) {
@@ -455,7 +467,7 @@
 
         if (STATE.mode === "firebase") {
           try {
-            const { getFirestore, doc, setDoc, serverTimestamp, getAuth, signInAnonymously, onSnapshot } = window.__fb;
+            const { getFirestore, doc, setDoc, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
             const db = getFirestore();
             const auth = getAuth();
             await signInAnonymously(auth);
@@ -491,6 +503,7 @@
             if (!snap.exists()) return alert("해당 Room ID가 없습니다.");
             const room = snap.data();
 
+            // 아직 이름이 기본값인 슬롯을 찾아 배정
             const free = room.players.find(p => p.name.startsWith("플레이어 "));
             const me = free ? free : room.players[0];
             me.name = name;
@@ -530,7 +543,7 @@
 
       if (h.startsWith("host=")) {
         const roomId = h.split("=")[1];
-        if (STATE.mode === "firebase") {
+        if (STATE.mode === "firebase")) {
           onFirebaseRoom(roomId, gotoHost);
         } else {
           const room = LS.read(roomId);
@@ -543,7 +556,7 @@
       }
     }
 
-    // ------- Firebase 실시간 구독 -------
+    // ------- Firebase 구독 -------
     async function onFirebaseRoom(roomId, cb) {
       try {
         const { getFirestore, doc, onSnapshot, getAuth, signInAnonymously } = window.__fb;
