@@ -108,7 +108,11 @@
     if(!name){ const e=$("#errCreate"); e.textContent="닉네임을 입력하세요."; e.classList.remove("hidden"); return; }
 
     const roomId = randId();
-    const joinUrl = new URL("join.html", location.href); joinUrl.searchParams.set("room", roomId);
+
+    // ✅ 절대 경로로 join 링크 생성 (경로 꼬임 방지)
+    const baseDir = location.origin + location.pathname.replace(/[^/]+$/, ""); // .../board_game/
+    const joinUrl = new URL(baseDir + "join.html");
+    joinUrl.searchParams.set("room", roomId);
 
     // ✅ 방장도 참가자 포함(P1), 기본금 100만원
     const room = {
@@ -174,7 +178,7 @@
           if(n<3 || n>6) return; // 가드
           await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
           // 게임 페이지로 이동
-          const gameUrl = new URL("game.html", location.href);
+          const gameUrl = new URL(baseDir + "game.html");
           gameUrl.searchParams.set("room", roomId);
           gameUrl.searchParams.set("name", name);
           location.href = gameUrl.toString();
