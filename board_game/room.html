@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>울릉 한 접시 · 참가(join)</title>
+<title>울릉 한 접시 · 방장(room)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Firebase -->
-<script type="module">
+<!-- Firebase (모듈) -->
+<script type="module" id="fb-sdk">
   const firebaseConfig = {
     apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
     authDomain: "boardgame-1a3dd.firebaseapp.com",
@@ -18,8 +18,7 @@
     measurementId: "G-0EQB5WN6QE"
   };
 
-  // SDK 로드
-  const ready = (async()=>{
+  const ready = (async () => {
     const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
     const app = initializeApp(firebaseConfig);
     const fs  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
@@ -36,168 +35,145 @@
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-<div class="max-w-xl mx-auto p-4 md:p-6 space-y-6">
+<div class="max-w-3xl mx-auto p-4 md:p-6 space-y-6">
+
   <header class="flex items-center justify-between">
-    <h1 class="text-xl md:text-2xl font-bold">울릉 한 접시 <span class="text-slate-500">· 참가</span></h1>
+    <h1 class="text-xl md:text-2xl font-bold">울릉 한 접시 <span class="text-slate-500">· 방장</span></h1>
     <span id="badge" class="text-xs px-2 py-1 rounded bg-slate-200">연결 준비중…</span>
   </header>
 
-  <!-- 참가 -->
-  <section id="view-join" class="bg-white rounded-xl shadow p-4 md:p-6">
-    <h2 class="font-semibold mb-3">참가하기</h2>
-    <div class="text-sm mb-2">Room <span id="room" class="mono">—</span></div>
-
-    <label class="text-sm block mb-1">내 닉네임</label>
-    <input id="nick" type="text" placeholder="예: 탐험가" class="w-full border rounded px-3 py-2 mb-3" />
-
-    <button id="btnJoin" class="btn w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2" disabled>
-      입장
+  <!-- 방 만들기 -->
+  <section id="view-create" class="bg-white rounded-xl shadow p-4 md:p-6">
+    <h2 class="font-semibold mb-3">방 만들기</h2>
+    <label class="text-sm block mb-1">내 닉네임(방장)</label>
+    <input id="hostName" type="text" placeholder="예: 상회장" class="w-full border rounded px-3 py-2 mb-3" />
+    <button id="btnCreate" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2" disabled>
+      방 만들기
     </button>
-
-    <p class="text-xs text-slate-500 mt-3">정원: 최소 3명, 최대 6명. 동일 닉네임은 사용할 수 없습니다.</p>
-    <div id="errJoin" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
+    <div id="errCreate" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
   </section>
 
-  <!-- 대기실 -->
-  <section id="view-lobby" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
-    <h2 class="font-semibold mb-2">대기실</h2>
-    <div class="text-sm mb-2">
-      Room <span id="lobbyRoom" class="mono"></span> · 현재 <span id="count" class="font-bold">0</span>/6
+  <!-- 공유/대기 -->
+  <section id="view-host" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold">Room <span id="roomId" class="mono"></span></h2>
+      <div class="text-sm">참가자 <span id="count" class="font-bold">0</span> / 6</div>
     </div>
-    <ul id="list" class="space-y-2 text-sm"></ul>
 
-    <div id="started" class="hidden mt-3 p-3 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
-      게임이 시작되었습니다.
-      <button id="goGame" class="ml-2 text-emerald-800 underline">게임 화면으로 이동</button>
+    <div class="grid md:grid-cols-2 gap-4 mt-4">
+      <div class="border rounded-lg p-4">
+        <h3 class="font-semibold mb-2">참가 링크 공유</h3>
+        <div class="flex items-center gap-2">
+          <input id="shareLink" class="w-full border rounded px-3 py-2 text-xs" readonly />
+          <button id="btnCopy" class="btn bg-slate-800 text-white rounded px-3 py-2">복사</button>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">최대 6명 접속. <b>3명 이상</b>이면 시작 가능.</p>
+      </div>
+
+      <div class="border rounded-lg p-4">
+        <h3 class="font-semibold mb-2">대기 중 참가자</h3>
+        <ul id="waitList" class="space-y-2 text-sm"></ul>
+      </div>
     </div>
+
+    <div class="mt-4 flex items-center gap-2">
+      <button id="btnStart" class="btn bg-indigo-600 disabled:bg-indigo-600/50 text-white rounded px-4 py-2" disabled>
+        시작하기
+      </button>
+      <span class="text-xs text-slate-600">3–6명에서 시작 가능</span>
+    </div>
+
+    <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
   </section>
 </div>
 
 <script type="module">
   const $ = s => document.querySelector(s);
   const show = (id, yes) => $(id).classList.toggle("hidden", !yes);
-
-  const params = new URL(location.href).searchParams;
-  const roomId = (params.get("room") || "").toUpperCase();
-  $("#room").textContent = roomId || "—";
+  const setBadge=(t,c)=>{const b=$("#badge");b.textContent=t;b.className=`text-xs px-2 py-1 rounded ${c}`};
+  const randId = (n=6)=>{const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<n;i++)s+=A[Math.floor(Math.random()*A.length)];return s};
 
   await window.firebaseReady;
-  const {
-    getFirestore, doc, getDoc, updateDoc, onSnapshot, serverTimestamp,
-    getAuth, signInAnonymously
-  } = window.__fb;
+  const { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
+  const db=getFirestore(), auth=getAuth();
+  async function ensureAuth(){ if(!auth.currentUser) await signInAnonymously(auth) }
 
-  const db   = getFirestore();
-  const auth = getAuth();
+  // 연결
+  try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); $("#btnCreate").disabled=false; }
+  catch{ setBadge("연결 실패","bg-rose-600 text-white"); }
 
-  async function ensureAuth() {
-    if (!auth.currentUser) await signInAnonymously(auth);
-  }
+  // 방 만들기
+  $("#btnCreate").addEventListener("click", async ()=>{
+    const name = ($("#hostName").value||"").trim();
+    if(!name){ const e=$("#errCreate"); e.textContent="닉네임을 입력하세요."; e.classList.remove("hidden"); return; }
 
-  function setBadge(t, ok=true){
-    const b=$("#badge");
-    b.textContent=t;
-    b.className = "text-xs px-2 py-1 rounded " + (ok ? "bg-indigo-600 text-white" : "bg-rose-600 text-white");
-  }
+    const roomId = randId();
+    const joinUrl = new URL("join.html", location.href); joinUrl.searchParams.set("room", roomId);
 
-  function showErr(msg) {
-    const box = $("#errJoin");
-    box.textContent = msg;
-    box.classList.remove("hidden");
-  }
+    const room = {
+      id: roomId,
+      hostName: name,
+      link: joinUrl.toString(),
+      started: false,
+      round: 0,
+      stipend: 200000,
+      players: [], // join.html에서 추가됨
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    };
 
-  // 1) 인증
-  try { await ensureAuth(); setBadge("연결됨", true); } 
-  catch (e) { setBadge("연결 실패", false); showErr(`익명 로그인 실패: ${e.code||""} ${e.message||""}`); }
-
-  // 2) 방 파라미터 체크
-  let roomExists = false;
-  let roomRef = null;
-
-  if (!roomId) {
-    showErr("잘못된 링크입니다. room 파라미터가 필요합니다.");
-  } else {
-    try {
-      roomRef = doc(db, "rooms", roomId);
-      const snap = await getDoc(roomRef);
-      roomExists = snap.exists();
-      if (!roomExists) {
-        showErr("존재하지 않는 방입니다. 링크를 확인하세요.");
-      }
-    } catch (e) {
-      showErr(`방 확인 실패: ${e.code||""} ${e.message||e}`);
-    }
-  }
-
-  // 3) 버튼 활성화 로직: 방이 존재하고 닉네임이 입력되어야 활성화
-  function refreshJoinButton() {
-    const hasName = ($("#nick").value || "").trim().length > 0;
-    $("#btnJoin").disabled = !(roomExists && hasName);
-  }
-  $("#nick").addEventListener("input", refreshJoinButton);
-  // 초기 1회 평가
-  refreshJoinButton();
-
-  // 4) Enter로 즉시 입장 가능
-  $("#nick").addEventListener("keydown", (e)=>{
-    if (e.key === "Enter" && !$("#btnJoin").disabled) {
-      $("#btnJoin").click();
-    }
-  });
-
-  // 5) 입장 처리
-  $("#btnJoin").addEventListener("click", async () => {
-    const name = ($("#nick").value || "").trim();
-    if (!name) return showErr("닉네임을 입력하세요.");
-    if (!roomExists || !roomRef) return showErr("방이 존재하지 않습니다.");
-
-    try {
+    try{
       await ensureAuth();
-      const snap = await getDoc(roomRef);
-      if (!snap.exists()) throw new Error("존재하지 않는 방입니다.");
+      await setDoc(doc(db,"rooms",roomId), room);
 
-      const r = snap.data();
-      const players = Array.isArray(r.players) ? [...r.players] : [];
+      // 호스트 화면 전환
+      $("#roomId").textContent = roomId;
+      $("#shareLink").value = joinUrl.toString();
+      show("#view-create", false);
+      show("#view-host", true);
 
-      if (players.length >= 6) throw new Error("정원이 가득 찼습니다(6명).");
-      if (players.some(p => p.name === name)) throw new Error("같은 닉네임이 이미 있습니다.");
-
-      players.push({ id: `P${players.length+1}`, name, balance: 0, hold: 0, bid: 0, committed: false, ready: false });
-      await updateDoc(roomRef, { players, updatedAt: serverTimestamp() });
-
-      // 대기실로 전환 + 실시간 구독
-      $("#lobbyRoom").textContent = roomId;
-      show("#view-join", false);
-      show("#view-lobby", true);
-
-      onSnapshot(roomRef, (s) => {
-        if (!s.exists()) return;
-        const d = s.data();
-        const list = d.players || [];
-        $("#count").textContent = list.length;
-
-        const ul = $("#list"); ul.innerHTML = "";
-        list.forEach((p,i) => {
-          const li = document.createElement("li");
-          li.className = "flex items-center justify-between border rounded px-3 py-2";
-          li.innerHTML = `<span>${i+1}. ${p.name}</span>`;
+      const ref = doc(db,"rooms",roomId);
+      onSnapshot(ref, (snap)=>{
+        if(!snap.exists()) return;
+        const r=snap.data(); const list=r.players||[];
+        const ul=$("#waitList"); ul.innerHTML="";
+        list.forEach((p,i)=>{
+          const li=document.createElement("li");
+          li.className="flex items-center justify-between border rounded px-3 py-2";
+          li.innerHTML=`<span>${i+1}. ${p.name}</span>`;
           ul.appendChild(li);
         });
-
-        if (d.started) {
-          $("#started").classList.remove("hidden");
-          $("#goGame").onclick = () => {
-            const u = new URL("game.html", location.href);
-            u.searchParams.set("room", roomId);
-            u.searchParams.set("name", name);
-            location.href = u.toString();
-          };
-        }
+        $("#count").textContent=list.length;
+        $("#btnStart").disabled=!(list.length>=3 && list.length<=6);
       });
 
-    } catch (e) {
-      showErr(`입장 실패: ${e.code||""} ${e.message||e}`);
-      console.error(e);
+      $("#btnCopy").onclick = async ()=>{
+        try{
+          await navigator.clipboard.writeText(joinUrl.toString());
+          const btn=$("#btnCopy"); btn.textContent="복사됨!"; setTimeout(()=>btn.textContent="복사",1200);
+        }catch(e){
+          const b=$("#errHost"); b.textContent=`복사 실패: ${e.message||e}`; b.classList.remove("hidden");
+        }
+      };
+
+      $("#btnStart").onclick = async ()=>{
+        try{
+          const ref=doc(db,"rooms",roomId);
+          const snap=await getDoc(ref); const r=snap.data(); const n=(r.players||[]).length;
+          if(n<3 || n>6) return; // 가드
+          await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
+          // 게임 페이지로 이동
+          const gameUrl = new URL("game.html", location.href);
+          gameUrl.searchParams.set("room", roomId);
+          gameUrl.searchParams.set("name", name);
+          location.href = gameUrl.toString();
+        }catch(e){
+          const b=$("#errHost"); b.textContent=`시작 실패: ${e.message||e}`; b.classList.remove("hidden");
+        }
+      };
+
+    }catch(e){
+      const box=$("#errCreate"); box.textContent=`방 생성 실패: ${e.code||""} ${e.message||e}`; box.classList.remove("hidden");
     }
   });
 </script>
