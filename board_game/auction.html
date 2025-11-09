@@ -1,534 +1,279 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>울릉 한 접시 : 섬맛 요리 경연대회 · 경매 보조</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>울릉 한 접시 · 로비(간략)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
-  <!-- Tailwind (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- QRCode.js (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<!-- Firebase (웹 클라이언트 전용) -->
+<script type="module" id="fb-sdk">
+  // ▶ 이미 발급받은 구성값 (필요 시 교체)
+  const firebaseConfig = {
+    apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
+    authDomain: "boardgame-1a3dd.firebaseapp.com",
+    projectId: "boardgame-1a3dd",
+    storageBucket: "boardgame-1a3dd.firebasestorage.app",
+    messagingSenderId: "278191503167",
+    appId: "1:278191503167:web:a02892e0d742e12339058a",
+    measurementId: "G-0EQB5WN6QE"
+  };
 
-  <!-- Firebase (멀티기기 동기화 + Analytics) : 웹 전용 구성 안전하게 사용 -->
-  <script type="module" id="firebase-sdk">
-    // 프로젝트 제공 값(웹 클라이언트용 공개 구성)
-    const firebaseConfig = {
-      apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
-      authDomain: "boardgame-1a3dd.firebaseapp.com",
-      projectId: "boardgame-1a3dd",
-      storageBucket: "boardgame-1a3dd.firebasestorage.app",
-      messagingSenderId: "278191503167",
-      appId: "1:278191503167:web:a02892e0d742e12339058a",
-      measurementId: "G-0EQB5WN6QE"
-    };
+  // SDK 로드 & 전역 주입
+  const ready = (async () => {
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
+    const app = initializeApp(firebaseConfig);
+    const fs  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
+    const au  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
+    window.__fb = { app, ...fs, ...au };
+  })();
+  window.firebaseReady = ready;
+</script>
 
-    // SDK 로드(모듈) — 준비되면 window.firebaseReady가 resolve됨
-    const ready = (async () => {
-      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
-      const app = initializeApp(firebaseConfig);
-
-      const firestore = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
-      const authMod   = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
-
-      // (선택) Analytics — HTTPS 환경에서만 초기화됨
-      try {
-        const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js");
-        getAnalytics(app);
-      } catch (_) {}
-
-      // 전역 핸들
-      window.__fb = {
-        app,
-        ...firestore, // getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp 등
-        ...authMod    // getAuth, signInAnonymously
-      };
-    })();
-
-    // 외부 스크립트에서 await 할 수 있게 Promise 노출
-    window.firebaseReady = ready;
-  </script>
-
-  <style>
-    .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
-    .btn:disabled { opacity:.5; cursor:not-allowed; }
-  </style>
+<style>
+  .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+</style>
 </head>
 <body class="bg-slate-50 text-slate-900">
-  <div class="max-w-4xl mx-auto p-4 md:p-6">
-    <header class="flex items-center justify-between gap-4">
-      <h1 class="text-xl md:text-2xl font-bold">
-        울릉 한 접시 <span class="text-slate-500">: 섬맛 요리 경연대회</span>
-      </h1>
-      <span id="connBadge" class="text-xs uppercase tracking-wide px-2 py-1 rounded bg-slate-200">연결 준비 중…</span>
-    </header>
+<div class="max-w-3xl mx-auto p-4 md:p-6 space-y-6">
 
-    <main id="app" class="mt-4 space-y-6">
-      <!-- 홈 -->
-      <section id="view-home" class="bg-white rounded-xl shadow p-4 md:p-6">
-        <h2 class="font-semibold mb-3">경매 보조 · 홈</h2>
-        <p class="text-sm text-slate-600 mb-4">
-          이 도구는 <b>라운드 수당</b> 지급, <b>입찰 기록</b>, <b>낙찰자 공지(동가 포함)</b>, <b>소지금 갱신</b>을 담당합니다.<br>
-          카드 지급 및 승리 판정은 실물 보드게임에서 진행하세요.
-        </p>
+  <header class="flex items-center justify-between">
+    <h1 class="text-xl md:text-2xl font-bold">울릉 한 접시 <span class="text-slate-500">· 로비</span></h1>
+    <span id="badge" class="text-xs px-2 py-1 rounded bg-slate-200">연결 준비중…</span>
+  </header>
 
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-2">방 만들기</h3>
-            <label class="text-sm block mb-1">인원 (3–6명)</label>
-            <input id="create-count" type="number" min="3" max="6" value="4"
-                   class="w-full border rounded px-3 py-2 mb-3" />
-            <button id="btn-create-room" type="button"
-                    class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2" disabled>
-              새 방 생성
-            </button>
-            <p class="text-xs text-slate-500 mt-3">
-              Firebase 연결이 준비되면 버튼이 활성화됩니다.
-              오류가 나면 아래 오류 표시를 확인하세요.
-            </p>
-          </div>
+  <!-- 방장: 방 만들기 -->
+  <section id="view-create" class="bg-white rounded-xl shadow p-4 md:p-6">
+    <h2 class="font-semibold mb-3">방장 · 방 만들기</h2>
+    <label class="text-sm block mb-1">내 닉네임(방장)</label>
+    <input id="host-name" type="text" placeholder="예: 상회장" class="w-full border rounded px-3 py-2 mb-3" />
+    <button id="btn-create" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2" disabled>
+      방 만들기
+    </button>
+    <p class="text-xs text-slate-500 mt-3">
+      이 페이지(보통 QR로 접속)는 <b>방장 전용</b>입니다. 방을 만든 뒤 링크를 복사해 참가자에게 보내세요.
+    </p>
+    <div id="err-create" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
+  </section>
 
-          <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-2">참가하기</h3>
-            <label class="text-sm block mb-1">Room ID</label>
-            <input id="join-room-id" type="text" placeholder="예: UL6J2A" class="w-full border rounded px-3 py-2 mb-2" />
-            <label class="text-sm block mb-1">닉네임</label>
-            <input id="join-name" type="text" placeholder="닉네임" class="w-full border rounded px-3 py-2 mb-3" />
-            <button id="btn-join-room" type="button"
-                    class="btn w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2" disabled>
-              방 입장
-            </button>
-            <p class="text-xs text-slate-500 mt-3">또는 방에서 보여주는 <b>QR</b>을 스캔하세요.</p>
-          </div>
+  <!-- 방장: 공유/대기실 -->
+  <section id="view-host" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold">Room <span id="room-id" class="mono"></span></h2>
+      <div class="text-sm">참가자 <span id="count" class="font-bold">0</span> / 6</div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mt-4">
+      <div class="border rounded-lg p-4">
+        <h3 class="font-semibold mb-2">참가 링크 공유</h3>
+        <div class="flex items-center gap-2">
+          <input id="share-link" class="w-full border rounded px-3 py-2 text-xs" readonly />
+          <button id="btn-copy" class="btn bg-slate-800 text-white rounded px-3 py-2">복사</button>
         </div>
+        <canvas id="qr" class="mx-auto mt-3"></canvas>
+        <p class="text-xs text-slate-500 mt-2">링크 최대 <b>6명</b>까지 접속 가능. <b>3명 이상</b> 모이면 시작 버튼이 활성화됩니다.</p>
+      </div>
 
-        <div id="errorBox" class="hidden mt-4 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
-      </section>
+      <div class="border rounded-lg p-4">
+        <h3 class="font-semibold mb-2">대기 중 참가자</h3>
+        <ul id="wait-list" class="space-y-2 text-sm"></ul>
+      </div>
+    </div>
 
-      <!-- 호스트 -->
-      <section id="view-host" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
-        <div class="flex items-center justify-between">
-          <h2 class="font-semibold">호스트 · Room <span id="host-room-id" class="mono"></span></h2>
-          <div class="text-sm text-slate-600">라운드 <span id="host-round" class="font-bold mono">0</span></div>
-        </div>
+    <div class="mt-4 flex items-center gap-2">
+      <button id="btn-start" class="btn bg-indigo-600 disabled:bg-indigo-600/50 text-white rounded px-4 py-2" disabled>
+        시작하기
+      </button>
+      <span id="hint" class="text-xs text-slate-600">3–6명에서 시작 가능</span>
+    </div>
+  </section>
 
-        <div class="grid md:grid-cols-2 gap-4 mt-4">
-          <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-2">QR · 참가 안내</h3>
-            <canvas id="qr" class="mx-auto"></canvas>
-            <p class="text-xs text-slate-500 mt-2 break-all" id="join-url"></p>
-          </div>
+  <!-- 참가자: 닉네임 입력 → 입장 -->
+  <section id="view-join" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+    <h2 class="font-semibold mb-3">참가하기</h2>
+    <div class="text-sm mb-2">Room <span id="join-room" class="mono"></span></div>
+    <label class="text-sm block mb-1">내 닉네임</label>
+    <input id="join-name" type="text" placeholder="예: 탐험가" class="w-full border rounded px-3 py-2 mb-3" />
+    <button id="btn-join" class="btn w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2" disabled>
+      입장
+    </button>
+    <p class="text-xs text-slate-500 mt-3">정원: 최소 3명, 최대 6명</p>
+    <div id="err-join" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
+  </section>
 
-          <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-2">플레이어</h3>
-            <ul id="host-players" class="space-y-2"></ul>
-          </div>
-        </div>
+  <!-- 참가자/방장 공통: 대기실 뷰(간단) -->
+  <section id="view-lobby" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+    <h2 class="font-semibold mb-3">대기실</h2>
+    <div class="text-sm">Room <span id="lobby-room" class="mono"></span> · 현재 <span id="lobby-count" class="font-bold">0</span>/6</div>
+    <ul id="lobby-list" class="mt-3 space-y-2 text-sm"></ul>
+    <div id="lobby-started" class="hidden mt-4 p-3 rounded bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
+      게임이 시작되었습니다! (여기서부터의 본 게임 화면은 다음 단계에서 붙입니다)
+    </div>
+  </section>
 
-        <div class="border rounded-lg p-4 mt-4">
-          <div class="flex flex-wrap items-center gap-3">
-            <button id="btn-start-round" type="button"
-                    class="btn bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
-              라운드 시작(+200,000 지급)
-            </button>
-            <div class="flex items-center gap-2">
-              <label for="item-select" class="text-sm">이번 재료</label>
-              <select id="item-select" class="border rounded px-2 py-1">
-                <option>오징어</option>
-                <option>독도새우</option>
-                <option>호박</option>
-                <option>명이나물</option>
-              </select>
-            </div>
-            <button id="btn-open-bids" type="button"
-                    class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
-              입찰 마감 · 낙찰자 발표
-            </button>
-            <button id="btn-next-round" type="button"
-                    class="btn bg-slate-200 hover:bg-slate-300 rounded px-4 py-2">
-              다음 라운드로
-            </button>
-          </div>
+</div>
 
-          <div class="mt-3 text-sm text-slate-600">
-            진행: <span id="host-status" class="font-medium">대기</span>
-          </div>
+<script type="module">
+  // ------- 준비/공통 -------
+  const $ = s => document.querySelector(s);
+  const show = (id, yes) => $(id).classList.toggle("hidden", !yes);
+  const setBadge = (t, cls) => { const b=$("#badge"); b.textContent=t; b.className=`text-xs px-2 py-1 rounded ${cls}`; };
+  const randId = (len=6) => {
+    const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let s="";
+    for (let i=0;i<len;i++) s+=A[Math.floor(Math.random()*A.length)]; return s;
+  };
 
-          <div class="mt-4">
-            <h4 class="font-semibold mb-2">이번 라운드 입찰</h4>
-            <div id="host-bids" class="grid md:grid-cols-2 gap-2"></div>
-          </div>
+  await window.firebaseReady;
+  const {
+    getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp,
+    getAuth, signInAnonymously
+  } = window.__fb;
+  const db = getFirestore();
+  const auth = getAuth();
+  try { await signInAnonymously(auth); setBadge("연결됨", "bg-indigo-600 text-white"); }
+  catch(e){ setBadge("연결 실패", "bg-rose-600 text-white"); }
 
-          <div class="mt-4">
-            <h4 class="font-semibold mb-2">낙찰 결과</h4>
-            <div id="host-winners" class="text-emerald-700 font-semibold"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 플레이어 -->
-      <section id="view-seat" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
-        <div class="flex items-center justify-between">
-          <h2 class="font-semibold">플레이어 · <span id="seat-name"></span></h2>
-          <div class="text-sm text-slate-600">라운드 <span id="seat-round" class="font-bold mono">0</span></div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-4 mt-4">
-          <div class="border rounded-lg p-4">
-            <div class="text-sm text-slate-600 mb-1">내 소지금</div>
-            <div id="seat-balance" class="text-2xl font-bold mono">0</div>
-            <div class="mt-3 text-sm">이번 재료: <span id="seat-item" class="font-semibold">-</span></div>
-            <div class="mt-1 text-xs text-slate-500">※ 금액은 다른 참가자에게 공개되지 않습니다.</div>
-          </div>
-
-          <div class="border rounded-lg p-4">
-            <h3 class="font-semibold mb-2">입찰</h3>
-            <div class="flex items-center gap-2">
-              <input id="seat-bid" type="number" step="10000" min="0" value="0"
-                     class="w-full border rounded px-3 py-2 mono" />
-              <button id="btn-submit-bid" type="button"
-                      class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
-                입찰 저장
-              </button>
-            </div>
-            <p class="text-xs text-slate-500 mt-2">1만 원 단위. 라운드 마감 전까지 수정 가능.</p>
-            <div id="seat-bid-status" class="mt-2 text-sm text-slate-600">현재 입찰: 0</div>
-            <div id="seat-result" class="mt-3 text-emerald-700 font-semibold"></div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="mt-10 text-center text-xs text-slate-500">
-      © Project DullG · <span class="mono">auction.html</span>
-    </footer>
-  </div>
-
-  <script type="module">
-    // ---- 공통 유틸 & 상태 ----
-    const STATE = {
-      room: null,     // {id, round, item, players:[{id,name,balance,bid}], winners:[]}
-      me: null        // {id, name}
-    };
-    const money = n => Number(n||0);
-    const fmt = n => money(n).toLocaleString("ko-KR");
-    const $ = sel => document.querySelector(sel);
-    const show = (id, yes) => $(id).classList.toggle("hidden", !yes);
-    const setBadge = (text, cls) => {
-      const el = $("#connBadge");
-      el.textContent = text;
-      el.className = `text-xs uppercase tracking-wide px-2 py-1 rounded ${cls}`;
-    };
-    const showError = (msg) => {
-      const box = $("#errorBox");
-      box.textContent = msg;
-      box.classList.remove("hidden");
-    };
-
-    // ---- Firebase 준비 기다림 ----
-    try {
-      await window.firebaseReady;
-      setBadge("실시간 연결", "bg-indigo-600 text-white");
+  // ------- 라우팅: #join=ROOM 이면 참가 뷰로 -------
+  function handleRoute() {
+    const h = location.hash.replace(/^#/, "");
+    if (h.startsWith("join=")) {
+      const roomId = h.split("=")[1];
+      $("#join-room").textContent = roomId;
+      show("#view-create", false);
+      show("#view-host",   false);
+      show("#view-join",   true);
+      show("#view-lobby",  false);
       // 버튼 활성화
-      ["#btn-create-room","#btn-join-room",
-       "#btn-start-round","#btn-open-bids","#btn-next-round","#btn-submit-bid"]
-      .forEach(id => { const b=$(id); if(b) b.disabled=false; });
-    } catch (e) {
-      setBadge("연결 실패", "bg-rose-600 text-white");
-      showError("Firebase 로드 실패. 네트워크, adblock, 콘솔 오류를 확인하세요.");
-    }
-
-    const {
-      getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp,
-      getAuth, signInAnonymously
-    } = window.__fb || {};
-
-    const db   = getFirestore?.();
-    const auth = getAuth?.();
-
-    async function ensureAuth() {
-      try {
-        await signInAnonymously(auth);
-      } catch (e) {
-        showError("익명 로그인 실패: Authentication 설정과 허용 도메인을 확인하세요.");
-        throw e;
-      }
-    }
-
-    // ---- 로직 ----
-    function randomRoomId() {
-      const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-      let s = "";
-      for (let i=0;i<6;i++) s += letters[Math.floor(Math.random()*letters.length)];
-      return s;
-    }
-
-    function initRoomSkeleton(roomId, count) {
-      const players = [];
-      for (let i=0;i<count;i++) players.push({ id:`P${i+1}`, name:`플레이어 ${i+1}`, balance:0, bid:0 });
-      return { id:roomId, round:0, item:"-", players, winners:[] };
-    }
-
-    function gotoHome() {
-      show("#view-home", true);
-      show("#view-host", false);
-      show("#view-seat", false);
-    }
-    function gotoHost(room) {
-      STATE.room = room;
-      renderHost();
-      show("#view-home", false);
-      show("#view-host", true);
-      show("#view-seat", false);
-    }
-    function gotoSeat(room, me) {
-      STATE.room = room;
-      STATE.me   = me;
-      renderSeat();
-      show("#view-home", false);
-      show("#view-host", false);
-      show("#view-seat", true);
-    }
-
-    function renderHost() {
-      $("#host-room-id").textContent = STATE.room.id;
-      $("#host-round").textContent   = STATE.room.round;
-      $("#host-status").textContent  = STATE.room.round===0 ? "대기" : "라운드 진행 중";
-
-      // 플레이어 목록
-      const ul = $("#host-players"); ul.innerHTML="";
-      STATE.room.players.forEach(p=>{
-        const li = document.createElement("li");
-        li.className="flex items-center justify-between border rounded px-3 py-2";
-        li.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-xs">${p.id}</span>
-            <span class="font-medium">${p.name}</span>
-          </div>
-          <div class="mono text-sm">잔액 ${fmt(p.balance)}</div>`;
-        ul.appendChild(li);
-      });
-
-      // QR
-      const joinUrl = `${location.origin}${location.pathname}#join=${STATE.room.id}`;
-      $("#join-url").textContent = joinUrl;
-      const canvas = $("#qr");
-      canvas.getContext && QRCode.toCanvas(canvas, joinUrl, { width: 200 });
-
-      // 입찰 현황
-      const grid = $("#host-bids"); grid.innerHTML="";
-      STATE.room.players.forEach(p=>{
-        const card = document.createElement("div");
-        card.className="border rounded p-3";
-        card.innerHTML = `
-          <div class="flex items-center justify-between">
-            <div class="font-medium">${p.name}</div>
-            <div class="text-xs text-slate-500">${p.id}</div>
-          </div>
-          <div class="mt-2 mono">입찰: ${fmt(p.bid||0)}</div>`;
-        grid.appendChild(card);
-      });
-
-      // 낙찰 결과
-      const winners = STATE.room.winners || [];
-      $("#host-winners").textContent = winners.length
-        ? "낙찰: " + winners.map(id => (STATE.room.players.find(x=>x.id===id)?.name || id)).join(", ")
-        : "";
-    }
-
-    function renderSeat() {
-      $("#seat-name").textContent  = STATE.me.name;
-      $("#seat-round").textContent = STATE.room.round;
-      $("#seat-item").textContent  = STATE.room.item||"-";
-
-      const me = STATE.room.players.find(p=>p.id===STATE.me.id) || {balance:0,bid:0};
-      $("#seat-balance").textContent = fmt(me.balance);
-      $("#seat-bid").value           = me.bid || 0;
-      $("#seat-bid-status").textContent = `현재 입찰: ${fmt(me.bid||0)}`;
-
-      const won = (STATE.room.winners||[]).includes(STATE.me.id);
-      $("#seat-result").textContent = won ? "이번 라운드 낙찰!" : "";
-    }
-
-    async function startRound() {
-      try {
-        await ensureAuth();
-        const room = STATE.room;
-        room.round += 1;
-        room.item   = $("#item-select").value;
-        room.winners = [];
-        room.players.forEach(p => { p.balance = money(p.balance)+200000; p.bid = 0; });
-
-        await updateDoc(doc(db,"rooms",room.id), {
-          round: room.round, item: room.item, winners: [],
-          players: room.players, updatedAt: serverTimestamp()
-        });
-      } catch (e) {
-        showError("라운드 시작 실패: Firestore 규칙/인증/네트워크를 확인하세요.");
-        console.error(e);
-      }
-    }
-
-    async function submitBid(amount) {
-      const room = STATE.room;
-      const me   = room.players.find(p=>p.id===STATE.me.id);
-      if (!me) return;
-
-      const a = Math.max(0, Math.floor(money(amount)/10000)*10000);
-      if (a > money(me.balance)) { alert("잔액을 초과했습니다."); return; }
-      me.bid = a;
-
-      try {
-        await ensureAuth();
-        await updateDoc(doc(db,"rooms",room.id), {
-          players: room.players, updatedAt: serverTimestamp()
-        });
-        renderSeat();
-      } catch (e) {
-        showError("입찰 저장 실패: Firestore 규칙/인증을 확인하세요.");
-        console.error(e);
-      }
-    }
-
-    async function resolveBids() {
-      try {
-        await ensureAuth();
-        const room = STATE.room;
-        const bids = room.players.map(p=>money(p.bid||0));
-        const max  = Math.max(...bids);
-        const winners = room.players
-          .filter(p => money(p.bid||0)===max && max>0)
-          .map(p => p.id);
-
-        if (winners.length) {
-          room.players.forEach(p=>{
-            if (winners.includes(p.id)) p.balance = money(p.balance) - money(p.bid||0);
-          });
-        }
-        room.winners = winners;
-
-        await updateDoc(doc(db,"rooms",room.id), {
-          players: room.players, winners, updatedAt: serverTimestamp()
-        });
-      } catch (e) {
-        showError("낙찰 처리 실패: Firestore 규칙/인증을 확인하세요.");
-        console.error(e);
-      }
-    }
-
-    async function nextRound() {
-      try {
-        await ensureAuth();
-        STATE.room.players.forEach(p=>p.bid=0);
-        STATE.room.winners = [];
-        await updateDoc(doc(db,"rooms",STATE.room.id), {
-          players: STATE.room.players, winners: [], updatedAt: serverTimestamp()
-        });
-      } catch (e) {
-        showError("다음 라운드 이동 실패.");
-        console.error(e);
-      }
-    }
-
-    // ---- Firebase 실시간 구독 ----
-    async function onFirebaseRoom(roomId, cb) {
-      try {
-        await ensureAuth();
-        onSnapshot(doc(db,"rooms",roomId), (snap)=>{
-          if (!snap.exists()) return;
-          const room = snap.data();
-          if (typeof cb === "function") cb(room);
-          else {
-            STATE.room = room;
-            renderHost();
-            if (STATE.me) renderSeat();
-          }
-        });
-      } catch (e) {
-        showError("방 실시간 구독 실패: 인증/규칙 확인.");
-        console.error(e);
-      }
-    }
-
-    // ---- 이벤트 바인딩 ----
-    function bind() {
-      $("#btn-create-room").addEventListener("click", async () => {
-        const count = Number($("#create-count").value || 4);
-        if (count < 3 || count > 6) return alert("인원은 3–6명 사이여야 합니다.");
-        const roomId = randomRoomId();
-        const room   = initRoomSkeleton(roomId, count);
-
-        try {
-          await ensureAuth();
-          await setDoc(doc(db,"rooms",roomId), { ...room, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
-          onFirebaseRoom(roomId, gotoHost);
-          location.hash = `host=${roomId}`;
-        } catch (e) {
-          showError("방 생성 실패: Firestore 규칙 또는 인증 설정을 확인하세요.");
-          console.error(e);
-        }
-      });
-
-      $("#btn-join-room").addEventListener("click", async () => {
-        const roomId = ($("#join-room-id").value || "").trim().toUpperCase();
-        const name   = ($("#join-name").value || "").trim();
-        if (!roomId || !name) return alert("Room ID와 닉네임을 입력하세요.");
-
-        try {
-          await ensureAuth();
-          const ref = doc(db,"rooms",roomId);
-          const snap = await getDoc(ref);
-          if (!snap.exists()) return alert("해당 Room ID가 없습니다.");
-
-          const room = snap.data();
-          const free = room.players.find(p => p.name.startsWith("플레이어 "));
-          const me = free ? free : room.players[0];
-          me.name = name;
-
-          await updateDoc(ref, { players: room.players, updatedAt: serverTimestamp() });
-          onFirebaseRoom(roomId, (r)=>gotoSeat(r, { id: me.id, name: me.name }));
-        } catch (e) {
-          showError("방 입장 실패: Authentication의 허용 도메인과 Firestore 규칙을 확인하세요.");
-          console.error(e);
-        }
-      });
-
-      $("#btn-start-round").addEventListener("click", startRound);
-      $("#btn-open-bids").addEventListener("click", resolveBids);
-      $("#btn-next-round").addEventListener("click", nextRound);
-
-      $("#btn-submit-bid").addEventListener("click", () => {
-        submitBid(Number($("#seat-bid").value||0));
-      });
-
-      // 해시 라우팅 (#host=ROOM, #join=ROOM 지원)
-      window.addEventListener("hashchange", handleHashRoute);
-      handleHashRoute();
-    }
-
-    function handleHashRoute() {
-      const h = location.hash.replace(/^#/, "");
-      if (!h) return;
-
-      if (h.startsWith("host=")) {
-        const roomId = h.split("=")[1];
-        onFirebaseRoom(roomId, gotoHost);
-      }
-      if (h.startsWith("join=")) {
-        $("#join-room-id").value = h.split("=")[1];
-      }
-    }
-
-    // ---- 부팅 ----
-    function boot() {
-      bind();
-      gotoHome();
-    }
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", boot);
+      $("#btn-join").disabled = false;
     } else {
-      boot();
+      // 기본: 방장 생성 화면
+      show("#view-create", true);
+      show("#view-host",   false);
+      show("#view-join",   false);
+      show("#view-lobby",  false);
+      $("#btn-create").disabled = false;
     }
-  </script>
+  }
+  window.addEventListener("hashchange", handleRoute);
+  handleRoute();
+
+  // ------- 방 생성(방장) -------
+  $("#btn-create").addEventListener("click", async () => {
+    const name = ($("#host-name").value||"").trim();
+    if (!name) return ($("#err-create").textContent="닉네임을 입력하세요.", $("#err-create").classList.remove("hidden"));
+
+    const roomId = randId();
+    const link   = `${location.origin}${location.pathname}#join=${roomId}`;
+    const room = { id: roomId, hostName: name, link, players: [], started: false,
+                   createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+
+    try {
+      await setDoc(doc(db,"rooms",roomId), room);
+      // 호스트 화면으로
+      $("#room-id").textContent = roomId;
+      $("#share-link").value    = link;
+      QRCode.toCanvas($("#qr"), link, { width: 160 });
+      show("#view-create", false);
+      show("#view-host",   true);
+      // 실시간 참가자 목록
+      onSnapshot(doc(db,"rooms",roomId), (snap)=>{
+        if (!snap.exists()) return;
+        const r = snap.data();
+        renderWaitList(r.players||[]);
+        $("#count").textContent = (r.players||[]).length;
+        $("#lobby-count").textContent = (r.players||[]).length;
+        // 시작 버튼 조건(3~6명)
+        $("#btn-start").disabled = !((r.players||[]).length >=3 && (r.players||[]).length <=6);
+      });
+      // 복사 버튼
+      $("#btn-copy").onclick = async () => {
+        await navigator.clipboard.writeText(link);
+        $("#btn-copy").textContent = "복사됨!";
+        setTimeout(()=>$("#btn-copy").textContent="복사", 1200);
+      };
+      // 시작 버튼 (여기선 started=true만 기록)
+      $("#btn-start").onclick = async () => {
+        const ref = doc(db,"rooms",roomId);
+        const snap = await getDoc(ref); const r=snap.data();
+        const n = (r.players||[]).length;
+        if (n<3 || n>6) return; // 가드
+        await updateDoc(ref, { started:true, updatedAt: serverTimestamp() });
+        // 간단한 대기실로 전환(호스트 포함 공통)
+        $("#lobby-room").textContent = roomId;
+        show("#view-host", false);
+        show("#view-lobby", true);
+        $("#lobby-started").classList.remove("hidden");
+        onSnapshot(ref, s=>{
+          const rr = s.data();
+          renderLobby(rr.players||[]);
+        });
+      };
+    } catch(e) {
+      $("#err-create").textContent = "방 생성 실패: Firestore 규칙/도메인/인증 설정을 확인하세요.";
+      $("#err-create").classList.remove("hidden");
+      console.error(e);
+    }
+  });
+
+  function renderWaitList(players){
+    const ul = $("#wait-list"); ul.innerHTML="";
+    players.forEach((p,i)=>{
+      const li = document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.innerHTML = `<span>${i+1}. ${p.name}</span>`;
+      ul.appendChild(li);
+    });
+  }
+
+  // ------- 참가(링크로 접속한 플레이어) -------
+  $("#btn-join").addEventListener("click", async ()=>{
+    const roomId = $("#join-room").textContent.trim();
+    const name   = ($("#join-name").value||"").trim();
+    if (!name)   return ($("#err-join").textContent="닉네임을 입력하세요.", $("#err-join").classList.remove("hidden"));
+
+    try{
+      const ref = doc(db,"rooms",roomId);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) throw new Error("존재하지 않는 방입니다.");
+      const r = snap.data();
+      const players = r.players || [];
+
+      if (players.length >= 6) throw new Error("정원이 가득 찼습니다(6명).");
+      if (players.some(p=>p.name===name)) throw new Error("같은 닉네임이 이미 존재합니다.");
+
+      players.push({ id:`P${players.length+1}`, name });
+      await updateDoc(ref, { players, updatedAt: serverTimestamp() });
+
+      // 공통 대기실로
+      $("#lobby-room").textContent = roomId;
+      show("#view-join", false);
+      show("#view-lobby", true);
+
+      onSnapshot(ref, s=>{
+        const rr = s.data();
+        $("#lobby-count").textContent = (rr.players||[]).length;
+        renderLobby(rr.players||[]);
+        if (rr.started) $("#lobby-started").classList.remove("hidden");
+      });
+
+    }catch(e){
+      $("#err-join").textContent = e.message || "입장 실패";
+      $("#err-join").classList.remove("hidden");
+      console.error(e);
+    }
+  });
+
+  function renderLobby(players){
+    const ul = $("#lobby-list"); ul.innerHTML="";
+    players.forEach((p,i)=>{
+      const li = document.createElement("li");
+      li.className="flex items-center justify-between border rounded px-3 py-2";
+      li.innerHTML = `<span>${i+1}. ${p.name}</span>`;
+      ul.appendChild(li);
+    });
+  }
+</script>
 </body>
 </html>
