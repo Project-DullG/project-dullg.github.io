@@ -6,7 +6,7 @@
 <title>울릉 한 접시 · 방장(room)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
-!-- Firebase (모듈) --
+<!-- Firebase (모듈) -->
 <script type="module" id="fb-sdk">
   const firebaseConfig = {
     apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
@@ -110,19 +110,19 @@
     const roomId = randId();
     const joinUrl = new URL("join.html", location.href); joinUrl.searchParams.set("room", roomId);
 
+    // ✅ 방장도 참가자 포함(P1), 기본금 100만원
     const room = {
       id: roomId,
       hostName: name,
       link: joinUrl.toString(),
       started: false,
       round: 0,
-      stipend: 200000, // 수당은 그대로 20만원
-      // 🔽 방장도 참가자에 포함 (P1)
+      stipend: 200000, // 라운드 수당 20만원
       players: [
         {
           id: "P1",
           name: name,
-          balance: 1000000,  // 기본금 100만원
+          balance: 1000000, // 기본 소지금 100만원
           hold: 0,
           bid: 0,
           committed: false,
