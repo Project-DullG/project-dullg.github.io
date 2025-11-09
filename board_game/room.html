@@ -94,7 +94,7 @@
   const randId = (n=6)=>{const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<n;i++)s+=A[Math.floor(Math.random()*A.length)];return s};
 
   await window.firebaseReady;
-  const { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
+  const { getFirestore, doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp, getAuth, signInAnonymously, deleteDoc } = window.__fb;
   const db=getFirestore(), auth=getAuth();
   async function ensureAuth(){ if(!auth.currentUser) await signInAnonymously(auth) }
 
@@ -109,28 +109,33 @@
 
     const roomId = randId();
 
-    // ✅ 절대 경로로 join 링크 생성 (경로 꼬임 방지)
+    // 절대 경로로 join 링크
     const baseDir = location.origin + location.pathname.replace(/[^/]+$/, ""); // .../board_game/
     const joinUrl = new URL(baseDir + "join.html");
     joinUrl.searchParams.set("room", roomId);
 
-    // ✅ 방장도 참가자 포함(P1), 기본금 100만원
+    // 방장도 참가자 포함(P1), 기본금 100만원, 수당 5만원
     const room = {
       id: roomId,
       hostName: name,
       link: joinUrl.toString(),
       started: false,
       round: 0,
-      stipend: 200000, // 라운드 수당 20만원
+      stipend: 50000,              // ✅ 라운드 수당 5만원
+      lastItem: "",                // 최근 상품
+      lastWinners: [],             // 최근 라운드 낙찰자 이름 배열
+      lastBidders: [],             // 최근 라운드 입찰자 이름 배열
+      resultRound: 0,              // 결과 표시 라운드(클라이언트 알림용)
       players: [
         {
           id: "P1",
           name: name,
-          balance: 1000000, // 기본 소지금 100만원
+          balance: 1000000,        // ✅ 기본 소지금 100만원
           hold: 0,
           bid: 0,
           committed: false,
-          ready: false
+          ready: false,
+          items: []                // ✅ 서버 보관 인벤토리(개인별)
         }
       ],
       createdAt: serverTimestamp(),
@@ -149,7 +154,11 @@
 
       const ref = doc(db,"rooms",roomId);
       onSnapshot(ref, (snap)=>{
-        if(!snap.exists()) return;
+        if(!snap.exists()){
+          alert("방이 삭제되었습니다. (방장이 나갔거나 종료함)");
+          location.href = baseDir + "room.html";
+          return;
+        }
         const r=snap.data(); const list=r.players||[];
         const ul=$("#waitList"); ul.innerHTML="";
         list.forEach((p,i)=>{
@@ -186,6 +195,11 @@
           const b=$("#errHost"); b.textContent=`시작 실패: ${e.message||e}`; b.classList.remove("hidden");
         }
       };
+
+      // 방장이 페이지를 떠나면 방 삭제 (최대한 시도)
+      window.addEventListener("beforeunload", async ()=>{
+        try{ await deleteDoc(doc(db,"rooms",roomId)); }catch(_){}
+      });
 
     }catch(e){
       const box=$("#errCreate"); box.textContent=`방 생성 실패: ${e.code||""} ${e.message||e}`; box.classList.remove("hidden");
