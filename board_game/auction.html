@@ -1,1 +1,584 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>울릉 한 접시 : 섬맛 요리 경연대회 · 경매 보조</title>
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- QRCode.js (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <!-- Firebase (선택: 멀티기기 동기화용) -->
+  <script type="module" id="firebase-sdk">
+    // ⚠️ 실시간 동기화가 필요하면 아래 설정을 채우세요 (없으면 자동으로 '로컬 모드'로 동작)
+    const firebaseConfig = {
+      apiKey: "",           // 예: "AIzaSyA…"
+      authDomain: "",       // 예: "myapp.firebaseapp.com"
+      projectId: "",        // 예: "myapp"
+      appId: "",
+      // Firestore만 쓰므로 나머지는 비워도 OK
+    };
+
+    // SDK 로드를 시도하되, 설정이 비어 있으면 아무 것도 하지 않음(로컬 모드)
+    const hasConfig = Object.values(firebaseConfig).some(Boolean);
+    if (hasConfig) {
+      import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js").then(async ({ initializeApp }) => {
+        const app = initializeApp(firebaseConfig);
+        const { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp } =
+          await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
+        const { getAuth, signInAnonymously } =
+          await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
+
+        window.__fb = { app, getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc, serverTimestamp, getAuth, signInAnonymously };
+      }).catch(() => {
+        // 실패해도 로컬 모드로 계속
+      });
+    }
+  </script>
+  <style>
+    .mono { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="max-w-4xl mx-auto p-4 md:p-6">
+    <header class="flex items-center justify-between gap-4">
+      <h1 class="text-xl md:text-2xl font-bold">
+        울릉 한 접시 <span class="text-slate-500">: 섬맛 요리 경연대회</span>
+      </h1>
+      <span id="modeBadge" class="text-xs uppercase tracking-wide px-2 py-1 rounded bg-slate-200">로컬 모드</span>
+    </header>
+
+    <main id="app" class="mt-4 space-y-6">
+      <!-- 뷰: 홈 -->
+      <section id="view-home" class="bg-white rounded-xl shadow p-4 md:p-6">
+        <h2 class="font-semibold mb-3">경매 보조 · 홈</h2>
+        <p class="text-sm text-slate-600 mb-4">
+          이 도구는 <b>라운드 수당 지급</b>, <b>입찰 기록</b>, <b>최고가 낙찰자(동가 포함) 공지</b>, <b>소지금 갱신</b>만 담당합니다.<br>
+          카드 지급 및 승리 조건 판단은 <b>실물 보드게임</b>에서 진행하세요.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="border rounded-lg p-4">
+            <h3 class="font-semibold mb-2">방 만들기</h3>
+            <label class="text-sm block mb-1">인원 (3–6명)</label>
+            <input id="create-count" type="number" min="3" max="6" value="4"
+                   class="w-full border rounded px-3 py-2 mb-3" />
+            <button id="btn-create-room" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
+              새 방 생성
+            </button>
+            <p class="text-xs text-slate-500 mt-3">※ Firebase 설정을 채우면 여러 기기에서 동기화됩니다. 비워두면 한 기기에서만 사용합니다.</p>
+          </div>
+
+          <div class="border rounded-lg p-4">
+            <h3 class="font-semibold mb-2">참가하기</h3>
+            <label class="text-sm block mb-1">Room ID</label>
+            <input id="join-room-id" type="text" placeholder="예: UL6J2A" class="w-full border rounded px-3 py-2 mb-2" />
+            <label class="text-sm block mb-1">닉네임</label>
+            <input id="join-name" type="text" placeholder="닉네임" class="w-full border rounded px-3 py-2 mb-3" />
+            <button id="btn-join-room" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
+              방 입장
+            </button>
+            <p class="text-xs text-slate-500 mt-3">또는 방에서 보여주는 <b>QR</b>을 스캔하세요.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 뷰: 호스트 -->
+      <section id="view-host" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold">호스트 · Room <span id="host-room-id" class="mono"></span></h2>
+          <div class="text-sm text-slate-600">라운드 <span id="host-round" class="font-bold mono">0</span></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+          <div class="border rounded-lg p-4">
+            <h3 class="font-semibold mb-2">QR · 참가 안내</h3>
+            <canvas id="qr" class="mx-auto"></canvas>
+            <p class="text-xs text-slate-500 mt-2 break-all" id="join-url"></p>
+          </div>
+
+          <div class="border rounded-lg p-4">
+            <h3 class="font-semibold mb-2">플레이어</h3>
+            <ul id="host-players" class="space-y-2"></ul>
+          </div>
+        </div>
+
+        <div class="border rounded-lg p-4 mt-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="btn-start-round" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2">
+              라운드 시작(+200,000 지급)
+            </button>
+            <div class="flex items-center gap-2">
+              <label for="item-select" class="text-sm">이번 재료</label>
+              <select id="item-select" class="border rounded px-2 py-1">
+                <option>오징어</option>
+                <option>독도새우</option>
+                <option>호박</option>
+                <option>명이나물</option>
+              </select>
+            </div>
+            <button id="btn-open-bids" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
+              입찰 마감 · 낙찰자 발표
+            </button>
+            <button id="btn-next-round" class="bg-slate-200 hover:bg-slate-300 rounded px-4 py-2">
+              다음 라운드로
+            </button>
+          </div>
+
+          <div class="mt-3 text-sm text-slate-600">
+            진행: <span id="host-status" class="font-medium">대기</span>
+          </div>
+
+          <div class="mt-4">
+            <h4 class="font-semibold mb-2">이번 라운드 입찰</h4>
+            <div id="host-bids" class="grid md:grid-cols-2 gap-2"></div>
+          </div>
+
+          <div class="mt-4">
+            <h4 class="font-semibold mb-2">낙찰 결과</h4>
+            <div id="host-winners" class="text-emerald-700 font-semibold"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 뷰: 플레이어 -->
+      <section id="view-seat" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
+        <div class="flex items-center justify-between">
+          <h2 class="font-semibold">플레이어 · <span id="seat-name"></span></h2>
+          <div class="text-sm text-slate-600">라운드 <span id="seat-round" class="font-bold mono">0</span></div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+          <div class="border rounded-lg p-4">
+            <div class="text-sm text-slate-600 mb-1">내 소지금</div>
+            <div id="seat-balance" class="text-2xl font-bold mono">0</div>
+            <div class="mt-3 text-sm">이번 재료: <span id="seat-item" class="font-semibold">-</span></div>
+            <div class="mt-1 text-xs text-slate-500">※ 금액은 다른 참가자에게 공개되지 않습니다.</div>
+          </div>
+
+          <div class="border rounded-lg p-4">
+            <h3 class="font-semibold mb-2">입찰</h3>
+            <div class="flex items-center gap-2">
+              <input id="seat-bid" type="number" step="10000" min="0" value="0"
+                     class="w-full border rounded px-3 py-2 mono" />
+              <button id="btn-submit-bid" class="bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">
+                입찰 저장
+              </button>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">1만 원 단위. 라운드 마감 전까지 수정 가능.</p>
+            <div id="seat-bid-status" class="mt-2 text-sm text-slate-600">현재 입찰: 0</div>
+            <div id="seat-result" class="mt-3 text-emerald-700 font-semibold"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="mt-10 text-center text-xs text-slate-500">
+      © Project DullG · <span class="mono">auction.html</span>
+    </footer>
+  </div>
+
+  <script>
+    // ------- 공통 상태 -------
+    const STATE = {
+      mode: "local", // "local" | "firebase"
+      room: null,    // {id, round, item, players: [{id,name,balance,bid}], winners:[]}
+      me: null       // {id, name}
+    };
+
+    const money = n => Number(n||0);
+    const fmt = n => money(n).toLocaleString("ko-KR");
+
+    // UI helpers
+    const $ = sel => document.querySelector(sel);
+    const show = (id, yes) => {
+      const el = $(id);
+      if (!el) return;
+      el.classList.toggle("hidden", !yes);
+    };
+
+    // ------- 로컬 스토리지용 간단 스토어 (백엔드 없는 경우) -------
+    const LS = {
+      k: roomId => `ull_auction_room_${roomId}`,
+      read(roomId) {
+        const raw = localStorage.getItem(this.k(roomId));
+        return raw ? JSON.parse(raw) : null;
+      },
+      write(roomId, data) {
+        localStorage.setItem(this.k(roomId), JSON.stringify(data));
+      }
+    };
+
+    // Room 생성
+    function randomRoomId() {
+      const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let s = "";
+      for (let i=0;i<6;i++) s += letters[Math.floor(Math.random()*letters.length)];
+      return s;
+    }
+
+    function initRoomSkeleton(roomId, count) {
+      const players = [];
+      for (let i=0;i<count;i++) {
+        players.push({ id: `P${i+1}`, name: `플레이어 ${i+1}`, balance: 0, bid: 0 });
+      }
+      return { id: roomId, round: 0, item: "-", players, winners: [] };
+    }
+
+    // ------- Firebase 모드 감지 -------
+    function detectMode() {
+      if (window.__fb && window.__fb.app) {
+        STATE.mode = "firebase";
+        $("#modeBadge").textContent = "실시간 모드";
+        $("#modeBadge").className = "text-xs uppercase tracking-wide px-2 py-1 rounded bg-indigo-600 text-white";
+      } else {
+        STATE.mode = "local";
+        $("#modeBadge").textContent = "로컬 모드";
+        $("#modeBadge").className = "text-xs uppercase tracking-wide px-2 py-1 rounded bg-slate-200";
+      }
+    }
+
+    // ------- 뷰 전환 -------
+    function gotoHome() {
+      show("#view-home", true);
+      show("#view-host", false);
+      show("#view-seat", false);
+    }
+
+    function gotoHost(room) {
+      STATE.room = room;
+      renderHost();
+      show("#view-home", false);
+      show("#view-host", true);
+      show("#view-seat", false);
+    }
+
+    function gotoSeat(room, me) {
+      STATE.room = room;
+      STATE.me = me;
+      renderSeat();
+      show("#view-home", false);
+      show("#view-host", false);
+      show("#view-seat", true);
+    }
+
+    // ------- 렌더링 (호스트) -------
+    function renderHost() {
+      $("#host-room-id").textContent = STATE.room.id;
+      $("#host-round").textContent = STATE.room.round;
+      $("#host-status").textContent = STATE.room.round === 0 ? "대기" : "라운드 진행 중";
+
+      // 참가자 목록
+      const ul = $("#host-players");
+      ul.innerHTML = "";
+      STATE.room.players.forEach(p => {
+        const li = document.createElement("li");
+        li.className = "flex items-center justify-between border rounded px-3 py-2";
+        li.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-xs">${p.id}</span>
+            <span class="font-medium">${p.name}</span>
+          </div>
+          <div class="mono text-sm">잔액 ${fmt(p.balance)}</div>
+        `;
+        ul.appendChild(li);
+      });
+
+      // QR
+      const joinUrl = `${location.origin}${location.pathname}#join=${STATE.room.id}`;
+      $("#join-url").textContent = joinUrl;
+      const canvas = $("#qr");
+      canvas.getContext && QRCode.toCanvas(canvas, joinUrl, { width: 200 });
+
+      // 입찰 현황
+      const grid = $("#host-bids");
+      grid.innerHTML = "";
+      STATE.room.players.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "border rounded p-3";
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="font-medium">${p.name}</div>
+            <div class="text-xs text-slate-500">${p.id}</div>
+          </div>
+          <div class="mt-2 mono">입찰: ${fmt(p.bid||0)}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // 낙찰 결과
+      const winners = STATE.room.winners || [];
+      if (winners.length) {
+        $("#host-winners").textContent = "낙찰: " + winners.map(id => {
+          const pl = STATE.room.players.find(x => x.id === id);
+          return pl ? pl.name : id;
+        }).join(", ");
+      } else {
+        $("#host-winners").textContent = "";
+      }
+    }
+
+    // ------- 렌더링 (플레이어) -------
+    function renderSeat() {
+      $("#seat-name").textContent = STATE.me.name;
+      $("#seat-round").textContent = STATE.room.round;
+      $("#seat-item").textContent = STATE.room.item || "-";
+
+      const me = STATE.room.players.find(p => p.id === STATE.me.id) || { balance: 0, bid: 0 };
+      $("#seat-balance").textContent = fmt(me.balance);
+      $("#seat-bid").value = me.bid || 0;
+      $("#seat-bid-status").textContent = `현재 입찰: ${fmt(me.bid||0)}`;
+
+      const won = (STATE.room.winners || []).includes(STATE.me.id);
+      $("#seat-result").textContent = won ? "이번 라운드 낙찰!" : "";
+    }
+
+    // ------- 로컬 모드: 저장/동기화 -------
+    function localSave() {
+      LS.write(STATE.room.id, STATE.room);
+      // 렌더 갱신
+      renderHost();
+      if (STATE.me) renderSeat();
+    }
+
+    // ------- 공용 액션 -------
+    async function startRound() {
+      const room = STATE.room;
+      room.round += 1;
+      room.item = $("#item-select").value;
+      room.winners = [];
+      room.players.forEach(p => {
+        p.balance = money(p.balance) + 200000; // 수당
+        p.bid = 0; // 초기화
+      });
+
+      if (STATE.mode === "firebase") {
+        const { getFirestore, doc, updateDoc, serverTimestamp } = window.__fb;
+        const db = getFirestore();
+        await updateDoc(doc(db, "rooms", room.id), {
+          round: room.round,
+          item: room.item,
+          winners: [],
+          players: room.players,
+          updatedAt: serverTimestamp()
+        });
+      } else {
+        localSave();
+      }
+    }
+
+    async function submitBid(amount) {
+      const room = STATE.room;
+      const me = room.players.find(p => p.id === STATE.me.id);
+      if (!me) return;
+
+      const a = Math.max(0, Math.floor(money(amount) / 10000) * 10000);
+      if (a > money(me.balance)) {
+        alert("잔액을 초과했습니다.");
+        return;
+      }
+      me.bid = a;
+
+      if (STATE.mode === "firebase") {
+        const { getFirestore, doc, updateDoc, serverTimestamp } = window.__fb;
+        const db = getFirestore();
+        await updateDoc(doc(db, "rooms", room.id), {
+          players: room.players,
+          updatedAt: serverTimestamp()
+        });
+      } else {
+        localSave();
+      }
+      renderSeat();
+    }
+
+    async function resolveBids() {
+      const room = STATE.room;
+      // 최고가 찾기
+      const bids = room.players.map(p => money(p.bid||0));
+      const max = Math.max(...bids);
+      const winners = room.players.filter(p => money(p.bid||0) === max && max > 0).map(p => p.id);
+
+      // 낙찰자들만 지불
+      if (winners.length) {
+        room.players.forEach(p => {
+          if (winners.includes(p.id)) {
+            p.balance = money(p.balance) - money(p.bid||0);
+          }
+        });
+      }
+      room.winners = winners;
+
+      if (STATE.mode === "firebase") {
+        const { getFirestore, doc, updateDoc, serverTimestamp } = window.__fb;
+        const db = getFirestore();
+        await updateDoc(doc(db, "rooms", room.id), {
+          players: room.players,
+          winners,
+          updatedAt: serverTimestamp()
+        });
+      } else {
+        localSave();
+      }
+      renderHost();
+      if (STATE.me) renderSeat();
+    }
+
+    async function nextRound() {
+      // 다음 라운드로 이동하되, 아이템은 유지/변경 선택 가능 (호스트가 바꿀 수 있음)
+      STATE.room.players.forEach(p => p.bid = 0);
+      STATE.room.winners = [];
+      if (STATE.mode === "firebase") {
+        const { getFirestore, doc, updateDoc, serverTimestamp } = window.__fb;
+        const db = getFirestore();
+        await updateDoc(doc(db, "rooms", room.id), {
+          players: STATE.room.players,
+          winners: [],
+          updatedAt: serverTimestamp()
+        });
+      } else {
+        localSave();
+      }
+      renderHost();
+    }
+
+    // ------- 이벤트 바인딩 -------
+    function bind() {
+      $("#btn-create-room").addEventListener("click", async () => {
+        const count = Number($("#create-count").value || 4);
+        if (count < 3 || count > 6) return alert("인원은 3–6명 사이여야 합니다.");
+
+        const roomId = randomRoomId();
+        const room = initRoomSkeleton(roomId, count);
+
+        if (STATE.mode === "firebase") {
+          try {
+            const { getFirestore, doc, setDoc, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
+            const db = getFirestore();
+            const auth = getAuth();
+            await signInAnonymously(auth);
+            await setDoc(doc(db, "rooms", roomId), { ...room, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+            // 실시간 구독
+            onFirebaseRoom(roomId, gotoHost);
+          } catch (e) {
+            console.error(e);
+            alert("Firebase 연결 실패. 로컬 모드로 전환합니다.");
+            gotoHost(room); // 로컬
+          }
+        } else {
+          LS.write(roomId, room);
+          gotoHost(room);
+        }
+
+        // URL 해시에 호스트 표식 남기기
+        location.hash = `host=${roomId}`;
+      });
+
+      $("#btn-join-room").addEventListener("click", async () => {
+        const roomId = ($("#join-room-id").value || "").trim().toUpperCase();
+        const name = ($("#join-name").value || "").trim();
+        if (!roomId || !name) return alert("Room ID와 닉네임을 입력하세요.");
+
+        if (STATE.mode === "firebase") {
+          try {
+            const { getFirestore, doc, getDoc, updateDoc, serverTimestamp, getAuth, signInAnonymously } = window.__fb;
+            const db = getFirestore();
+            const auth = getAuth();
+            await signInAnonymously(auth);
+
+            const ref = doc(db, "rooms", roomId);
+            const snap = await getDoc(ref);
+            if (!snap.exists()) return alert("해당 Room ID가 없습니다.");
+            const room = snap.data();
+
+            // 빈 슬롯(이름이 기본값인 자리)을 찾거나 새 이름 대입
+            const free = room.players.find(p => p.name.startsWith("플레이어 "));
+            const me = free ? free : room.players[0];
+            me.name = name;
+
+            await updateDoc(ref, { players: room.players, updatedAt: serverTimestamp() });
+            onFirebaseRoom(roomId, (r) => gotoSeat(r, { id: me.id, name: me.name }));
+          } catch (e) {
+            console.error(e);
+            alert("Firebase 연결 실패. 로컬 모드에선 같은 기기에서만 참가할 수 있어요.");
+          }
+        } else {
+          const room = LS.read(roomId);
+          if (!room) return alert("로컬 모드: 해당 Room ID가 없습니다(같은 기기에서 만든 방만 가능).");
+          // 로컬에선 첫 '플레이어 X'에 이름 할당
+          const free = room.players.find(p => p.name.startsWith("플레이어 "));
+          const me = free ? free : room.players[0];
+          me.name = name;
+          LS.write(roomId, room);
+          gotoSeat(room, { id: me.id, name: me.name });
+        }
+      });
+
+      $("#btn-start-round").addEventListener("click", startRound);
+      $("#btn-open-bids").addEventListener("click", resolveBids);
+      $("#btn-next-round").addEventListener("click", nextRound);
+
+      $("#btn-submit-bid").addEventListener("click", () => {
+        submitBid(Number($("#seat-bid").value||0));
+      });
+
+      // 해시 라우팅(호스트/조인 링크 지원)
+      window.addEventListener("hashchange", handleHashRoute);
+      handleHashRoute();
+    }
+
+    function handleHashRoute() {
+      const h = location.hash.replace(/^#/, "");
+      if (!h) return;
+
+      // #host=ROOM
+      if (h.startsWith("host=")) {
+        const roomId = h.split("=")[1];
+        if (STATE.mode === "firebase") {
+          onFirebaseRoom(roomId, gotoHost);
+        } else {
+          const room = LS.read(roomId);
+          if (room) gotoHost(room);
+        }
+      }
+
+      // #join=ROOM
+      if (h.startsWith("join=")) {
+        $("#join-room-id").value = h.split("=")[1];
+      }
+    }
+
+    // ------- Firebase 실시간 구독 -------
+    async function onFirebaseRoom(roomId, cb) {
+      try {
+        const { getFirestore, doc, onSnapshot, getAuth, signInAnonymously } = window.__fb;
+        const db = getFirestore();
+        const auth = getAuth();
+        await signInAnonymously(auth);
+
+        onSnapshot(doc(db, "rooms", roomId), (snap) => {
+          if (!snap.exists()) return;
+          const room = snap.data();
+          if (typeof cb === "function") cb(room);
+          else {
+            STATE.room = room;
+            renderHost();
+            if (STATE.me) renderSeat();
+          }
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // ------- 부팅 -------
+    function boot() {
+      detectMode();
+      bind();
+      gotoHome();
+    }
+    document.addEventListener("DOMContentLoaded", boot);
+  </script>
+</body>
+</html>
 
