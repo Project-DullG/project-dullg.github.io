@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>울릉 한 접시 · 방장(acution)</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
 <!-- Firebase (웹 클라이언트 전용) -->
 <script type="module" id="fb-sdk">
-  // ✅ 프로젝트 구성 (필요시 교체)
   const firebaseConfig = {
     apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
     authDomain: "boardgame-1a3dd.firebaseapp.com",
@@ -68,7 +66,6 @@
           <input id="shareLink" class="w-full border rounded px-3 py-2 text-xs" readonly />
           <button id="btnCopy" class="btn bg-slate-800 text-white rounded px-3 py-2">복사</button>
         </div>
-        <canvas id="qr" class="mx-auto mt-3"></canvas>
         <p class="text-xs text-slate-500 mt-2">최대 6명 접속. <b>3명 이상</b>이면 시작 가능.</p>
       </div>
 
@@ -116,7 +113,7 @@
       started: false,
       round: 0,
       stipend: 200000,
-      players: [], // join에서 추가
+      players: [],
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     };
@@ -128,14 +125,12 @@
       // 호스트 화면 전환
       $("#roomId").textContent = roomId;
       $("#shareLink").value = joinUrl.toString();
-      QRCode.toCanvas($("#qr"), joinUrl.toString(), { width: 180 });
       show("#view-create", false); show("#view-host", true);
 
       const ref = doc(db,"rooms",roomId);
       onSnapshot(ref, (snap)=>{
         if(!snap.exists()) return;
         const r=snap.data(); const list=r.players||[];
-        // 목록
         const ul=$("#waitList"); ul.innerHTML="";
         list.forEach((p,i)=>{
           const li=document.createElement("li");
@@ -148,7 +143,12 @@
       });
 
       $("#btnCopy").onclick = async ()=>{
-        try{ await navigator.clipboard.writeText(joinUrl.toString()); $("#btnCopy").textContent="복사됨!"; setTimeout(()=>$("#btnCopy").textContent="복사",1200);}catch(e){ const b=$("#errHost"); b.textContent=`복사 실패: ${e.message||e}`; b.classList.remove("hidden");}
+        try{
+          await navigator.clipboard.writeText(joinUrl.toString());
+          $("#btnCopy").textContent="복사됨!"; setTimeout(()=>$("#btnCopy").textContent="복사",1200);
+        }catch(e){
+          const b=$("#errHost"); b.textContent=`복사 실패: ${e.message||e}`; b.classList.remove("hidden");
+        }
       };
 
       $("#btnStart").onclick = async ()=>{
@@ -157,12 +157,14 @@
           const snap=await getDoc(ref); const r=snap.data(); const n=(r.players||[]).length;
           if(n<3 || n>6) return;
           await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
-          // 게임 페이지로 이동 (방장 본인 이름 포함)
+          // 게임 페이지로 이동
           const gameUrl = new URL("game.html", location.href);
           gameUrl.searchParams.set("room", roomId);
           gameUrl.searchParams.set("name", name);
           location.href = gameUrl.toString();
-        }catch(e){ const b=$("#errHost"); b.textContent=`시작 실패: ${e.message||e}`; b.classList.remove("hidden"); }
+        }catch(e){
+          const b=$("#errHost"); b.textContent=`시작 실패: ${e.message||e}`; b.classList.remove("hidden");
+        }
       };
 
     }catch(e){
