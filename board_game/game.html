@@ -107,6 +107,7 @@
         참가자 <span id="pCount" class="font-bold">0</span>명
         · 이번 상품: <span id="currentItem" class="font-medium">-</span>
         · 최근 상품: <span id="lastItem" class="font-medium">-</span>
+        · <span>다음 라운드 수당: <b id="stipendAmount" class="mono">50,000</b>원</span>
       </div>
       <ul id="players" class="space-y-2 text-sm"></ul>
       <div class="text-xs text-slate-500 mt-2">※ 잔액은 각자만 확인합니다.</div>
@@ -125,7 +126,7 @@
         <option>명이나물</option>
       </select>
 
-      <div class="text-sm mb-3">라운드 수당: <b class="mono">50,000</b>원</div>
+      <div class="text-sm mb-3">라운드 수당: <b id="hostStipend" class="mono">50,000</b>원</div>
 
       <button id="btnEndRound" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2 mb-2" disabled>
         라운드 종료 · 정산 + 수당 지급
@@ -151,13 +152,11 @@
   const show=(id,yes)=>$(id).classList.toggle("hidden",!yes);
   const toast=(msg)=>{ $("#toastMsg").textContent=msg; $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2200); };
 
-  // URL 파라미터
   const params=new URL(location.href).searchParams;
   const roomId=(params.get("room")||"").toUpperCase();
   const myName=(params.get("name")||"").trim();
   $("#roomId").textContent=roomId||"—"; $("#you").textContent=myName||"—"; $("#myName").textContent=myName||"—";
 
-  // Firebase 준비
   await window.firebaseReady;
   const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp,
           getAuth, signInAnonymously } = window.__fb;
@@ -213,7 +212,6 @@
     $("#roundItem")?.setAttribute("disabled","true");
   }
 
-  // 방장 판별 강화
   function guessHost(roomData){
     const a = (roomData?.hostName||"").trim().toLowerCase();
     const b = (myName||"").trim().toLowerCase();
@@ -238,7 +236,6 @@
     }
   }
 
-  // 승리 판정 (items: string[])
   function checkWin(items=[]) {
     const total = items.length;
     if (total >= 5) return "any5";
@@ -260,6 +257,11 @@
     applyLayout();
     lastSeenResultRound = r.resultRound || 0;
 
+    // 수당 표시 초기화
+    const stipend = Number(r.stipend ?? 50000);
+    $("#stipendAmount").textContent = fmt(stipend);
+    $("#hostStipend").textContent = fmt(stipend);
+
     // 방장: 상품 선택 시 currentItem 실시간 반영
     if (isHost) {
       $("#hostPanel").classList.remove("hidden");
@@ -276,23 +278,25 @@
     if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
     const d=s.data();
 
-    // 게임 종료 처리 공통
     if (d.gameOver) { endUI("게임이 종료되었습니다.", d.winners||[]); }
 
     $("#round").textContent=d.round??0;
     $("#currentItem").textContent = d.currentItem || "-";
     $("#lastItem").textContent    = d.lastItem || "-";
 
+    // 수당 표시 동기화
+    const stipendNow = Number(d.stipend ?? 50000);
+    $("#stipendAmount").textContent = fmt(stipendNow);
+    $("#hostStipend").textContent = fmt(stipendNow);
+
     currentPlayers = Array.isArray(d.players) ? d.players : [];
     currentMe = currentPlayers.find(p=>p.name===myName) || null;
 
-    // 내 패널
     $("#myBalance").textContent = fmt(currentMe?.balance||0);
     $("#myHold").textContent = fmt(currentMe?.hold||0);
     $("#myStatus").textContent = currentMe?.ready ? "준비됨" : "대기중";
     $("#myStatus").className = "badge " + (currentMe?.ready ? "bg-emerald-100" : "bg-slate-100");
 
-    // 내 소지품
     const myItems = Array.isArray(currentMe?.items) ? currentMe.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{
@@ -302,7 +306,6 @@
       ulItems.appendChild(li);
     });
 
-    // 플레이어(잔액 비공개)
     $("#pCount").textContent = currentPlayers.length.toString();
     const ul=$("#players"); ul.innerHTML="";
     currentPlayers.forEach((p,i)=>{
@@ -319,7 +322,6 @@
       ul.appendChild(li);
     });
 
-    // 라운드 결과 알림(개인화)
     if (!d.gameOver && (d.resultRound||0) > lastSeenResultRound) {
       const winners = Array.isArray(d.lastWinners) ? d.lastWinners : [];
       const bidders = Array.isArray(d.lastBidders) ? d.lastBidders : [];
@@ -333,7 +335,6 @@
       lastSeenResultRound = d.resultRound||0;
     }
 
-    // 방장: 드롭다운 동기화 + 종료 버튼 활성화
     if (!d.gameOver) {
       isHost = guessHost(d);
       $("#role").textContent = isHost ? "host" : "guest";
@@ -347,7 +348,6 @@
       }
     }
 
-    // 자동 승리 감지
     if (!d.gameOver) {
       const reason = checkWin(myItems);
       if (reason) {
@@ -399,7 +399,7 @@
     }catch(err){ alert(`확정 취소 실패: ${err.message||err}`); }
   });
 
-  // --- 방장: 라운드 종료 (정산 + 아이템 지급 + 환불 + 수당 5만원 + 결과 필드 + currentItem 정리) ---
+  // --- 방장: 라운드 종료 ---
   $("#btnEndRound").addEventListener("click", async ()=>{
     const snap = await getDoc(ref); if(!snap.exists()) return;
     const r = snap.data();
@@ -415,11 +415,13 @@
       const winners = players.filter(p=>Number(p.hold||0)===maxHold && maxHold>0).map(p=>p.name);
       const bidders = players.filter(p=>Number(p.hold||0)>0).map(p=>p.name);
 
+      const stipend = Number(r.stipend ?? 50000);
+
       players = players.map(p=>{
         const hold = Number(p.hold||0);
         let balance = Number(p.balance||0);
         if (hold>0 && !winners.includes(p.name)) balance += hold; // 환불
-        balance += 50000; // 수당
+        balance += stipend; // 수당 (서버값 사용)
         const items = Array.isArray(p.items)? [...p.items] : [];
         if (winners.includes(p.name)) items.push(current);
         return { ...p, balance, hold:0, bid:0, committed:false, ready:false, items };
@@ -429,7 +431,7 @@
         players,
         round: Number(r.round||0) + 1,
         lastItem: current,
-        currentItem: "",                // 다음 라운드를 위해 비움
+        currentItem: "",
         lastWinners: winners,
         lastBidders: bidders,
         resultRound: Number(r.round||0) + 1,
