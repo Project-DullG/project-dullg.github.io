@@ -42,7 +42,7 @@
     <span id="badge" class="text-xs px-2 py-1 rounded bg-slate-200">연결 준비중…</span>
   </header>
 
-  <!-- 기존 방 목록으로 입장 (닉네임 입력 없음, join.html로 이동만) -->
+  <!-- 이미 만들어진 방으로 입장 (닉네임 입력 없음, join.html로 이동) -->
   <section id="view-list" class="bg-white rounded-xl shadow p-4 md:p-6">
     <div class="flex items-center justify-between mb-3">
       <h2 class="font-semibold">이미 만들어진 방으로 입장</h2>
@@ -51,7 +51,7 @@
 
     <div class="flex items-center justify-between mb-2">
       <button id="btnRefresh" class="btn bg-slate-200 hover:bg-slate-300 rounded px-3 py-2 text-sm">목록 새로고침</button>
-      <span class="text-xs text-slate-500">* 진행 중인 방은 입장 불가</span>
+      <span class="text-xs text-slate-500">* 진행 중/종료 방은 입장 불가</span>
     </div>
 
     <div id="roomsEmpty" class="hidden text-sm text-slate-500 border rounded p-3">
@@ -128,7 +128,7 @@
   try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); $("#btnCreate").disabled=false; }
   catch{ setBadge("연결 실패","bg-rose-600 text-white"); }
 
-  // ===== 기존 방 목록 (started=false & gameOver!=true 만) =====
+  // ===== 이미 만들어진 방 목록 (진행 전 + 미종료만 노출) =====
   const listEl = $("#roomsList");
   const emptyEl= $("#roomsEmpty");
   const errJoinList = $("#errJoinList");
@@ -157,7 +157,7 @@
   async function refreshRoomsOnce(){
     try{
       errJoinList.classList.add("hidden");
-      // 진행 전 + 미종료만 노출
+      // 진행 전 + 미종료만 표시
       const q = query(
         collection(db,"rooms"),
         where("started","==", false),
@@ -181,13 +181,30 @@
       listEl.innerHTML = rooms.map(roomCard).join("");
       show("#roomsEmpty", rooms.length===0);
 
-      // 버튼 바인딩: join.html로 이동만
+      // 버튼 바인딩: 최신 상태 확인 → join.html로 이동
       listEl.querySelectorAll("[data-join]").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
+        btn.addEventListener("click", async ()=>{
           const roomId = btn.getAttribute("data-join");
-          const url = new URL("join.html", location.href);
-          url.searchParams.set("room", roomId);
-          location.href = url.toString();
+          try{
+            const ref = doc(db,"rooms",roomId);
+            const snap = await getDoc(ref);
+            if(!snap.exists()) throw new Error("방이 삭제되었습니다.");
+            const r=snap.data();
+            const count = Array.isArray(r.players)? r.players.length : 0;
+            if (r.started || r.gameOver) throw new Error("이미 게임이 진행 중이거나 종료된 방입니다.");
+            if (count >= 6) throw new Error("정원이 가득 찼습니다.");
+
+            // join.html로 이동 (닉네임은 그 페이지에서 입력)
+            const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
+            const url = new URL(baseDir + "join.html");
+            url.searchParams.set("room", roomId);
+            location.href = url.toString();
+          }catch(e){
+            errJoinList.textContent = e.message || e;
+            errJoinList.classList.remove("hidden");
+            // 목록을 다시 고침
+            refreshRoomsOnce();
+          }
         });
       });
     }catch(e){
@@ -208,7 +225,8 @@
     if(!name){ errBox.textContent="닉네임을 입력하세요."; errBox.classList.remove("hidden"); return; }
 
     const roomId = randId();
-    const joinUrl = new URL("join.html", location.href); joinUrl.searchParams.set("room", roomId);
+    const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
+    const joinUrl = new URL(baseDir + "join.html"); joinUrl.searchParams.set("room", roomId);
 
     const room = {
       id: roomId,
@@ -277,7 +295,7 @@
           const snap=await getDoc(ref); const r=snap.data(); const n=(r.players||[]).length;
           if(n<3 || n>6) return;
           await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
-          const gameUrl = new URL("game.html", location.href);
+          const gameUrl = new URL(baseDir + "game.html");
           gameUrl.searchParams.set("room", roomId);
           gameUrl.searchParams.set("name", name);
           location.href = gameUrl.toString();
