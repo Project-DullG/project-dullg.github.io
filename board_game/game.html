@@ -33,7 +33,7 @@
   .btn:disabled{opacity:.5;cursor:not-allowed}
   .badge{font-size:.75rem;padding:.125rem .5rem;border-radius:.375rem}
   .card{background:#fff;border-radius:1rem;box-shadow:0 1px 3px rgb(0 0 0 / .06),0 1px 2px rgb(0 0 0 / .04)}
-  .safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0) + 72px);} /* 모바일 하단 바 자리 */
+  .safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0) + 72px);}
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 safe-bottom">
@@ -85,14 +85,14 @@
         <p class="text-xs text-slate-500">※ 불응찰 확정 시 이번 라운드 입찰은 불가하며 즉시 50,000원이 지급됩니다.</p>
       </div>
 
-      <!-- 2단계: 입찰 (데스크톱용) -->
+      <!-- 2단계: 입찰 -->
       <div id="phaseBid" class="hidden space-y-3">
         <h3 class="font-semibold">2) 비공개 입찰</h3>
         <div class="text-sm">이번 상품: <b id="currentItemBid">-</b></div>
         <div id="bidDisabled" class="hidden text-sm text-slate-500">이번 라운드 불응찰을 선택하여 입찰할 수 없습니다.</div>
 
         <div id="bidBox" class="hidden">
-          <!-- 개인 입찰 단위 선택 -->
+          <!-- 개인 입찰 단위 -->
           <div class="flex items-center gap-2 mb-2">
             <label class="text-xs text-slate-600">내 입찰 단위</label>
             <select id="myBidStep" class="border rounded px-2 py-1 text-sm">
@@ -152,11 +152,9 @@
       <div class="text-xs text-slate-500 mt-2">※ 잔액은 각자만 확인합니다.</div>
     </section>
 
-    <!-- 방장 설정: 상품만 컨트롤 -->
+    <!-- 방장 설정: 상품만 -->
     <section id="hostPanel" class="hidden card p-4 md:p-6 lg:col-span-3 xl:col-span-3">
       <h2 class="font-semibold mb-3">방장 설정</h2>
-
-      <!-- 재료 선택/랜덤 -->
       <label class="text-sm block mb-1">이번 상품</label>
       <div class="flex items-center gap-2 mb-3">
         <select id="roundItem" class="w-full border rounded px-3 py-2">
@@ -168,13 +166,12 @@
         </select>
         <button id="btnRandom" class="btn bg-slate-200 rounded px-3 py-2">랜덤</button>
       </div>
-      <p class="text-xs text-slate-500 mb-3">라운드 시작 시 아이템이 비어있다면 자동으로 랜덤 설정됩니다. 필요 시 변경 가능.</p>
+      <p class="text-xs text-slate-500 mb-3">라운드 시작 시 아이템이 비어있으면 자동 랜덤 지정. 필요 시 변경 가능.</p>
 
       <hr class="my-4">
       <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">
         게임 종료(방 삭제)
       </button>
-
       <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
     </section>
   </div>
@@ -243,8 +240,7 @@
 
   // 상태
   let isHost=false, currentPlayers=[], currentMe=null;
-  let lastSeenResultRound=0;
-  let singleRevealTimerSet=false;
+  let lastSeenResultRound=0, singleRevealTimerSet=false;
 
   // 개인 입찰 단위(로컬)
   let bidStep=10000;
@@ -253,42 +249,26 @@
   const bidInputMobile=$("#bidInputMobile");
   const parseMoney=s=>Number((s||"0").replace(/[^\d]/g,""))||0;
   const snapToStep=n=>Math.floor(Number(n||0)/bidStep)*bidStep;
-
-  function updateStepLabels(){
-    $("#stepMobile").textContent = bidStep.toLocaleString("ko-KR");
-  }
-  myBidStepSel?.addEventListener("change", ()=>{
-    bidStep = Number(myBidStepSel.value||"10000")||10000;
-    syncBidInputs(); updateStepLabels();
-  });
+  function updateStepLabels(){ $("#stepMobile").textContent = bidStep.toLocaleString("ko-KR"); }
+  myBidStepSel?.addEventListener("change", ()=>{ bidStep = Number(myBidStepSel.value||"10000")||10000; syncBidInputs(); updateStepLabels(); });
   let stagedBid=0;
-  function syncBidInputs(){
-    const v=snapToStep(stagedBid);
-    if(bidInput)       bidInput.value      = v.toLocaleString("ko-KR");
-    if(bidInputMobile) bidInputMobile.value= v.toLocaleString("ko-KR");
-  }
-  function clampToAvail(avail){
-    stagedBid=Math.max(0, Math.min(snapToStep(stagedBid), avail));
-    syncBidInputs();
-  }
+  function syncBidInputs(){ const v=snapToStep(stagedBid); if(bidInput) bidInput.value=v.toLocaleString("ko-KR"); if(bidInputMobile) bidInputMobile.value=v.toLocaleString("ko-KR"); }
+  function clampToAvail(a){ stagedBid=Math.max(0, Math.min(snapToStep(stagedBid), a)); syncBidInputs(); }
   function bindStepButtons(){
     document.querySelectorAll("[data-step]").forEach(btn=>{
-      if(btn._bound) return;
-      btn._bound=true;
+      if(btn._bound) return; btn._bound=true;
       btn.addEventListener("click", ()=>{
-        const factor = Number(btn.getAttribute("data-step")); // -5,-1,1,5
-        const delta = factor * bidStep;
-        const avail = (currentMe?.balance||0)+(currentMe?.hold||0);
-        stagedBid = stagedBid + delta;
-        clampToAvail(avail);
+        const factor=Number(btn.getAttribute("data-step")); const delta=factor*bidStep;
+        const avail=(currentMe?.balance||0)+(currentMe?.hold||0);
+        stagedBid = stagedBid + delta; clampToAvail(avail);
       });
     });
   }
   bindStepButtons(); updateStepLabels(); syncBidInputs();
   bidInput?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInput.value); syncBidInputs(); });
-  bidInput?.addEventListener("blur",  ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
+  bidInput?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
   bidInputMobile?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInputMobile.value); syncBidInputs(); });
-  bidInputMobile?.addEventListener("blur",  ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
+  bidInputMobile?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
 
   // 종료 UI
   function endUI(msg, winners=[]){
@@ -299,81 +279,89 @@
     show("#mobileBidBar", false);
   }
 
-  // ---- 자동 전환: 트랜잭션 ----
+  // --- 보정: phase 없으면 choose로 세팅 (핵심 패치 A)
+  async function ensurePhaseDefault(){
+    try{
+      await runTransaction(db, async (tx)=>{
+        const snap=await tx.get(ref);
+        if(!snap.exists()) return;
+        const r=snap.data();
+        if(!r.phase){
+          tx.update(ref,{ phase:"choose", updatedAt: serverTimestamp() });
+        }
+      });
+    }catch{}
+  }
+
+  // 아이템 자동 랜덤(choose에서 비어있으면)
   async function ensureRandomItemIfEmpty(){
     try{
       await runTransaction(db, async (tx)=>{
         const snap=await tx.get(ref);
         if(!snap.exists()) return;
         const r=snap.data();
-        if((r.phase||"choose")==="choose" && !r.currentItem){
+        const phase=(r.phase||"choose");
+        if(phase==="choose" && !r.currentItem){
           tx.update(ref,{ currentItem: randItem(), updatedAt: serverTimestamp() });
         }
       });
     }catch{}
   }
 
-  // 모두 응/불응찰 확정 → 분기(0/1/2+)
+  // 전원 응/불응찰 확정 후 분기(0/1/2+)  (핵심 패치 B: undefined→choose로 간주)
   async function afterAllLockedAdvance(){
     try{
       await runTransaction(db, async (tx)=>{
         const snap=await tx.get(ref);
         if(!snap.exists()) return;
         const r=snap.data();
-        if(r.phase!=="choose") return;
+        const phase=(r.phase||"choose");
+        if(phase!=="choose") return;
 
-        const players=Array.isArray(r.players)? r.players:[];
-        if(players.length===0) return;
-
-        // 호환: readyPart || ready
+        const players=Array.isArray(r.players)? r.players:[]; if(players.length===0) return;
         const allLocked = players.every(p => (p.readyPart===true) || (p.ready===true));
         if(!allLocked) return;
 
-        // 참여자 판정(신: willParticipate, 구: committed를 참여로 간주)
         const parts = players
           .filter(p => p.willParticipate===true || (p.willParticipate===undefined && p.committed===true))
           .map(p => p.name);
 
-        // 아이템 보정(없으면 랜덤)
-        const item = (r.currentItem||"").trim() || randItem();
+        const item=(r.currentItem||"").trim() || randItem();
 
         if(parts.length===0){
-          // 즉시 유찰 정산
           const resetPlayers = players.map(p=>({
-            ...p, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null
+            ...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null
           }));
-          tx.update(ref, {
+          tx.update(ref,{
             players: resetPlayers,
             round: Number(r.round||0)+1,
             lastItem: item,
-            currentItem: "",
+            currentItem:"",
             participants: [],
             lastWinners: [],
             resultRound: Number(r.round||0)+1,
-            phase: "choose",
+            phase:"choose",
             updatedAt: serverTimestamp()
           });
           return;
         }
 
         if(parts.length===1){
-          // 응찰자 공개(phase: reveal_single) → 클라이언트가 1초 후 자동 정산
-          tx.update(ref, {
+          tx.update(ref,{
             participants: parts,
             currentItem: item,
-            phase: "reveal_single",
-            revealRound: Number(r.round||0)+1, // 가드용
+            phase:"reveal_single",
+            revealRound: Number(r.round||0)+1,
             revealAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
           return;
         }
 
-        // 2명 이상 → 응찰자 공개 & 입찰 단계
-        tx.update(ref, {
+        tx.update(ref,{
           participants: parts,
           currentItem: item,
-          phase: "bid",
+          phase:"bid",
           updatedAt: serverTimestamp()
         });
       });
@@ -384,15 +372,12 @@
   async function attemptSettleFromBid(){
     try{
       await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref);
-        if(!snap.exists()) return;
-        const r=snap.data();
-        if(r.phase!=="bid") return;
+        const snap=await tx.get(ref); if(!snap.exists()) return;
+        const r=snap.data(); if(r.phase!=="bid") return;
 
         let players=Array.isArray(r.players)? r.players.map(p=>({...p})):[];
         const partNames=Array.isArray(r.participants)? r.participants:[];
         const participants = players.filter(p=>partNames.includes(p.name));
-        // 호환: readyBid || committed
         const readyAll = participants.length===0
           ? true
           : participants.every(p => (p.readyBid===true) || (p.committed===true));
@@ -402,28 +387,21 @@
         let winners=[];
 
         if(participants.length===0){
-          // 유찰
           players = players.map(p=>({
             ...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null
           }));
         }else{
-          const maxHold = Math.max(0, ...participants.map(p=>Number(p.hold||0)));
+          const maxHold=Math.max(0, ...participants.map(p=>Number(p.hold||0)));
           if(maxHold>0){
             winners = participants.filter(p=>Number(p.hold||0)===maxHold).map(p=>p.name);
             players = players.map(p=>{
               const isPart=partNames.includes(p.name);
               let balance=Number(p.balance||0), hold=Number(p.hold||0);
               const items=Array.isArray(p.items)? [...p.items] : [];
-              if(isPart){
-                if(winners.includes(p.name)) items.push(item);
-                else balance += hold;
-              }
-              return { ...p,
-                balance, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null, items
-              };
+              if(isPart){ if(winners.includes(p.name)) items.push(item); else balance += hold; }
+              return { ...p, balance, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null, items };
             });
           }else{
-            // 모두 0원 → 유찰
             players = players.map(p=>({
               ...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null
             }));
@@ -431,7 +409,7 @@
           }
         }
 
-        tx.update(ref, {
+        tx.update(ref,{
           players,
           round:Number(r.round||0)+1,
           lastItem:item,
@@ -446,15 +424,12 @@
     }catch{}
   }
 
-  // 단독 응찰 공개 후(phase: reveal_single) → 1초 뒤 자동 정산(0원 무료 낙찰)
+  // 단독 응찰 공개 → 1초 후 자동 정산(0원 낙찰)
   async function settleAfterSingleReveal(){
     try{
       await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref);
-        if(!snap.exists()) return;
-        const r=snap.data();
-        if(r.phase!=="reveal_single") return;
-
+        const snap=await tx.get(ref); if(!snap.exists()) return;
+        const r=snap.data(); if(r.phase!=="reveal_single") return;
         let players=Array.isArray(r.players)? r.players.map(p=>({...p})):[];
         const partNames=Array.isArray(r.participants)? r.participants:[];
         if(partNames.length!==1) return;
@@ -466,11 +441,7 @@
         players = players.map(p=>{
           if(p.name===only){
             const refund=Number(p.hold||0);
-            return { ...p,
-              balance:Number(p.balance||0)+refund,
-              hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null,
-              items:[...(p.items||[]), item]
-            };
+            return { ...p, balance:Number(p.balance||0)+refund, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null, items:[...(p.items||[]), item] };
           }
           return { ...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null };
         });
@@ -490,14 +461,8 @@
     }catch{}
   }
 
-  // 초기
-  async function init(){
-    const s=await getDoc(ref);
-    if(!s.exists()){ endUI("방이 존재하지 않습니다."); return; }
-    const r=s.data();
-    if(r.gameOver){ endUI("게임이 종료되었습니다.", r.winners||[]); return; }
-  }
-  await init();
+  // 초기: phase 기본값 보정
+  await ensurePhaseDefault();
 
   // 스냅샷
   onSnapshot(ref, async (s)=>{
@@ -506,10 +471,9 @@
     if(d.gameOver){ endUI("게임이 종료되었습니다.", d.winners||[]); }
 
     $("#round").textContent=d.round??0;
-    const phaseLabel = d.phase==="choose" ? "응찰 선택"
-                      : d.phase==="bid" ? "비공개 입찰"
-                      : d.phase==="reveal_single" ? "단독 응찰 공개"
-                      : "-";
+    const phaseLabel = d.phase==="choose" ? "응찰 선택" :
+                       d.phase==="bid" ? "비공개 입찰" :
+                       d.phase==="reveal_single" ? "단독 응찰 공개" : "-";
     $("#phaseText").textContent = phaseLabel;
 
     $("#currentItem").textContent = d.currentItem || "-";
@@ -544,7 +508,7 @@
       }
     }
 
-    // 현황(호환 표시: ready/readyPart, committed/readyBid)
+    // 현황(구/신 스키마 호환)
     const ul=$("#players"); ul.innerHTML="";
     currentPlayers.forEach((p,i)=>{
       const isReadyPart = (p.readyPart===true) || (p.ready===true);
@@ -563,7 +527,7 @@
       ul.appendChild(li);
     });
 
-    // 응찰자 공개(어느 phase든 participants 있으면 노출)
+    // 응찰자 공개
     if(Array.isArray(d.participants) && d.participants.length>0){
       show("#revealBox", true);
       const pu=$("#participantList"); pu.innerHTML="";
@@ -577,52 +541,32 @@
       show("#revealBox", false);
     }
 
-    // 단계별 내 UI
+    // 단계별 내 UI + 자동 전환
     if(d.phase==="choose" || d.phase===undefined){
-      show("#phaseChoose", true);
-      show("#phaseBid", false);
-      show("#mobileBidBar", false);
-
-      // 아이템 자동 랜덤(비어있으면 1회) — 트랜잭션
+      show("#phaseChoose", true); show("#phaseBid", false); show("#mobileBidBar", false);
       if(!d.currentItem) await ensureRandomItemIfEmpty();
 
-      // 응찰 라디오/버튼
       const partRadios=[...document.querySelectorAll('input[name="part"]')];
-      const partVal = currentMe?.willParticipate===true ? "yes"
-                      : currentMe?.willParticipate===false? "no"  : null;
-      partRadios.forEach(r=>{ r.checked = (r.value===partVal); r.disabled = ((currentMe?.readyPart===true)||(currentMe?.ready===true)); });
+      const partVal = currentMe?.willParticipate===true ? "yes" : currentMe?.willParticipate===false? "no" : null;
+      partRadios.forEach(r=>{ r.checked=(r.value===partVal); r.disabled=((currentMe?.readyPart===true)||(currentMe?.ready===true)); });
       $("#btnLockPart").disabled = ((currentMe?.readyPart===true)||(currentMe?.ready===true)) || !(d.currentItem);
       $("#partStatus").textContent = ((currentMe?.readyPart===true)||(currentMe?.ready===true))
         ? (currentMe?.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
 
-      // 전원 응찰 확정 시 자동 분기(누구나 트리거)
       await afterAllLockedAdvance();
     }
     else if(d.phase==="reveal_single"){
-      // 단독 응찰자 공개 화면 — 1초 뒤 자동 정산(가드: 한 번만)
-      show("#phaseChoose", true);
-      show("#phaseBid", false);
-      show("#mobileBidBar", false);
-
-      if(!singleRevealTimerSet){
-        singleRevealTimerSet = true;
-        setTimeout(async ()=>{ singleRevealTimerSet=false; await settleAfterSingleReveal(); }, 1000);
-      }
+      show("#phaseChoose", true); show("#phaseBid", false); show("#mobileBidBar", false);
+      if(!singleRevealTimerSet){ singleRevealTimerSet=true; setTimeout(async()=>{ singleRevealTimerSet=false; await settleAfterSingleReveal(); }, 1000); }
     }
     else if(d.phase==="bid"){
-      const isParticipant = currentMe?.willParticipate===true || (Array.isArray(d.participants) && d.participants.includes(myName));
-      show("#phaseChoose", false);
-      show("#phaseBid", true);
-      show("#bidBox", isParticipant);
-      show("#bidDisabled", !isParticipant);
-      show("#mobileBidBar", isParticipant);
+      const isParticipant = currentMe?.willParticipate===true || (Array.isArray(d.participants)&&d.participants.includes(myName));
+      show("#phaseChoose", false); show("#phaseBid", true);
+      show("#bidBox", isParticipant); show("#bidDisabled", !isParticipant); show("#mobileBidBar", isParticipant);
       const isReadyBid = (currentMe?.readyBid===true)||(currentMe?.committed===true);
       $("#bidStatus").textContent = isReadyBid ? "입찰 확정됨" : "대기중";
+      const avail=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(avail);
 
-      const avail=(currentMe?.balance||0)+(currentMe?.hold||0);
-      clampToAvail(avail);
-
-      // 전원 입찰 확정/취소 완료 시 자동 정산(누구나 트리거)
       await attemptSettleFromBid();
     }
 
@@ -631,7 +575,7 @@
 
   function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
 
-  // 방장: 상품 수동 변경/랜덤
+  // 방장: 상품 변경/랜덤
   $("#roundItem").addEventListener("change", async ()=>{
     const val=$("#roundItem").value;
     try{ await updateDoc(ref,{ currentItem:val || "", updatedAt:serverTimestamp() }); }catch(_){}
@@ -657,33 +601,26 @@
       const snap=await getDoc(ref); if(!snap.exists()) return;
       const r=snap.data(); const players=(r.players||[]).map(p=>({...p}));
       const me=players.find(p=>p.name===myName); if(!me) return;
-
       if(me.readyPart===true || me.ready===true){ toast("이미 응찰 확정했습니다."); return; }
-      me.willParticipate = choice;
-      me.readyPart = true;
-      delete me.ready; // 호환: 구 필드 정리
-
-      if(choice===false){ me.balance = Number(me.balance||0) + 50000; } // 불응찰 보너스
+      me.willParticipate = choice; me.readyPart = true; delete me.ready; // 구필드 정리
+      if(choice===false){ me.balance = Number(me.balance||0) + 50000; }
       await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
       toast(choice ? "응찰 참여를 확정했습니다." : "불응찰(+50,000원)을 확정했습니다.");
     }catch(err){ alert(`응찰 확정 실패: ${err.message||err}`); }
   });
 
-  // 입찰 확정/취소(공통)
+  // 입찰 확정/취소
   async function doConfirmBid(){
     const snap=await getDoc(ref); if(!snap.exists()) return;
     const r=snap.data(); if(r.phase!=="bid"){ toast("아직 입찰 단계가 아닙니다."); return; }
     const players=(r.players||[]).map(p=>({...p}));
     const me=players.find(p=>p.name===myName); if(!me) return;
-
-    // 참가자만 가능(안전 가드)
     const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
     if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
 
     const avail=Number(me.balance||0)+Number(me.hold||0);
-    let val = snapToStep(stagedBid);
-    val = Math.max(0, Math.min(val, avail));
-    me.hold=val; me.bid=val; me.balance=avail - val; me.committed=true; me.readyBid=true; // 호환 플래그도 설정
+    let val = snapToStep(stagedBid); val = Math.max(0, Math.min(val, avail));
+    me.hold=val; me.bid=val; me.balance=avail - val; me.committed=true; me.readyBid=true;
     await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
     toast("입찰을 확정했습니다.");
   }
@@ -692,7 +629,6 @@
     const r=snap.data(); if(r.phase!=="bid"){ toast("아직 입찰 단계가 아닙니다."); return; }
     const players=(r.players||[]).map(p=>({...p}));
     const me=players.find(p=>p.name===myName); if(!me) return;
-
     const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
     if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
 
