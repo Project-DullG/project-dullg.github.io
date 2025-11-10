@@ -51,15 +51,14 @@
     <span id="badge" class="badge bg-slate-200">연결 준비중…</span>
   </header>
 
-  <!-- 종료 안내 + 다시하기 버튼 -->
-  <div id="endedBox" class="hidden p-4 rounded border bg-emerald-50 border-emerald-200 text-emerald-800 text-sm flex items-center justify-between gap-3">
+  <div id="endedBox" class="hidden p-4 rounded border bg-emerald-50 border-emerald-200 text-emerald-800 text-sm">
     <span id="endMsg">게임이 종료되었습니다.</span>
-    <button id="btnRetry" class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-3 py-2 hidden">다시하기</button>
+    <a id="btnReplay" href="room.html" class="ml-3 underline">다시하기(방 목록/생성으로)</a>
   </div>
 
   <div id="grid" class="grid gap-4 lg:grid-cols-12">
 
-    <!-- 내 정보 + 단계별 액션 -->
+    <!-- 내 정보 + 단계 액션 -->
     <section id="panelMe" class="card p-4 md:p-6 lg:col-span-5 xl:col-span-4">
       <h2 class="font-semibold mb-3">내 정보</h2>
       <div class="text-sm">닉네임: <span id="myName" class="font-medium"></span></div>
@@ -72,7 +71,9 @@
       <div id="phaseChoose" class="space-y-3">
         <h3 class="font-semibold">1) 응찰 여부 선택</h3>
         <div class="text-sm">이번 상품: <b id="currentItemMe">-</b></div>
-        <div class="mt-2"><img id="imgCurrentMe" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;"></div>
+        <div class="mt-2">
+          <img id="imgCurrentMe" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+        </div>
 
         <div class="flex items-center gap-4 mt-2">
           <label class="flex items-center gap-2 text-sm">
@@ -84,6 +85,7 @@
         </div>
         <div class="flex items-center gap-2">
           <button id="btnLockPart" class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">응찰 확정</button>
+          <button id="btnResyncPart" class="btn bg-slate-200 rounded px-3 py-2">새로고침</button>
           <span id="partStatus" class="badge bg-slate-100">미확정</span>
         </div>
         <p class="text-xs text-slate-500">※ 불응찰 확정 시 이번 라운드 입찰은 불가하며 즉시 50,000원이 지급됩니다.</p>
@@ -93,17 +95,19 @@
       <div id="phaseBid" class="hidden space-y-3">
         <h3 class="font-semibold">2) 비공개 입찰</h3>
         <div class="text-sm">이번 상품: <b id="currentItemBid">-</b></div>
-        <div class="mt-2"><img id="imgCurrentBid" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;"></div>
+        <div class="mt-2">
+          <img id="imgCurrentBid" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+        </div>
 
         <div id="bidDisabled" class="hidden text-sm text-slate-500">이번 라운드 불응찰을 선택하여 입찰할 수 없습니다.</div>
 
         <div id="bidBox" class="hidden">
           <div class="flex items-center gap-2 mb-2 flex-wrap">
-            <button data-step="-5" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-5만</button>
-            <button data-step="-1" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-1만</button>
+            <button data-step="-5" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-5단위</button>
+            <button data-step="-1" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-1단위</button>
             <input id="bidInput" inputmode="numeric" class="mono w-36 md:w-44 border rounded px-3 py-2 text-right" placeholder="0" aria-label="입찰 금액(원)" />
-            <button data-step="1"  class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">+1만</button>
-            <button data-step="5"  class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">+5만</button>
+            <button data-step="1"  class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">+1단위</button>
+            <button data-step="5"  class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">+5단위</button>
           </div>
           <div class="flex items-center gap-2">
             <button id="btnConfirmBid"  class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">입찰 확정</button>
@@ -135,8 +139,11 @@
       <div class="text-sm text-slate-600 mb-2">
         라운드 단계: <b id="phaseText">-</b> · 이번 상품: <b id="currentItem">-</b> · 최근 상품: <b id="lastItem">-</b>
       </div>
-      <div class="mt-2"><img id="imgCurrentPublic" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;"></div>
+      <div class="mt-2">
+        <img id="imgCurrentPublic" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+      </div>
 
+      <!-- 응찰자 공개 -->
       <div id="revealBox" class="hidden mt-4">
         <h3 class="font-semibold mb-2">이번 라운드 응찰자</h3>
         <ul id="participantList" class="space-y-2 text-sm"></ul>
@@ -148,17 +155,14 @@
       <div class="text-xs text-slate-500 mt-2">※ 잔액은 각자만 확인합니다.</div>
     </section>
 
-    <!-- 방장 설정: 상품만 -->
+    <!-- 방장: 상품만 제어 -->
     <section id="hostPanel" class="hidden card p-4 md:p-6 lg:col-span-3 xl:col-span-3">
       <h2 class="font-semibold mb-3">방장 설정</h2>
       <label class="text-sm block mb-1">이번 상품</label>
       <div class="flex items-center gap-2 mb-3">
         <select id="roundItem" class="w-full border rounded px-3 py-2">
           <option value="">— 선택 —</option>
-          <option>오징어</option>
-          <option>독도새우</option>
-          <option>호박</option>
-          <option>명이나물</option>
+          <option>오징어</option><option>독도새우</option><option>호박</option><option>명이나물</option>
         </select>
         <button id="btnRandom" class="btn bg-slate-200 rounded px-3 py-2">랜덤</button>
       </div>
@@ -172,24 +176,26 @@
     </section>
   </div>
 
-  <!-- 토스트 (이미지 + 텍스트) -->
-  <div id="toast" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded z-40">
-    <div class="flex items-center gap-2">
-      <img id="toastImg" width="60" height="60" class="rounded object-contain border border-white/20 hidden" alt="알림">
-      <span id="toastMsg"></span>
-    </div>
+  <!-- 토스트 -->
+  <div id="toast" class="hidden fixed bottom-20 left-1/2 -translate-x-1/2 bg-black/80 text-white px-3 py-2 rounded z-40 flex items-center gap-2">
+    <img id="toastImg" width="20" height="20" style="display:none" alt="">
+    <span id="toastMsg"></span>
   </div>
 </div>
 
 <!-- 모바일 하단 입찰 바 -->
 <div id="mobileBidBar" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t shadow-lg z-50 hidden">
   <div class="max-w-7xl mx-auto px-3 py-2">
-    <div class="text-xs text-slate-600 mb-1">이번 상품: <b id="currentItemMobile">-</b></div>
-    <div class="mt-1"><img id="imgCurrentMobile" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;"></div>
+    <div class="text-xs text-slate-600 mb-1">
+      이번 상품: <b id="currentItemMobile">-</b>
+    </div>
+    <div class="mt-1">
+      <img id="imgCurrentMobile" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+    </div>
     <div class="flex items-center gap-2 mt-2">
-      <button data-step="-1" class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">-1만</button>
+      <button data-step="-1" class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">-1단위</button>
       <input id="bidInputMobile" inputmode="numeric" class="mono w-28 flex-none border rounded px-2 py-2 text-right" placeholder="0" />
-      <button data-step="1"  class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">+1만</button>
+      <button data-step="1"  class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">+1단위</button>
     </div>
     <div class="flex items-center gap-2 mt-2">
       <button id="btnConfirmBidMobile" class="flex-1 py-2 rounded bg-indigo-600 text-white">확정</button>
@@ -202,17 +208,7 @@
   const $=s=>document.querySelector(s);
   const fmt=n=>Number(n||0).toLocaleString("ko-KR");
   const show=(sel,yes)=>$(sel).classList.toggle("hidden",!yes);
-
-  // 토스트(이미지 지원)
-  const RESULT_IMG={ success:"success.png", fail:"fail.png" };
-  function toast(msg, kind=null){
-    const box=$("#toast"), img=$("#toastImg"), msgEl=$("#toastMsg");
-    msgEl.textContent=msg;
-    if(kind && RESULT_IMG[kind]){ img.src=RESULT_IMG[kind]; img.classList.remove("hidden"); }
-    else{ img.classList.add("hidden"); }
-    box.classList.remove("hidden");
-    setTimeout(()=>box.classList.add("hidden"), 2000);
-  }
+  const toast=(msg,img)=>{ $("#toastMsg").textContent=msg; const im=$("#toastImg"); if(img){im.src=img; im.style.display="";}else{im.style.display="none";} $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2200); };
 
   const params=new URL(location.href).searchParams;
   const roomId=(params.get("room")||"").toUpperCase();
@@ -222,6 +218,7 @@
   await window.firebaseReady;
   const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp,
           getAuth, signInAnonymously, runTransaction } = window.__fb;
+
   const db=getFirestore(), auth=getAuth();
   try{ if(!auth.currentUser) await signInAnonymously(auth);
        $("#badge").textContent="연결됨"; $("#badge").className="badge bg-indigo-600 text-white";
@@ -229,262 +226,125 @@
 
   const ref=doc(db,"rooms",roomId);
 
-  // 아이템 → 이미지 파일 매핑
-  const ITEM_IMG = { "오징어":"squid.png", "독도새우":"shrimp.png", "호박":"pumpkin.png", "명이나물":"wild_leek.png" };
-  function setItemImg(el, item){
-    if(!el) return;
-    const file = ITEM_IMG[item || ""];
-    if(file){ el.src=file; el.style.display=""; el.alt=item||"상품"; }
-    else{ el.style.display="none"; }
-  }
-  function renderItemImages(item){
-    setItemImg($("#imgCurrentMe"), item);
-    setItemImg($("#imgCurrentBid"), item);
-    setItemImg($("#imgCurrentPublic"), item);
-    setItemImg($("#imgCurrentMobile"), item);
-  }
+  // 이미지 매핑
+  const ITEM_IMG = {
+    "오징어":"squid.png","독도새우":"shrimp.png","호박":"pumpkin.png","명이나물":"wild_leek.png",
+  };
+  const RESULT_IMG = { success:"success.png", fail:"fail.png" };
+  function setItemImg(el, item){ if(!el) return; const file=ITEM_IMG[item||""]; if(file){ el.src=file; el.style.display=""; el.alt=item||"상품"; }else{ el.style.display="none"; } }
+  function renderItemImages(item){ setItemImg($("#imgCurrentMe"),item); setItemImg($("#imgCurrentBid"),item); setItemImg($("#imgCurrentPublic"),item); setItemImg($("#imgCurrentMobile"),item); }
 
-  // 유틸
-  function guessHost(r){
-    const a=(r?.hostName||"").trim().toLowerCase();
-    const b=(myName||"").trim().toLowerCase();
-    const p1=Array.isArray(r?.players)? r.players[0]:null;
-    const p1n=(p1?.name||"").trim().toLowerCase();
-    return (a&&a===b)||(p1n&&p1n===b);
-  }
-  function checkWin(items=[]){
-    const total=items.length; const c={}; items.forEach(it=>c[it]=(c[it]||0)+1);
-    if(total>=5) return "any5";
-    if(Object.values(c).some(v=>v>=3)) return "same3";
-    if(new Set(items).size>=4) return "diff4";
-    return "";
-  }
-  const ITEMS=["오징어","독도새우","호박","명이나물"];
-  const randItem=()=>ITEMS[Math.floor(Math.random()*ITEMS.length)];
+  // 유틸/상태
+  function guessHost(r){const a=(r?.hostName||"").trim().toLowerCase(); const b=(myName||"").trim().toLowerCase(); const p1=(r?.players||[])[0]; const p1n=(p1?.name||"").trim().toLowerCase(); return (a&&a===b)||(p1n&&p1n===b);}
+  function checkWin(items=[]){const t=items.length,c={};items.forEach(it=>c[it]=(c[it]||0)+1); if(t>=5) return "any5"; if(Object.values(c).some(v=>v>=3)) return "same3"; if(new Set(items).size>=4) return "diff4"; return "";}
+  const ITEMS=["오징어","독도새우","호박","명이나물"]; const randItem=()=>ITEMS[Math.floor(Math.random()*ITEMS.length)];
 
-  // 상태
   let isHost=false, currentPlayers=[], currentMe=null;
   let lastSeenResultRound=0, singleRevealTimerSet=false;
 
-  // 고정 입찰 단위(1만)
-  const bidStep=10000;
-  const bidInput=$("#bidInput"), bidInputMobile=$("#bidInputMobile");
+  // 입찰(1만 단위)
+  let bidStep=10000, stagedBid=0;
   const parseMoney=s=>Number((s||"0").replace(/[^\d]/g,""))||0;
   const snapToStep=n=>Math.floor(Number(n||0)/bidStep)*bidStep;
-  let stagedBid=0;
-  function syncBidInputs(){ const v=snapToStep(stagedBid); bidInput && (bidInput.value=v.toLocaleString("ko-KR")); bidInputMobile && (bidInputMobile.value=v.toLocaleString("ko-KR")); }
+  const bidInput=$("#bidInput"), bidInputMobile=$("#bidInputMobile");
+  function syncBidInputs(){const v=snapToStep(stagedBid); if(bidInput) bidInput.value=v.toLocaleString("ko-KR"); if(bidInputMobile) bidInputMobile.value=v.toLocaleString("ko-KR");}
   function clampToAvail(a){ stagedBid=Math.max(0, Math.min(snapToStep(stagedBid), a)); syncBidInputs(); }
-  function bindStepButtons(){
-    document.querySelectorAll("[data-step]").forEach(btn=>{
-      if(btn._bound) return; btn._bound=true;
-      btn.addEventListener("click", ()=>{
-        const factor=Number(btn.getAttribute("data-step"));
-        const avail=(currentMe?.balance||0)+(currentMe?.hold||0);
-        stagedBid = stagedBid + factor*bidStep; clampToAvail(avail);
-      });
-    });
-  }
-  bindStepButtons(); syncBidInputs();
+  function bindStepButtons(){ document.querySelectorAll("[data-step]").forEach(btn=>{ if(btn._bound) return; btn._bound=true; btn.addEventListener("click", ()=>{ const factor=Number(btn.getAttribute("data-step")); const delta=factor*bidStep; const avail=(currentMe?.balance||0)+(currentMe?.hold||0); stagedBid=stagedBid+delta; clampToAvail(avail); }); }); }
+  syncBidInputs(); bindStepButtons();
   bidInput?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInput.value); syncBidInputs(); });
   bidInput?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
   bidInputMobile?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInputMobile.value); syncBidInputs(); });
   bidInputMobile?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
 
-  // 종료 UI + 다시하기 버튼
+  // 종료 UI(문서 삭제 후에도 표시 유지)
   function endUI(msg, winners=[]){
     $("#endMsg").textContent = winners.length? `게임 종료! 우승: ${winners.join(", ")}` : msg;
     $("#endedBox").classList.remove("hidden");
-    const retry=$("#btnRetry");
-    if(retry){
-      retry.classList.remove("hidden");
-      retry.onclick=()=>{ location.href = "room.html"; };
-    }
-    ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile"]
+    ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
       .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
     show("#mobileBidBar", false);
   }
 
-  // --- phase 기본값 보정
-  async function ensurePhaseDefault(){
-    try{
-      await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref);
-        if(!snap.exists()) return;
-        const r=snap.data();
-        if(!r.phase){ tx.update(ref,{ phase:"choose", updatedAt: serverTimestamp() }); }
-      });
-    }catch{}
-  }
+  // phase 기본값 보정 & 아이템 자동
+  async function ensurePhaseDefault(){ try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(!r.phase) tx.update(ref,{phase:"choose",updatedAt:serverTimestamp()}); }); }catch{} }
+  async function ensureRandomItemIfEmpty(){ try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if((r.phase||"choose")==="choose" && !r.currentItem){ tx.update(ref,{currentItem:randItem(),updatedAt:serverTimestamp()}); } }); }catch{} }
 
-  // 아이템 자동 랜덤(choose에서 비어있으면)
-  async function ensureRandomItemIfEmpty(){
-    try{
-      await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref);
-        if(!snap.exists()) return;
-        const r=snap.data();
-        if((r.phase||"choose")==="choose" && !r.currentItem){
-          tx.update(ref,{ currentItem: randItem(), updatedAt: serverTimestamp() });
-        }
-      });
-    }catch{}
-  }
-
-  // 라운드 리셋 시 상태 초기화
-  function resetPlayerState(p){
-    const np={ ...p,
-      hold:0, bid:0, committed:false,
-      readyPart:false, readyBid:false, willParticipate:null
-    };
-    delete np.ready; // 구필드 제거
-    return np;
-  }
-
-  // 전원 응/불응찰 확정 후 분기(0/1/2+)
+  // choose → (0명 skip / 1명 reveal_single / 2명이상 bid)
   async function afterAllLockedAdvance(){
-    try{
-      await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref); if(!snap.exists()) return;
-        const r=snap.data(); if((r.phase||"choose")!=="choose") return;
+    try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if((r.phase||"choose")!=="choose") return;
+      const players=(r.players||[]); if(players.length===0) return;
+      const allLocked=players.every(p=>p.readyPart===true || p.ready===true); if(!allLocked) return;
+      const parts=players.filter(p=>p.willParticipate===true || (p.willParticipate===undefined && p.committed===true)).map(p=>p.name);
+      const item=(r.currentItem||"").trim() || randItem();
 
-        const players=Array.isArray(r.players)? r.players:[]; if(players.length===0) return;
-        const allLocked = players.every(p => p.readyPart===true);
-        if(!allLocked) return;
-
-        const parts = players.filter(p => p.willParticipate===true).map(p => p.name);
-        const item=(r.currentItem||"").trim() || randItem();
-
-        if(parts.length===0){
-          const resetPlayers = players.map(resetPlayerState);
-          tx.update(ref,{
-            players: resetPlayers,
-            round: Number(r.round||0)+1,
-            lastItem: item,
-            currentItem:"",
-            participants: [],
-            lastWinners: [],
-            resultRound: Number(r.round||0)+1,
-            phase:"choose",
-            updatedAt: serverTimestamp()
-          });
-          return;
-        }
-
-        if(parts.length===1){
-          tx.update(ref,{
-            participants: parts,
-            currentItem: item,
-            phase:"reveal_single",
-            revealRound: Number(r.round||0)+1,
-            revealAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-          });
-          return;
-        }
-
-        tx.update(ref,{ participants: parts, currentItem: item, phase:"bid", updatedAt: serverTimestamp() });
-      });
-    }catch{}
+      if(parts.length===0){
+        const reset=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
+        tx.update(ref,{players:reset,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:[],resultRound:(r.round||0)+1,phase:"choose",updatedAt:serverTimestamp()});
+        return;
+      }
+      if(parts.length===1){
+        tx.update(ref,{participants:parts,currentItem:item,phase:"reveal_single",revealRound:(r.round||0)+1,revealAt:serverTimestamp(),updatedAt:serverTimestamp()});
+        return;
+      }
+      tx.update(ref,{participants:parts,currentItem:item,phase:"bid",updatedAt:serverTimestamp()});
+    }); }catch{}
   }
 
-  // 입찰 단계 전원 완료 → 정산
+  // bid → 정산
   async function attemptSettleFromBid(){
-    try{
-      await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref); if(!snap.exists()) return;
-        const r=snap.data(); if(r.phase!=="bid") return;
+    try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(r.phase!=="bid") return;
+      let players=(r.players||[]).map(p=>({...p}));
+      const partNames=(r.participants||[]);
+      const participants=players.filter(p=>partNames.includes(p.name));
+      const readyAll = participants.length===0 ? true : participants.every(p=>p.readyBid===true || p.committed===true);
+      if(!readyAll) return;
 
-        let players=Array.isArray(r.players)? r.players.map(p=>({...p})):[];
-        const partNames=Array.isArray(r.participants)? r.participants:[];
-        const participants = players.filter(p=>partNames.includes(p.name));
-        const readyAll = participants.length===0 ? true : participants.every(p => p.readyBid===true || p.committed===true);
-        if(!readyAll) return;
-
-        const item=(r.currentItem||"").trim() || randItem();
-        let winners=[];
-
-        if(participants.length===0){
-          players = players.map(resetPlayerState);
+      const item=(r.currentItem||"").trim() || randItem();
+      let winners=[];
+      if(participants.length){
+        const maxHold=Math.max(0,...participants.map(p=>Number(p.hold||0)));
+        if(maxHold>0){
+          winners=participants.filter(p=>Number(p.hold||0)===maxHold).map(p=>p.name);
+          players=players.map(p=>{
+            const isPart=partNames.includes(p.name);
+            let balance=Number(p.balance||0), hold=Number(p.hold||0);
+            const items=[...(p.items||[])];
+            if(isPart){ if(winners.includes(p.name)) items.push(item); else balance+=hold; }
+            return {...p,balance,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null,items};
+          });
         }else{
-          const maxHold=Math.max(0, ...participants.map(p=>Number(p.hold||0)));
-          if(maxHold>0){
-            winners = participants.filter(p=>Number(p.hold||0)===maxHold).map(p=>p.name);
-            players = players.map(p=>{
-              const isPart=partNames.includes(p.name);
-              let balance=Number(p.balance||0), hold=Number(p.hold||0);
-              const items=Array.isArray(p.items)? [...p.items] : [];
-              if(isPart){ if(winners.includes(p.name)) items.push(item); else balance += hold; }
-              return resetPlayerState({ ...p, balance, items });
-            });
-          }else{
-            players = players.map(resetPlayerState);
-            winners=[];
-          }
+          players=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
+          winners=[];
         }
+      }else{
+        players=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
+      }
 
-        tx.update(ref,{
-          players,
-          round:Number(r.round||0)+1,
-          lastItem:item,
-          currentItem:"",
-          participants: [],
-          lastWinners:winners,
-          resultRound:Number(r.round||0)+1,
-          phase:"choose",
-          updatedAt: serverTimestamp()
-        });
-      });
-    }catch{}
+      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",updatedAt:serverTimestamp()});
+    }); }catch{}
   }
 
-  // 단독 응찰 공개 → 1초 후 자동 정산(0원 낙찰)
+  // 단독 응찰 → 0원 낙찰 정산
   async function settleAfterSingleReveal(){
-    try{
-      await runTransaction(db, async (tx)=>{
-        const snap=await tx.get(ref); if(!snap.exists()) return;
-        const r=snap.data(); if(r.phase!=="reveal_single") return;
-        let players=Array.isArray(r.players)? r.players.map(p=>({...p})):[];
-        const partNames=Array.isArray(r.participants)? r.participants:[];
-        if(partNames.length!==1) return;
-
-        const item=(r.currentItem||"").trim() || randItem();
-        const only=partNames[0]; const winners=[only];
-
-        players = players.map(p=>{
-          if(p.name===only){
-            const refund=Number(p.hold||0);
-            return resetPlayerState({
-              ...p,
-              balance:Number(p.balance||0)+refund,
-              items:[...(p.items||[]), item]
-            });
-          }
-          return resetPlayerState(p);
-        });
-
-        tx.update(ref,{
-          players,
-          round:Number(r.round||0)+1,
-          lastItem:item,
-          currentItem:"",
-          participants: [],
-          lastWinners:winners,
-          resultRound:Number(r.round||0)+1,
-          phase:"choose",
-          updatedAt: serverTimestamp()
-        });
+    try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(r.phase!=="reveal_single") return;
+      let players=(r.players||[]).map(p=>({...p}));
+      const partNames=(r.participants||[]); if(partNames.length!==1) return;
+      const item=(r.currentItem||"").trim() || randItem(); const only=partNames[0]; const winners=[only];
+      players=players.map(p=>{
+        if(p.name===only){ const refund=Number(p.hold||0); return {...p,balance:Number(p.balance||0)+refund,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null,items:[...(p.items||[]),item]}; }
+        return {...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null};
       });
-    }catch{}
+      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",updatedAt:serverTimestamp()});
+    }); }catch{}
   }
 
-  // 초기: phase 기본값 보정
+  // 초기
   await ensurePhaseDefault();
 
   // 스냅샷
   onSnapshot(ref, async (s)=>{
     if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
     const d=s.data();
-    if(d.gameOver){ endUI("게임이 종료되었습니다.", d.winners||[]); }
 
     $("#round").textContent=d.round??0;
     const phaseLabel = d.phase==="choose" ? "응찰 선택" :
@@ -501,36 +361,29 @@
 
     isHost=guessHost(d);
     $("#role").textContent=isHost?"host":"guest";
-    isHost ? $("#hostPanel").classList.remove("hidden") : $("#hostPanel").classList.add("hidden");
+    show("#hostPanel", isHost?true:false);
 
     currentPlayers = Array.isArray(d.players)? d.players : [];
     currentMe = currentPlayers.find(p=>p.name===myName) || null;
 
-    $("#myBalance").textContent = (currentMe?.balance||0).toLocaleString("ko-KR");
-    $("#myHold").textContent    = (currentMe?.hold||0).toLocaleString("ko-KR");
+    $("#myBalance").textContent = fmt(currentMe?.balance||0);
+    $("#myHold").textContent    = fmt(currentMe?.hold||0);
 
-    // 소지품 + 우승 감지
+    // 소지품 + 자동 우승 → 문서 삭제
     const myItems=Array.isArray(currentMe?.items)? currentMe.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
-    myItems.forEach((it,i)=>{
-      const li=document.createElement("li");
-      li.className="flex items-center justify-between border rounded px-3 py-2";
-      li.textContent=`${i+1}. ${it}`;
-      ulItems.appendChild(li);
-    });
-    if(!d.gameOver){
-      const reason=checkWin(myItems);
-      if(reason){
-        try{ await updateDoc(ref,{ gameOver:true, winners:[myName], winReason:reason, updatedAt:serverTimestamp() }); endUI("게임 종료!", [myName]); }catch(_){}
-      }
-    }
+    myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
+    const reason=checkWin(myItems);
+    if(reason){ try{ endUI(`게임 종료! 우승: ${myName}`,[myName]); await deleteDoc(ref);}catch(_){} }
 
-    // 현황(readyPart/readyBid만 사용)
+    // 현황
     const ul=$("#players"); ul.innerHTML="";
     currentPlayers.forEach((p,i)=>{
-      const tag = d.phase==="choose" ? (p.readyPart ? "응찰 확정":"대기")
-                : d.phase==="bid"    ? ((p.readyBid||p.committed) ? "입찰 확정":"대기")
-                : d.phase==="reveal_single" ? (p.readyPart ? "응찰 확정":"대기")
+      const isReadyPart = (p.readyPart===true) || (p.ready===true);
+      const isReadyBid  = (p.readyBid===true)  || (p.committed===true);
+      const tag = d.phase==="choose" ? (isReadyPart ? "응찰 확정":"대기")
+                : d.phase==="bid"    ? (isReadyBid  ? "입찰 확정":"대기")
+                : d.phase==="reveal_single" ? (isReadyPart ? "응찰 확정":"대기")
                 : "대기";
       const stClass = /확정/.test(tag) ? "bg-emerald-100" : "bg-slate-100";
       const li=document.createElement("li");
@@ -546,15 +399,8 @@
     if(Array.isArray(d.participants) && d.participants.length>0){
       show("#revealBox", true);
       const pu=$("#participantList"); pu.innerHTML="";
-      d.participants.forEach((nm,idx)=>{
-        const li=document.createElement("li");
-        li.className="border rounded px-3 py-2";
-        li.textContent = `${idx+1}. ${nm}`;
-        pu.appendChild(li);
-      });
-    }else{
-      show("#revealBox", false);
-    }
+      d.participants.forEach((nm,idx)=>{ const li=document.createElement("li"); li.className="border rounded px-3 py-2"; li.textContent = `${idx+1}. ${nm}`; pu.appendChild(li); });
+    }else{ show("#revealBox", false); }
 
     // 단계별 내 UI + 자동 전환
     if(d.phase==="choose" || d.phase===undefined){
@@ -563,9 +409,9 @@
 
       const partRadios=[...document.querySelectorAll('input[name="part"]')];
       const partVal = currentMe?.willParticipate===true ? "yes" : currentMe?.willParticipate===false? "no" : null;
-      partRadios.forEach(r=>{ r.checked=(r.value===partVal); r.disabled=!!currentMe?.readyPart; });
-      $("#btnLockPart").disabled = !!currentMe?.readyPart || !(d.currentItem);
-      $("#partStatus").textContent = currentMe?.readyPart
+      partRadios.forEach(r=>{ r.checked=(r.value===partVal); r.disabled=((currentMe?.readyPart===true)||(currentMe?.ready===true)); });
+      $("#btnLockPart").disabled = ((currentMe?.readyPart===true)||(currentMe?.ready===true)) || !(d.currentItem);
+      $("#partStatus").textContent = ((currentMe?.readyPart===true)||(currentMe?.ready===true))
         ? (currentMe?.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
 
       await afterAllLockedAdvance();
@@ -591,21 +437,11 @@
   function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
 
   // 방장: 상품 변경/랜덤
-  $("#roundItem").addEventListener("change", async ()=>{
-    const val=$("#roundItem").value;
-    try{ await updateDoc(ref,{ currentItem:val || "", updatedAt:serverTimestamp() }); }catch(_){}
-  });
-  $("#btnRandom").addEventListener("click", async ()=>{
-    const r=randItem(); $("#roundItem").value=r;
-    try{ await updateDoc(ref,{ currentItem:r, updatedAt:serverTimestamp() }); }catch(_){}
-  });
+  $("#roundItem").addEventListener("change", async ()=>{ const val=$("#roundItem").value; try{ await updateDoc(ref,{ currentItem:val||"", updatedAt:serverTimestamp() }); }catch(_){ } });
+  $("#btnRandom").addEventListener("click", async ()=>{ const r=randItem(); $("#roundItem").value=r; try{ await updateDoc(ref,{ currentItem:r, updatedAt:serverTimestamp() }); }catch(_){ } });
 
   // 게임 종료(방 삭제)
-  $("#btnEndGame").onclick = async ()=>{
-    const ok=confirm("정말 게임을 종료하고 방을 삭제할까요?");
-    if(!ok) return;
-    try{ await deleteDoc(ref); }catch(err){ showErr(`삭제 실패: ${err.message||err}`); }
-  };
+  $("#btnEndGame").onclick = async ()=>{ const ok=confirm("정말 게임을 종료하고 방을 삭제할까요?"); if(!ok) return; try{ await deleteDoc(ref); }catch(err){ showErr(`삭제 실패: ${err.message||err}`); } };
 
   // 응찰 확정
   $("#btnLockPart").addEventListener("click", async ()=>{
@@ -616,12 +452,26 @@
       const snap=await getDoc(ref); if(!snap.exists()) return;
       const r=snap.data(); const players=(r.players||[]).map(p=>({...p}));
       const me=players.find(p=>p.name===myName); if(!me) return;
-      if(me.readyPart){ toast("이미 응찰 확정했습니다."); return; }
-      me.willParticipate = choice; me.readyPart = true;
+      if(me.readyPart===true || me.ready===true){ toast("이미 응찰 확정했습니다."); return; }
+      me.willParticipate = choice; me.readyPart = true; delete me.ready;
       if(choice===false){ me.balance = Number(me.balance||0) + 50000; }
       await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
       toast(choice ? "응찰 참여를 확정했습니다." : "불응찰(+50,000원)을 확정했습니다.");
     }catch(err){ alert(`응찰 확정 실패: ${err.message||err}`); }
+  });
+
+  // 응찰 새로고침
+  $("#btnResyncPart").addEventListener("click", async ()=>{
+    try{
+      const s=await getDoc(ref); if(!s.exists()) return;
+      const d=s.data();
+      const me=(d.players||[]).find(p=>p.name===myName) || {};
+      const canEdit = !(me.readyPart===true || me.ready===true);
+      [...document.querySelectorAll('input[name="part"]')].forEach(r=> r.disabled = !canEdit);
+      $("#btnLockPart").disabled = !canEdit || !(d.currentItem);
+      $("#partStatus").textContent = me.readyPart||me.ready ? (me.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
+      toast("상태를 새로고침했어요.");
+    }catch(e){ alert(`새로고침 실패: ${e.message||e}`); }
   });
 
   // 입찰 확정/취소
@@ -632,7 +482,6 @@
     const me=players.find(p=>p.name===myName); if(!me) return;
     const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
     if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
-
     const avail=Number(me.balance||0)+Number(me.hold||0);
     let val = snapToStep(stagedBid); val = Math.max(0, Math.min(val, avail));
     me.hold=val; me.bid=val; me.balance=avail - val; me.committed=true; me.readyBid=true;
@@ -646,7 +495,6 @@
     const me=players.find(p=>p.name===myName); if(!me) return;
     const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
     if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
-
     const refund=Number(me.hold||0);
     me.balance=Number(me.balance||0)+refund; me.hold=0; me.bid=0; me.committed=false; me.readyBid=true;
     await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
@@ -657,9 +505,9 @@
   $("#btnConfirmBidMobile")?.addEventListener("click", doConfirmBid);
   $("#btnCancelBidMobile")?.addEventListener("click", doCancelBid);
 
-  // 라운드 결과 토스트 (성공/실패 이미지 포함)
+  // 라운드 결과 토스트(성공/실패 이미지)
   onSnapshot(ref,(s)=>{
-    if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
+    if(!s.exists()) return;
     const d=s.data();
     if((d.resultRound||0) <= lastSeenResultRound) return;
     lastSeenResultRound = d.resultRound||0;
@@ -668,8 +516,8 @@
     const wasPart = Array.isArray(d.participantsBackup) ? d.participantsBackup.includes(myName)
                     : Array.isArray(d.participants) ? d.participants.includes(myName) : null;
 
-    if (winners.includes(myName)) toast(`낙찰되었습니다! (${d.lastItem})`, "success");
-    else if (wasPart===true)      toast(`입찰 실패(환불 완료).`, "fail");
+    if (winners.includes(myName)) toast(`낙찰! (${d.lastItem})`, RESULT_IMG.success);
+    else if (wasPart===true)      toast(`입찰 실패(환불 완료)`, RESULT_IMG.fail);
     else                          toast(`불응찰 라운드 종료.`);
   });
 </script>
