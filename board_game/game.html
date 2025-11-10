@@ -70,7 +70,12 @@
       <div id="phaseChoose" class="space-y-3">
         <h3 class="font-semibold">1) 응찰 여부 선택</h3>
         <div class="text-sm">이번 상품: <b id="currentItemMe">-</b></div>
-        <div class="flex items-center gap-4">
+        <!-- 이미지 자리 -->
+        <div class="mt-2">
+          <img id="imgCurrentMe" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+        </div>
+
+        <div class="flex items-center gap-4 mt-2">
           <label class="flex items-center gap-2 text-sm">
             <input type="radio" name="part" value="yes" /> 응찰 참여
           </label>
@@ -89,6 +94,11 @@
       <div id="phaseBid" class="hidden space-y-3">
         <h3 class="font-semibold">2) 비공개 입찰</h3>
         <div class="text-sm">이번 상품: <b id="currentItemBid">-</b></div>
+        <!-- 이미지 자리 -->
+        <div class="mt-2">
+          <img id="imgCurrentBid" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+        </div>
+
         <div id="bidDisabled" class="hidden text-sm text-slate-500">이번 라운드 불응찰을 선택하여 입찰할 수 없습니다.</div>
 
         <div id="bidBox" class="hidden">
@@ -139,9 +149,13 @@
       <div class="text-sm text-slate-600 mb-2">
         라운드 단계: <b id="phaseText">-</b> · 이번 상품: <b id="currentItem">-</b> · 최근 상품: <b id="lastItem">-</b>
       </div>
+      <!-- 이미지 자리 -->
+      <div class="mt-2">
+        <img id="imgCurrentPublic" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+      </div>
 
       <!-- 응찰자 공개 -->
-      <div id="revealBox" class="hidden">
+      <div id="revealBox" class="hidden mt-4">
         <h3 class="font-semibold mb-2">이번 라운드 응찰자</h3>
         <ul id="participantList" class="space-y-2 text-sm"></ul>
         <p class="text-xs text-slate-500 mt-2">※ 응찰자 명단만 공개됩니다. 낙찰자/입찰액은 공개되지 않습니다.</p>
@@ -187,7 +201,11 @@
     <div class="text-xs text-slate-600 mb-1">
       이번 상품: <b id="currentItemMobile">-</b> · 내 단위: <b id="stepMobile">-</b>
     </div>
-    <div class="flex items-center gap-2">
+    <!-- 이미지 자리 -->
+    <div class="mt-1">
+      <img id="imgCurrentMobile" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
+    </div>
+    <div class="flex items-center gap-2 mt-2">
       <button data-step="-1" class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">-1단위</button>
       <input id="bidInputMobile" inputmode="numeric" class="mono w-28 flex-none border rounded px-2 py-2 text-right" placeholder="0" />
       <button data-step="1"  class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">+1단위</button>
@@ -219,6 +237,31 @@
   }catch(e){ $("#badge").textContent="연결 실패"; $("#badge").className="badge bg-rose-600 text-white"; }
 
   const ref=doc(db,"rooms",roomId);
+
+  // 아이템 → 이미지 파일 매핑
+  const ITEM_IMG = {
+    "오징어": "squid.png",
+    "독도새우": "shrimp.png",
+    "호박": "pumpkin.png",
+    "명이나물": "wild_leek.png",
+  };
+  function setItemImg(el, item){
+    if(!el) return;
+    const file = ITEM_IMG[item || ""];
+    if(file){
+      el.src = file;            // 경로가 다르면 여기만 수정
+      el.style.display = "";
+      el.alt = item || "상품";
+    }else{
+      el.style.display = "none";
+    }
+  }
+  function renderItemImages(item){
+    setItemImg(document.getElementById("imgCurrentMe"), item);
+    setItemImg(document.getElementById("imgCurrentBid"), item);
+    setItemImg(document.getElementById("imgCurrentPublic"), item);
+    setItemImg(document.getElementById("imgCurrentMobile"), item);
+  }
 
   // 유틸
   function guessHost(r){
@@ -279,7 +322,7 @@
     show("#mobileBidBar", false);
   }
 
-  // --- 보정: phase 없으면 choose로 세팅 (핵심 패치 A)
+  // --- phase 기본값 보정
   async function ensurePhaseDefault(){
     try{
       await runTransaction(db, async (tx)=>{
@@ -308,7 +351,7 @@
     }catch{}
   }
 
-  // 전원 응/불응찰 확정 후 분기(0/1/2+)  (핵심 패치 B: undefined→choose로 간주)
+  // 전원 응/불응찰 확정 후 분기(0/1/2+)
   async function afterAllLockedAdvance(){
     try{
       await runTransaction(db, async (tx)=>{
@@ -481,6 +524,8 @@
     $("#currentItemMe").textContent = d.currentItem || "-";
     $("#currentItemBid").textContent= d.currentItem || "-";
     $("#currentItemMobile").textContent = d.currentItem || "-";
+    // 이미지 갱신
+    renderItemImages(d.currentItem || "");
 
     isHost=guessHost(d);
     $("#role").textContent=isHost?"host":"guest";
