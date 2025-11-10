@@ -42,7 +42,7 @@
     <span id="badge" class="text-xs px-2 py-1 rounded bg-slate-200">연결 준비중…</span>
   </header>
 
-  <!-- 이미 만들어진 방으로 입장 (닉네임 입력 없음, join.html로 이동) -->
+  <!-- 이미 만들어진 방으로 입장 -->
   <section id="view-list" class="bg-white rounded-xl shadow p-4 md:p-6">
     <div class="flex items-center justify-between mb-3">
       <h2 class="font-semibold">이미 만들어진 방으로 입장</h2>
@@ -112,12 +112,11 @@
   const $ = s => document.querySelector(s);
   const show = (sel, yes) => $(sel).classList.toggle("hidden", !yes);
   const setBadge=(t,c)=>{const b=$("#badge");b.textContent=t;b.className=`text-xs px-2 py-1 rounded ${c}`};
-  const randId = (n=6)=>{const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<n;i++)s+=A[Math.floor(Math.random()*A.length)];return s};
 
   await window.firebaseReady;
   const { 
     getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, onSnapshot, getDocs,
-    collection, query, where, orderBy, limit, serverTimestamp,
+    collection, serverTimestamp,
     getAuth, signInAnonymously 
   } = window.__fb;
 
@@ -128,7 +127,7 @@
   try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); $("#btnCreate").disabled=false; }
   catch{ setBadge("연결 실패","bg-rose-600 text-white"); }
 
-  // ===== 방 목록 (진행 전 + 미종료) =====
+  // ===== 방 목록 (인덱스 없이 전부 가져와 필터/정렬) =====
   const listEl = $("#roomsList");
   const errJoinList = $("#errJoinList");
 
@@ -156,8 +155,6 @@
   async function refreshRoomsOnce(){
     try{
       errJoinList.classList.add("hidden");
-
-      // 인덱스 없이도 동작하도록: 전체 가져와서 클라이언트 필터/정렬
       const snap = await getDocs(collection(db,"rooms"));
       const all = [];
       snap.forEach(docu=>{
@@ -171,10 +168,9 @@
           createdAt: d.createdAt?.toMillis?.() || 0
         });
       });
-      const rooms = all
-        .filter(r=>!r.started && !r.gameOver)
-        .sort((a,b)=>b.createdAt - a.createdAt)
-        .slice(0,20);
+      const rooms = all.filter(r=>!r.started && !r.gameOver)
+                       .sort((a,b)=>b.createdAt - a.createdAt)
+                       .slice(0,20);
 
       listEl.innerHTML = rooms.map(roomCard).join("");
       $("#roomsEmpty").classList.toggle("hidden", rooms.length!==0);
@@ -191,7 +187,6 @@
             const count = Array.isArray(r.players)? r.players.length : 0;
             if (r.started || r.gameOver) throw new Error("이미 진행 중이거나 종료된 방입니다.");
             if (count >= 6) throw new Error("정원이 가득 찼습니다.");
-
             const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
             const url = new URL(baseDir + "join.html");
             url.searchParams.set("room", roomId);
@@ -208,12 +203,11 @@
       errJoinList.classList.remove("hidden");
     }
   }
-
   onSnapshot(collection(db,"rooms"), ()=> refreshRoomsOnce());
   $("#btnRefresh").addEventListener("click", refreshRoomsOnce);
   refreshRoomsOnce();
 
-  // ===== 내 방(이미 만든 방) 복원 & 중복 생성 방지 =====
+  // ===== 내 방 복원 & 중복 생성 방지 =====
   const ownRoomIdStorageKey = "ownRoomId";
   let ownRoomId = localStorage.getItem(ownRoomIdStorageKey) || "";
 
@@ -221,28 +215,20 @@
     if(!ownRoomId) return false;
     const ref = doc(db,"rooms", ownRoomId);
     const snap = await getDoc(ref);
-    if(!snap.exists()){
+    if(!snap.exists() || snap.data().gameOver===true){
       localStorage.removeItem(ownRoomIdStorageKey);
       ownRoomId = "";
       return false;
     }
-    const r=snap.data();
-    if(r.gameOver===true){
-      localStorage.removeItem(ownRoomIdStorageKey);
-      ownRoomId = "";
-      return false;
-    }
-    // 방장 대기 화면으로 전환 + 목록/생성 숨김
     show("#view-list", false);
     show("#view-create", false);
     $("#roomId").textContent = ownRoomId;
-    $("#shareLink").value = r.link || "";
+    $("#shareLink").value = snap.data().link || "";
     show("#view-host", true);
 
-    // 참가자 구독
+    // 대기 인원 실시간
     onSnapshot(ref, (s)=>{
       if(!s.exists()){
-        // 방이 삭제되면 다시 기본 화면으로
         show("#view-host", false);
         show("#view-list", true);
         show("#view-create", true);
@@ -252,19 +238,17 @@
         return;
       }
       const data = s.data();
-      const list = data.players || [];
       const ul=$("#waitList"); ul.innerHTML="";
-      list.forEach((p,i)=>{
+      (data.players||[]).forEach((p,i)=>{
         const li=document.createElement("li");
         li.className="flex items-center justify-between border rounded px-3 py-2";
         li.innerHTML=`<span>${i+1}. ${p.name}</span>`;
         ul.appendChild(li);
       });
-      $("#count").textContent=list.length;
-      $("#btnStart").disabled=!(list.length>=3 && list.length<=6);
+      $("#count").textContent=(data.players||[]).length;
+      $("#btnStart").disabled=!((data.players||[]).length>=3 && (data.players||[]).length<=6);
     });
 
-    // 시작 버튼
     $("#btnStart").onclick = async ()=>{
       try{
         const ref=doc(db,"rooms",ownRoomId);
@@ -274,33 +258,43 @@
         const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
         const gameUrl = new URL(baseDir + "game.html");
         gameUrl.searchParams.set("room", ownRoomId);
-        gameUrl.searchParams.set("name", r.hostName || "");
+        gameUrl.searchParams.set("name", snap.data().hostName || "");
         location.href = gameUrl.toString();
       }catch(e){
-        const b=$("#errHost"); b.textContent=`시작 실패: ${e.message||e}`; b.classList.remove("hidden");
+        $("#errHost").textContent=`시작 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden");
       }
     };
-
     return true;
   }
-
   await tryRestoreOwnRoom();
+
+  // ===== 이름으로 방 ID 만들기(중복 시 2,3,… 부여) =====
+  async function makeRoomIdFromName(name){
+    const base = `${name}의 방`;
+    let candidate = base;
+    let idx = 2;
+    while(true){
+      const ref = doc(db,"rooms", candidate);
+      const snap = await getDoc(ref);
+      if(!snap.exists()) return candidate;
+      candidate = `${base} ${idx++}`;
+      if(idx>99) return `${base} ${Date.now()}`; // 비상 fallback
+    }
+  }
 
   // ===== 새 방 만들기 =====
   $("#btnCreate").addEventListener("click", async ()=>{
-    // 중복 생성 방지
     if(ownRoomId){
       const errBox=$("#errCreate");
       errBox.textContent="이미 생성한 방이 있습니다. 해당 방에서 진행하거나 방을 삭제한 후 새로 만들어 주세요.";
       errBox.classList.remove("hidden");
       return;
     }
-
     const name = ($("#hostName").value||"").trim();
     const errBox=$("#errCreate");
     if(!name){ errBox.textContent="닉네임을 입력하세요."; errBox.classList.remove("hidden"); return; }
 
-    const roomId = randId();
+    const roomId = await makeRoomIdFromName(name);
     const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
     const joinUrl = new URL(baseDir + "join.html"); joinUrl.searchParams.set("room", roomId);
 
@@ -312,18 +306,7 @@
       gameOver: false,
       round: 0,
       players: [
-        {
-          id: "P1",
-          name: name,
-          balance: 1000000,
-          hold: 0,
-          bid: 0,
-          committed: false,
-          readyPart: false,
-          readyBid: false,
-          willParticipate: null,
-          items: []
-        }
+        { id:"P1", name, balance:1000000, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null, items:[] }
       ],
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
@@ -333,7 +316,6 @@
       await ensureAuth();
       await setDoc(doc(db,"rooms",roomId), room);
 
-      // 상태 저장 & 화면 전환
       ownRoomId = roomId;
       localStorage.setItem(ownRoomIdStorageKey, ownRoomId);
       show("#view-list", false);
@@ -342,7 +324,6 @@
       $("#shareLink").value = joinUrl.toString();
       show("#view-host", true);
 
-      // 참가자 구독
       const ref = doc(db,"rooms",roomId);
       onSnapshot(ref, (snap)=>{
         if(!snap.exists()) return;
@@ -358,17 +339,12 @@
         $("#btnStart").disabled=!(list.length>=3 && list.length<=6);
       });
 
-      // 링크 복사
       $("#btnCopy").onclick = async ()=>{
-        try{
-          await navigator.clipboard.writeText(joinUrl.toString());
-          const btn=$("#btnCopy"); btn.textContent="복사됨!"; setTimeout(()=>btn.textContent="복사",1200);
-        }catch(e){
-          const b=$("#errHost"); b.textContent=`복사 실패: ${e.message||e}`; b.classList.remove("hidden");
-        }
+        try{ await navigator.clipboard.writeText(joinUrl.toString());
+             const btn=$("#btnCopy"); btn.textContent="복사됨!"; setTimeout(()=>btn.textContent="복사",1200);
+        }catch(e){ $("#errHost").textContent=`복사 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden"); }
       };
 
-      // 시작 버튼
       $("#btnStart").onclick = async ()=>{
         try{
           const ref=doc(db,"rooms",roomId);
@@ -379,39 +355,31 @@
           gameUrl.searchParams.set("room", roomId);
           gameUrl.searchParams.set("name", name);
           location.href = gameUrl.toString();
-        }catch(e){
-          const b=$("#errHost"); b.textContent=`시작 실패: ${e.message||e}`; b.classList.remove("hidden");
-        }
+        }catch(e){ $("#errHost").textContent=`시작 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden"); }
       };
 
-      // ==== B 방식: 비시작 방 자동 청소(15분) ====
+      // 15분 미시작 자동 삭제
       setTimeout(async ()=>{
         try{
           const ref = doc(db,"rooms", roomId);
           const snap = await getDoc(ref);
           if (snap.exists() && !snap.data().started) {
             await deleteDoc(ref);
-            // 로컬 상태 정리 및 화면 복귀
             localStorage.removeItem(ownRoomIdStorageKey);
             ownRoomId = "";
             alert("15분 동안 시작되지 않아 방이 자동 삭제되었습니다.");
-            // 기본 화면으로 복귀
-            show("#view-host", false);
-            show("#view-list", true);
-            show("#view-create", true);
+            show("#view-host", false); show("#view-list", true); show("#view-create", true);
             refreshRoomsOnce();
           }
-        }catch(e){
-          console.warn("auto-clean failed:", e);
-        }
-      }, 15 * 60 * 1000); // 15분
+        }catch(e){ console.warn("auto-clean failed:", e); }
+      }, 15 * 60 * 1000);
 
     }catch(e){
       errBox.textContent=`방 생성 실패: ${e.code||""} ${e.message||e}`; errBox.classList.remove("hidden");
     }
   });
 
-  // 초기: 방장 화면 숨김 상태
+  // 초기: 방장 화면 숨김
   show("#view-host", false);
 </script>
 </body>
