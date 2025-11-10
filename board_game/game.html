@@ -33,7 +33,9 @@
   .btn:disabled{opacity:.5;cursor:not-allowed}
   .badge{font-size:.75rem;padding:.125rem .5rem;border-radius:.375rem}
   .card{background:#fff;border-radius:1rem;box-shadow:0 1px 3px rgb(0 0 0 / .06),0 1px 2px rgb(0 0 0 / .04)}
-  .safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0) + 72px);}
+  .safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0) + 80px);}
+  .icon-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:.5rem;border:1px solid rgb(226 232 240);background:#f8fafc;padding:.5rem}
+  .icon-btn svg{width:16px;height:16px}
 </style>
 </head>
 <body class="bg-slate-50 text-slate-900 safe-bottom">
@@ -85,7 +87,10 @@
         </div>
         <div class="flex items-center gap-2">
           <button id="btnLockPart" class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2">응찰 확정</button>
-          <button id="btnResyncPart" class="btn bg-slate-200 rounded px-3 py-2">새로고침</button>
+          <!-- 아이콘 새로고침 -->
+          <button id="btnResyncPart" class="icon-btn" aria-label="새로고침" title="새로고침">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+          </button>
           <span id="partStatus" class="badge bg-slate-100">미확정</span>
         </div>
         <p class="text-xs text-slate-500">※ 불응찰 확정 시 이번 라운드 입찰은 불가하며 즉시 50,000원이 지급됩니다.</p>
@@ -102,6 +107,7 @@
         <div id="bidDisabled" class="hidden text-sm text-slate-500">이번 라운드 불응찰을 선택하여 입찰할 수 없습니다.</div>
 
         <div id="bidBox" class="hidden">
+          <!-- 동일 UI: ±1단위 / ±5단위 -->
           <div class="flex items-center gap-2 mb-2 flex-wrap">
             <button data-step="-5" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-5단위</button>
             <button data-step="-1" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-1단위</button>
@@ -150,6 +156,10 @@
         <p class="text-xs text-slate-500 mt-2">※ 응찰자 명단만 공개됩니다. 낙찰자/입찰액은 공개되지 않습니다.</p>
       </div>
 
+      <!-- 라운드 로그 -->
+      <h3 class="font-semibold mt-6 mb-2">라운드 로그</h3>
+      <ul id="roundLog" class="space-y-2 text-xs text-slate-700"></ul>
+
       <h3 class="font-semibold mt-6 mb-2">플레이어 현황</h3>
       <ul id="players" class="space-y-2 text-sm"></ul>
       <div class="text-xs text-slate-500 mt-2">※ 잔액은 각자만 확인합니다.</div>
@@ -166,7 +176,7 @@
         </select>
         <button id="btnRandom" class="btn bg-slate-200 rounded px-3 py-2">랜덤</button>
       </div>
-      <p class="text-xs text-slate-500 mb-3">라운드 시작 시 아이템이 비어있으면 자동 랜덤 지정. 필요 시 변경 가능.</p>
+      <p class="text-xs text-slate-500 mb-3">카드를 뒤집어 다음에 경매에 등장 할 상품을 등록하여 주세요.</p>
 
       <hr class="my-4">
       <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">
@@ -183,7 +193,7 @@
   </div>
 </div>
 
-<!-- 모바일 하단 입찰 바 -->
+<!-- 모바일 하단 입찰 바 (±1/±5 동일 UI) -->
 <div id="mobileBidBar" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t shadow-lg z-50 hidden">
   <div class="max-w-7xl mx-auto px-3 py-2">
     <div class="text-xs text-slate-600 mb-1">
@@ -193,9 +203,11 @@
       <img id="imgCurrentMobile" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
     </div>
     <div class="flex items-center gap-2 mt-2">
+      <button data-step="-5" class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">-5단위</button>
       <button data-step="-1" class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">-1단위</button>
       <input id="bidInputMobile" inputmode="numeric" class="mono w-28 flex-none border rounded px-2 py-2 text-right" placeholder="0" />
       <button data-step="1"  class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">+1단위</button>
+      <button data-step="5"  class="flex-1 min-w-[56px] py-2 rounded bg-slate-200 text-xs">+5단위</button>
     </div>
     <div class="flex items-center gap-2 mt-2">
       <button id="btnConfirmBidMobile" class="flex-1 py-2 rounded bg-indigo-600 text-white">확정</button>
@@ -269,6 +281,27 @@
   async function ensurePhaseDefault(){ try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(!r.phase) tx.update(ref,{phase:"choose",updatedAt:serverTimestamp()}); }); }catch{} }
   async function ensureRandomItemIfEmpty(){ try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if((r.phase||"choose")==="choose" && !r.currentItem){ tx.update(ref,{currentItem:randItem(),updatedAt:serverTimestamp()}); } }); }catch{} }
 
+  // 상품 변경 시 라운드 초기화(phase 유지: choose, 상태 리셋)
+  async function resetRoundForItemChange(nextItem){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        const players=(r.players||[]).map(p=>({
+          ...p, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null
+        }));
+        tx.update(ref,{
+          players,
+          participants: [],
+          currentItem: nextItem||"",
+          phase: "choose",
+          updatedAt: serverTimestamp()
+        });
+      });
+      toast("상품이 변경되어 라운드를 다시 시작합니다.");
+    }catch(e){ console.warn("resetRoundForItemChange:",e); }
+  }
+
   // choose → (0명 skip / 1명 reveal_single / 2명이상 bid)
   async function afterAllLockedAdvance(){
     try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if((r.phase||"choose")!=="choose") return;
@@ -279,7 +312,9 @@
 
       if(parts.length===0){
         const reset=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
-        tx.update(ref,{players:reset,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:[],resultRound:(r.round||0)+1,phase:"choose",updatedAt:serverTimestamp()});
+        const logs=[...(r.roundLogs||[])];
+        logs.push({round:(r.round||0)+1, item, participants:[], winners:[]});
+        tx.update(ref,{players:reset,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:[],resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
         return;
       }
       if(parts.length===1){
@@ -290,7 +325,7 @@
     }); }catch{}
   }
 
-  // bid → 정산
+  // bid → 정산 (모두 0원인 경우: 참가자 전원에게 아이템 지급)
   async function attemptSettleFromBid(){
     try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(r.phase!=="bid") return;
       let players=(r.players||[]).map(p=>({...p}));
@@ -301,9 +336,22 @@
 
       const item=(r.currentItem||"").trim() || randItem();
       let winners=[];
+
       if(participants.length){
-        const maxHold=Math.max(0,...participants.map(p=>Number(p.hold||0)));
-        if(maxHold>0){
+        const holds = participants.map(p=>Number(p.hold||0));
+        const maxHold = Math.max(0, ...holds);
+        const allZero = holds.every(h=>h===0);
+
+        if(allZero){
+          winners = [...partNames]; // 전원 무료 지급
+          players = players.map(p=>{
+            if(partNames.includes(p.name)){
+              const refund=Number(p.hold||0);
+              return {...p, balance:Number(p.balance||0)+refund, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null, items:[...(p.items||[]), item]};
+            }
+            return {...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null};
+          });
+        }else if(maxHold>0){
           winners=participants.filter(p=>Number(p.hold||0)===maxHold).map(p=>p.name);
           players=players.map(p=>{
             const isPart=partNames.includes(p.name);
@@ -313,6 +361,7 @@
             return {...p,balance,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null,items};
           });
         }else{
+          // (논리상 allZero로 이미 처리되어 이 분기는 도달 X)
           players=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
           winners=[];
         }
@@ -320,11 +369,13 @@
         players=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
       }
 
-      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",updatedAt:serverTimestamp()});
+      const logs=[...(r.roundLogs||[])];
+      logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
+      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
     }); }catch{}
   }
 
-  // 단독 응찰 → 0원 낙찰 정산
+  // 단독 응찰 → 0원 낙찰 정산 (로그 포함)
   async function settleAfterSingleReveal(){
     try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(r.phase!=="reveal_single") return;
       let players=(r.players||[]).map(p=>({...p}));
@@ -334,7 +385,9 @@
         if(p.name===only){ const refund=Number(p.hold||0); return {...p,balance:Number(p.balance||0)+refund,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null,items:[...(p.items||[]),item]}; }
         return {...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null};
       });
-      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",updatedAt:serverTimestamp()});
+      const logs=[...(r.roundLogs||[])];
+      logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
+      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
     }); }catch{}
   }
 
@@ -402,6 +455,20 @@
       d.participants.forEach((nm,idx)=>{ const li=document.createElement("li"); li.className="border rounded px-3 py-2"; li.textContent = `${idx+1}. ${nm}`; pu.appendChild(li); });
     }else{ show("#revealBox", false); }
 
+    // 라운드 로그 렌더
+    const logUl = $("#roundLog"); logUl.innerHTML="";
+    (d.roundLogs||[]).slice().reverse().forEach(entry=>{
+      const li=document.createElement("li");
+      const winners = (entry.winners||[]).length ? entry.winners.join(", ") : "—";
+      const parts = (entry.participants||[]).length ? entry.participants.join(", ") : "—";
+      li.className="border rounded px-3 py-2 bg-slate-50";
+      li.innerHTML = `<div class="flex items-center justify-between">
+        <div>R${entry.round} · <b>${entry.item||"-"}</b></div>
+        <div class="text-slate-500">응찰: ${parts} · 우승: ${winners}</div>
+      </div>`;
+      logUl.appendChild(li);
+    });
+
     // 단계별 내 UI + 자동 전환
     if(d.phase==="choose" || d.phase===undefined){
       show("#phaseChoose", true); show("#phaseBid", false); show("#mobileBidBar", false);
@@ -436,9 +503,16 @@
 
   function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
 
-  // 방장: 상품 변경/랜덤
-  $("#roundItem").addEventListener("change", async ()=>{ const val=$("#roundItem").value; try{ await updateDoc(ref,{ currentItem:val||"", updatedAt:serverTimestamp() }); }catch(_){ } });
-  $("#btnRandom").addEventListener("click", async ()=>{ const r=randItem(); $("#roundItem").value=r; try{ await updateDoc(ref,{ currentItem:r, updatedAt:serverTimestamp() }); }catch(_){ } });
+  // 방장: 상품 변경/랜덤  → 라운드 초기화
+  $("#roundItem").addEventListener("change", async ()=>{
+    const val=$("#roundItem").value;
+    await resetRoundForItemChange(val||"");
+  });
+  $("#btnRandom").addEventListener("click", async ()=>{
+    const r=randItem();
+    $("#roundItem").value=r;
+    await resetRoundForItemChange(r);
+  });
 
   // 게임 종료(방 삭제)
   $("#btnEndGame").onclick = async ()=>{ const ok=confirm("정말 게임을 종료하고 방을 삭제할까요?"); if(!ok) return; try{ await deleteDoc(ref); }catch(err){ showErr(`삭제 실패: ${err.message||err}`); } };
@@ -460,7 +534,7 @@
     }catch(err){ alert(`응찰 확정 실패: ${err.message||err}`); }
   });
 
-  // 응찰 새로고침
+  // 응찰 새로고침(아이콘)
   $("#btnResyncPart").addEventListener("click", async ()=>{
     try{
       const s=await getDoc(ref); if(!s.exists()) return;
