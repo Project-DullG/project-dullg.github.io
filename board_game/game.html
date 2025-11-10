@@ -238,6 +238,17 @@
 
   const ref=doc(db,"rooms",roomId);
 
+  /* ─────────────────────────────
+     ★ 1시간 비활성 자동 삭제 세팅
+     ───────────────────────────── */
+  const STALE_MS = 60 * 60 * 200; // 12분
+  const isStale = (d)=>{
+    try{
+      const ts = d?.updatedAt?.toMillis?.();
+      return ts ? (Date.now() - ts > STALE_MS) : false;
+    }catch{return false;}
+  };
+
   // 이미지 매핑
   const ITEM_IMG = {
     "오징어":"squid.png","독도새우":"shrimp.png","호박":"pumpkin.png","명이나물":"wild_leek.png",
@@ -361,7 +372,6 @@
             return {...p,balance,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null,items};
           });
         }else{
-          // (논리상 allZero로 이미 처리되어 이 분기는 도달 X)
           players=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
           winners=[];
         }
@@ -398,6 +408,11 @@
   onSnapshot(ref, async (s)=>{
     if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
     const d=s.data();
+
+    /* ★ 스냅샷 수신 시 비활성(1시간) 자동 삭제 */
+    if(!d.gameOver && isStale(d)){
+      try{ await deleteDoc(ref); return; }catch(_){}
+    }
 
     $("#round").textContent=d.round??0;
     const phaseLabel = d.phase==="choose" ? "응찰 선택" :
@@ -459,7 +474,6 @@
     const logUl = $("#roundLog"); logUl.innerHTML="";
     (d.roundLogs||[]).slice().reverse().forEach(entry=>{
       const li=document.createElement("li");
-      const winners = (entry.winners||[]).length ? entry.winners.join(", ") : "—";
       const parts = (entry.participants||[]).length ? entry.participants.join(", ") : "—";
       li.className="border rounded px-3 py-2 bg-slate-50";
       li.innerHTML = `<div class="flex items-center justify-between">
@@ -594,6 +608,19 @@
     else if (wasPart===true)      toast(`입찰 실패(환불 완료)`, RESULT_IMG.fail);
     else                          toast(`불응찰 라운드 종료.`);
   });
+
+  /* ★ 5분 주기 백업 검사: 비활성 1시간이면 삭제 */
+  setInterval(async ()=>{
+    try{
+      const s=await getDoc(ref);
+      if(s.exists()){
+        const d=s.data();
+        if(!d.gameOver && isStale(d)){
+          await deleteDoc(ref);
+        }
+      }
+    }catch(_){}
+  }, 5 * 60 * 1000);
 </script>
 </body>
 </html>
