@@ -240,7 +240,7 @@
   /* ─────────────────────────────
      ★ 1시간 비활성 자동 삭제 세팅
      ───────────────────────────── */
-  const STALE_MS = 60 * 60 * 1000; // 1시간
+  const STALE_MS = 60 * 60 * 200; // 12분
   const isStale = (d)=>{
     try{
       const ts = d?.updatedAt?.toMillis?.();
@@ -431,7 +431,10 @@
 
     const players = Array.isArray(d.players)? d.players : [];
     const me = players.find(p=>p.name===myName) || null;
-
+    // 버튼/입력 로직이 참조하는 모듈 스코프 상태를 반드시 업데이트
+    currentPlayers = players;
+    currentMe = me;
+    // (선택) 디버깅용 전역
     window.currentPlayers = players;
     window.currentMe = me;
 
