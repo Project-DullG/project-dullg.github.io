@@ -72,7 +72,7 @@
       <!-- 1단계: 응찰 선택 -->
       <div id="phaseChoose" class="space-y-3">
         <h3 class="font-semibold">1) 응찰 여부 선택</h3>
-        <라운드 단계: <b id="phaseText">-</b> · 이번 상품: <b id="currentItem">-</b> · 최근 상품: <b id="lastItem">-</b>
+        <div class="text-sm">이번 상품: <b id="currentItemMe">-</b></div>
         <div class="mt-2">
           <img id="imgCurrentMe" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
         </div>
@@ -107,7 +107,6 @@
         <div id="bidDisabled" class="hidden text-sm text-slate-500">이번 라운드 불응찰을 선택하여 입찰할 수 없습니다.</div>
 
         <div id="bidBox" class="hidden">
-          <!-- 동일 UI: ±1단위 / ±5단위 -->
           <div class="flex items-center gap-2 mb-2 flex-wrap">
             <button data-step="-5" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-5단위</button>
             <button data-step="-1" class="shrink-0 w-16 px-2 py-2 rounded bg-slate-200 text-xs md:text-sm">-1단위</button>
@@ -193,7 +192,7 @@
   </div>
 </div>
 
-<!-- 모바일 하단 입찰 바 (±1/±5 동일 UI) -->
+<!-- 모바일 하단 입찰 바 -->
 <div id="mobileBidBar" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t shadow-lg z-50 hidden">
   <div class="max-w-7xl mx-auto px-3 py-2">
     <div class="text-xs text-slate-600 mb-1">
@@ -241,7 +240,7 @@
   /* ─────────────────────────────
      ★ 1시간 비활성 자동 삭제 세팅
      ───────────────────────────── */
-  const STALE_MS = 60 * 60 * 200; // 12분
+  const STALE_MS = 60 * 60 * 1000; // 1시간
   const isStale = (d)=>{
     try{
       const ts = d?.updatedAt?.toMillis?.();
@@ -279,7 +278,7 @@
   bidInputMobile?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInputMobile.value); syncBidInputs(); });
   bidInputMobile?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
 
-  // 종료 UI(문서 삭제 후에도 표시 유지)
+  // 종료 UI
   function endUI(msg, winners=[]){
     $("#endMsg").textContent = winners.length? `게임 종료! 우승: ${winners.join(", ")}` : msg;
     $("#endedBox").classList.remove("hidden");
@@ -292,7 +291,7 @@
   async function ensurePhaseDefault(){ try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(!r.phase) tx.update(ref,{phase:"choose",updatedAt:serverTimestamp()}); }); }catch{} }
   async function ensureRandomItemIfEmpty(){ try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if((r.phase||"choose")==="choose" && !r.currentItem){ tx.update(ref,{currentItem:randItem(),updatedAt:serverTimestamp()}); } }); }catch{} }
 
-  // 상품 변경 시 라운드 초기화(phase 유지: choose, 상태 리셋)
+  // 상품 변경 시 라운드 초기화
   async function resetRoundForItemChange(nextItem){
     try{
       await runTransaction(db, async tx=>{
@@ -313,7 +312,7 @@
     }catch(e){ console.warn("resetRoundForItemChange:",e); }
   }
 
-  // choose → (0명 skip / 1명 reveal_single / 2명이상 bid)
+  // choose → 분기
   async function afterAllLockedAdvance(){
     try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if((r.phase||"choose")!=="choose") return;
       const players=(r.players||[]); if(players.length===0) return;
@@ -325,7 +324,7 @@
         const reset=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
         const logs=[...(r.roundLogs||[])];
         logs.push({round:(r.round||0)+1, item, participants:[], winners:[]});
-        tx.update(ref,{players:reset,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:[],resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
+        tx.update(ref,{players:reset,round:(r.round||0)+1,currentItem:"",participants:[],lastWinners:[],resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
         return;
       }
       if(parts.length===1){
@@ -336,7 +335,7 @@
     }); }catch{}
   }
 
-  // bid → 정산 (모두 0원인 경우: 참가자 전원에게 아이템 지급)
+  // bid → 정산 (모두 0원인 경우 전원 지급)
   async function attemptSettleFromBid(){
     try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(r.phase!=="bid") return;
       let players=(r.players||[]).map(p=>({...p}));
@@ -354,7 +353,7 @@
         const allZero = holds.every(h=>h===0);
 
         if(allZero){
-          winners = [...partNames]; // 전원 무료 지급
+          winners = [...partNames];
           players = players.map(p=>{
             if(partNames.includes(p.name)){
               const refund=Number(p.hold||0);
@@ -381,11 +380,11 @@
 
       const logs=[...(r.roundLogs||[])];
       logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
-      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
+      tx.update(ref,{players,round:(r.round||0)+1,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
     }); }catch{}
   }
 
-  // 단독 응찰 → 0원 낙찰 정산 (로그 포함)
+  // 단독 응찰 → 0원 낙찰 정산
   async function settleAfterSingleReveal(){
     try{ await runTransaction(db, async tx=>{ const s=await tx.get(ref); if(!s.exists()) return; const r=s.data(); if(r.phase!=="reveal_single") return;
       let players=(r.players||[]).map(p=>({...p}));
@@ -397,7 +396,7 @@
       });
       const logs=[...(r.roundLogs||[])];
       logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
-      tx.update(ref,{players,round:(r.round||0)+1,lastItem:item,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
+      tx.update(ref,{players,round:(r.round||0)+1,currentItem:"",participants:[],lastWinners:winners,resultRound:(r.round||0)+1,phase:"choose",roundLogs:logs.slice(-30),updatedAt:serverTimestamp()});
     }); }catch{}
   }
 
@@ -409,7 +408,7 @@
     if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
     const d=s.data();
 
-    /* ★ 스냅샷 수신 시 비활성(1시간) 자동 삭제 */
+    /* 비활성(1시간) 자동 삭제 */
     if(!d.gameOver && isStale(d)){
       try{ await deleteDoc(ref); return; }catch(_){}
     }
@@ -421,7 +420,6 @@
     $("#phaseText").textContent = phaseLabel;
 
     $("#currentItem").textContent = d.currentItem || "-";
-    $("#lastItem").textContent    = d.lastItem || "-";
     $("#currentItemMe").textContent = d.currentItem || "-";
     $("#currentItemBid").textContent= d.currentItem || "-";
     $("#currentItemMobile").textContent = d.currentItem || "-";
@@ -431,14 +429,17 @@
     $("#role").textContent=isHost?"host":"guest";
     show("#hostPanel", isHost?true:false);
 
-    currentPlayers = Array.isArray(d.players)? d.players : [];
-    currentMe = currentPlayers.find(p=>p.name===myName) || null;
+    const players = Array.isArray(d.players)? d.players : [];
+    const me = players.find(p=>p.name===myName) || null;
 
-    $("#myBalance").textContent = fmt(currentMe?.balance||0);
-    $("#myHold").textContent    = fmt(currentMe?.hold||0);
+    window.currentPlayers = players;
+    window.currentMe = me;
+
+    $("#myBalance").textContent = fmt(me?.balance||0);
+    $("#myHold").textContent    = fmt(me?.hold||0);
 
     // 소지품 + 자동 우승 → 문서 삭제
-    const myItems=Array.isArray(currentMe?.items)? currentMe.items : [];
+    const myItems=Array.isArray(me?.items)? me.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
     const reason=checkWin(myItems);
@@ -446,7 +447,7 @@
 
     // 현황
     const ul=$("#players"); ul.innerHTML="";
-    currentPlayers.forEach((p,i)=>{
+    players.forEach((p,i)=>{
       const isReadyPart = (p.readyPart===true) || (p.ready===true);
       const isReadyBid  = (p.readyBid===true)  || (p.committed===true);
       const tag = d.phase==="choose" ? (isReadyPart ? "응찰 확정":"대기")
@@ -470,7 +471,7 @@
       d.participants.forEach((nm,idx)=>{ const li=document.createElement("li"); li.className="border rounded px-3 py-2"; li.textContent = `${idx+1}. ${nm}`; pu.appendChild(li); });
     }else{ show("#revealBox", false); }
 
-    // 라운드 로그 렌더
+    // 라운드 로그
     const logUl = $("#roundLog"); logUl.innerHTML="";
     (d.roundLogs||[]).slice().reverse().forEach(entry=>{
       const li=document.createElement("li");
@@ -483,17 +484,17 @@
       logUl.appendChild(li);
     });
 
-    // 단계별 내 UI + 자동 전환
+    // 단계별 UI + 자동 전환
     if(d.phase==="choose" || d.phase===undefined){
       show("#phaseChoose", true); show("#phaseBid", false); show("#mobileBidBar", false);
       if(!d.currentItem) await ensureRandomItemIfEmpty();
 
       const partRadios=[...document.querySelectorAll('input[name="part"]')];
-      const partVal = currentMe?.willParticipate===true ? "yes" : currentMe?.willParticipate===false? "no" : null;
-      partRadios.forEach(r=>{ r.checked=(r.value===partVal); r.disabled=((currentMe?.readyPart===true)||(currentMe?.ready===true)); });
-      $("#btnLockPart").disabled = ((currentMe?.readyPart===true)||(currentMe?.ready===true)) || !(d.currentItem);
-      $("#partStatus").textContent = ((currentMe?.readyPart===true)||(currentMe?.ready===true))
-        ? (currentMe?.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
+      const partVal = me?.willParticipate===true ? "yes" : me?.willParticipate===false? "no" : null;
+      partRadios.forEach(r=>{ r.checked=(r.value===partVal); r.disabled=((me?.readyPart===true)||(me?.ready===true)); });
+      $("#btnLockPart").disabled = ((me?.readyPart===true)||(me?.ready===true)) || !(d.currentItem);
+      $("#partStatus").textContent = ((me?.readyPart===true)||(me?.ready===true))
+        ? (me?.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
 
       await afterAllLockedAdvance();
     }
@@ -502,12 +503,12 @@
       if(!singleRevealTimerSet){ singleRevealTimerSet=true; setTimeout(async()=>{ singleRevealTimerSet=false; await settleAfterSingleReveal(); }, 1000); }
     }
     else if(d.phase==="bid"){
-      const isParticipant = currentMe?.willParticipate===true || (Array.isArray(d.participants)&&d.participants.includes(myName));
+      const isParticipant = me?.willParticipate===true || (Array.isArray(d.participants)&&d.participants.includes(myName));
       show("#phaseChoose", false); show("#phaseBid", true);
       show("#bidBox", isParticipant); show("#bidDisabled", !isParticipant); show("#mobileBidBar", isParticipant);
-      const isReadyBid = (currentMe?.readyBid===true)||(currentMe?.committed===true);
+      const isReadyBid = (me?.readyBid===true)||(me?.committed===true);
       $("#bidStatus").textContent = isReadyBid ? "입찰 확정됨" : "대기중";
-      const avail=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(avail);
+      const avail=(me?.balance||0)+(me?.hold||0); clampToAvail(avail);
 
       await attemptSettleFromBid();
     }
@@ -609,7 +610,7 @@
     else                          toast(`불응찰 라운드 종료.`);
   });
 
-  /* ★ 5분 주기 백업 검사: 비활성 1시간이면 삭제 */
+  /* 5분마다 비활성 방 정리 */
   setInterval(async ()=>{
     try{
       const s=await getDoc(ref);
