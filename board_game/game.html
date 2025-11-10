@@ -143,7 +143,7 @@
     <section id="panelPublic" class="card p-4 md:p-6 lg:col-span-7 xl:col-span-5">
       <h2 class="font-semibold mb-3">라운드 정보</h2>
       <div class="text-sm text-slate-600 mb-2">
-        라운드 단계: <b id="phaseText">-</b> · 이번 상품: <b id="currentItem">-</b> · 최근 상품: <b id="lastItem">-</b>
+        라운드 단계: <b id="phaseText">-</b> · 이번 상품: <b id="currentItem">-</b>
       </div>
       <div class="mt-2">
         <img id="imgCurrentPublic" alt="이번 상품 이미지" width="60" height="60" class="rounded object-contain border" style="display:none;">
@@ -464,7 +464,7 @@
       li.className="border rounded px-3 py-2 bg-slate-50";
       li.innerHTML = `<div class="flex items-center justify-between">
         <div>R${entry.round} · <b>${entry.item||"-"}</b></div>
-        <div class="text-slate-500">응찰: ${parts}}</div>
+        <div class="text-slate-500">응찰: ${parts}</div>
       </div>`;
       logUl.appendChild(li);
     });
