@@ -124,10 +124,18 @@
   async function ensureAuth(){ if(!auth.currentUser) await signInAnonymously(auth) }
 
   // 연결
-  try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); $("#btnCreate").disabled=false; }
+  try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); }
   catch{ setBadge("연결 실패","bg-rose-600 text-white"); }
 
-  // ===== 방 목록 (인덱스 없이 전부 가져와 필터/정렬) =====
+  // 닉네임 들어오면 버튼 활성화
+  const hostNameInput = $("#hostName");
+  const btnCreate = $("#btnCreate");
+  hostNameInput.addEventListener("input", ()=> {
+    btnCreate.disabled = !(hostNameInput.value || "").trim();
+  });
+  btnCreate.disabled = !(hostNameInput.value || "").trim();
+
+  // ===== 방 목록 =====
   const listEl = $("#roomsList");
   const errJoinList = $("#errJoinList");
 
@@ -175,7 +183,7 @@
       listEl.innerHTML = rooms.map(roomCard).join("");
       $("#roomsEmpty").classList.toggle("hidden", rooms.length!==0);
 
-      // 버튼 바인딩 → join.html로 이동
+      // 입장 버튼 → join.html (room ID를 절대 변형하지 않음)
       listEl.querySelectorAll("[data-join]").forEach(btn=>{
         btn.addEventListener("click", async ()=>{
           const roomId = btn.getAttribute("data-join");
@@ -189,7 +197,7 @@
             if (count >= 6) throw new Error("정원이 가득 찼습니다.");
             const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
             const url = new URL(baseDir + "join.html");
-            url.searchParams.set("room", roomId);
+            url.searchParams.set("room", roomId); // 그대로 전달
             location.href = url.toString();
           }catch(e){
             errJoinList.textContent = e.message || e;
@@ -211,6 +219,13 @@
   const ownRoomIdStorageKey = "ownRoomId";
   let ownRoomId = localStorage.getItem(ownRoomIdStorageKey) || "";
 
+  function makeJoinUrl(id){
+    const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
+    const url = new URL(baseDir + "join.html");
+    url.searchParams.set("room", id); // 변형 없이
+    return url.toString();
+  }
+
   async function tryRestoreOwnRoom(){
     if(!ownRoomId) return false;
     const ref = doc(db,"rooms", ownRoomId);
@@ -223,7 +238,8 @@
     show("#view-list", false);
     show("#view-create", false);
     $("#roomId").textContent = ownRoomId;
-    $("#shareLink").value = snap.data().link || "";
+    // 링크 필드가 비어있어도 정확한 링크를 즉시 구성해 표시
+    $("#shareLink").value = snap.data().link || makeJoinUrl(ownRoomId);
     show("#view-host", true);
 
     // 대기 인원 실시간
@@ -268,15 +284,24 @@
   }
   await tryRestoreOwnRoom();
 
-  // ===== 이름으로 방 ID 만들기(중복 시 2,3,… 부여) =====
+  // ===== 케이스 무시 중복 방지용 검사 =====
+  async function existsIdCaseInsensitive(candidate){
+    const all = await getDocs(collection(db,"rooms"));
+    const want = (candidate||"").toLowerCase();
+    let found = false;
+    all.forEach(d=>{
+      if((d.id||"").toLowerCase() === want) found = true;
+    });
+    return found;
+  }
+
+  // ===== 이름으로 방 ID 만들기(중복 시 2,3,…) =====
   async function makeRoomIdFromName(name){
-    const base = `${name}의 방`;
+    const base = `${name}의 방`;        // 표시/ID 겸용 (요청사항)
     let candidate = base;
     let idx = 2;
     while(true){
-      const ref = doc(db,"rooms", candidate);
-      const snap = await getDoc(ref);
-      if(!snap.exists()) return candidate;
+      if(!(await existsIdCaseInsensitive(candidate))) return candidate;
       candidate = `${base} ${idx++}`;
       if(idx>99) return `${base} ${Date.now()}`; // 비상 fallback
     }
@@ -290,18 +315,18 @@
       errBox.classList.remove("hidden");
       return;
     }
-    const name = ($("#hostName").value||"").trim();
+    const raw = ($("#hostName").value||"");
+    const name = raw.trim();
     const errBox=$("#errCreate");
     if(!name){ errBox.textContent="닉네임을 입력하세요."; errBox.classList.remove("hidden"); return; }
 
     const roomId = await makeRoomIdFromName(name);
-    const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
-    const joinUrl = new URL(baseDir + "join.html"); joinUrl.searchParams.set("room", roomId);
+    const joinUrl = makeJoinUrl(roomId);
 
     const room = {
-      id: roomId,
+      id: roomId,                 // => 대/소문자 그대로 저장
       hostName: name,
-      link: joinUrl.toString(),
+      link: joinUrl,
       started: false,
       gameOver: false,
       round: 0,
@@ -321,7 +346,7 @@
       show("#view-list", false);
       show("#view-create", false);
       $("#roomId").textContent = roomId;
-      $("#shareLink").value = joinUrl.toString();
+      $("#shareLink").value = joinUrl;
       show("#view-host", true);
 
       const ref = doc(db,"rooms",roomId);
@@ -340,7 +365,7 @@
       });
 
       $("#btnCopy").onclick = async ()=>{
-        try{ await navigator.clipboard.writeText(joinUrl.toString());
+        try{ await navigator.clipboard.writeText(joinUrl);
              const btn=$("#btnCopy"); btn.textContent="복사됨!"; setTimeout(()=>btn.textContent="복사",1200);
         }catch(e){ $("#errHost").textContent=`복사 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden"); }
       };
@@ -351,8 +376,9 @@
           const snap=await getDoc(ref); const r=snap.data(); const n=(r.players||[]).length;
           if(n<3 || n>6) return;
           await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
+          const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
           const gameUrl = new URL(baseDir + "game.html");
-          gameUrl.searchParams.set("room", roomId);
+          gameUrl.searchParams.set("room", roomId);   // 그대로 전달
           gameUrl.searchParams.set("name", name);
           location.href = gameUrl.toString();
         }catch(e){ $("#errHost").textContent=`시작 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden"); }
