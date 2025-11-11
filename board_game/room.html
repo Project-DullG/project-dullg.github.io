@@ -74,11 +74,11 @@
     <div id="errCreate" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
   </section>
 
-  <!-- 방장 공유/대기 -->
+  <!-- 방장: 공유/대기 -->
   <section id="view-host" class="hidden bg-white rounded-xl shadow p-4 md:p-6">
     <div class="flex items-center justify-between">
       <h2 class="font-semibold">Room <span id="roomId" class="mono"></span></h2>
-      <div class="text-sm">참가자 <span id="count" class="font-bold">0</span> / 6</div>
+      <div class="text-sm">참가자 <span id="count" class="font-bold">0</span> / 8</div>
     </div>
 
     <div class="grid md:grid-cols-2 gap-4 mt-4">
@@ -88,7 +88,7 @@
           <input id="shareLink" class="w-full border rounded px-3 py-2 text-xs" readonly />
           <button id="btnCopy" class="btn bg-slate-800 text-white rounded px-3 py-2">복사</button>
         </div>
-        <p class="text-xs text-slate-500 mt-2">최대 6명 접속. <b>3명 이상</b>이면 시작 가능.</p>
+        <p class="text-xs text-slate-500 mt-2">최대 8명 접속. <b>3명 이상</b>이면 시작 가능.</p>
       </div>
 
       <div class="border rounded-lg p-4">
@@ -101,7 +101,7 @@
       <button id="btnStart" class="btn bg-indigo-600 disabled:bg-indigo-600/50 text-white rounded px-4 py-2" disabled>
         시작하기
       </button>
-      <span class="text-xs text-slate-600">3–6명에서 시작 가능</span>
+      <span class="text-xs text-slate-600">3–8명에서 시작 가능</span>
     </div>
 
     <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
@@ -124,24 +124,17 @@
   async function ensureAuth(){ if(!auth.currentUser) await signInAnonymously(auth) }
 
   // 연결
-  try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); }
+  try{ await ensureAuth(); setBadge("연결됨","bg-indigo-600 text-white"); $("#btnCreate").disabled=false; }
   catch{ setBadge("연결 실패","bg-rose-600 text-white"); }
 
-  // 닉네임 들어오면 버튼 활성화
-  const hostNameInput = $("#hostName");
-  const btnCreate = $("#btnCreate");
-  hostNameInput.addEventListener("input", ()=> {
-    btnCreate.disabled = !(hostNameInput.value || "").trim();
-  });
-  btnCreate.disabled = !(hostNameInput.value || "").trim();
-
   // ===== 방 목록 =====
+  const MAX_PLAYERS = 8;
   const listEl = $("#roomsList");
   const errJoinList = $("#errJoinList");
 
   function roomCard({id, hostName, players=[], started=false}) {
     const count = Array.isArray(players) ? players.length : 0;
-    const disabled = started || count>=6;
+    const disabled = started || count>=MAX_PLAYERS;
     return `
       <li class="border rounded-lg p-3 flex flex-col gap-2">
         <div class="flex items-center justify-between">
@@ -152,7 +145,7 @@
           <div class="text-xs text-slate-600">${started ? "진행중" : "대기중"}</div>
         </div>
         <div class="flex items-center justify-between">
-          <div class="text-sm">인원: <b>${count}</b> / 6</div>
+          <div class="text-sm">인원: <b>${count}</b> / ${MAX_PLAYERS}</div>
           <button data-join="${id}" class="btn bg-indigo-600 hover:bg-indigo-700 text-white rounded px-3 py-1.5 text-sm"
             ${disabled ? "disabled" : ""}>입장</button>
         </div>
@@ -183,7 +176,7 @@
       listEl.innerHTML = rooms.map(roomCard).join("");
       $("#roomsEmpty").classList.toggle("hidden", rooms.length!==0);
 
-      // 입장 버튼 → join.html (room ID를 절대 변형하지 않음)
+      // 버튼 바인딩 → join.html로 이동
       listEl.querySelectorAll("[data-join]").forEach(btn=>{
         btn.addEventListener("click", async ()=>{
           const roomId = btn.getAttribute("data-join");
@@ -194,10 +187,10 @@
             const r=snap.data();
             const count = Array.isArray(r.players)? r.players.length : 0;
             if (r.started || r.gameOver) throw new Error("이미 진행 중이거나 종료된 방입니다.");
-            if (count >= 6) throw new Error("정원이 가득 찼습니다.");
+            if (count >= MAX_PLAYERS) throw new Error("정원이 가득 찼습니다.");
             const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
             const url = new URL(baseDir + "join.html");
-            url.searchParams.set("room", roomId); // 그대로 전달
+            url.searchParams.set("room", roomId);
             location.href = url.toString();
           }catch(e){
             errJoinList.textContent = e.message || e;
@@ -219,13 +212,6 @@
   const ownRoomIdStorageKey = "ownRoomId";
   let ownRoomId = localStorage.getItem(ownRoomIdStorageKey) || "";
 
-  function makeJoinUrl(id){
-    const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
-    const url = new URL(baseDir + "join.html");
-    url.searchParams.set("room", id); // 변형 없이
-    return url.toString();
-  }
-
   async function tryRestoreOwnRoom(){
     if(!ownRoomId) return false;
     const ref = doc(db,"rooms", ownRoomId);
@@ -235,16 +221,17 @@
       ownRoomId = "";
       return false;
     }
+    // ✅ 복원 성공: 방장 화면만 표시
     show("#view-list", false);
     show("#view-create", false);
     $("#roomId").textContent = ownRoomId;
-    // 링크 필드가 비어있어도 정확한 링크를 즉시 구성해 표시
-    $("#shareLink").value = snap.data().link || makeJoinUrl(ownRoomId);
+    $("#shareLink").value = snap.data().link || "";
     show("#view-host", true);
 
-    // 대기 인원 실시간
+    // 실시간 대기 인원
     onSnapshot(ref, (s)=>{
       if(!s.exists()){
+        // 방이 지워졌으면 기본 화면으로 복귀
         show("#view-host", false);
         show("#view-list", true);
         show("#view-create", true);
@@ -262,14 +249,14 @@
         ul.appendChild(li);
       });
       $("#count").textContent=(data.players||[]).length;
-      $("#btnStart").disabled=!((data.players||[]).length>=3 && (data.players||[]).length<=6);
+      $("#btnStart").disabled=!((data.players||[]).length>=3 && (data.players||[]).length<=MAX_PLAYERS);
     });
 
     $("#btnStart").onclick = async ()=>{
       try{
         const ref=doc(db,"rooms",ownRoomId);
         const snap=await getDoc(ref); const r=snap.data(); const n=(r.players||[]).length;
-        if(n<3 || n>6) return;
+        if(n<3 || n>MAX_PLAYERS) return;
         await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
         const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
         const gameUrl = new URL(baseDir + "game.html");
@@ -282,26 +269,17 @@
     };
     return true;
   }
-  await tryRestoreOwnRoom();
+  const restored = await tryRestoreOwnRoom();
 
-  // ===== 케이스 무시 중복 방지용 검사 =====
-  async function existsIdCaseInsensitive(candidate){
-    const all = await getDocs(collection(db,"rooms"));
-    const want = (candidate||"").toLowerCase();
-    let found = false;
-    all.forEach(d=>{
-      if((d.id||"").toLowerCase() === want) found = true;
-    });
-    return found;
-  }
-
-  // ===== 이름으로 방 ID 만들기(중복 시 2,3,…) =====
+  // ===== 이름으로 방 ID 만들기(중복 시 2,3,… 부여) =====
   async function makeRoomIdFromName(name){
-    const base = `${name}의 방`;        // 표시/ID 겸용 (요청사항)
+    const base = `${name}의 방`;
     let candidate = base;
     let idx = 2;
     while(true){
-      if(!(await existsIdCaseInsensitive(candidate))) return candidate;
+      const ref = doc(db,"rooms", candidate);
+      const snap = await getDoc(ref);
+      if(!snap.exists()) return candidate;
       candidate = `${base} ${idx++}`;
       if(idx>99) return `${base} ${Date.now()}`; // 비상 fallback
     }
@@ -315,18 +293,18 @@
       errBox.classList.remove("hidden");
       return;
     }
-    const raw = ($("#hostName").value||"");
-    const name = raw.trim();
+    const name = ($("#hostName").value||"").trim();
     const errBox=$("#errCreate");
     if(!name){ errBox.textContent="닉네임을 입력하세요."; errBox.classList.remove("hidden"); return; }
 
     const roomId = await makeRoomIdFromName(name);
-    const joinUrl = makeJoinUrl(roomId);
+    const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
+    const joinUrl = new URL(baseDir + "join.html"); joinUrl.searchParams.set("room", roomId);
 
     const room = {
-      id: roomId,                 // => 대/소문자 그대로 저장
+      id: roomId,
       hostName: name,
-      link: joinUrl,
+      link: joinUrl.toString(),
       started: false,
       gameOver: false,
       round: 0,
@@ -343,10 +321,12 @@
 
       ownRoomId = roomId;
       localStorage.setItem(ownRoomIdStorageKey, ownRoomId);
+
+      // 방장 화면 표시
       show("#view-list", false);
       show("#view-create", false);
       $("#roomId").textContent = roomId;
-      $("#shareLink").value = joinUrl;
+      $("#shareLink").value = joinUrl.toString();
       show("#view-host", true);
 
       const ref = doc(db,"rooms",roomId);
@@ -361,11 +341,11 @@
           ul.appendChild(li);
         });
         $("#count").textContent=list.length;
-        $("#btnStart").disabled=!(list.length>=3 && list.length<=6);
+        $("#btnStart").disabled=!(list.length>=3 && list.length<=MAX_PLAYERS);
       });
 
       $("#btnCopy").onclick = async ()=>{
-        try{ await navigator.clipboard.writeText(joinUrl);
+        try{ await navigator.clipboard.writeText(joinUrl.toString());
              const btn=$("#btnCopy"); btn.textContent="복사됨!"; setTimeout(()=>btn.textContent="복사",1200);
         }catch(e){ $("#errHost").textContent=`복사 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden"); }
       };
@@ -374,11 +354,10 @@
         try{
           const ref=doc(db,"rooms",roomId);
           const snap=await getDoc(ref); const r=snap.data(); const n=(r.players||[]).length;
-          if(n<3 || n>6) return;
+          if(n<3 || n>MAX_PLAYERS) return;
           await updateDoc(ref,{ started:true, updatedAt:serverTimestamp() });
-          const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
           const gameUrl = new URL(baseDir + "game.html");
-          gameUrl.searchParams.set("room", roomId);   // 그대로 전달
+          gameUrl.searchParams.set("room", roomId);
           gameUrl.searchParams.set("name", name);
           location.href = gameUrl.toString();
         }catch(e){ $("#errHost").textContent=`시작 실패: ${e.message||e}`; $("#errHost").classList.remove("hidden"); }
@@ -405,8 +384,12 @@
     }
   });
 
-  // 초기: 방장 화면 숨김
-  show("#view-host", false);
+  // ✅ 복원 실패시에만 호스트 화면을 숨김
+  if (!restored) {
+    show("#view-host", false);
+    show("#view-list", true);
+    show("#view-create", true);
+  }
 </script>
 </body>
 </html>
