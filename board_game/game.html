@@ -164,7 +164,7 @@
       <div id="detailLogWrap" class="hidden">
         <h3 class="font-semibold mt-6 mb-2">게임 기록(상세)</h3>
         <ul id="detailLog" class="space-y-2 text-xs text-slate-700"></ul>
-        <p class="text-xs text-slate-500 mt-2">※ 전체 상세 로그와 내보내기는 게임 종료 후에만 확인할 수 있어요.</p>
+        <p class="text-xs text-slate-500 mt-2">※ 각 라운드별로 누가 얼마를 입찰했는지, 불응찰했는지 확인할 수 있어요.</p>
       </div>
 
       <h3 class="font-semibold mt-6 mb-2">플레이어 현황</h3>
@@ -262,6 +262,7 @@
   let lastSeenResultRound=0, singleRevealTimerSet=false;
   let boardMode=false; // room.boardMode 반영
   let localGameEnded=false; // 로컬에서 게임 종료 처리 여부
+  let lastRoomSnap=null;    // 마지막 스냅샷 데이터(문서 삭제 후 상세 로그 표시용)
 
   // 입찰(1만 단위)
   let bidStep=10000, stagedBid=0;
@@ -284,6 +285,49 @@
     ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
       .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
     show("#mobileBidBar", false);
+  }
+
+  // 상세 로그 렌더링
+  function renderDetailLogs(room){
+    const wrap=$("#detailLogWrap");
+    if(!wrap) return;
+    const detUl=$("#detailLog");
+    detUl.innerHTML="";
+    const dlogs = room?.roundLogsDetailed || [];
+    if(!dlogs.length){
+      show("#detailLogWrap", false);
+      return;
+    }
+    dlogs.slice().reverse().forEach(entry=>{
+      const li=document.createElement("li");
+      const bidsTxt = Object.keys(entry.bids||{}).length
+        ? Object.entries(entry.bids).map(([nm,amt])=>`${nm}:${fmt(amt)}원`).join(", ")
+        : "—";
+      const skips = (entry.skipped||[]).length ? entry.skipped.join(", ") : "없음";
+      const winners = (entry.winners||[]).join(", ") || "—";
+      const actionsHTML = (entry.actions||[]).map(a=>`
+        <li>${a.name}: ${a.participated ? `입찰 ${fmt(a.bid)}원` : '불응찰'}
+          (잔액 ${fmt(a.balance||0)}원, 보류 ${fmt(a.hold||0)}원)
+        </li>
+      `).join("");
+
+      li.className="border rounded px-3 py-2 bg-white";
+      li.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div>R${entry.round} · <b>${entry.item||"-"}</b> <span class="text-[10px] text-slate-400">(${entry.mode})</span></div>
+          <div class="text-slate-500">낙찰가: ${fmt(entry.winningBid||0)}원</div>
+        </div>
+        <div class="mt-1 text-slate-700">응찰액: ${bidsTxt}</div>
+        <div class="mt-1 text-slate-700">낙찰: ${winners}</div>
+        <div class="mt-1 text-slate-500">불응찰: ${skips}</div>
+        <div class="mt-1 text-slate-700">행동 로그:</div>
+        <ul class="list-disc ml-5 text-[11px] text-slate-600">
+          ${actionsHTML || "<li>기록 없음</li>"}
+        </ul>
+      `;
+      detUl.appendChild(li);
+    });
+    show("#detailLogWrap", true);
   }
 
   // phase 기본값 보정
@@ -455,7 +499,16 @@
         const logs=[...(r.roundLogs||[])];
         logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
 
-        // 상세 로그 엔트리(문서는 게임 종료 시 삭제되므로 임시 기록 용도)
+        // 상세 로그 엔트리 (플레이어별 행동 기록 포함)
+        const actions = (r.players||[]).map(p=>({
+          name: p.name,
+          participated: partNames.includes(p.name),
+          bid: bids[p.name] || 0,
+          hold: p.hold || 0,
+          balance: p.balance || 0,
+          items: p.items || []
+        }));
+
         const detail = {
           round: (r.round||0)+1,
           item,
@@ -464,6 +517,7 @@
           winners,
           winningBid,
           skipped: (r.players||[]).filter(p=>!partNames.includes(p.name)).map(p=>p.name),
+          actions,
           mode: r.boardMode===true ? "board" : "web",
           ts: Date.now()
         };
@@ -511,6 +565,15 @@
         const logs=[...(r.roundLogs||[])];
         logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
 
+        const actions = (r.players||[]).map(p=>({
+          name: p.name,
+          participated: partNames.includes(p.name),
+          bid: bids[p.name] || 0,
+          hold: p.hold || 0,
+          balance: p.balance || 0,
+          items: p.items || []
+        }));
+
         const detail = {
           round:(r.round||0)+1,
           item,
@@ -519,6 +582,7 @@
           winners,
           winningBid,
           skipped: (r.players||[]).filter(p=>!partNames.includes(p.name)).map(p=>p.name),
+          actions,
           mode: r.boardMode===true ? "board" : "web",
           ts: Date.now()
         };
@@ -549,12 +613,17 @@
     // 문서가 삭제된 경우
     if(!s.exists()){
       if(!localGameEnded){
+        if(lastRoomSnap){
+          renderDetailLogs(lastRoomSnap);
+        }
         endUI("방이 종료(삭제)되었습니다.");
+        localGameEnded = true;
       }
       return;
     }
 
     const d=s.data();
+    lastRoomSnap = d;
 
     // 오래된 방 자동 삭제
     if(isStale(d)){
@@ -562,7 +631,7 @@
       return;
     }
 
-    if(localGameEnded) return; // 이미 로컬에서 종료 처리했으면 더 이상 UI 업데이트 안 함
+    if(localGameEnded) return; // 이미 로컬 종료 처리 했으면 더 이상 UI 업데이트 안 함
 
     boardMode = d.boardMode===true;
     $("#mode").textContent = boardMode ? "보드게임" : "웹 전용";
@@ -599,10 +668,11 @@
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
 
-    // 우승 체크 → 우승자 계산 후 문서 삭제
+    // 우승 체크 → 우승자 계산 후 문서 삭제 + 상세 로그 표시
     const reason=checkWin(myItems);
     if(reason && !localGameEnded){
       const winners = (players||[]).filter(p=>checkWin(p.items||[])!=="").map(p=>p.name);
+      renderDetailLogs(d);
       endUI("", winners);
       localGameEnded = true;
       try{ await deleteDoc(ref); }catch(_){}
@@ -640,16 +710,14 @@
     (d.roundLogs||[]).slice().reverse().forEach(entry=>{
       const li=document.createElement("li");
       const parts = (entry.participants||[]).length ? entry.participants.join(", ") : "—";
+      const wins = (entry.winners||[]).length ? entry.winners.join(", ") : "—";
       li.className="border rounded px-3 py-2 bg-slate-50";
       li.innerHTML = `<div class="flex items-center justify-between">
         <div>R${entry.round} · <b>${entry.item||"-"}</b></div>
-        <div class="text-slate-500">응찰: ${parts}</div>
+        <div class="text-slate-500">응찰: ${parts} · 낙찰: ${wins}</div>
       </div>`;
       logUl.appendChild(li);
     });
-
-    // 상세 로그는 문서가 삭제되면 같이 사라지므로 UI는 항상 숨김 상태로 두어도 됨
-    show("#detailLogWrap", false);
 
     // 단계별 UI + 자동 전환
     if(d.phase==="choose" || d.phase===undefined){
@@ -699,11 +767,17 @@
     await resetRoundForItemChange(r);
   });
 
-  // 게임 종료(삭제) 버튼 → 문서 삭제
+  // 게임 종료(삭제) 버튼 → 문서 삭제 + 상세 로그 표시
   $("#btnEndGame").onclick = async ()=>{
     try{
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        lastRoomSnap = snap.data();
+        renderDetailLogs(lastRoomSnap);
+        endUI("게임을 종료했습니다.");
+        localGameEnded = true;
+      }
       await deleteDoc(ref);
-      alert("게임을 종료했습니다. 방이 삭제되었습니다.");
     }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
   };
 
