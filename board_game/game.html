@@ -164,9 +164,13 @@
       <h3 class="font-semibold mt-6 mb-2">라운드 로그</h3>
       <ul id="roundLog" class="space-y-2 text-xs text-slate-700"></ul>
 
-      <!-- ▼ 게임 종료 후에만 보이는 상세 기록 -->
+      <!-- ▼ 게임 종료 후에만 보이는 상세 기록 + 내보내기 -->
       <div id="historyBox" class="hidden">
         <h3 class="font-semibold mt-6 mb-2">게임 기록(상세)</h3>
+        <div class="flex items-center gap-2 mb-2">
+          <button id="btnExportJSON" class="btn bg-slate-800 text-white rounded px-3 py-1.5 text-xs">JSON 내보내기</button>
+          <button id="btnExportCSV"  class="btn bg-slate-200 rounded px-3 py-1.5 text-xs">CSV 내보내기</button>
+        </div>
         <ul id="detailLog" class="space-y-2 text-xs text-slate-700"></ul>
       </div>
       <!-- ▲ 상세 기록 끝 -->
@@ -230,6 +234,20 @@
   const fmt=n=>Number(n||0).toLocaleString("ko-KR");
   const show=(sel,yes)=>$(sel).classList.toggle("hidden",!yes);
   const toast=(msg,img)=>{ $("#toastMsg").textContent=msg; const im=$("#toastImg"); if(img){im.src=img; im.style.display="";}else{im.style.display="none";} $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2200); };
+
+  // ▼ 내보내기 유틸
+  function toCSV(rows){
+    const esc = v => `"${String(v??"").replace(/"/g,'""')}"`;
+    const header = Object.keys(rows[0]||{});
+    const body=[header.join(",")].concat(rows.map(r=>header.map(k=>esc(r[k])).join(",")));
+    return body.join("\n");
+  }
+  function downloadText(filename, text){
+    const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download=filename; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 500);
+  }
 
   const params=new URL(location.href).searchParams;
   const roomId=(params.get("room")||"").toUpperCase();
@@ -566,7 +584,7 @@
   onSnapshot(ref, async (s)=>{
     if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
     const d=s.data();
-    window.__lastRoomSnap = d;
+    window.__lastRoomSnap = d; // 최근 스냅샷 캐시
 
     /* 비활성 자동 삭제 — gameOver 상태면 보존 */
     if(!d.gameOver && isStale(d)){
@@ -599,11 +617,13 @@
     const me = players.find(p=>p.name===myName) || null;
     currentPlayers = players;
     currentMe = me;
+    window.currentPlayers = players;
+    window.currentMe = me;
 
     $("#myBalance").textContent = fmt(me?.balance||0);
     $("#myHold").textContent    = fmt(me?.hold||0);
 
-    // 소지품 + 자동 우승 → gameOver 플래그 저장
+    // 소지품 + 자동 우승 → gameOver 플래그 저장 (삭제 금지)
     const myItems=Array.isArray(me?.items)? me.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
@@ -852,6 +872,38 @@
       }
     }catch(_){}
   }, 5 * 60 * 1000);
+
+  // ▼ 상세 로그 내보내기(게임 종료 후만 버튼 보임)
+  $("#btnExportJSON").addEventListener("click", ()=>{
+    const snap = window.__lastRoomSnap;
+    if(!snap?.gameOver){ alert("게임 종료 후에만 내보낼 수 있습니다."); return; }
+    const payload = {
+      roomId,
+      endedAt: snap?.endedAt?.toMillis?.() || null,
+      finalWinners: snap?.finalWinners || [],
+      victoryReason: snap?.victoryReason || "",
+      logs: snap?.roundLogsDetailed || []
+    };
+    downloadText(`ulleung_game_${roomId}.json`, JSON.stringify(payload, null, 2));
+  });
+
+  $("#btnExportCSV").addEventListener("click", ()=>{
+    const snap = window.__lastRoomSnap;
+    if(!snap?.gameOver){ alert("게임 종료 후에만 내보낼 수 있습니다."); return; }
+    const rows = (snap.roundLogsDetailed||[]).map(e=>({
+      round: e.round,
+      item: e.item,
+      mode: e.mode,
+      winningBid: e.winningBid||0,
+      winners: (e.winners||[]).join(" / "),
+      participants: (e.participants||[]).join(" / "),
+      bids: Object.entries(e.bids||{}).map(([n,a])=>`${n}:${a}`).join(" | "),
+      skipped: (e.skipped||[]).join(" / "),
+      ts: e.ts
+    }));
+    if(rows.length===0){ alert("내보낼 로그가 없습니다."); return; }
+    downloadText(`ulleung_game_${roomId}.csv`, toCSV(rows));
+  });
 </script>
 </body>
 </html>
