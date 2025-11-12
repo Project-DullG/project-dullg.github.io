@@ -66,8 +66,23 @@
   <!-- 새 방 만들기 -->
   <section id="view-create" class="bg-white rounded-xl shadow p-4 md:p-6">
     <h2 class="font-semibold mb-3">새 방 만들기</h2>
+
     <label class="text-sm block mb-1">내 닉네임(방장)</label>
     <input id="hostName" type="text" placeholder="예: 상회장" class="w-full border rounded px-3 py-2 mb-3" />
+
+    <!-- 진행 방식 선택 -->
+    <div class="mb-3 text-sm space-y-2">
+      <div class="font-medium">진행 방식</div>
+      <label class="flex items-center gap-2">
+        <input type="radio" name="mode" value="board" checked>
+        <span>보드게임 카드 사용(매 라운드 방장이 상품 수동 등록)</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input type="radio" name="mode" value="web">
+        <span>웹 전용(상품 자동 결정)</span>
+      </label>
+    </div>
+
     <button id="btnCreate" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded px-4 py-2" disabled>
       방 만들기
     </button>
@@ -80,6 +95,8 @@
       <h2 class="font-semibold">Room <span id="roomId" class="mono"></span></h2>
       <div class="text-sm">참가자 <span id="count" class="font-bold">0</span> / <span id="maxPlayers">8</span></div>
     </div>
+
+    <div class="text-xs text-slate-600 mt-1" id="modeInfo"></div>
 
     <div class="grid md:grid-cols-2 gap-4 mt-4">
       <div class="border rounded-lg p-4">
@@ -104,7 +121,7 @@
       <span class="text-xs text-slate-600">3–8명에서 시작 가능</span>
     </div>
 
-    <!-- ✅ 방 삭제 버튼 추가 -->
+    <!-- 방 삭제 -->
     <div class="mt-2">
       <button id="btnDeleteRoom" class="btn bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">방 삭제</button>
     </div>
@@ -139,9 +156,10 @@
   const listEl = $("#roomsList");
   const errJoinList = $("#errJoinList");
 
-  function roomCard({id, hostName, players=[], started=false}) {
+  function roomCard({id, hostName, players=[], started=false, boardMode}) {
     const count = Array.isArray(players) ? players.length : 0;
     const disabled = started || count>=MAX_PLAYERS;
+    const modeLabel = boardMode ? "보드게임" : "웹 전용";
     return `
       <li class="border rounded-lg p-3 flex flex-col gap-2">
         <div class="flex items-center justify-between">
@@ -149,7 +167,10 @@
             <div class="font-semibold">Room <span class="mono">${id}</span></div>
             <div class="text-xs text-slate-500">방장: ${hostName || "-"}</div>
           </div>
-          <div class="text-xs text-slate-600">${started ? "진행중" : "대기중"}</div>
+          <div class="text-right text-xs text-slate-600">
+            <div>${started ? "진행중" : "대기중"}</div>
+            <div class="text-slate-400">${modeLabel}</div>
+          </div>
         </div>
         <div class="flex items-center justify-between">
           <div class="text-sm">인원: <b>${count}</b> / ${MAX_PLAYERS}</div>
@@ -173,7 +194,8 @@
           players: d.players||[],
           started: !!d.started,
           gameOver: d.gameOver===true,
-          createdAt: d.createdAt?.toMillis?.() || 0
+          createdAt: d.createdAt?.toMillis?.() || 0,
+          boardMode: d.boardMode===true
         });
       });
       const rooms = all.filter(r=>!r.started && !r.gameOver)
@@ -212,7 +234,8 @@
     }
   }
   onSnapshot(collection(db,"rooms"), ()=> refreshRoomsOnce());
-  $("#btnRefresh").addEventListener("click", refreshRoomsOnce());
+  // 버그 수정: 핸들러에 함수 참조 전달
+  $("#btnRefresh").addEventListener("click", refreshRoomsOnce);
   refreshRoomsOnce();
 
   // ===== 내 방 복원 & 중복 생성 방지 =====
@@ -220,7 +243,6 @@
   let ownRoomId = localStorage.getItem(ownRoomIdStorageKey) || "";
 
   async function bindHostRealtime(ref){
-    // 실시간 대기 인원
     onSnapshot(ref, (s)=>{
       if(!s.exists()){
         // 방이 지워졌으면 기본 화면으로 복귀
@@ -243,6 +265,9 @@
       const n=(data.players||[]).length;
       $("#count").textContent=n;
       $("#btnStart").disabled=!(n>=3 && n<=MAX_PLAYERS);
+
+      // 진행 방식 안내
+      $("#modeInfo").textContent = data.boardMode ? "진행 방식: 보드게임(수동 상품 등록)" : "진행 방식: 웹 전용(자동 상품)";
     });
   }
 
@@ -293,7 +318,7 @@
       ownRoomId = "";
       return false;
     }
-    // ✅ 복원 성공: 방장 화면만 표시
+    // 복원 성공: 방장 화면만 표시
     show("#view-list", false);
     show("#view-create", false);
     $("#roomId").textContent = ownRoomId;
@@ -333,6 +358,9 @@
     const errBox=$("#errCreate");
     if(!name){ errBox.textContent="닉네임을 입력하세요."; errBox.classList.remove("hidden"); return; }
 
+    // 진행 방식 읽기
+    const boardMode = (document.querySelector('input[name="mode"]:checked')?.value === 'board');
+
     const roomId = await makeRoomIdFromName(name);
     const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
     const joinUrl = new URL(baseDir + "join.html"); joinUrl.searchParams.set("room", roomId);
@@ -344,6 +372,7 @@
       started: false,
       gameOver: false,
       round: 0,
+      boardMode: boardMode, // true=보드게임(수동), false=웹 전용(자동)
       players: [
         { id:"P1", name, balance:1000000, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null, items:[] }
       ],
@@ -396,7 +425,7 @@
     }
   });
 
-  // ✅ 복원 실패시에만 호스트 화면을 숨김
+  // 복원 실패시에만 호스트 화면을 숨김
   if (!restored) {
     show("#view-host", false);
     show("#view-list", true);
