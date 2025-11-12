@@ -164,9 +164,13 @@
       <h3 class="font-semibold mt-6 mb-2">라운드 로그</h3>
       <ul id="roundLog" class="space-y-2 text-xs text-slate-700"></ul>
 
-      <!-- ▼ 게임 종료 후에만 보이는 상세 기록(다운로드 없음) -->
+      <!-- ▼ 게임 종료 후에만 보이는 상세 기록 + 내보내기 -->
       <div id="historyBox" class="hidden">
         <h3 class="font-semibold mt-6 mb-2">게임 기록(상세)</h3>
+        <div class="flex items-center gap-2 mb-2">
+          <button id="btnExportJSON" class="btn bg-slate-800 text-white rounded px-3 py-1.5 text-xs">JSON 내보내기</button>
+          <button id="btnExportCSV"  class="btn bg-slate-200 rounded px-3 py-1.5 text-xs">CSV 내보내기</button>
+        </div>
         <ul id="detailLog" class="space-y-2 text-xs text-slate-700"></ul>
       </div>
       <!-- ▲ 상세 기록 끝 -->
@@ -189,7 +193,7 @@
 
       <hr class="my-4">
       <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">
-        게임 종료(방 삭제)
+        게임 종료(방 삭제/보존 선택)
       </button>
       <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
     </section>
@@ -231,9 +235,19 @@
   const show=(sel,yes)=>$(sel).classList.toggle("hidden",!yes);
   const toast=(msg,img)=>{ $("#toastMsg").textContent=msg; const im=$("#toastImg"); if(img){im.src=img; im.style.display="";}else{im.style.display="none";} $("#toast").classList.remove("hidden"); setTimeout(()=>$("#toast").classList.add("hidden"), 2200); };
 
-  // 마지막 스냅샷 보관 및 로컬 삭제 종료 플래그
-  let __lastSnap = null;
-  let __locallyEndedAndDeleted = false;
+  // ▼ 내보내기 유틸
+  function toCSV(rows){
+    const esc = v => `"${String(v??"").replace(/"/g,'""')}"`;
+    const header = Object.keys(rows[0]||{});
+    const body=[header.join(",")].concat(rows.map(r=>header.map(k=>esc(r[k])).join(",")));
+    return body.join("\n");
+  }
+  function downloadText(filename, text){
+    const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url; a.download=filename; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url), 500);
+  }
 
   const params=new URL(location.href).searchParams;
   const roomId=(params.get("room")||"").toUpperCase();
@@ -252,9 +266,9 @@
   const ref=doc(db,"rooms",roomId);
 
   /* ─────────────────────────────
-     ★ 비활성 자동 삭제(1시간)
+     ★ 비활성 자동 삭제(1시간) — gameOver이면 보존
      ───────────────────────────── */
-  const STALE_MS = 60 * 60 * 1000; // 1시간
+  const STALE_MS = 60 * 60 * 1000;
   const isStale = (d)=>{
     try{
       const ts = d?.updatedAt?.toMillis?.();
@@ -568,19 +582,11 @@
 
   // 스냅샷
   onSnapshot(ref, async (s)=>{
-    if(!s.exists()){
-      // 로컬에서 종료+삭제를 수행한 경우엔 화면에 남겨둔 로그를 유지
-      if(__locallyEndedAndDeleted){
-        $("#endedBox").classList.remove("hidden");
-      }else{
-        endUI("방이 종료(삭제)되었습니다.");
-      }
-      return;
-    }
+    if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
     const d=s.data();
-    __lastSnap = d;
+    window.__lastRoomSnap = d; // 최근 스냅샷 캐시
 
-    /* 비활성 자동 삭제 */
+    /* 비활성 자동 삭제 — gameOver 상태면 보존 */
     if(!d.gameOver && isStale(d)){
       try{ await deleteDoc(ref); return; }catch(_){}
     }
@@ -617,15 +623,28 @@
     $("#myBalance").textContent = fmt(me?.balance||0);
     $("#myHold").textContent    = fmt(me?.hold||0);
 
-    // 소지품 + 자동 우승 → 화면 종료 안내(삭제는 아님)
+    // 소지품 + 자동 우승 → gameOver 플래그 저장 (삭제 금지)
     const myItems=Array.isArray(me?.items)? me.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
     const reason=checkWin(myItems);
     if(reason && !d.gameOver){
-      // 안내만 하고 실제 삭제는 방장이 종료 버튼을 눌렀을 때
-      $("#endMsg").textContent = `우승 조건 달성! 방장이 종료하면 게임이 끝납니다.`;
-      $("#endedBox").classList.remove("hidden");
+      try{
+        await runTransaction(db, async tx=>{
+          const s=await tx.get(ref); if(!s.exists()) return;
+          const r=s.data();
+          const winners = (r.players||[])
+            .filter(p=>checkWin(p.items||[])!=="")
+            .map(p=>p.name);
+          tx.update(ref,{
+            gameOver:true,
+            endedAt: serverTimestamp(),
+            finalWinners: winners,
+            victoryReason: reason,
+            updatedAt: serverTimestamp()
+          });
+        });
+      }catch(_){}
     }
 
     // 현황
@@ -700,6 +719,38 @@
     }
 
     bindStepButtons();
+
+    // ▼ 게임 종료 UI/기록 표시 제어
+    if(d.gameOver){
+      const winners = (d.finalWinners||[]).join(", ") || "—";
+      $("#endMsg").textContent = `게임 종료! 우승: ${winners}`;
+      $("#endedBox").classList.remove("hidden");
+
+      // 상세 로그 렌더링 + 표시
+      const detUl = $("#detailLog"); detUl.innerHTML="";
+      const dlogs = d.roundLogsDetailed || [];
+      dlogs.slice().reverse().forEach(entry=>{
+        const li=document.createElement("li");
+        const bidsTxt = Object.keys(entry.bids||{}).length
+          ? Object.entries(entry.bids).map(([nm,amt])=>`${nm}:${fmt(amt)}원`).join(", ")
+          : "—";
+        const skips = (entry.skipped||[]).length ? entry.skipped.join(", ") : "없음";
+        li.className="border rounded px-3 py-2 bg-white";
+        li.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div>R${entry.round} · <b>${entry.item||"-"}</b> <span class="text-[10px] text-slate-400">(${entry.mode})</span></div>
+            <div class="text-slate-500">낙찰가: ${fmt(entry.winningBid||0)}원</div>
+          </div>
+          <div class="mt-1 text-slate-700">응찰액: ${bidsTxt}</div>
+          <div class="mt-1 text-slate-700">낙찰: ${(entry.winners||[]).join(", ") || "—"}</div>
+          <div class="mt-1 text-slate-500">불응찰: ${skips}</div>
+        `;
+        detUl.appendChild(li);
+      });
+      $("#historyBox").classList.remove("hidden");
+    }else{
+      $("#historyBox").classList.add("hidden");
+    }
   });
 
   function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
@@ -715,53 +766,17 @@
     await resetRoundForItemChange(r);
   });
 
-  // 로컬 종료 렌더링(스냅샷으로 기록 고정)
-  function renderLocalHistory(){
-    const d = __lastSnap || {};
-    const winnersTxt = (d.finalWinners||[]).join(", ") || "—";
-    $("#endMsg").textContent = `게임 종료! 우승: ${winnersTxt}`;
-    $("#endedBox").classList.remove("hidden");
-
-    const detUl = $("#detailLog"); detUl.innerHTML="";
-    const dlogs = d.roundLogsDetailed || [];
-    dlogs.slice().reverse().forEach(entry=>{
-      const li=document.createElement("li");
-      const bidsTxt = Object.keys(entry.bids||{}).length
-        ? Object.entries(entry.bids).map(([nm,amt])=>`${nm}:${fmt(amt)}원`).join(", ")
-        : "—";
-      const skips = (entry.skipped||[]).length ? entry.skipped.join(", ") : "없음";
-      li.className="border rounded px-3 py-2 bg-white";
-      li.innerHTML = `
-        <div class="flex items-center justify-between">
-          <div>R${entry.round} · <b>${entry.item||"-"}</b> <span class="text-[10px] text-slate-400">(${entry.mode})</span></div>
-          <div class="text-slate-500">낙찰가: ${fmt(entry.winningBid||0)}원</div>
-        </div>
-        <div class="mt-1 text-slate-700">응찰액: ${bidsTxt}</div>
-        <div class="mt-1 text-slate-700">낙찰: ${(entry.winners||[]).join(", ") || "—"}</div>
-        <div class="mt-1 text-slate-500">불응찰: ${skips}</div>
-      `;
-      detUl.appendChild(li);
-    });
-    $("#historyBox").classList.remove("hidden");
-
-    // 조작 비활성화
-    ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
-      .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
-    show("#mobileBidBar", false);
-  }
-
-  // 게임 종료(즉시 삭제) — 삭제 전에 화면에 로그 고정 렌더링
+  // 게임 종료(보존/삭제 선택)
   $("#btnEndGame").onclick = async ()=>{
-    if(!confirm("정말 게임을 종료하고 방을 삭제할까요? (기록은 이 화면에만 남고 DB에서는 삭제됩니다)")) return;
+    const keep = confirm("게임을 종료(보존)하시겠어요?\n확인: 게임 종료(로그 보존)\n취소: 방 완전 삭제(로그도 삭제)");
     try{
-      renderLocalHistory();            // 화면에 기록 고정
-      __locallyEndedAndDeleted = true;
-      await deleteDoc(ref);            // DB 문서 삭제
-      toast("방이 삭제되었습니다.");
-    }catch(err){
-      __locallyEndedAndDeleted = false;
-      showErr(`삭제 실패: ${err.message||err}`);
-    }
+      if(keep){
+        await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
+        alert("게임을 종료했습니다. 로그는 보존됩니다.");
+      }else{
+        await deleteDoc(ref);
+      }
+    }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
   };
 
   // 응찰 확정
@@ -845,7 +860,7 @@
     else                          toast(`불응찰 라운드 종료.`);
   });
 
-  /* 5분마다 비활성 방 정리 */
+  /* 5분마다 비활성 방 정리 — gameOver면 보존 */
   setInterval(async ()=>{
     try{
       const s=await getDoc(ref);
@@ -857,6 +872,38 @@
       }
     }catch(_){}
   }, 5 * 60 * 1000);
+
+  // ▼ 상세 로그 내보내기(게임 종료 후만 버튼 보임)
+  $("#btnExportJSON").addEventListener("click", ()=>{
+    const snap = window.__lastRoomSnap;
+    if(!snap?.gameOver){ alert("게임 종료 후에만 내보낼 수 있습니다."); return; }
+    const payload = {
+      roomId,
+      endedAt: snap?.endedAt?.toMillis?.() || null,
+      finalWinners: snap?.finalWinners || [],
+      victoryReason: snap?.victoryReason || "",
+      logs: snap?.roundLogsDetailed || []
+    };
+    downloadText(`ulleung_game_${roomId}.json`, JSON.stringify(payload, null, 2));
+  });
+
+  $("#btnExportCSV").addEventListener("click", ()=>{
+    const snap = window.__lastRoomSnap;
+    if(!snap?.gameOver){ alert("게임 종료 후에만 내보낼 수 있습니다."); return; }
+    const rows = (snap.roundLogsDetailed||[]).map(e=>({
+      round: e.round,
+      item: e.item,
+      mode: e.mode,
+      winningBid: e.winningBid||0,
+      winners: (e.winners||[]).join(" / "),
+      participants: (e.participants||[]).join(" / "),
+      bids: Object.entries(e.bids||{}).map(([n,a])=>`${n}:${a}`).join(" | "),
+      skipped: (e.skipped||[]).join(" / "),
+      ts: e.ts
+    }));
+    if(rows.length===0){ alert("내보낼 로그가 없습니다."); return; }
+    downloadText(`ulleung_game_${roomId}.csv`, toCSV(rows));
+  });
 </script>
 </body>
 </html>
