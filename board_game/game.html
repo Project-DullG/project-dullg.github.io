@@ -163,12 +163,9 @@
       <!-- 전체 상세 로그(종료 후에만 노출) -->
       <div id="detailLogWrap" class="hidden">
         <h3 class="font-semibold mt-6 mb-2">게임 기록(상세)</h3>
-        <div class="flex items-center gap-2 mb-2">
-          <button id="btnExportJSON" class="btn bg-slate-800 text-white rounded px-3 py-1.5 text-xs">JSON 내보내기</button>
-          <button id="btnExportCSV"  class="btn bg-slate-200 rounded px-3 py-1.5 text-xs">CSV 내보내기</button>
-        </div>
+        <!-- 다운로드 버튼 제거 -->
         <ul id="detailLog" class="space-y-2 text-xs text-slate-700"></ul>
-        <p class="text-xs text-slate-500 mt-2">※ 전체 상세 로그와 내보내기는 게임 종료 후에만 확인할 수 있어요.</p>
+        <p class="text-xs text-slate-500 mt-2">※ 게임 종료 후, 이 페이지를 보고 있는 동안에만 전체 상세 로그를 확인할 수 있어요.</p>
       </div>
 
       <h3 class="font-semibold mt-6 mb-2">플레이어 현황</h3>
@@ -193,7 +190,7 @@
 
       <hr class="my-4">
       <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2">
-        게임 종료(보존)
+        게임 종료(데이터 삭제)
       </button>
       <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
     </section>
@@ -278,6 +275,7 @@
   let isHost=false, currentPlayers=[], currentMe=null;
   let lastSeenResultRound=0, singleRevealTimerSet=false;
   let boardMode=false; // room.boardMode 반영
+  let endedLocally=false; // 이 클라이언트에서 종료 UI를 이미 세팅했는지
 
   // 입찰(1만 단위)
   let bidStep=10000, stagedBid=0;
@@ -295,25 +293,25 @@
 
   // 종료 UI
   function endUI(msg, winners=[]){
-    $("#endMsg").textContent = winners.length? `게임 종료! 우승: ${winners.join(", ")}` : msg;
+    // winners가 있으면 승자 메시지 우선
+    if (winners.length){
+      $("#endMsg").textContent = `게임 종료! 우승: ${winners.join(", ")}`;
+    } else if (!endedLocally) {
+      // 이미 로컬 종료 메시지가 있다면 덮어쓰지 않음
+      $("#endMsg").textContent = msg;
+    }
     $("#endedBox").classList.remove("hidden");
     ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
       .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
     show("#mobileBidBar", false);
   }
 
-  // CSV/JSON 유틸
+  // CSV/JSON 유틸 (더 이상 사용 안 하지만, 혹시 나중 확장 대비해서 남겨도/지워도 상관 없음)
   function toCSV(rows){
     const esc = v => `"${String(v??"").replace(/"/g,'""')}"`;
     const header = Object.keys(rows[0]||{});
     const body=[header.join(",")].concat(rows.map(r=>header.map(k=>esc(r[k])).join(",")));
     return body.join("\n");
-  }
-  function downloadText(filename, text){
-    const blob=new Blob([text],{type:"text/plain;charset=utf-8"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a"); a.href=url; a.download=filename; a.click();
-    setTimeout(()=>URL.revokeObjectURL(url), 500);
   }
 
   // phase 기본값 보정
@@ -441,7 +439,7 @@
         const readyAll = participants.length===0 ? true : participants.every(p=>p.readyBid===true || p.committed===true);
         if(!readyAll) return;
 
-        // 🔒 정산 시에는 랜덤 상품 금지: currentItem / lastItem 둘 다 없으면 정산 중단
+        // 정산 시에는 랜덤 상품 금지
         const item = (r.currentItem || r.lastItem || "").trim();
         if (!item) {
           console.warn("attemptSettleFromBid: item이 없어 정산을 중단합니다.");
@@ -555,7 +553,7 @@
         let players=(r.players||[]).map(p=>({...p}));
         const partNames=(r.participants||[]); if(partNames.length!==1) return;
 
-        // 🔒 단독 응찰 정산도 랜덤 상품 금지
+        // 단독 응찰 정산도 랜덤 상품 금지
         const item = (r.currentItem || r.lastItem || "").trim();
         if (!item) {
           console.warn("settleAfterSingleReveal: item이 없어 정산을 중단합니다.");
@@ -623,9 +621,13 @@
 
   // 스냅샷
   onSnapshot(ref, async (s)=>{
-    if(!s.exists()){ endUI("방이 종료(삭제)되었습니다."); return; }
+    if(!s.exists()){
+      // 이미 로컬에서 종료 UI를 띄웠다면 메시지를 덮어쓰지 않음
+      endUI("방이 종료(삭제)되었습니다.");
+      return;
+    }
     const d=s.data();
-    window.__lastRoomSnap = d; // 내보내기용 캐시
+    window.__lastRoomSnap = d; // 디버깅용 캐시
 
     if(!d.gameOver && isStale(d)){ try{ await deleteDoc(ref); return; }catch(_){} }
 
@@ -659,7 +661,7 @@
     $("#myBalance").textContent = fmt(me?.balance||0);
     $("#myHold").textContent    = fmt(me?.hold||0);
 
-    // 우승 체크(문서 삭제 금지, 보존형 종료)
+    // 우승 체크(승리조건 달성 시 gameOver=true 설정 → 이후 삭제)
     const myItems=Array.isArray(me?.items)? me.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
@@ -720,7 +722,7 @@
       logUl.appendChild(li);
     });
 
-    // 상세 로그(종료 시에만 표시)
+    // 상세 로그(종료 시에만 표시 + 이후 바로 방 삭제)
     show("#detailLogWrap", !!d.gameOver);
     if(d.gameOver){
       const detUl = $("#detailLog"); detUl.innerHTML="";
@@ -744,9 +746,14 @@
         detUl.appendChild(li);
       });
 
-      const winners = (d.finalWinners||[]).join(", ") || "—";
-      $("#endMsg").textContent = `게임 종료! 우승: ${winners}`;
-      $("#endedBox").classList.remove("hidden");
+      const winnersArr = d.finalWinners || [];
+      endedLocally = true;
+      endUI("", winnersArr);
+
+      // 게임 종료가 확인되면 방 문서 삭제 (Firebase 상 로그 제거)
+      try{
+        await deleteDoc(ref);
+      }catch(_){}
     }
 
     // 단계별 UI + 자동 전환
@@ -803,11 +810,11 @@
     await resetRoundForItemChange(r);
   });
 
-  // 게임 종료(보존) 버튼
+  // 게임 종료(데이터 삭제) 버튼
   $("#btnEndGame").onclick = async ()=>{
     try{
       await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
-      alert("게임을 종료했습니다. 로그는 보존됩니다.");
+      alert("게임을 종료합니다. 데이터는 삭제되고, 이 화면에서만 로그를 볼 수 있습니다.");
     }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
   };
 
@@ -893,36 +900,7 @@
     else                          toast(`불응찰 라운드 종료.`);
   });
 
-  // 상세 로그 내보내기(종료 후만 의미 있음)
-  $("#btnExportJSON")?.addEventListener("click", ()=>{
-    const snap = window.__lastRoomSnap || {};
-    const payload = {
-      roomId,
-      endedAt: snap?.endedAt?.toMillis?.() || null,
-      finalWinners: snap?.finalWinners || [],
-      victoryReason: snap?.victoryReason || "",
-      logs: snap?.roundLogsDetailed || []
-    };
-    downloadText(`ulleung_game_${roomId}.json`, JSON.stringify(payload, null, 2));
-  });
-  $("#btnExportCSV")?.addEventListener("click", ()=>{
-    const snap = window.__lastRoomSnap || {};
-    const rows = (snap.roundLogsDetailed||[]).map(e=>({
-      round: e.round,
-      item: e.item,
-      mode: e.mode,
-      winningBid: e.winningBid||0,
-      winners: (e.winners||[]).join(" / "),
-      participants: (e.participants||[]).join(" / "),
-      bids: Object.entries(e.bids||{}).map(([n,a])=>`${n}:${a}`).join(" | "),
-      skipped: (e.skipped||[]).join(" / "),
-      ts: e.ts
-    }));
-    if(rows.length===0){ alert("내보낼 로그가 없습니다."); return; }
-    downloadText(`ulleung_game_${roomId}.csv`, toCSV(rows));
-  });
-
-  /* 5분마다 비활성 방 정리 */
+  /* 5분마다 비활성 방 정리 (게임 미종료 상태에서만) */
   setInterval(async ()=>{
     try{
       const s=await getDoc(ref);
