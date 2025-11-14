@@ -276,6 +276,7 @@
   let lastSeenResultRound=0, singleRevealTimerSet=false;
   let boardMode=false; // room.boardMode 반영
   let endedLocally=false; // 이 클라이언트에서 종료 UI를 이미 세팅했는지
+  let deletedOnce=false; // 중복 delete 방지 플래그
 
   // 입찰(1만 단위)
   let bidStep=10000, stagedBid=0;
@@ -293,25 +294,15 @@
 
   // 종료 UI
   function endUI(msg, winners=[]){
-    // winners가 있으면 승자 메시지 우선
     if (winners.length){
       $("#endMsg").textContent = `게임 종료! 우승: ${winners.join(", ")}`;
     } else if (!endedLocally) {
-      // 이미 로컬 종료 메시지가 있다면 덮어쓰지 않음
       $("#endMsg").textContent = msg;
     }
     $("#endedBox").classList.remove("hidden");
     ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
       .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
     show("#mobileBidBar", false);
-  }
-
-  // CSV/JSON 유틸 (현재는 사용 안 함, 필요시 재사용 가능)
-  function toCSV(rows){
-    const esc = v => `"${String(v??"").replace(/"/g,'""')}"`;
-    const header = Object.keys(rows[0]||{});
-    const body=[header.join(",")].concat(rows.map(r=>header.map(k=>esc(r[k])).join(",")));
-    return body.join("\n");
   }
 
   // phase 기본값 보정
@@ -369,7 +360,7 @@
         const players=(r.players||[]); if(players.length===0) return;
 
         const item=(r.currentItem||"").trim();
-        if(r.boardMode===true && !item) return; // 보드게임 모드: 상품 필수
+        if(r.boardMode===true && !item) return;
 
         const allLocked=players.every(p=>p.readyPart===true || p.ready===true);
         if(!allLocked) return;
@@ -378,7 +369,7 @@
           .filter(p=>p.willParticipate===true || (p.willParticipate===undefined && p.committed===true))
           .map(p=>p.name);
 
-        const chosenItem = item || randItem(); // 웹모드 백업 (라운드 시작 시에만 적용)
+        const chosenItem = item || randItem();
 
         if(parts.length===0){
           const reset=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
@@ -426,7 +417,7 @@
     }catch(e){ console.warn(e); }
   }
 
-  // bid → 정산 (모두 0원인 경우 전원 지급) + 상세 로그
+  // bid → 정산 + 상세 로그
   async function attemptSettleFromBid(){
     try{
       await runTransaction(db, async tx=>{
@@ -439,7 +430,6 @@
         const readyAll = participants.length===0 ? true : participants.every(p=>p.readyBid===true || p.committed===true);
         if(!readyAll) return;
 
-        // 정산 시에는 랜덤 상품 금지
         const item = (r.currentItem || r.lastItem || "").trim();
         if (!item) {
           console.warn("attemptSettleFromBid: item이 없어 정산을 중단합니다.");
@@ -508,11 +498,9 @@
           winners=[]; winningBid=0;
         }
 
-        // 요약 로그
         const logs=[...(r.roundLogs||[])];
         logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
 
-        // 상세 로그 엔트리
         const detail = {
           round: (r.round||0)+1,
           item,
@@ -553,7 +541,6 @@
         let players=(r.players||[]).map(p=>({...p}));
         const partNames=(r.participants||[]); if(partNames.length!==1) return;
 
-        // 단독 응찰 정산도 랜덤 상품 금지
         const item = (r.currentItem || r.lastItem || "").trim();
         if (!item) {
           console.warn("settleAfterSingleReveal: item이 없어 정산을 중단합니다.");
@@ -622,15 +609,16 @@
   // 스냅샷
   onSnapshot(ref, async (s)=>{
     if(!s.exists()){
-      // 이미 로컬에서 종료 UI를 띄웠다면 메시지를 덮어쓰지 않음
       endUI("방이 종료(삭제)되었습니다.");
       return;
     }
     const d=s.data();
-    window.__lastRoomSnap = d; // 디버깅용 캐시
+    window.__lastRoomSnap = d;
 
-    // 오래된 방은 gameOver 여부와 관계없이 정리
-    if(isStale(d)){ try{ await deleteDoc(ref); return; }catch(_){} }
+    if(!d.gameOver && isStale(d)){
+      try{ await deleteDoc(ref); }catch(_){}
+      return;
+    }
 
     boardMode = d.boardMode===true;
     $("#mode").textContent = boardMode ? "보드게임" : "웹 전용";
@@ -657,12 +645,11 @@
     const players = Array.isArray(d.players)? d.players : [];
     const me = players.find(p=>p.name===myName) || null;
     currentPlayers = players; currentMe = me;
-    window.currentPlayers = players; window.currentMe = me;
 
     $("#myBalance").textContent = fmt(me?.balance||0);
     $("#myHold").textContent    = fmt(me?.hold||0);
 
-    // 우승 체크(승리조건 달성 시 gameOver=true 설정)
+    // 승리조건 체크 → gameOver true만 세팅 (실제 삭제는 아래 gameOver 블록에서)
     const myItems=Array.isArray(me?.items)? me.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
@@ -684,7 +671,7 @@
       }catch(_){}
     }
 
-    // 현황
+    // 플레이어 현황
     const ul=$("#players"); ul.innerHTML="";
     players.forEach((p,i)=>{
       const isReadyPart = (p.readyPart===true) || (p.ready===true);
@@ -703,7 +690,7 @@
       ul.appendChild(li);
     });
 
-    // 응찰자 공개(게임 중 표시)
+    // 응찰자 공개
     if(Array.isArray(d.participants) && d.participants.length>0){
       show("#revealBox", true);
       const pu=$("#participantList"); pu.innerHTML="";
@@ -723,7 +710,7 @@
       logUl.appendChild(li);
     });
 
-    // 상세 로그(종료 시에만 표시)
+    // 상세 로그 + 종료 후 처리
     show("#detailLogWrap", !!d.gameOver);
     if(d.gameOver){
       const detUl = $("#detailLog"); detUl.innerHTML="";
@@ -750,9 +737,15 @@
       const winnersArr = d.finalWinners || [];
       endedLocally = true;
       endUI("", winnersArr);
+
+      // 🔥 gameOver가 된 시점에서 Firebase 문서 삭제 (승리조건/종료버튼 공통)
+      if (!deletedOnce) {
+        deletedOnce = true;
+        try{ await deleteDoc(ref); }catch(_){}
+      }
     }
 
-    // 단계별 UI + 자동 전환
+    // 단계별 UI
     if(d.phase==="choose" || d.phase===undefined){
       show("#phaseChoose", true); show("#phaseBid", false); show("#mobileBidBar", false);
       $("#chooseHint").classList.toggle("hidden", !(boardMode && !d.currentItem));
@@ -795,7 +788,7 @@
 
   function showErr(msg){ const b=$("#errHost"); if(!b) return; b.textContent=msg; b.classList.remove("hidden"); }
 
-  // 방장: 상품 변경/랜덤  → 라운드 초기화
+  // 방장: 상품 변경/랜덤
   $("#roundItem").addEventListener("change", async ()=>{
     const val=$("#roundItem").value;
     await resetRoundForItemChange(val||"");
@@ -806,11 +799,11 @@
     await resetRoundForItemChange(r);
   });
 
-  // 게임 종료(데이터 삭제) 버튼 → 문서 자체는 바로 삭제하지 않고 gameOver만 표시
+  // 게임 종료(데이터 삭제 버튼) → gameOver만 세팅, 실제 삭제는 스냅샷에서 처리
   $("#btnEndGame").onclick = async ()=>{
     try{
       await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
-      alert("게임을 종료합니다. 데이터는 잠시 남아 있으며, 이 화면/방에서 로그를 계속 볼 수 있습니다.");
+      alert("게임을 종료합니다. 이 화면에서만 로그를 확인할 수 있고, 데이터는 곧 삭제됩니다.");
     }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
   };
 
@@ -835,7 +828,7 @@
     }catch(err){ alert(`응찰 확정 실패: ${err.message||err}`); }
   });
 
-  // 응찰 새로고침(아이콘)
+  // 응찰 새로고침
   $("#btnResyncPart").addEventListener("click", async ()=>{
     try{
       const s=await getDoc(ref); if(!s.exists()) return;
@@ -896,13 +889,13 @@
     else                          toast(`불응찰 라운드 종료.`);
   });
 
-  /* 5분마다 비활성 방 정리 (게임 끝난 방도 포함) */
+  /* 5분마다 비활성 방 정리 (게임 미종료 상태에서만) */
   setInterval(async ()=>{
     try{
       const s=await getDoc(ref);
       if(s.exists()){
         const d=s.data();
-        if(isStale(d)){
+        if(!d.gameOver && isStale(d)){
           await deleteDoc(ref);
         }
       }
