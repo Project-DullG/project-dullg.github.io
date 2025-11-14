@@ -306,7 +306,7 @@
     show("#mobileBidBar", false);
   }
 
-  // CSV/JSON 유틸 (더 이상 사용 안 하지만, 혹시 나중 확장 대비해서 남겨도/지워도 상관 없음)
+  // CSV/JSON 유틸 (현재는 사용 안 함, 필요시 재사용 가능)
   function toCSV(rows){
     const esc = v => `"${String(v??"").replace(/"/g,'""')}"`;
     const header = Object.keys(rows[0]||{});
@@ -629,7 +629,8 @@
     const d=s.data();
     window.__lastRoomSnap = d; // 디버깅용 캐시
 
-    if(!d.gameOver && isStale(d)){ try{ await deleteDoc(ref); return; }catch(_){} }
+    // 오래된 방은 gameOver 여부와 관계없이 정리
+    if(isStale(d)){ try{ await deleteDoc(ref); return; }catch(_){} }
 
     boardMode = d.boardMode===true;
     $("#mode").textContent = boardMode ? "보드게임" : "웹 전용";
@@ -661,7 +662,7 @@
     $("#myBalance").textContent = fmt(me?.balance||0);
     $("#myHold").textContent    = fmt(me?.hold||0);
 
-    // 우승 체크(승리조건 달성 시 gameOver=true 설정 → 이후 삭제)
+    // 우승 체크(승리조건 달성 시 gameOver=true 설정)
     const myItems=Array.isArray(me?.items)? me.items : [];
     const ulItems=$("#myItems"); ulItems.innerHTML="";
     myItems.forEach((it,i)=>{ const li=document.createElement("li"); li.className="flex items-center justify-between border rounded px-3 py-2"; li.textContent=`${i+1}. ${it}`; ulItems.appendChild(li); });
@@ -722,7 +723,7 @@
       logUl.appendChild(li);
     });
 
-    // 상세 로그(종료 시에만 표시 + 이후 바로 방 삭제)
+    // 상세 로그(종료 시에만 표시)
     show("#detailLogWrap", !!d.gameOver);
     if(d.gameOver){
       const detUl = $("#detailLog"); detUl.innerHTML="";
@@ -749,11 +750,6 @@
       const winnersArr = d.finalWinners || [];
       endedLocally = true;
       endUI("", winnersArr);
-
-      // 게임 종료가 확인되면 방 문서 삭제 (Firebase 상 로그 제거)
-      try{
-        await deleteDoc(ref);
-      }catch(_){}
     }
 
     // 단계별 UI + 자동 전환
@@ -810,11 +806,11 @@
     await resetRoundForItemChange(r);
   });
 
-  // 게임 종료(데이터 삭제) 버튼
+  // 게임 종료(데이터 삭제) 버튼 → 문서 자체는 바로 삭제하지 않고 gameOver만 표시
   $("#btnEndGame").onclick = async ()=>{
     try{
       await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
-      alert("게임을 종료합니다. 데이터는 삭제되고, 이 화면에서만 로그를 볼 수 있습니다.");
+      alert("게임을 종료합니다. 데이터는 잠시 남아 있으며, 이 화면/방에서 로그를 계속 볼 수 있습니다.");
     }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
   };
 
@@ -900,13 +896,13 @@
     else                          toast(`불응찰 라운드 종료.`);
   });
 
-  /* 5분마다 비활성 방 정리 (게임 미종료 상태에서만) */
+  /* 5분마다 비활성 방 정리 (게임 끝난 방도 포함) */
   setInterval(async ()=>{
     try{
       const s=await getDoc(ref);
       if(s.exists()){
         const d=s.data();
-        if(!d.gameOver && isStale(d)){
+        if(isStale(d)){
           await deleteDoc(ref);
         }
       }
