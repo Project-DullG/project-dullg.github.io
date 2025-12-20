@@ -1,32 +1,223 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>[Snake Carnival] 사건의 전말</title>
+
+<!-- Optional: Pretendard CDN (없어도 fallback으로 잘 보임) -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@latest/dist/web/static/pretendard.css">
+
 <style>
-body {
-  margin:0; padding:80px 20px;
-  background:#0c0c0e; color:#f5f5f5;
-  font-family:'Pretendard',sans-serif;
-  line-height:1.8; text-align:center;
+:root{
+  --bg0:#060608;
+  --bg1:#0c0c0f;
+  --card:#0f1016cc;
+  --card2:#0f1016f0;
+  --text:#f2f2f2;
+  --muted:#b8b8b8;
+  --dim:#9a9aa3;
+  --line:#ffffff14;
+  --glow:#b48cff;      /* 보라빛 */
+  --glow2:#66ffd6;     /* 청록빛 */
+  --accent:#d7c7ff;
 }
-.container { max-width:780px; margin:0 auto; text-align:left; }
-h1 { text-align:center; margin-bottom:40px; font-size:2em; }
-h2 { margin-top:40px; font-size:1.2em; color:#b8b8b8; }
-p { opacity:.9; margin-bottom:20px; }
-a { display:inline-block; margin-top:50px; color:#aaa; text-decoration:none; }
-a:hover { color:#fff; }
-.tag { text-align:center; font-size:.8em; opacity:.6; margin-bottom:6px; }
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  color:var(--text);
+  font-family:"Pretendard", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height:1.9;
+  letter-spacing:-0.2px;
+  background:
+    radial-gradient(900px 600px at 20% -10%, #6b4dff22, transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, #00ffd522, transparent 55%),
+    radial-gradient(1000px 800px at 50% 110%, #ffffff10, transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  overflow-x:hidden;
+}
+
+/* subtle film grain */
+body:before{
+  content:"";
+  position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+  mix-blend-mode:overlay;
+  opacity:.08;
+  pointer-events:none;
+}
+
+.wrap{
+  padding:72px 20px 90px;
+}
+
+.shell{
+  max-width:880px;
+  margin:0 auto;
+}
+
+/* top header */
+.top{
+  text-align:center;
+  margin-bottom:34px;
+}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:linear-gradient(180deg, #0f1016aa, #0a0a0e88);
+  color:var(--dim);
+  font-size:.82rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.kicker:before{
+  content:"";
+  width:8px; height:8px;
+  border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, var(--glow2), var(--glow));
+  box-shadow:0 0 18px #66ffd655, 0 0 22px #b48cff44;
+}
+
+h1{
+  margin:18px 0 0;
+  font-size:clamp(2.0rem, 4vw, 2.6rem);
+  letter-spacing:-0.02em;
+  line-height:1.25;
+  text-shadow:0 0 28px #b48cff18;
+}
+.sub{
+  margin:12px auto 0;
+  max-width:56ch;
+  color:var(--muted);
+  opacity:.9;
+  font-size:1rem;
+}
+
+/* card */
+.card{
+  position:relative;
+  margin-top:26px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, var(--card), var(--card2));
+  box-shadow:
+    0 12px 40px #00000066,
+    inset 0 1px 0 #ffffff08;
+  overflow:hidden;
+}
+.card:before{
+  content:"";
+  position:absolute; inset:-2px;
+  background:
+    radial-gradient(700px 250px at 30% 0%, #b48cff18, transparent 60%),
+    radial-gradient(700px 250px at 70% 0%, #66ffd618, transparent 60%);
+  pointer-events:none;
+}
+.card-inner{
+  position:relative;
+  padding:30px 26px 22px;
+}
+
+/* section header */
+h2{
+  margin:0 0 14px;
+  font-size:1.05rem;
+  color:#dedee6;
+  letter-spacing:.02em;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+h2 .chip{
+  font-size:.75rem;
+  color:var(--accent);
+  padding:4px 10px;
+  border:1px solid #d7c7ff2b;
+  border-radius:999px;
+  background:#d7c7ff10;
+}
+
+/* readable paragraph */
+p{
+  margin:0;
+  color:#efeff6;
+  opacity:.92;
+  font-size:1.02rem;
+  text-wrap:pretty;
+  word-break:keep-all;
+}
+
+/* callout (optional blocks if you add later) */
+.callout{
+  margin-top:18px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid #66ffd61e;
+  background:linear-gradient(180deg, #0a0f0f88, #0a0a0e66);
+  color:#d7fff5;
+  font-size:.95rem;
+}
+
+/* footer nav */
+.footer{
+  display:flex;
+  justify-content:center;
+  margin-top:22px;
+}
+a.back{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #0f1016aa, #0a0a0e88);
+  color:#d5d5de;
+  text-decoration:none;
+  transition: transform .15s ease, border-color .15s ease, color .15s ease;
+}
+a.back:hover{
+  transform: translateY(-1px);
+  border-color:#ffffff2a;
+  color:#ffffff;
+}
+a.back:before{
+  content:"←";
+  opacity:.9;
+}
+
+/* small screen polish */
+@media (max-width:520px){
+  .card-inner{ padding:22px 18px 18px; }
+  p{ font-size:1rem; line-height:1.85; }
+}
 </style>
 </head>
-<body>
-  <div class="tag">SNAKE CARNIVAL · 사건의 전말</div>
-  <h1>사건의 전말</h1>
 
-  <div class="container">
-    <h2>1. 교단의 시작</h2>
-    <p>수십 년 전, 현 교단의 진짜 교주 뱀 가면은 ‘붉은 책’을 해독해 젊은 육신으로 환생했다.
+<body>
+  <main class="wrap">
+    <div class="shell">
+
+      <header class="top">
+        <div class="kicker">SNAKE CARNIVAL · 사건의 전말</div>
+        <h1>사건의 전말</h1>
+        <div class="sub">의식, 환상, 배신. 다섯 가면이 모인 그날 자정의 기록</div>
+      </header>
+
+      <section class="card">
+        <div class="card-inner">
+          <h2><span class="chip">CH.01</span> 1. 교단의 시작</h2>
+
+          <!-- 원문 그대로 -->
+          <p>
+수십 년 전, 현 교단의 진짜 교주 뱀 가면은 ‘붉은 책’을 해독해 젊은 육신으로 환생했다.
 이후 그는 ‘용 가면’을 쓰고 정체를 숨긴 채 교단에 남았다.
 늙은 몸이 다시 병들자, 두 번째 환생을 준비했다.
 이번 환생의 대상은 대중적 인지도가 높은 연예인 정혁, 교단 내에서는 ‘뱀 가면’으로 알려진 인물이었다.
@@ -71,10 +262,21 @@ a:hover { color:#fff; }
 이후 단검을 다시 원래 자리에 두고는 의식에 빠진 척 쓰러졌다.
 
 잠시 후 용 가면이 깨어났다. 하지만 용 가면의 몸은 똑같이 늙어있었다.
-원래의 닭 가면 이도현이 아닌, 개 띠의 오지환이 대신 의식에 참여하였고, 이로 인해 의식이 실패한 것이다.
-용 가면의 두 번째 환생은 그렇게 실패했다.</p>
-  </div>
+원래의 닭 가면 김용주가 아닌, 개 띠의 오지환이 대신 의식에 참여하였고, 이로 인해 의식이 실패한 것이다.
+용 가면의 두 번째 환생은 그렇게 실패했다.
+          </p>
 
-  <a href="index.html">← 엔딩 선택으로 돌아가기</a>
+          <!-- 원하면 이런 블록도 추가 가능
+          <div class="callout">Tip: 문단을 여러 개로 쪼개면 몰입감이 더 살아남</div>
+          -->
+        </div>
+      </section>
+
+      <div class="footer">
+        <a class="back" href="index.html">엔딩 선택으로 돌아가기</a>
+      </div>
+
+    </div>
+  </main>
 </body>
 </html>
