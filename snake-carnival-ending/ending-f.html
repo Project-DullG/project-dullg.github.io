@@ -1,21 +1,116 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>[Snake Carnival] 엔딩 C : 불길한 서약</title>
-<style>
-body{background:#080808;color:#fafafa;font-family:'Pretendard',sans-serif;text-align:center;padding:100px 20px;margin:0;}
-.tag{font-size:.8em;opacity:.6;margin-bottom:10px;}
-h1{font-size:2.1em;margin-bottom:20px;}p{line-height:1.8;max-width:700px;margin:0 auto;opacity:.9;}
-a{display:inline-block;margin-top:50px;color:#aaa;text-decoration:none;}a:hover{color:#fff;}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>[Snake Carnival] 엔딩 F : 두 번 연속 표가 갈린 경우</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #0c0c0e;
+      --ink: #e0e0e6;
+      --dim: #94949e;
+      --accent: #e63946;
+      --line: rgba(255, 255, 255, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-blend-mode: overlay;
+      color: var(--ink);
+      font-family: 'Pretendard', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 40px 24px;
+      overflow: hidden;
+    }
+
+    .content-box {
+      max-width: 700px;
+      animation: cinematicScroll 4s ease-out forwards;
+    }
+
+    @keyframes cinematicScroll {
+      0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      opacity: 0.8;
+    }
+
+    /* --- Storytelling Utility Classes --- */
+    .hl { color: #fff; font-weight: 700; border-bottom: 2px solid var(--accent); }
+    .danger { color: var(--accent); font-weight: 800; }
+    .redact { background: #111; color: #111; cursor: help; padding: 0 2px; border-radius: 2px; transition: all 0.2s; }
+    .redact:hover { background: rgba(230, 57, 70, 0.2); color: var(--ink); }
+    /* ------------------------------------ */
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin: 0 0 40px;
+      color: #fff;
+    }
+
+    p {
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: #d1d1d9;
+      word-break: keep-all;
+      margin-bottom: 60px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.95rem;
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+      animation: fadeInDelayed 5s ease-out;
+    }
+
+    @keyframes fadeInDelayed {
+      0% { opacity: 0; }
+      80% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--accent);
+    }
+  </style>
 </head>
 <body>
-<div class="tag">SNAKE CARNIVAL · ENDING C</div>
-<h1>불길한 서약</h1>
-<p>뱀의 그림자는 다시 깨어났다.<br>
-당신이 내린 서약은 피로 물들어 있었다.<br>
-끝은 새로운 시작이었고, 그것이 저주의 시작이었다.</p>
-<a href="index.html">← 엔딩 선택으로 돌아가기</a>
+  <div class="content-box">
+    <div class="tag">Snake Carnival · Ending F</div>
+    <h1>두 번 연속 표가 갈린 경우</h1>
+    <p>
+      뱀의 그림자는 다시 깨어났다.<br><br>
+      당신이 내린 서약은 피로 물들어 있었다.<br><br>
+      끝은 새로운 시작이었고, 그것이 저주의 시작이었다.
+    </p>
+    <a href="index.html" class="back-btn">← 엔딩 선택으로 돌아가기</a>
+  </div>
+  <script src="bgm.js"></script>
 </body>
 </html>

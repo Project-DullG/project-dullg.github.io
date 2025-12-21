@@ -5,162 +5,354 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>〈뱀이 죽은 축제〉 엔딩 | Project DullG</title>
   <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
     :root {
-      --bg:#0a0a0c; --bg2:#1b1b20;
-      --panel:#141416; --ink:#eaeaea; --dim:#9a9aa0;
-      --chip:#232326; --chipH:#2d2d33; --line:rgba(255,255,255,.06);
+      --bg: #0c0c0e;
+      --bg-accent: #151518;
+      --panel: #141416;
+      --ink: #e0e0e6;
+      --dim: #94949e;
+      --accent: #e63946; /* Crimson Red */
+      --accent-muted: rgba(230, 57, 70, 0.15);
+      --line: rgba(255, 255, 255, 0.04);
+      --chip: #1c1c1f;
+      --chip-hover: #252529;
     }
-    * { box-sizing:border-box; }
-    html, body { height:100%; }
+
+    * { box-sizing: border-box; }
+    
     body {
-      margin:0;
-      background: radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0, var(--bg) 55%);
+      margin: 0;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-blend-mode: overlay;
       color: var(--ink);
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Pretendard,sans-serif;
-      display:flex; justify-content:center;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
     }
-    .wrap { width:100%; max-width:860px; padding:64px 20px 72px; }
 
-    /* Header */
+    .wrap {
+      width: 100%;
+      max-width: 800px;
+      padding: 80px 24px 100px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     header {
-      display:flex; justify-content:space-between; align-items:center;
-      margin-bottom:30px;
+      margin-bottom: 60px;
+      text-align: center;
     }
-    .brand { font-weight:800; letter-spacing:.2px; }
-    .nav a {
-      color:var(--ink); opacity:.85; text-decoration:none; font-size:.95em;
-    }
-    .nav a:hover { opacity:1; }
 
-    /* Title */
-    h1 { margin:0 0 6px; text-align:center; font-size:26px; }
-    .subtitle { text-align:center; color:var(--dim); margin-bottom:24px; }
+    .brand {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--dim);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      margin: 0;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to bottom, #fff, #a0a0a0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--dim);
+      font-size: 1.1rem;
+      margin-top: 12px;
+      font-weight: 400;
+    }
 
     /* 안내 패널 */
     .panel {
-      background:var(--panel); border:1px solid var(--line);
-      border-radius:14px; max-width:720px;
-      margin:0 auto 22px; padding:18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 48px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
     }
-    .panel h2 { margin:0 0 10px; font-size:1rem; color:#d6d6da; }
-    .panel ul { margin:0; padding-left:18px; list-style-type:disc; }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent);
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .panel ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
     .panel li {
-      margin:8px 0; line-height:1.6; color:#dcdce0;
+      margin: 12px 0;
+      color: var(--ink);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
     }
-    .panel strong { color:#fff; font-weight:600; }
 
-    /* 엔딩 카드 */
-    .endings { display:flex; flex-direction:column; gap:12px; align-items:center; }
+    .panel li::before {
+      content: '•';
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .panel strong {
+      color: var(--accent);
+      font-weight: 700;
+      background: var(--accent-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* 엔딩 리스트 */
+    .endings {
+      display: grid;
+      gap: 16px;
+    }
+
     .card {
-      width:100%; max-width:720px; background:var(--panel);
-      border:1px solid var(--line); border-radius:14px;
-      padding:16px; display:flex; justify-content:space-between; align-items:center;
-    }
-    .meta { display:flex; flex-direction:column; gap:4px; }
-    .tag { color:var(--dim); font-size:.86em; }
-    .title { font-weight:700; }
-    .desc { color:#dcdce0; font-size:.95em; }
-
-    /* 버튼 */
-    .btn {
-      background:var(--chip); color:var(--ink);
-      text-decoration:none; border-radius:12px;
-      padding:10px 14px; font-weight:600;
-      transition:background .3s;
-    }
-    .btn:hover { background:var(--chipH); }
-    .rowBtns {
-      display:flex; flex-wrap:wrap;
-      gap:10px; justify-content:center; margin-top:26px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Footer */
+    .card:hover {
+      background: var(--bg-accent);
+      border-color: rgba(230, 57, 70, 0.3);
+      transform: scale(1.01);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+
+    /* --- Storytelling Utility Classes --- */
+    .hl { color: #fff; font-weight: 700; border-bottom: 2px solid var(--accent); }
+    .danger { color: var(--accent); font-weight: 800; text-shadow: 0 0 10px rgba(230, 57, 70, 0.3); }
+    .redact { background: #111; color: #111; cursor: help; transition: all 0.2s ease; padding: 0 2px; border-radius: 2px; }
+    .redact:hover { background: var(--accent-muted); color: var(--ink); }
+    /* ------------------------------------ */
+
+    .title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .title strong {
+        color: var(--accent);
+    }
+
+    .btn-arrow {
+      width: 44px;
+      height: 44px;
+      background: var(--chip);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 1px solid var(--line);
+    }
+
+    .card:hover .btn-arrow {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .btn-arrow svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: var(--ink);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    
+    .card:hover .btn-arrow svg {
+        stroke: #fff;
+    }
+
+    /* 사건의 전말 버튼 */
+    .footer-actions {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-story {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: var(--chip);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 50px;
+      border: 1px solid var(--line);
+      transition: all 0.3s ease;
+    }
+
+    .btn-story:hover {
+      background: var(--chip-hover);
+      border-color: var(--dim);
+      transform: translateY(-2px);
+    }
+
     footer {
-      text-align:center; margin-top:36px;
-      color:var(--dim); font-size:.9em;
-      opacity:.8;
+      text-align: center;
+      margin-top: 80px;
+      color: var(--dim);
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 60px 20px; }
+      h1 { font-size: 1.8rem; }
+      .card { padding: 20px; }
+      .title { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
   <main class="wrap">
     <header>
-      <div class="brand">Project DullG</div>
+      <div class="brand">Project DullG Investigation</div>
+      <h1>〈뱀이 죽은 축제〉</h1>
+      <p class="subtitle">사건의 종결, 그 너머의 이야기</p>
     </header>
 
-    <h1>〈뱀이 죽은 축제〉 엔딩</h1>
-    <p class="subtitle">정해진 이야기의 결말을 선택하세요.</p>
-
     <section class="panel">
-      <h2>엔딩 분기</h2>
-      <ul style="list-style-type:none; padding-left:0; margin:0 0 8px 0;">
-        <li>투표를 통해 최다 지목이 된 가면은 교주를 죽인 범인으로 희생됩니다.</li>
-      </ul>
+      <h2>최종 투표 결과에 따른 분기</h2>
       <ul>
-        <li> <strong>용 가면</strong>이 지목된 경우 → 엔딩 A</li>
-        <li> <strong>쥐 가면</strong>이 지목된 경우 → 엔딩 B</li>
-        <li> <strong>닭 가면</strong>이 지목된 경우 → 엔딩 C</li>
-        <li> <strong>돼지 가면</strong>이 지목된 경우 → 엔딩 D</li>
-        <li> <strong>기타 가면</strong>이 지목된 경우 → 엔딩 E</li>
-        <li> 두번 연속 표가 <strong>갈린</strong> 경우 → 엔딩 F</li>
+        <li>참가자들의 투표를 통해 지목된 인물은 사건의 범인으로 소환됩니다.</li>
+        <li><strong>지목된 가면</strong>에 따라 서로 다른 진실과 마주하게 됩니다.</li>
       </ul>
     </section>
 
     <section class="endings">
-      <article class="card" id="ending-a">
+      <a href="ending-a.html" class="card">
         <div class="meta">
-          <div class="tag">뱀이 죽은 축제 · ENDING A</div>
-          <div class="title">엔딩 A :  <strong>용 가면</strong>이 지목된 경우</div>
+          <div class="tag">Ending A</div>
+          <div class="title"><strong>용 가면</strong>이 지목된 경우</div>
         </div>
-        <a class="btn" href="ending-a.html">선택</a>
-      </article>
+        <div class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
 
-      <article class="card" id="ending-b">
+      <a href="ending-b.html" class="card">
         <div class="meta">
-          <div class="tag">뱀이 죽은 축제 · ENDING B</div>
-          <div class="title">엔딩 B : <strong>쥐 가면</strong>이 지목된 경우</div>
+          <div class="tag">Ending B</div>
+          <div class="title"><strong>쥐 가면</strong>이 지목된 경우</div>
         </div>
-        <a class="btn" href="ending-b.html">선택</a>
-      </article>
+        <div class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
 
-      <article class="card" id="ending-c">
+      <a href="ending-c.html" class="card">
         <div class="meta">
-          <div class="tag">뱀이 죽은 축제 · ENDING C</div>
-          <div class="title">엔딩 C : <strong>닭 가면</strong>이 지목된 경우</div>
+          <div class="tag">Ending C</div>
+          <div class="title"><strong>닭 가면</strong>이 지목된 경우</div>
         </div>
-        <a class="btn" href="ending-c.html">선택</a>
-      </article>
+        <div class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
 
-      <article class="card" id="ending-d">
+      <a href="ending-d.html" class="card">
         <div class="meta">
-          <div class="tag">뱀이 죽은 축제 · ENDING D</div>
-          <div class="title">엔딩 D : <strong>돼지 가면</strong>이 지목된 경우</li></div>
+          <div class="tag">Ending D</div>
+          <div class="title"><strong>돼지 가면</strong>이 지목된 경우</div>
         </div>
-        <a class="btn" href="ending-d.html">선택</a>
-      </article>
+        <div class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
 
-      <article class="card" id="ending-e">
+      <a href="ending-e.html" class="card">
         <div class="meta">
-          <div class="tag">뱀이 죽은 축제 · ENDING E</div>
-          <div class="title">엔딩 E : <strong>기타 가면</strong>이 지목된 경우</div>
+          <div class="tag">Ending E</div>
+          <div class="title"><strong>기타 가면</strong>이 지목된 경우</div>
         </div>
-        <a class="btn" href="ending-e.html">선택</a>
-      </article>
+        <div class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
 
-      <article class="card" id="ending-f">
+      <a href="ending-f.html" class="card">
         <div class="meta">
-          <div class="tag">뱀이 죽은 축제 · ENDING F</div>
-          <div class="title">엔딩 F : 두번 연속 표가 갈린 경우</div>
+          <div class="tag">Ending F</div>
+          <div class="title">두 번 연속 표가 <strong>갈린</strong> 경우</div>
         </div>
-        <a class="btn" href="ending-f.html">선택</a>
-      </article>
+        <div class="btn-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
     </section>
 
-    <div class="rowBtns">
-      <a class="btn" href="story.html">🕯 사건의 전말 보기</a>
+    <div class="footer-actions">
+      <a class="btn-story" href="story.html">
+        <span>🕯</span> 사건의 전말 확인하기
+      </a>
     </div>
 
-    <footer>© Project DullG · Snake Carnival</footer>
+    <footer>© Project DullG · Snake Carnival Investigation</footer>
   </main>
+  <script src="bgm.js"></script>
 </body>
 </html>

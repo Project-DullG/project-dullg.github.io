@@ -1,140 +1,311 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>[Snake Carnival] 사건의 전말</title>
-<style>
-body {
-  margin:0; padding:80px 20px;
-  background:#0c0c0e; color:#f5f5f5;
-  font-family:'Pretendard',sans-serif;
-  line-height:1.8; text-align:center;
-}
-.container { max-width:780px; margin:0 auto; text-align:left; }
-h1 { text-align:center; margin-bottom:40px; font-size:2em; }
-h2 { margin-top:40px; font-size:1.2em; color:#b8b8b8; }
-p { opacity:.9; margin-bottom:20px; }
-  pre{
-  font-family:"Pretendard", system-ui, sans-serif;
-  margin:0;
-  color:#efeff6;
-  opacity:.92;
-  font-size:1rem;
-  text-wrap:pretty;
-  word-break:keep-all;
-  white-space:pre-line;
-}
-a { display:inline-block; margin-top:50px; color:#aaa; text-decoration:none; }
-a:hover { color:#fff; }
-.tag { text-align:center; font-size:.8em; opacity:.6; margin-bottom:6px; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>[Snake Carnival] 사건의 전말</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #0c0c0e;
+      --bg-accent: #151518;
+      --panel: #141416;
+      --ink: #e0e0e6;
+      --dim: #94949e;
+      --accent: #e63946;
+      --accent-muted: rgba(230, 57, 70, 0.15);
+      --line: rgba(255, 255, 255, 0.04);
+      --chip: #1c1c1f;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-blend-mode: overlay;
+      color: var(--ink);
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      line-height: 1.8;
+      padding-bottom: 120px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    header {
+      text-align: center;
+      padding: 100px 0 60px;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin: 0;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 80px 0 32px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-num {
+      font-family: serif;
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--accent);
+      opacity: 0.8;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+    }
+
+    .story-block {
+      background: var(--panel);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    p {
+      margin: 0 0 24px;
+      font-size: 1.1rem;
+      color: #d1d1d9;
+      word-break: keep-all;
+      text-align: justify;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    strong {
+      color: #fff;
+      font-weight: 700;
+      border-bottom: 1px solid var(--accent);
+    }
+
+    .highlight-box {
+      margin-top: 32px;
+      padding: 24px;
+      background: var(--accent-muted);
+      border-left: 3px solid var(--accent);
+      border-radius: 4px 12px 12px 4px;
+      font-style: italic;
+      color: #efeff6;
+    }
+
+    /* ==========================================================
+       [유지보수 가이드] 텍스트에 아래 클래스를 추가하여 연출하세요:
+       1. <span class="hl">텍스트</span> : 중요 키워드 하이라이트 (밑줄)
+       2. <p class="clue">...</p> : 조사 중 발견된 단서 박스
+       3. <p class="whisper">...</p> : 혼잣말이나 비밀스러운 작은 글씨
+       4. <span class="redact">텍스트</span> : 검게 가려진 글자 (마우스 올리면 보임)
+       5. <span class="danger">텍스트</span> : 붉은색 강조 (경고/위험)
+       ========================================================== */
+
+    .hl {
+      color: #fff;
+      font-weight: 700;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .clue {
+      margin: 32px 0;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed var(--dim);
+      border-radius: 12px;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .clue::before {
+      content: '🔍 단서:';
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .whisper {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--dim);
+      opacity: 0.7;
+      padding-left: 12px;
+      border-left: 2px solid var(--line);
+    }
+
+    .danger {
+      color: var(--accent);
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
+    }
+
+    .redact {
+      background: #111;
+      color: #111;
+      cursor: help;
+      transition: all 0.2s ease;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    .redact:hover {
+      background: var(--accent-muted);
+      color: var(--ink);
+    }
+
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 100px auto 0;
+      padding: 16px 40px;
+      background: var(--chip);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 50px;
+      border: 1px solid var(--line);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--bg-accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(230, 57, 70, 0.2);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 60px 0 40px; }
+      h1 { font-size: 2rem; }
+      .story-block { padding: 24px; }
+      p { font-size: 1rem; }
+    }
+  </style>
 </head>
 <body>
-  <div class="tag">SNAKE CARNIVAL · 사건의 전말</div>
-  <h1>사건의 전말</h1>
-
   <div class="container">
-    <h2>1. 용 가면 이야기</h2>
-<pre>
-용 가면은 과거 교단의 교주였으며, 당시 ‘뱀 가면’을 쓰고 활동하던 인물이었다.
+    <header>
+      <div class="tag">The Deepest Truth</div>
+      <h1>사건의 전말</h1>
+    </header>
 
-그는 과거에 <붉은 책>에 언급된 대로 12번의 예배 이후 젊은 영혼을 바쳤다.
-늙은 영혼인 자신이 젊은 몸으로 스며드는 환생을 직접 경험하였고, 김용환이라는 새 이름으로 살아가며 교단을 떠나 저명한 기업인이 되었다.
-그렇게 모든 의식을 총괄하던 당시 뱀 교주를 잃은 교단은 자연스럽게 와해되었다.
-그러나 시간이 흐르며 그의 육체는 다시 노쇠했고, 김용환은 두 번째 환생을 결심하며 교단을 재창설했다.
-이때부터, 그는 용 가면을 쓰고 정체를 숨긴 채 교단을 운영했다.
-  
-다음 육신으로 사용하기 위한 제물로서, 그는 대중적 인지도가 높은 연예인 정혁을 가짜 교주인 ‘뱀 가면’으로 세워 새로운 환생을 준비했다.
-회의와 예배, 공식 발표는 가짜 교주인 뱀 가면이 담당했으나 실질적인 권한은 없었고, 교단의 모든 결정은 회의실 벽 <교주의 자리>, 그리고 교주의 방 <책상 위>의 초상화 액자 뒤에 남긴 암호 쪽지를 통해 소통하였다.
-이 과정에서 <소 가면, 신우선>은 용 가면이 교주의 방에 드나드는 장면을 목격한 바 있다.
+    <div class="story-block">
+      <div class="section-title">
+        <span class="section-num">01.</span>
+        <h2>용 가면 이야기</h2>
+      </div>
+      <p>
+        용 가면은 과거 교단의 교주였으며, 당시 <span class="hl">‘뱀 가면’</span>을 쓰고 활동하던 인물이었다.
+      </p>
+      <p>
+        그는 과거에 <span class="hl">&lt;붉은 책&gt;</span>에 언급된 대로 12번의 예배 이후 젊은 영혼을 바쳤다. 늙은 영혼인 자신이 젊은 몸으로 스며드는 환생을 직접 경험하였고, 김용환이라는 새 이름으로 살아가며 교단을 떠나 저명한 기업인이 되었다. 그렇게 모든 의식을 총괄하던 당시 뱀 교주를 잃은 교단은 자연스럽게 와해되었다.
+      </p>
+      <p>
+        그러나 시간이 흐르며 그의 육체는 다시 노쇠했고, 김용환은 두 번째 환생을 결심하며 교단을 재창설했다. 이때부터, 그는 용 가면을 쓰고 정체를 숨긴 채 교단을 운영했다.
+      </p>
+      <p>
+        다음 육신으로 사용하기 위한 제물로서, 그는 대중적 인지도가 높은 연예인 <span class="hl">정혁</span>을 가짜 교주인 ‘뱀 가면’으로 세워 새로운 환생을 준비했다. 회의와 예배, 공식 발표는 가짜 교주인 뱀 가면이 담당했으나 실질적인 권한은 없었고, 교단의 모든 결정은 초상화 액자 뒤에 남긴 <span class="hl">암호 쪽지</span>를 통해 소통하였다.
+      </p>
 
-</pre>
-      
-      <h2>2. 쥐 가면 이야기</h2>
-<pre>
-뱀 가면은 시간이 흐르며 교단 내부의 ‘쥐 가면’과 연인 관계가 되었다.
-그는 이 관계를 공식적으로 인정받기 위해 <교단원 간 사적 유대 관계를 금지한다.>는 교단 수칙의 변경을 요청했으나, 용 가면 김용환은 이를 검토조차 하지 않고 자신의 소지품이었던 <붉은 마커펜>으로 거부 표시를 남겼다.
-  이러한 일이 반복되자 뱀 가면은 예배 직전마다 술을 마시며 소극적인 반항을 시작했다.
+      <div class="section-title">
+        <span class="section-num">02.</span>
+        <h2>쥐 가면 이야기</h2>
+      </div>
+      <p>
+        뱀 가면은 시간이 흐르며 교단 내부의 <span class="hl">‘쥐 가면’</span>과 연인 관계가 되었다. 그는 이 관계를 공식적으로 인정받기 위해 수칙 변경을 요청했으나, 용 가면은 이를 검토조차 하지 않고 <span class="danger">붉은 마커펜</span>으로 거부 표시를 남겼다.
+      </p>
+      <p>
+        쥐 가면 <strong>김은비</strong>는 외부적으로 유명한 예술가 J였다. 그녀는 정혁을 위해 <strong>장미꽃 그림</strong>을 가져왔으며, 두 사람은 커플링인 <strong>은반지</strong>를 끼고 있었다.
+      </p>
+      <p class="whisper">
+        “이젠 그만 만나자. 우리가 바라는 건, 그분이 절대 허락하지 않아...”
+      </p>
+      <p>
+        예배 직전, 술에 취한 정혁은 그녀에게 작별을 고했다. 이 장면을 목격한 원숭이 가면은 상황을 오해했고, 쥐 가문의 불안은 의식의 결과와 상관없이 극도로 고조되었다.
+</p>
 
-쥐 가면, 김은비는 교단 외부에서는 유명한 예술가 J였다.
-  
-그녀는 뱀 가면과 어느 순간 사랑에 빠졌고, 쭉 연인 관계를 유지하고 있었다.
-이번 예배에 만날 뱀 가면, ‘정혁’을 위해 그녀는 그에게 선물할 <장미꽃 그림>이 그려진 캔버스를 가져왔다.
-또한 오른손의 장갑 밑 약지에는 커플링인 <은반지>를 끼고 있었다. 이는 뱀 가면도 마찬가지였다.
+      <div class="section-title">
+        <span class="section-num">03.</span>
+        <h2>닭 가면 이야기</h2>
+      </div>
+      <p>
+        닭 가문의 정체는 정보기관 소속 요원 <strong>오지환</strong>이다. 그는 실종된 쌍둥이 형의 죽음을 파헤치기 위해 보도국장 김용주의 신분으로 위장하여 잠입했다.
+      </p>
+      <p class="clue">
+        형이 남긴 기록: 매년 12월 12일 자정, 동물 가면을 쓴 인물들이 비밀리에 집결한다.
+      </p>
+      <p>
+        그는 <strong>음성 변조기</strong>와 <strong>녹음용 반지</strong>를 이용해 정체를 숨기려 했으나, 교단의 <span class="danger">약물</span>로 인해 환각에 빠지며 현실과 환상의 경계에서 길을 잃고 말았다.
+      </p>
 
-예배 직전, 쥐 가면은, 술을 마신 상태였던 뱀 가면과 마주쳤다.
-그는 낮은 목소리로 “이젠 그만 만나자. 우리가 바라는 건, 그분이 절대 허락하지 않아”라고 말했다.
-쥐 가면이 당황하는 순간 뱀 가면은 “예배가 끝나면 말할게”라는 말만 남긴 채 자리를 떠났다.
-그녀는 예배가 끝난 뒤 그가 숨기고 있는 사정을 반드시 확인하겠다고 마음먹었다.
-이 장면을 멀리서 목격한 <원숭이 가면, 윤재원>은 두 사람의 상황을 뱀 가면이 쥐 가면을 질책하는 장면으로 오해했다.
-이 일로 인해 쥐 가면은 예배가 시작될 무렵 이미 심리적으로 크게 동요한 상태였으며, 감정적으로 불안정한 채 의식에 참여하게 되었지만, 이것은 <검은 책>에 언급된 의식의 결과와는 아무 연관이 없었다. 
+      <div class="section-title">
+        <span class="section-num">04.</span>
+        <h2>돼지 가면 이야기</h2>
+      </div>
+      <p>
+        돼지 가면 <strong>김진철</strong>은 대한민국 육군 중장이다. 그는 군사 기밀을 넘기는 대가로 권력을 유지해왔지만, 실상은 죄책감과 망상에 찌든 인물이었다.
+      </p>
+      <p>
+        2년 전, 그는 제단 인근에서 마주친 침입자(오지환의 형)를 우발적으로 살해했다. 이후 극심한 불안 증세로 <strong>군용 권총</strong>과 약물에 의존하게 된 그는 교단이 자신을 도청한다는 확신에 빠져 교주를 죽이고 교단을 무너뜨리기로 결심한다.
+      </p>
+      <p>
+        그는 환상을 차단하는 <strong>이교도의 문양</strong>을 장갑 내부에 새긴 채, 제정신으로 예배에 참여했다.
+      </p>
 
-</pre>
+      <div class="section-title">
+        <span class="section-num">05.</span>
+        <h2>사건의 전말</h2>
+      </div>
+      <p>
+        의식용 향이 피워지고 모두가 환상에 빠진 순간, 유일하게 정신이 멀쩡했던 <strong>돼지 가면</strong>이 움직였다. 그는 무방비 상태인 뱀 가면의 심장을 찔러 즉사시켰다.
+      </p>
+      <p>
+        범행을 마친 그는 다시 환각에 취한 척 곁으로 돌아가 잠들었다. 저주와 약물이 뒤섞인 그 밤, 제단 위에는 오직 차가운 시신만이 남겨졌다.
+      </p>
 
-      <h2>3. 닭 가면 이야기</h2>
-<pre>
-닭 가면은 본디 A방송 보도국장 김용주였지만, 이번 의식에 참석한 자는 자신의 형의 죽음을 파헤치기 위해 교단으로 잠입한 외부인이자, 정보기관 소속 요원 오지환이다.
+      <div class="highlight-box">
+        누가 거짓을 말하고, 누가 진실을 보았는가. 축제는 끝났지만 뱀의 문장은 여전히 그곳에 남아 있다.
+      </div>
+    </div>
 
-2년 전, 그의 쌍둥이 형은 군사 기밀 유출 사건을 추적하던 중 실종되었다.
-형이 남긴 기록에는 매년 12월 12일 자정, 동물 가면을 쓴 인물들이 비밀리에 집결한다는 내용과 함께 A방송 보도국장 김용주의 이름이 남아 있었다.
-오지환은 형의 실종이 이 집단과 직접적으로 연관되어 있다고 판단했다.
-  
-그는 김용주를 감금하여, 그의 목소리와 습관을 분석한 뒤 ‘닭 가면’의 신분으로 위장해 ‘만년필 형태의 음성 변조기’와 ‘녹음 기능이 내장된 은반지’를 착용한 채 A방송 보도국장의 닭 가면으로 의식에 잠입하기로 결정했다.
-그는 형이 남긴 ‘동물 가면들이 비밀리에 집결한다’는 내용 외에 아무것도 몰랐기 때문에, 그는 교단의 교리나, 인간관계에 대해 전혀 알고 있지 않았다.
-  
-그는 예배실로 향하던 복도에서 <개 가면, 환벼리>와 마주쳤으나, 정체 노출을 피하기 위해 음성 변조 장치를 켠 채로 짧게 대화를 차단하고 자리를 떠났다.
-  
-예배가 시작되자 닭 가면은 주변의 모든 상황을 기록하려 했지만, 어떤 약물의 영향을 받아 현실과 환상의 경계가 흐려지게 되었다고 착각하며 환각 속에 빠져들게 되었다. 
-
-</pre>
-
-      <h2>4. 돼지 가면 이야기</h2>
-<pre>
-돼지 가면, 김진철은 대한민국 육군 중장이다.
-그는 다른 가면과 마찬가지로 자신만이 알 수 있는 정보인 군사 기밀을 교단에 넘기는 대신 교단이 예측한 미래와 경쟁 상대의 추문을 알아내어 군의 진급 경쟁에서 우위를 점할 수 있었고, 오랜 시간 교단과의 협력을 유지하며 군 내부 권력의 핵심으로 빠르게 자리 잡을 수 있었다.
-그러나, 국가 기관에서도 고위직 장군이 군사기밀을 유출하고 있다는 사실을 알아내게 되고, 그는 계속해서 누군가로 부터 감시를 받기 시작했다.
-
-이 사실을 몰랐던 돼지 가면은 2년 전, 제단 인근에서 내부를 탐색하던 정체불명의 침입자와 마주쳤고, 자신의 신변이 밝혀지는 것에 대한 공포에 반사적으로 단검을 휘둘러 침입자가 누구인지, 목적이 무엇인지도 밝히지 못한 채 죽이고 만다.
-그 침입자는 군사 기밀 유출 사건을 추적하던 닭 가면의 쌍둥이 형이었고, 이 내용은 작년 회의에 보고되며 외부인 침입에 대한 경계로 이어졌다.
-
-이 사건을 시작으로 균열이 일던 돼지 가면의 내면은 본격적으로 붕괴되기 시작한다.
-그는 불면과 망상에 시달리기 시작했고, 결국 남몰래 정신과 치료를 받으며 항정신성 약물과 수면제에 의존하게 되었다. 그러나 약물로도 불안은 쉬이 가라앉지 않았고, 끊임없이 위협에 대비해야 한다는 강박에 사로잡혔다. 
-결국 이는 심리적 안정을 위해, 장군에게 보급되는 군용 권총의 약실을 비워둔 채 어디에나 가지고 다니며, 마음이 불안해지면 권총을 만지작거리는 습관으로 이어졌다.
-
-동시에 그는 교단이 자신을 감시하고 도청하고 있다는 확신에 빠지며, 교단을 더 이상 협력자가 아닌 감시자로 인식하고, 교단에서 벗어나기 위한 방법을 찾기 시작했다.
-그는 몰래 교단의 고문서를 조사하여, 의식 중에도 환상에 잠기지 않게 하는 이교도의 문양에 대해 알게 되었고, 의식 중에 환상에 빠지지 않은 틈을 타 교주를 죽여 교단을 무너뜨리는 것이 이 상황에서 벗어날 수 있는 유일한 방법이라 믿게 되었다.
-
-사건 당일 예배실로 향하던 중 그는 전신거울 앞에서 걸음을 멈췄다. 어디선가 스치는 기척에 반사적으로 고개를 돌렸고, 시선은 거울에 닿았고 거울 너머 복도를 따라 <말 가면, 염상혁>이 조용히 지나가는 모습이 보였다.
-이윽고, 12월 12일, 돼지 가면은 이교도의 문양을 장갑 내부에 새긴 채, 약물과 권총에 의존한 상태로 예배에 참여했다.
-
-</pre>
-
-
-      <h2>5. 사건 이야기</h2>
-<pre>
-그렇게 지하 제단에서 예배가 시작되었다.
-참여자는 용, 쥐, 닭, 돼지, 뱀 총 다섯 가면이었다.
-  
-의식용 향이 피워지며 공간은 점차 환상에 잠겼다.
-쥐 가면은 예배 직전 뱀 가면과 나눈 마지막 대화로 인해 감정적으로 동요한 채로 의식의 환각에 빠져들었고,
-용 가면은 예배 후의 환생을 기대하며 환각에 빠졌으며.
-닭 가면 또한 모든 상황을 제정신으로 기록하려 했으나 환각에 빠져 현실의 경계를 구분하지 못하게 되었다.
-  
-그러나 돼지 가면만은 환상에 잠기지 않았다. 
-장갑 내부에 새긴 이교의 문양이 의식의 영향을 차단했기 때문이다. 
-모두가 환상에 잠긴 순간 돼지 가면은 조용히 자리에서 일어나 제단으로 다가갔다. 뱀 가면은 이미 환각에 취해 무방비한 상태였다. 
-돼지 가면은 조심스럽게 그의 가면을 벗겨 그의 정체를 확인하고, 피가 튀어 흔적이 남지 않도록 제단 위에 놓인 보를 끌어당겨 뱀 가면의 상반신을 덮은 후, 뱀 가면이 쥐고 있던 단검을 빼앗아 뱀 가면의 심장을 찔렀다. 
-그는 단 한 번의 저항도 하지 못한 채 즉사했다.
-
-범행을 마친 돼지 가면은 단검을 시체 주변에 내려놓았다. 
-그리고 자신 또한 환각에 취한 척 다른 이들 곁으로 돌아가 마지막 남은 신경 안정제를 털어먹고 다른 가면들과 마찬가지로 바닥에서 잠들었다.
-개와 돼지의 기운이 충돌하며 발생한 저주로 인해 모든 가면들과 신경 안정제를 먹고 잠든 돼지 가면은 다른 가면들이 문을 열고 들어와 모두를 깨운 후에야 정신을 차릴 수 있었고, 제단 위에는, 뱀 가면의 차가운 시신만이 남겨져 있었다.
-
-</pre>
-  
+    <a href="index.html" class="back-btn">← 엔딩 선택으로 돌아가기</a>
   </div>
-
-  <a href="index.html">← 엔딩 선택으로 돌아가기</a>
+  <script src="bgm.js"></script>
 </body>
 </html>
