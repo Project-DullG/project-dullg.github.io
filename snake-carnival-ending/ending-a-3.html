@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>[Snake Carnival] Ending A-1 : 순응</title>
+  <title>[Snake Carnival] Ending A-3 : 혼돈</title>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
@@ -12,8 +12,8 @@
       --ink: #e8e8ec;
       --dim: #7a7a85;
       --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.2);
       --gold: #d4a855;
+      --purple: #8b5cf6;
       --panel: rgba(20, 20, 24, 0.95);
       --line: rgba(255, 255, 255, 0.06);
     }
@@ -54,7 +54,7 @@
       font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 3px;
-      color: var(--accent);
+      color: var(--purple);
       text-transform: uppercase;
       margin-bottom: 16px;
     }
@@ -71,7 +71,6 @@
       font-size: 0.95rem;
     }
 
-    /* 스토리 본문 */
     .story {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -99,7 +98,38 @@
       font-weight: 500;
     }
 
-    /* 뉴스 섹션 */
+    /* 혼돈 시퀀스 특별 스타일 */
+    .chaos-sequence {
+      background: linear-gradient(135deg, #1a0a1a 0%, #0a0808 100%);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chaos-sequence::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .chaos-sequence p {
+      color: #b0a0c0;
+      font-size: 1rem;
+    }
+
     .news-section {
       background: linear-gradient(135deg, #12121a 0%, #0a0a0f 100%);
       border: 1px solid var(--line);
@@ -123,7 +153,6 @@
       line-height: 1.8;
     }
 
-    /* 에필로그 */
     .epilogue {
       text-align: center;
       padding: 32px;
@@ -137,7 +166,11 @@
       margin-bottom: 16px;
     }
 
-    /* 네비게이션 */
+    .survivor {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
     .nav-links {
       display: flex;
       justify-content: center;
@@ -158,8 +191,8 @@
 
     .nav-links a:hover {
       color: var(--ink);
-      border-color: var(--accent);
-      background: rgba(59, 130, 246, 0.1);
+      border-color: var(--purple);
+      background: rgba(139, 92, 246, 0.1);
     }
 
     /* 캐릭터 컬러 */
@@ -177,28 +210,32 @@
 <body>
   <div class="container">
     <header class="header">
-      <div class="tag">Ending A-1</div>
-      <h1>순응</h1>
+      <div class="tag">Ending A-3</div>
+      <h1>영원한 혼돈</h1>
       <div class="subtitle">용 가면 김용환</div>
     </header>
 
     <article class="story">
-      <p>그는 구태여 변명하지 않았다. 추하게 발버둥 치는 것은 과거 교단을 지배했던 자신의 긍지가 허락하지 않았다. 또한, '환생'이라는 비현실적인 진실을 뱉어봤자 돌아올 것은 살인 혐의에 더해질 광기 어린 노인의 낙인뿐임을 그는 누구보다 잘 알았다.</p>
+      <p>추하게 발버둥 치는 것은 과거 교단을 지배했던 자신의 긍지가 허락하지 않았다. 그 순간 <span class="mask-dragon">용 가면</span> 김용환의 입가에 기괴한 미소가 번졌다. 그는 이미 뱀 가면이라는 그릇을 잃었기에, 환생의 기회가 사라졌음을 직감했다. 그는 추하게 구걸하는 대신, 주문을 읊어 의식을 강제로 진행하기로 결심했다.</p>
 
-      <p>그는 스스로 가면을 벗어 던졌다.</p>
-
-      <p class="dialogue">"어리석은 것들, 너희는 오늘 너희의 유일한 구원을 발로 찬 것이다."</p>
+      <p class="dialogue">"네놈들에게 줄 수 있는 건 영원한 혼돈뿐이다."</p>
     </article>
+
+    <div class="chaos-sequence">
+      <p><span class="mask-dragon">용 가면</span> 김용환이 주문을 읊조리기 시작하자, 제단 위의 향로에서 검붉은 연기가 폭발하듯 뿜어져 나와 예배실을 가득 메웠다. 거대한 소가 토끼를 짓밟고, 수만 마리의 쥐가 원숭이의 뇌를 갉아먹었다. 호랑이는 닭을 찢어발겼으며, 굶주린 개들이 돼지를 물어뜯는 악몽이 끝없이 반복되었다.</p>
+      <p style="margin-top: 16px;">그 지옥도 속에서 예배자들은 감각을, 기억을, 그리고 이성을 잃었다. <span class="mask-dragon">용 가면</span>을 포함한 다른 가면들의 눈동자는 초점을 잃은 채 뒤집혔다.</p>
+      <p style="margin-top: 16px;">하지만 이 광기 어린 환상을 보지 못하는 오직 한 사람, <span class="mask-pig">돼지 가면</span>만은 멀쩡히 서 있었다. 장갑 내부에 새긴 이교의 문양이 신의 저주를 차단하고 있었기 때문이다. 그는 환각에 빠져 허공을 허우적거리는 이들 사이를 유유히 가로질러 어둠 속으로 걸음을 옮겼다.</p>
+    </div>
 
     <div class="news-section">
       <div class="news-label">며칠 뒤, 뉴스 속보</div>
-      <p>"다음 소식입니다. 국내 굴지의 기업인 김용환 회장이 며칠째 행방이 묘연해 경찰이 수사에 나섰습니다. 자택을 나선 뒤 연락이 두절된 김 회장은... 한편, 유명 배우 정혁 씨 또한 의문의 실종 신고가 접수되어 충격을 주고 있습니다. 경찰은 두 사건의 연관성을 염두에 두고 수사를..."</p>
+      <p>"다음 소식입니다. 경찰은 최근 실종된 기업인 김용환 회장을 포함한 십여 명의 유명인들이 도심 지하의 한 폐쇄된 공간에서 무더기로 발견했습니다. 현장은 마치 기괴한 의식을 치른 듯한 모습이었으며, 발견된 인원 전원은 심각한 정신 착란 증세를 보여 의사소통이 불가능한 상태입니다. 경찰은 현장에서 유명 배우 정혁 씨가 살해당한 채 발견된 점에 주목하여, 현장에 있던 이들 사이의 강력 범죄 가능성을 열어두고..."</p>
     </div>
 
     <div class="epilogue">
-      <p>세상을 떠들썩하게 했던 연예인과 재벌의 실종 사건은 결국 시간이 지나 잊혀졌다.</p>
-      <p>용과 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그러나 온전한 예배의 방식을 알 리 없는 그들에게 신은 더 이상 축복을 제공하지 않았다. 눈에 보이는 기적을 마주하지 못한 가면들은 서로를 의심하며 하나둘씩 어둠 속으로 흩어졌다.</p>
-      <p>시간이 흐를수록 공고했던 결속력은 불신과 탐욕으로 얼룩졌고, 한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
+      <p>세상을 떠들썩하게 했던 광기 가득한 사건은 결국 시간이 지나 잊혀졌다.</p>
+      <p>그렇게 <span class="mask-pig">돼지 가면</span>은 원하던 대로 교단에서 벗어났다. 그는 군중 속으로 녹아들어 가며 장갑을 벗어 쓰레기통에 던져 넣었다. 그의 손은 이제 더 이상 떨리지 않았다. 등 뒤로 들려오는 뉴스 소리는 더 이상 그와 상관없는 남의 이야기였다.</p>
+      <p>한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
     </div>
 
     <nav class="nav-links">

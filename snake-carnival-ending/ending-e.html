@@ -3,114 +3,386 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>[Snake Carnival] 엔딩 E : 기타 가면이 지목된 경우</title>
+  <title>[Snake Carnival] Ending E : 기타 가면이 지목된 경우</title>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
     :root {
-      --bg: #0c0c0e;
-      --ink: #e0e0e6;
-      --dim: #94949e;
-      --accent: #e63946;
-      --line: rgba(255, 255, 255, 0.04);
+      --bg: #080808;
+      --ink: #e8e8ec;
+      --dim: #7a7a85;
+      --accent: #c41e3a;
+      --gold: #d4a855;
+      --silver: #94a3b8;
+      --panel: rgba(20, 20, 24, 0.95);
+      --line: rgba(255, 255, 255, 0.06);
     }
 
-    * { box-sizing: border-box; }
-    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      background-blend-mode: overlay;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse at 50% 0%, #1a1a1f 0%, #080808 60%);
       color: var(--ink);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 40px 24px;
-      overflow: hidden;
+      padding: 60px 24px;
+      line-height: 1.9;
     }
 
-    .content-box {
+    .container {
       max-width: 700px;
-      animation: cinematicScroll 4s ease-out forwards;
+      width: 100%;
+      animation: fadeIn 2s ease-out;
     }
 
-    @keyframes cinematicScroll {
-      0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    @keyframes fadeIn {
+      0% { opacity: 0; filter: blur(10px); }
+      100% { opacity: 1; filter: blur(0); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
     }
 
     .tag {
-      font-size: 0.8rem;
+      display: inline-block;
+      font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 3px;
-      color: var(--accent);
+      color: var(--silver);
       text-transform: uppercase;
-      margin-bottom: 24px;
-      opacity: 0.8;
+      margin-bottom: 16px;
     }
-
-    /* --- Storytelling Utility Classes --- */
-    .hl { color: #fff; font-weight: 700; border-bottom: 2px solid var(--accent); }
-    .danger { color: var(--accent); font-weight: 800; }
-    .redact { background: #111; color: #111; cursor: help; padding: 0 2px; border-radius: 2px; transition: all 0.2s; }
-    .redact:hover { background: rgba(230, 57, 70, 0.2); color: var(--ink); }
-    /* ------------------------------------ */
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: 800;
-      margin: 0 0 40px;
       color: #fff;
+      margin-bottom: 8px;
     }
 
-    p {
-      font-size: 1.25rem;
-      line-height: 1.8;
-      color: #d1d1d9;
+    .subtitle {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .branch-selector {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .branch-btn {
+      flex: 1;
+      min-width: 200px;
+      padding: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .branch-btn:hover, .branch-btn.active {
+      border-color: var(--silver);
+      background: rgba(148, 163, 184, 0.1);
+    }
+
+    .branch-btn.active {
+      border-color: var(--gold);
+      background: rgba(212, 168, 85, 0.1);
+    }
+
+    .branch-title {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .branch-desc {
+      font-size: 0.85rem;
+      color: var(--dim);
+    }
+
+    .story {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+
+    .story p {
+      font-size: 1.1rem;
+      color: #d8d8e0;
+      margin-bottom: 28px;
+      line-height: 2;
+      text-align: justify;
       word-break: keep-all;
-      margin-bottom: 60px;
     }
 
-    .back-btn {
-      display: inline-block;
-      padding: 12px 32px;
+    .story p:last-child {
+      margin-bottom: 0;
+    }
+
+    .dialogue {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .antagonist {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .branch-content {
+      display: none;
+    }
+
+    .branch-content.active {
+      display: block;
+    }
+
+    .debate-scene {
+      background: linear-gradient(135deg, #10101a 0%, #0a0808 100%);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+    }
+
+    .debate-scene p {
+      color: #a8b0c0;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .debate-scene p:last-child {
+      margin-bottom: 0;
+    }
+
+    .judgment-scene {
+      background: linear-gradient(135deg, #1a0808 0%, #0a0808 100%);
+      border: 1px solid rgba(196, 30, 58, 0.4);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+      position: relative;
+    }
+
+    .judgment-scene::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #9f1239, var(--accent));
+    }
+
+    .judgment-scene p {
+      color: #c0a0a0;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .judgment-scene p:last-child {
+      margin-bottom: 0;
+    }
+
+    .epilogue {
+      text-align: center;
+      padding: 32px;
+      color: var(--dim);
+      font-size: 1rem;
+      border-top: 1px solid var(--line);
+      margin-top: 32px;
+    }
+
+    .epilogue p {
+      margin-bottom: 16px;
+    }
+
+    .highlight {
+      color: var(--silver);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
       color: var(--dim);
       text-decoration: none;
-      font-size: 0.95rem;
-      border-bottom: 1px solid transparent;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       transition: all 0.3s ease;
-      animation: fadeInDelayed 5s ease-out;
     }
 
-    @keyframes fadeInDelayed {
-      0% { opacity: 0; }
-      80% { opacity: 0; }
-      100% { opacity: 1; }
+    .nav-links a:hover {
+      color: var(--ink);
+      border-color: var(--silver);
+      background: rgba(148, 163, 184, 0.1);
     }
 
-    .back-btn:hover {
-      color: #fff;
-      border-color: var(--accent);
+    /* 안내 박스 */
+    .guide-box {
+      background: linear-gradient(135deg, rgba(148, 163, 184, 0.1) 0%, rgba(20, 20, 24, 0.95) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .guide-box .guide-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--silver);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .guide-box p {
+      font-size: 0.95rem;
+      color: #a0a8b8;
+      margin-bottom: 8px;
+      line-height: 1.7;
+    }
+
+    .guide-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide-box .reader {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* 캐릭터 컬러 */
+    .mask-dragon { color: #3b82f6; font-weight: 600; }
+    .mask-rat { color: #a16207; font-weight: 600; }
+    .mask-chicken { color: #c41e3a; font-weight: 600; }
+    .mask-pig { color: #ec4899; font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .story { padding: 28px; }
+      h1 { font-size: 1.6rem; }
+      .branch-selector { flex-direction: column; }
     }
   </style>
 </head>
 <body>
-  <div class="content-box">
-    <div class="tag">Snake Carnival · Ending E</div>
-    <h1>기타 가면이 지목된 경우</h1>
-    <p>
-      뱀의 그림자는 다시 깨어났다.<br><br>
-      당신이 내린 서약은 피로 물들어 있었다.<br><br>
-      끝은 새로운 시작이었고, 그것이 저주의 시작이었다.
-    </p>
-    <a href="index.html" class="back-btn">← 엔딩 선택으로 돌아가기</a>
+  <div class="container">
+    <header class="header">
+      <div class="tag">Ending E</div>
+      <h1>기타 가면이 지목된 경우</h1>
+      <div class="subtitle">뱀 가면 또는 의식 외부의 가면</div>
+    </header>
+
+    <div class="guide-box">
+      <div class="guide-title">엔딩 진행 안내</div>
+      <p>최종 투표 결과에 따른 분기를 확인하기 전에, 먼저 <strong>점수 계산</strong>을 진행해주세요.</p>
+      <p>지목된 캐릭터의 담당 플레이어가 없으므로, <span class="reader">용 가면 담당 플레이어</span>가 대표로 아래 내용을 낭독해주세요.</p>
+    </div>
+
+    <div class="branch-selector">
+      <div class="branch-btn active" onclick="showBranch('a')">
+        <div class="branch-title">분기 A</div>
+        <div class="branch-desc">뱀 가면을 범인으로 지목한 경우</div>
+      </div>
+      <div class="branch-btn" onclick="showBranch('b')">
+        <div class="branch-title">분기 B</div>
+        <div class="branch-desc">기타 가면을 범인으로 지목한 경우</div>
+      </div>
+    </div>
+
+    <!-- Branch A: 뱀 가면 자살 주장 -->
+    <div id="branch-a" class="branch-content active">
+      <article class="story">
+        <p>투표 결과를 확인한 <span class="antagonist">호랑이 가면</span>이 짧게 코웃음을 쳤다.</p>
+
+        <p class="dialogue">"교주가 자살했다고? 흥미롭군. 그렇다면 왜 자살했는지 그 타당한 증거를 제시해 보시지."</p>
+      </article>
+
+      <div class="debate-scene">
+        <p>잠시 정적이 흐른 뒤, 우리는 각자 품고 있던 생각과 증거들을 쏟아냈으나 예배실의 공기는 여전히 냉랭했다. 고심하며 듣던 <span class="highlight">소 가면</span>이 무거운 목소리로 말을 이었다.</p>
+        <p class="dialogue">"그 증거가 맞다고 해도 말이오, 교주의 몸에는 이교의 문양도 존재하지 않았는데 어떻게 의식 중에 이성을 잃지 않고 스스로 목숨을 끊을 수 있었는지 모르겠소. 환상에 빠지지 않고 깨어 있을 수 있는 자는 오직 '가증스러운 상징'을 지닌 자뿐이 아니었소?"</p>
+        <p>소 가면의 지적에 누구도 대답하지 못했다. 명확한 범인을 가려내지 못한 채 서로를 향한 의심만 깊어졌다.</p>
+      </div>
+
+      <div class="judgment-scene">
+        <p><span class="antagonist">호랑이 가면</span>이 차갑게 일갈했다.</p>
+        <p class="dialogue">"헛소리는 더 이상 못 들어주겠군. 교주의 죽음, 그리고 의식이 실패한 책임은 의식에 참여한 <span class="mask-dragon">용 가면</span>, <span class="mask-rat">쥐 가면</span>, <span class="mask-chicken">닭 가면</span>, <span class="mask-pig">돼지 가면</span>에게 있다."</p>
+        <p>호랑이 가면의 말이 떨어지기 무섭게, 어둠 속에서 대기하던 이들이 쏟아져 나와 네 명의 가면을 거칠게 제압했다. 국가 정보를 쥐고 흔들던 군인도, 사랑하는 이를 잃은 연인도, 진실을 쫓던 요원도, 그리고 영생을 꿈꾸던 노인도 차가운 바닥에 짓눌린 채 지하의 깊은 어둠 속으로 끌려갔다.</p>
+        <p>그날 밤, 제단의 뒤편에서 거대한 불길이 치솟았다. 가슴에 단검이 꽂힌 뱀 가면 정혁과, 그를 죽인 범인, 그리고 침묵으로 방관했던 이들의 육신은 흔적도 없이 불태워졌다.</p>
+      </div>
+
+      <div class="epilogue">
+        <p>모든 증거는 재가 되어 흩어졌고, 화장된 그들의 존재를 문제 삼는 이는 아무도 없었다. 교단의 법률에 따라 사건은 철저히 은폐되었다.</p>
+        <p>용, 쥐, 닭, 돼지, 뱀의 빈 자리는 곧 새로운 권력자들로 채워졌다. 그러나 온전한 예배의 방식을 알 리 없는 그들에게 신은 더 이상 축복을 제공하지 않았다.</p>
+        <p>눈에 보이는 기적을 마주하지 못한 가면들은 서로를 의심하며 하나둘씩 어둠 속으로 흩어졌다. 시간이 흐를수록 공고했던 결속력은 불신과 탐욕으로 얼룩졌고, 한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
+      </div>
+    </div>
+
+    <!-- Branch B: 기타 가면 지목 -->
+    <div id="branch-b" class="branch-content">
+      <article class="story">
+        <p>투표 결과를 확인한 <span class="antagonist">호랑이 가면</span>이 짧게 코웃음을 쳤다.</p>
+
+        <p class="dialogue">"하, 이거 웃기는군. 투표의 근거도 빈약하고, 그저 살기 위한 발악인가? 아니면... 모두가 범인이었을지도 모르지."</p>
+      </article>
+
+      <div class="judgment-scene">
+        <p><span class="antagonist">호랑이 가면</span>이 차갑게 일갈했다.</p>
+        <p class="dialogue">"헛소리는 더 이상 못 들어주겠군. 교주의 죽음, 그리고 의식이 실패한 책임은 의식에 참여한 <span class="mask-dragon">용 가면</span>, <span class="mask-rat">쥐 가면</span>, <span class="mask-chicken">닭 가면</span>, <span class="mask-pig">돼지 가면</span>에게 있다."</p>
+        <p>호랑이 가면의 말이 떨어지기 무섭게, 어둠 속에서 대기하던 이들이 쏟아져 나와 네 명의 가면을 거칠게 제압했다. 국가 정보를 쥐고 흔들던 군인도, 사랑하는 이를 잃은 연인도, 진실을 쫓던 요원도, 그리고 영생을 꿈꾸던 노인도 차가운 바닥에 짓눌린 채 지하의 깊은 어둠 속으로 끌려갔다.</p>
+        <p>그날 밤, 제단의 뒤편에서 거대한 불길이 치솟았다. 가슴에 단검이 꽂힌 뱀 가면 정혁과, 그를 죽인 범인, 그리고 침묵으로 방관했던 이들의 육신은 흔적도 없이 불태워졌다.</p>
+      </div>
+
+      <div class="epilogue">
+        <p>모든 증거는 재가 되어 흩어졌고, 화장된 그들의 존재를 문제 삼는 이는 아무도 없었다. 교단의 법률에 따라 사건은 철저히 은폐되었다.</p>
+        <p>용, 쥐, 닭, 돼지, 뱀의 빈 자리는 곧 새로운 권력자들로 채워졌다. 그러나 온전한 예배의 방식을 알 리 없는 그들에게 신은 더 이상 축복을 제공하지 않았다.</p>
+        <p>눈에 보이는 기적을 마주하지 못한 가면들은 서로를 의심하며 하나둘씩 어둠 속으로 흩어졌다. 시간이 흐를수록 공고했던 결속력은 불신과 탐욕으로 얼룩졌고, 한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">엔딩 목록</a>
+    </nav>
   </div>
+
+  <script>
+    function showBranch(branch) {
+      // Hide all branches
+      document.querySelectorAll('.branch-content').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.querySelectorAll('.branch-btn').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      // Show selected branch
+      document.getElementById('branch-' + branch).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+  </script>
   <script src="bgm.js"></script>
 </body>
 </html>

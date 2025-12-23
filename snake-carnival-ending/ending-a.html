@@ -3,113 +3,320 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>[Snake Carnival] 엔딩 A : 뱀의 축복</title>
+  <title>[Snake Carnival] Ending A : 용 가면이 지목된 경우</title>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
     :root {
-      --bg: #0c0c0e;
-      --ink: #e0e0e6;
-      --dim: #94949e;
-      --accent: #e63946;
-      --line: rgba(255, 255, 255, 0.04);
+      --bg: #080808;
+      --bg-gradient: radial-gradient(ellipse at 50% 0%, #1a1a1f 0%, #080808 60%);
+      --ink: #e8e8ec;
+      --dim: #7a7a85;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59, 130, 246, 0.3);
+      --gold: #d4a855;
+      --panel: rgba(20, 20, 24, 0.9);
+      --line: rgba(255, 255, 255, 0.06);
     }
 
-    * { box-sizing: border-box; }
-    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      background-blend-mode: overlay;
+      background: var(--bg);
+      background-image: var(--bg-gradient);
       color: var(--ink);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      text-align: center;
       padding: 40px 24px;
-      overflow: hidden;
+      line-height: 1.8;
     }
 
-    .content-box {
-      max-width: 700px;
-      animation: cinematicScroll 4s ease-out forwards;
+    .container {
+      max-width: 720px;
+      width: 100%;
     }
 
-    @keyframes cinematicScroll {
-      0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    /* 헤더 */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeDown 1s ease-out;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .tag {
-      font-size: 0.8rem;
+      display: inline-block;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       color: var(--accent);
       text-transform: uppercase;
+      padding: 8px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
       margin-bottom: 24px;
-      opacity: 0.8;
     }
-
-    /* --- Storytelling Utility Classes --- */
-    .hl { color: #fff; font-weight: 700; border-bottom: 2px solid var(--accent); }
-    .danger { color: var(--accent); font-weight: 800; }
-    .redact { background: #111; color: #111; cursor: help; padding: 0 2px; border-radius: 2px; transition: all 0.2s; }
-    .redact:hover { background: rgba(230, 57, 70, 0.2); color: var(--ink); }
-    /* ------------------------------------ */
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 800;
-      margin: 0 0 40px;
       color: #fff;
+      margin-bottom: 8px;
     }
 
-    p {
-      font-size: 1.25rem;
-      line-height: 1.8;
-      color: #d1d1d9;
+    .character-name {
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* 스토리 패널 */
+    .story-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 40px;
+      animation: fadeUp 1.2s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .story-panel p {
+      font-size: 1.1rem;
+      color: #d8d8e0;
+      text-align: justify;
       word-break: keep-all;
-      margin-bottom: 60px;
+      line-height: 2;
     }
 
-    .back-btn {
-      display: inline-block;
-      padding: 12px 32px;
+    .story-panel p + p {
+      margin-top: 20px;
+      text-indent: 1em;
+    }
+
+    /* 선택지 */
+    .choices {
+      animation: fadeUp 1.5s ease-out;
+    }
+
+    .choices-title {
+      font-size: 0.85rem;
+      color: var(--dim);
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+
+    .choice-btn {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      padding: 24px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, rgba(30,30,35,0.9) 0%, rgba(20,20,25,0.9) 100%);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .choice-btn::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .choice-btn:hover {
+      background: linear-gradient(135deg, rgba(40,40,48,0.95) 0%, rgba(30,30,38,0.95) 100%);
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateX(8px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 20px var(--accent-glow);
+    }
+
+    .choice-btn:hover::before {
+      transform: scaleY(1);
+    }
+
+    .choice-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    .choice-content {
+      flex: 1;
+    }
+
+    .choice-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .choice-desc {
+      font-size: 0.85rem;
+      color: var(--dim);
+    }
+
+    .choice-arrow {
+      font-size: 1.2rem;
+      color: var(--dim);
+      transition: all 0.3s ease;
+    }
+
+    .choice-btn:hover .choice-arrow {
+      color: var(--accent);
+      transform: translateX(5px);
+    }
+
+    /* 안내 박스 */
+    .guide-box {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(20, 20, 24, 0.95) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      animation: fadeUp 1s ease-out;
+    }
+
+    .guide-box .guide-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .guide-box p {
+      font-size: 0.95rem;
+      color: #a0a8b8;
+      margin-bottom: 8px;
+      line-height: 1.7;
+    }
+
+    .guide-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide-box .reader {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* 캐릭터 컬러 */
+    .mask-dragon { color: #3b82f6; font-weight: 600; }
+    .mask-rat { color: #a16207; font-weight: 600; }
+    .mask-chicken { color: #c41e3a; font-weight: 600; }
+    .mask-pig { color: #ec4899; font-weight: 600; }
+
+    /* 뒤로가기 */
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 48px;
       color: var(--dim);
       text-decoration: none;
-      font-size: 0.95rem;
-      border-bottom: 1px solid transparent;
-      transition: all 0.3s ease;
-      animation: fadeInDelayed 5s ease-out;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+      animation: fadeUp 2s ease-out;
     }
 
-    @keyframes fadeInDelayed {
-      0% { opacity: 0; }
-      80% { opacity: 0; }
-      100% { opacity: 1; }
+    .back-link:hover {
+      color: var(--ink);
     }
 
-    .back-btn:hover {
-      color: #fff;
-      border-color: var(--accent);
+    /* 반응형 */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.7rem; }
+      .story-panel { padding: 24px; }
+      .choice-btn { padding: 20px; }
     }
   </style>
 </head>
 <body>
-  <div class="content-box">
-    <div class="tag">Snake Carnival · Ending A</div>
-    <h1>용 가면이 지목된 경우</h1>
-    <p>
-      용 가면 김용환은 자신을 가리키는 손가락들을 보며 나지막이 헛웃음을 삼켰다.<br><br>
-      수십 년 전, 젊은 용의 몸을 차지하며 환희에 찼던 그가 이제는 그 늙어버린 육신에 갇혀 누명을 쓴 채 끌려갈 처지가 되었다.<br><br>
-      그는 정혁을 죽이지 않았다. 오히려 정혁은 그가 오늘 밤 입어야 했던 ‘가장 비싼 옷’이었다. 누군가 자신의 옷을 찢어버렸는데, 그를 죽인 범인으로 몰린 상황이 참담했다.
-    </p>
-    <a href="index.html" class="back-btn">← 엔딩 선택으로 돌아가기</a>
+  <div class="container">
+    <header class="header">
+      <div class="tag">Ending A</div>
+      <h1>용 가면이 지목된 경우</h1>
+      <div class="character-name">김용환</div>
+    </header>
+
+    <div class="guide-box">
+      <div class="guide-title">엔딩 진행 안내</div>
+      <p>최종 투표 결과에 따른 분기를 확인하기 전에, 먼저 <strong>점수 계산</strong>을 진행해주세요.</p>
+      <p><span class="reader">용 가면 담당 플레이어</span>가 대표로 아래 내용을 낭독해주세요.</p>
+    </div>
+
+    <section class="story-panel">
+      <p><span class="mask-dragon">용 가면</span> 김용환은 자신을 가리키는 손가락들을 보며 나지막이 헛웃음을 삼켰다. 수십 년 전, 젊은 용의 몸을 차지하며 환희에 찼던 그가 이제는 그 늙어버린 육신에 갇혀 누명을 쓴 채 끌려갈 처지가 되었다.</p>
+      <p>그는 정혁을 죽이지 않았다. 오히려 정혁은 그가 오늘 밤 입어야 했던 '가장 비싼 옷'이었다. 누군가 자신의 옷을 찢어버렸는데, 그를 죽인 범인으로 몰린 상황이 참담했다.</p>
+    </section>
+
+    <section class="choices">
+      <div class="choices-title">당신의 선택은?</div>
+
+      <a href="ending-a-1.html" class="choice-btn">
+        <span class="choice-num">1</span>
+        <div class="choice-content">
+          <div class="choice-title">지목 결과에 순응하며 구속당한다</div>
+          <div class="choice-desc">추하게 발버둥 치는 것은 과거 교단을 지배했던 자신의 긍지가 허락하지 않았다.</div>
+        </div>
+        <span class="choice-arrow">&#10095;</span>
+      </a>
+
+      <a href="ending-a-2.html" class="choice-btn">
+        <span class="choice-num">2</span>
+        <div class="choice-content">
+          <div class="choice-title">자신의 비밀을 밝혀 스스로를 변호한다</div>
+          <div class="choice-desc">자신이 이 교단의 진짜 교주임을 밝히고, 정혁은 환생을 위한 '빈 껍데기'였음을 고백한다.</div>
+        </div>
+        <span class="choice-arrow">&#10095;</span>
+      </a>
+
+      <a href="ending-a-3.html" class="choice-btn">
+        <span class="choice-num">3</span>
+        <div class="choice-content">
+          <div class="choice-title">조용히 주문을 읊어 의식을 강제로 진행한다</div>
+          <div class="choice-desc">"네놈들에게 줄 수 있는 건 영원한 혼돈뿐이다."</div>
+        </div>
+        <span class="choice-arrow">&#10095;</span>
+      </a>
+    </section>
+
+    <a href="index.html" class="back-link">&#8592; 엔딩 선택으로 돌아가기</a>
   </div>
   <script src="bgm.js"></script>
 </body>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>[Snake Carnival] Ending B-3 : 최후의 작품</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #080808;
+      --ink: #e8e8ec;
+      --dim: #7a7a85;
+      --accent: #c41e3a;
+      --gold: #d4a855;
+      --brown: #a16207;
+      --panel: rgba(20, 20, 24, 0.95);
+      --line: rgba(255, 255, 255, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(ellipse at 50% 0%, #1a1a1f 0%, #080808 60%);
+      color: var(--ink);
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+      animation: fadeIn 2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; filter: blur(10px); }
+      100% { opacity: 1; filter: blur(0); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--brown);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .story {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+
+    .story p {
+      font-size: 1.1rem;
+      color: #d8d8e0;
+      margin-bottom: 28px;
+      line-height: 2;
+      text-align: justify;
+      word-break: keep-all;
+    }
+
+    .story p:last-child {
+      margin-bottom: 0;
+    }
+
+    .dialogue {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    /* 특별 장면 */
+    .tragic-scene {
+      background: linear-gradient(135deg, #1a0a12 0%, #0a0808 100%);
+      border: 1px solid rgba(161, 98, 7, 0.3);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tragic-scene::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--brown), var(--accent));
+    }
+
+    .tragic-scene p {
+      color: #c8a0b0;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .tragic-scene p:last-child {
+      margin-bottom: 0;
+    }
+
+    .news-section {
+      background: linear-gradient(135deg, #12121a 0%, #0a0a0f 100%);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 32px 0;
+    }
+
+    .news-label {
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .news-section p {
+      font-size: 0.95rem;
+      color: #a0a0a8;
+      line-height: 1.8;
+    }
+
+    .epilogue {
+      text-align: center;
+      padding: 32px;
+      color: var(--dim);
+      font-size: 1rem;
+      border-top: 1px solid var(--line);
+      margin-top: 32px;
+    }
+
+    .epilogue p {
+      margin-bottom: 16px;
+    }
+
+    .highlight {
+      color: var(--brown);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      border-color: var(--brown);
+      background: rgba(161, 98, 7, 0.1);
+    }
+
+    /* 캐릭터 컬러 */
+    .mask-dragon { color: #3b82f6; font-weight: 600; }
+    .mask-rat { color: #a16207; font-weight: 600; }
+    .mask-chicken { color: #c41e3a; font-weight: 600; }
+    .mask-pig { color: #ec4899; font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .story { padding: 28px; }
+      h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="tag">Ending B-3</div>
+      <h1>최후의 작품</h1>
+      <div class="subtitle">쥐 가면 김은비</div>
+    </header>
+
+    <article class="story">
+      <p>그때였다. <span class="mask-rat">쥐 가면</span> 김은비는 제단 위의 시신을 향해 비틀거리며 걸음을 옮겼다. 범인으로 지목된 용의자의 갑작스러운 돌발 행동에 당황한 다른 가면들은 제압할 타이밍조차 놓친 채, 홀린 듯 그녀의 기이한 행동을 지켜보았다.</p>
+
+      <p>그녀는 떨리는 손으로 자신의 장갑을 벗어 던졌다. 그러고는 정혁의 손을 감싸고 있던 장갑을 천천히, 아주 조심스럽게 벗겨냈다.</p>
+
+      <p>장갑이 벗겨지자 정혁의 약지가 드러났고, 그곳에는 김은비의 것과 똑같은 반지가 끼워져 있었다. 마지막 순간까지 변하지 않았던 그의 마음을 확인한 그녀는 비로소 진심을 읽어낸 듯, 왠지 모르게 안심이 된다는 평온한 표정을 지어 보였다. 그녀는 이제야 비로소 차갑게 식어버린 연인의 맨손을 조심스레, 그리고 아주 단단히 움켜쥐었다.</p>
+
+      <p class="dialogue">"예배가 끝나면 다 말하겠다더니... 결국 이렇게 혼자 남겨두는 거야?"</p>
+    </article>
+
+    <div class="tragic-scene">
+      <p>다른 가면들이 뒤늦게 그녀를 제압하려 다가가려는 순간, 김은비는 뱀 가면 주변에 놓여있던 제사용 단검에 손을 뻗었다.</p>
+      <p>작가에게 영감이 사라진 화폭은 더 이상 삶이 아니었기에, 김은비는 정혁의 손을 더욱 꽉 맞잡은 채 단검으로 자신의 심장을 깊숙이 찔러 내렸다.</p>
+      <p>뜨거운 피가 차가운 제단 위 정혁의 피와 섞이며 하나의 거대한 얼룩을 만들어냈다. 그것은 예술가 J가 세상에 남긴 <span class="highlight">가장 처절하고도 완벽한 최후의 작품</span>이었다.</p>
+    </div>
+
+    <div class="news-section">
+      <div class="news-label">며칠 뒤, 뉴스 속보</div>
+      <p>"다음 소식입니다. 유명 배우 정혁 씨가 며칠째 행방이 묘연해 경찰이 수사에 나섰습니다. 한편, 경찰은 오늘 오전 한강 가에서 신원 미상의 시신 두 구를 발견했습니다. 발견 당시 두 사람은 서로의 손을 굳게 맞잡은 상태였으며, 두 사람의 약지에는 서로 같은 문양의 반지가 끼워져 있었던 것으로 확인되었습니다. 경찰은 현장의 정황을 토대로 두 사람의 동반 자살 가능성에 무게를 두고 수사를 진행 중이며..."</p>
+    </div>
+
+    <div class="epilogue">
+      <p>세상을 떠들썩하게 했던 연예인의 실종과 연인의 동반 자살 사건은 시간이 지나 결국 잊혀졌다.</p>
+      <p><span class="mask-pig">돼지 가면</span>은 홀연히 잠적했고, 쥐와 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다.</p>
+      <p>참된 예배의 비밀을 모르는 교단은 결국 불신과 탐욕 속에서 무너져 내렸다.</p>
+    </div>
+
+    <nav class="nav-links">
+      <a href="ending-b.html">&#8592; 다른 선택</a>
+      <a href="index.html">엔딩 목록</a>
+    </nav>
+  </div>
+  <script src="bgm.js"></script>
+  <script>
+    // URL 파라미터로 분기 처리
+    const params = new URLSearchParams(window.location.search);
+    const hasRing = params.get('ring') !== 'no';
+
+    if (!hasRing) {
+      // 반지가 없는 경우 스토리 변경
+      document.querySelector('.story').innerHTML = `
+        <p>그때였다. <span class="mask-rat">쥐 가면</span> 김은비는 제단 위의 시신을 향해 비틀거리며 걸음을 옮겼다. 범인으로 지목된 용의자의 갑작스러운 돌발 행동에 당황한 다른 가면들은 제압할 타이밍조차 놓친 채, 홀린 듯 그녀의 기이한 행동을 지켜보았다.</p>
+        <p>그녀는 떨리는 손으로 자신의 장갑을 벗어 던졌다. 그러고는 정혁의 손을 감싸고 있던 장갑을 천천히, 아주 조심스럽게 벗겨냈다.</p>
+        <p>장갑이 벗겨지자 정혁의 약지가 드러났고, 그곳에는 평범한 은반지가 끼워져 있었다. 김은비는 자신의 텅 빈 약지를 내려다보았다. 마지막 순간까지 변하지 않았던 그의 마음을 확인한 그녀는 자신의 손에 반지가 없음을 깨닫고 아쉬운 표정을 지었다. 그럼에도 불구하고 차갑게 식어버린 연인의 맨손을 조심스레, 그리고 아주 단단히 움켜쥐었다.</p>
+        <p class="dialogue">"예배가 끝나면 다 말하겠다더니... 결국 이렇게 혼자 남겨두는 거야?"</p>
+      `;
+
+      document.querySelector('.tragic-scene').innerHTML = `
+        <p>다른 가면들이 뒤늦게 그녀를 제압하려 다가가려는 순간, 김은비는 뱀 가면 주변에 놓여있던 제사용 단검에 손을 뻗었다.</p>
+        <p>받지 못한 반지, 전하지 못한 마음. 작가에게 영감이 사라진 화폭은 더 이상 삶이 아니었기에, 김은비는 정혁의 손을 더욱 꽉 맞잡은 채 단검으로 자신의 심장을 깊숙이 찔러 내렸다.</p>
+        <p>뜨거운 피가 차가운 제단 위 정혁의 피와 섞이며 하나의 거대한 얼룩을 만들어냈다. 그것은 예술가 J가 세상에 남긴 <span class="highlight">가장 처절하고도 불완전한 최후의 작품</span>이었다.</p>
+      `;
+
+      document.querySelector('.news-section p').innerHTML = `"다음 소식입니다. 유명 배우 정혁 씨가 며칠째 행방이 묘연해 경찰이 수사에 나섰습니다. 한편, 경찰은 오늘 오전 한강 가에서 신원 미상의 시신 두 구를 발견했습니다. 발견 당시 두 사람은 서로의 손을 굳게 맞잡은 상태였으며, 남성의 약지에만 반지가 끼워져 있었습니다. 경찰은 현장의 정황을 토대로 세상을 떠들썩하게 했던 스토킹 사건과의 연관성을 수사 중이며..."`;
+
+      document.querySelector('.epilogue').innerHTML = `
+        <p>세상을 떠들썩하게 했던 스토킹 사건은 시간이 지나 결국 잊혀졌다.</p>
+        <p><span class="mask-pig">돼지 가면</span>은 홀연히 잠적했고, 쥐와 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다.</p>
+        <p>참된 예배의 비밀을 모르는 교단은 결국 불신과 탐욕 속에서 무너져 내렸다.</p>
+      `;
+    }
+  </script>
+</body>
+</html>

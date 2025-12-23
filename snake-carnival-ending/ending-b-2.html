@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>[Snake Carnival] Ending A-1 : 순응</title>
+  <title>[Snake Carnival] Ending B-2 : 장미의 고백</title>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
@@ -11,9 +11,9 @@
       --bg: #080808;
       --ink: #e8e8ec;
       --dim: #7a7a85;
-      --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.2);
+      --accent: #c41e3a;
       --gold: #d4a855;
+      --brown: #a16207;
       --panel: rgba(20, 20, 24, 0.95);
       --line: rgba(255, 255, 255, 0.06);
     }
@@ -54,7 +54,7 @@
       font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 3px;
-      color: var(--accent);
+      color: var(--brown);
       text-transform: uppercase;
       margin-bottom: 16px;
     }
@@ -71,7 +71,6 @@
       font-size: 0.95rem;
     }
 
-    /* 스토리 본문 */
     .story {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -84,9 +83,9 @@
       font-size: 1.1rem;
       color: #d8d8e0;
       margin-bottom: 28px;
+      line-height: 2;
       text-align: justify;
       word-break: keep-all;
-      line-height: 2;
     }
 
     .story p:last-child {
@@ -99,7 +98,11 @@
       font-weight: 500;
     }
 
-    /* 뉴스 섹션 */
+    .antagonist {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
     .news-section {
       background: linear-gradient(135deg, #12121a 0%, #0a0a0f 100%);
       border: 1px solid var(--line);
@@ -123,7 +126,6 @@
       line-height: 1.8;
     }
 
-    /* 에필로그 */
     .epilogue {
       text-align: center;
       padding: 32px;
@@ -137,7 +139,11 @@
       margin-bottom: 16px;
     }
 
-    /* 네비게이션 */
+    .highlight {
+      color: var(--brown);
+      font-weight: 600;
+    }
+
     .nav-links {
       display: flex;
       justify-content: center;
@@ -158,8 +164,8 @@
 
     .nav-links a:hover {
       color: var(--ink);
-      border-color: var(--accent);
-      background: rgba(59, 130, 246, 0.1);
+      border-color: var(--brown);
+      background: rgba(161, 98, 7, 0.1);
     }
 
     /* 캐릭터 컬러 */
@@ -177,32 +183,36 @@
 <body>
   <div class="container">
     <header class="header">
-      <div class="tag">Ending A-1</div>
-      <h1>순응</h1>
-      <div class="subtitle">용 가면 김용환</div>
+      <div class="tag">Ending B-2</div>
+      <h1>장미의 고백</h1>
+      <div class="subtitle">쥐 가면 김은비</div>
     </header>
 
     <article class="story">
-      <p>그는 구태여 변명하지 않았다. 추하게 발버둥 치는 것은 과거 교단을 지배했던 자신의 긍지가 허락하지 않았다. 또한, '환생'이라는 비현실적인 진실을 뱉어봤자 돌아올 것은 살인 혐의에 더해질 광기 어린 노인의 낙인뿐임을 그는 누구보다 잘 알았다.</p>
+      <p>그를 죽인 진짜 범인이 이 안에서 숨을 쉬고 있다는 사실이 참을 수 없는 오욕으로 다가왔다. 그녀는 떨리는 손으로 품 안의 장미 그림을 꺼내 제단 위로 던졌다.</p>
 
-      <p>그는 스스로 가면을 벗어 던졌다.</p>
+      <p class="dialogue">"내가 그를 죽였다고? 아니, 우린 서로 사랑했어."</p>
 
-      <p class="dialogue">"어리석은 것들, 너희는 오늘 너희의 유일한 구원을 발로 찬 것이다."</p>
+      <p>그녀는 멈추지 않고 자신의 왼쪽 약지에 끼워진, 정혁의 것과 쌍을 이루는 반지를 빼들어 모두가 볼 수 있게 치켜들었다. 그 순간, <span class="antagonist">양 가면</span>이 뒷짐을 진 채 걸어 나오며 입을 열었다.</p>
+
+      <p class="dialogue">"뱀 교주 아니 저 놈이 금기를 어겼기 때문에 신께서 벌을 내리신 게 아니겠나? 저 천박한 쥐년이 놈을 유혹해 타락시켰고, 결국 그 불결한 죄악이 신님의 심판으로 돌아온 것이지. 범인은 명백히 저 년이라네."</p>
+
+      <p>양 가면의 주장으로 인해 그녀의 가면은 거칠게 벗겨졌고, 정체가 밝혀진 유명 예술가 J는 어둠 속에서 최후를 맞이했다.</p>
     </article>
 
     <div class="news-section">
       <div class="news-label">며칠 뒤, 뉴스 속보</div>
-      <p>"다음 소식입니다. 국내 굴지의 기업인 김용환 회장이 며칠째 행방이 묘연해 경찰이 수사에 나섰습니다. 자택을 나선 뒤 연락이 두절된 김 회장은... 한편, 유명 배우 정혁 씨 또한 의문의 실종 신고가 접수되어 충격을 주고 있습니다. 경찰은 두 사건의 연관성을 염두에 두고 수사를..."</p>
+      <p>"다음 소식입니다. 유명 배우 정혁 씨가 며칠째 행방이 묘연해 경찰이 수사에 나섰습니다. 자택을 나선 뒤 연락이 두절된 정 씨의 실종 사건을 두고 팬들의 우려가 커지고 있습니다. 한편, 경찰은 오늘 오전 한강 가에서 신원 미상의 여성 시신 한 구를 발견했습니다. 사체 곁에는 유명 예술가 J의 미발표작으로 추정되는 그림 한 점이 남겨져 있었으며, 해당 장미 그림은..."</p>
     </div>
 
     <div class="epilogue">
-      <p>세상을 떠들썩하게 했던 연예인과 재벌의 실종 사건은 결국 시간이 지나 잊혀졌다.</p>
-      <p>용과 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그러나 온전한 예배의 방식을 알 리 없는 그들에게 신은 더 이상 축복을 제공하지 않았다. 눈에 보이는 기적을 마주하지 못한 가면들은 서로를 의심하며 하나둘씩 어둠 속으로 흩어졌다.</p>
-      <p>시간이 흐를수록 공고했던 결속력은 불신과 탐욕으로 얼룩졌고, 한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
+      <p>세상을 떠들썩하게 했던 연예인의 실종과 예술가의 사망 사건은 시간이 지나 결국 잊혀졌다.</p>
+      <p>쥐와 뱀의 빈자리는 곧 <span class="mask-dragon">용 가면</span> 김용환의 개입 아래 새로운 권력자들로 채워졌다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다.</p>
+      <p>참된 예배의 방식도, 영생의 비밀도 알지 못한 채 껍데기만 남은 교단은 결국 서로를 향한 불신과 탐욕 속에서 무너져 내렸다.</p>
     </div>
 
     <nav class="nav-links">
-      <a href="ending-a.html">&#8592; 다른 선택</a>
+      <a href="ending-b.html">&#8592; 다른 선택</a>
       <a href="index.html">엔딩 목록</a>
     </nav>
   </div>

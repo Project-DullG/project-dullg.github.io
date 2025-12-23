@@ -3,113 +3,325 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>[Snake Carnival] 엔딩 D : 돼지 가면의 종말</title>
+  <title>[Snake Carnival] Ending D : 진범의 고백</title>
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
     :root {
-      --bg: #0c0c0e;
-      --ink: #e0e0e6;
-      --dim: #94949e;
-      --accent: #e63946;
-      --line: rgba(255, 255, 255, 0.04);
+      --bg: #080808;
+      --ink: #e8e8ec;
+      --dim: #7a7a85;
+      --accent: #c41e3a;
+      --gold: #d4a855;
+      --pink: #ec4899;
+      --panel: rgba(20, 20, 24, 0.95);
+      --line: rgba(255, 255, 255, 0.06);
     }
 
-    * { box-sizing: border-box; }
-    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      background-blend-mode: overlay;
+      background: var(--bg);
+      background-image: radial-gradient(ellipse at 50% 0%, #1a1a1f 0%, #080808 60%);
       color: var(--ink);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 40px 24px;
-      overflow: hidden;
+      padding: 60px 24px;
+      line-height: 1.9;
     }
 
-    .content-box {
+    .container {
       max-width: 700px;
-      animation: cinematicScroll 4s ease-out forwards;
+      width: 100%;
+      animation: fadeIn 2s ease-out;
     }
 
-    @keyframes cinematicScroll {
-      0% { opacity: 0; transform: translateY(20px); filter: blur(10px); }
-      100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+    @keyframes fadeIn {
+      0% { opacity: 0; filter: blur(10px); }
+      100% { opacity: 1; filter: blur(0); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
     }
 
     .tag {
-      font-size: 0.8rem;
+      display: inline-block;
+      font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 3px;
-      color: var(--accent);
+      color: var(--pink);
       text-transform: uppercase;
-      margin-bottom: 24px;
-      opacity: 0.8;
+      margin-bottom: 16px;
     }
 
-    /* --- Storytelling Utility Classes --- */
-    .hl { color: #fff; font-weight: 700; border-bottom: 2px solid var(--accent); }
-    .danger { color: var(--accent); font-weight: 800; }
-    .redact { background: #111; color: #111; cursor: help; padding: 0 2px; border-radius: 2px; transition: all 0.2s; }
-    .redact:hover { background: rgba(230, 57, 70, 0.2); color: var(--ink); }
-    /* ------------------------------------ */
+    .true-ending {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent) 0%, #9f1239 100%);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      margin-left: 12px;
+      vertical-align: middle;
+    }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: 800;
-      margin: 0 0 40px;
       color: #fff;
+      margin-bottom: 8px;
     }
 
-    p {
-      font-size: 1.25rem;
-      line-height: 1.8;
-      color: #d1d1d9;
+    .subtitle {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .story {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+
+    .story p {
+      font-size: 1.1rem;
+      color: #d8d8e0;
+      margin-bottom: 28px;
+      line-height: 2;
+      text-align: justify;
       word-break: keep-all;
-      margin-bottom: 60px;
     }
 
-    .back-btn {
-      display: inline-block;
-      padding: 12px 32px;
+    .story p:last-child {
+      margin-bottom: 0;
+    }
+
+    .dialogue {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    .confession-scene {
+      background: linear-gradient(135deg, #1a1008 0%, #0a0808 100%);
+      border: 1px solid rgba(236, 72, 153, 0.4);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .confession-scene::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--pink), var(--accent));
+    }
+
+    .confession-scene p {
+      color: #c8b090;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .confession-scene p:last-child {
+      margin-bottom: 0;
+    }
+
+    .method-reveal {
+      background: linear-gradient(135deg, #0a0a12 0%, #080808 100%);
+      border: 1px solid rgba(196, 30, 58, 0.3);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 24px 0;
+    }
+
+    .method-reveal p {
+      color: #b0a0a8;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .method-reveal p:last-child {
+      margin-bottom: 0;
+    }
+
+    .news-section {
+      background: linear-gradient(135deg, #12121a 0%, #0a0a0f 100%);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--gold);
+      border-radius: 12px;
+      padding: 28px;
+      margin: 32px 0;
+    }
+
+    .news-label {
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .news-section p {
+      font-size: 0.95rem;
+      color: #a0a0a8;
+      line-height: 1.8;
+    }
+
+    .epilogue {
+      text-align: center;
+      padding: 32px;
+      color: var(--dim);
+      font-size: 1rem;
+      border-top: 1px solid var(--line);
+      margin-top: 32px;
+    }
+
+    .epilogue p {
+      margin-bottom: 16px;
+    }
+
+    .highlight {
+      color: var(--pink);
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
       color: var(--dim);
       text-decoration: none;
-      font-size: 0.95rem;
-      border-bottom: 1px solid transparent;
+      font-size: 0.9rem;
+      padding: 12px 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
       transition: all 0.3s ease;
-      animation: fadeInDelayed 5s ease-out;
     }
 
-    @keyframes fadeInDelayed {
-      0% { opacity: 0; }
-      80% { opacity: 0; }
-      100% { opacity: 1; }
+    .nav-links a:hover {
+      color: var(--ink);
+      border-color: var(--pink);
+      background: rgba(236, 72, 153, 0.1);
     }
 
-    .back-btn:hover {
-      color: #fff;
-      border-color: var(--accent);
+    /* 안내 박스 */
+    .guide-box {
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(20, 20, 24, 0.95) 100%);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .guide-box .guide-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--pink);
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .guide-box p {
+      font-size: 0.95rem;
+      color: #a0a8b8;
+      margin-bottom: 8px;
+      line-height: 1.7;
+    }
+
+    .guide-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide-box .reader {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* 캐릭터 컬러 */
+    .mask-dragon { color: #3b82f6; font-weight: 600; }
+    .mask-rat { color: #a16207; font-weight: 600; }
+    .mask-chicken { color: #c41e3a; font-weight: 600; }
+    .mask-pig { color: #ec4899; font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .story { padding: 28px; }
+      h1 { font-size: 1.6rem; }
+      .true-ending { display: block; margin: 8px auto 0; }
     }
   </style>
 </head>
 <body>
-  <div class="content-box">
-    <div class="tag">Snake Carnival · Ending D</div>
-    <h1>돼지 가면의 종말</h1>
-    <p>
-      뱀의 그림자는 다시 깨어났다.<br><br>
-      당신이 내린 서약은 피로 물들어 있었다.<br><br>
-      끝은 새로운 시작이었고, 그것이 저주의 시작이었다.
-    </p>
-    <a href="index.html" class="back-btn">← 엔딩 선택으로 돌아가기</a>
+  <div class="container">
+    <header class="header">
+      <div class="tag">Ending D <span class="true-ending">TRUE ENDING</span></div>
+      <h1>진범의 고백</h1>
+      <div class="subtitle">돼지 가면 김진철</div>
+    </header>
+
+    <div class="guide-box">
+      <div class="guide-title">엔딩 진행 안내</div>
+      <p>최종 투표 결과에 따른 분기를 확인하기 전에, 먼저 <strong>점수 계산</strong>을 진행해주세요.</p>
+      <p><span class="reader">돼지 가면 담당 플레이어</span>가 대표로 아래 내용을 낭독해주세요.</p>
+    </div>
+
+    <article class="story">
+      <p>예배실의 무거운 정적 속에 호랑이 가면의 추궁이 이어졌고, 마침내 의심의 화살은 <span class="mask-pig">돼지 가면</span> 김진철을 향해 멈췄다. 모든 시선이 그를 향해 쏟아지자, 그는 주머니 속에 든 낡은 권총의 묵직한 감촉을 느끼며 입을 열었다.</p>
+
+      <p class="dialogue">"그래, 내가 죽였다."</p>
+
+      <p>국가 안보를 책임지는 군인이었던 그는 2년 전, 내부를 수색하던 중 자신의 이름을 부르는 침입자를 단검으로 처치한 뒤부터 누군가 자신을 감시하고 있다는 확신에 시달려 왔다. 그는 교주를 제거하고 교단을 흔들어 정적 속으로 사라지기로 결심했다.</p>
+
+      <p class="dialogue">"이곳을 떠나기 위해서는 교주를 제거해야만 했다. 그래야 교단이 흔들리고, 나도 사라질 수 있으니까."</p>
+    </article>
+
+    <div class="method-reveal">
+      <p>김진철은 고문서에서 찾은 <span class="highlight">'신은 가증스러운 상징을 증오한다'</span>는 구절을 토대로, 장갑 안쪽에 역삼각형 문양을 각인해 예배 중에 발생한 환상을 차단했다.</p>
+      <p>모두가 연기 속에 쓰러졌을 때 홀로 깨어 있었던 그는 환상에 잠긴 뱀 가면에게 다가가, 그가 쥐고 있던 제사용 단검으로 그의 심장을 찔렀다.</p>
+    </div>
+
+    <div class="confession-scene">
+      <p class="dialogue">"범행은 완벽했다. 피 한 방울 튀지 않았고, 단검은 제자리에 놓여 있었다. 내가 범인이라는 사실만 들키지 않는다면 진실은 안개 속에 묻힐 것이라 생각했지."</p>
+      <p class="dialogue">"내가 원하던 건 조용히 이곳을 빠져나가는 것뿐이다."</p>
+      <p>범행을 시인함과 동시에 무섭게 어둠 속에서 대기하던 이들이 쏟아져 나와 그에게 달려들었다. 김진철은 군인 특유의 본능으로 저항하려 했으나, 좁은 공간에서 쏟아지는 수십 명의 손길을 막아내기엔 역부족이었다. 주머니 속의 낡은 권총은 바닥을 굴러 멀어졌고, 그는 차가운 지하 감옥으로 질질 끌려가며 어둠 속으로 사라졌다.</p>
+    </div>
+
+    <div class="news-section">
+      <div class="news-label">며칠 뒤, 뉴스 속보</div>
+      <p>"다음 소식입니다. 전 국민적인 사랑을 받는 인기 연예인 정혁 씨가 지난 12일 자정을 기점으로 행방이 묘연해져 경찰이 수사에 착수했습니다. 정 씨는 평소 스케줄을 어긴 적이 없을 정도로 성실했던 터라, 갑작스러운 연락 두절에 방송가와 팬들의 충격이 커지고 있습니다. 또한 국가 영웅이라고 불리던 김진철 씨 또한 비슷한 시각 실종 신고가 접수되었습니다. 김 씨는 며칠째 부대에 복귀하지 않은 채 소재가 파악되지 않고 있으며, 군 당국은 경찰과 협조하여 김 씨의 마지막 행적을 쫓고 있습니다."</p>
+    </div>
+
+    <div class="epilogue">
+      <p>세상을 떠들썩하게 했던 연예인과 국가 영웅의 실종 사건은 시간이 지나 결국 잊혀졌다.</p>
+      <p>돼지와 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그 과정에서 <span class="mask-dragon">용 가면</span> 김용환의 치밀한 개입이 있었으며, 중단되었던 예배는 다시 온전히 진행되었다.</p>
+      <p>그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다.</p>
+      <p>참된 예배의 비밀을 모르는 교단은 결국 불신과 탐욕 속에서 무너져 내렸다.</p>
+    </div>
+
+    <nav class="nav-links">
+      <a href="index.html">엔딩 목록</a>
+    </nav>
   </div>
   <script src="bgm.js"></script>
 </body>

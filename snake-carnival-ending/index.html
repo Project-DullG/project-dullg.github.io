@@ -1,358 +1,97 @@
-<!DOCTYPE html>
-<html lang="ko">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>〈뱀이 죽은 축제〉 엔딩 | Project DullG</title>
-  <style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
-    :root {
-      --bg: #0c0c0e;
-      --bg-accent: #151518;
-      --panel: #141416;
-      --ink: #e0e0e6;
-      --dim: #94949e;
-      --accent: #e63946; /* Crimson Red */
-      --accent-muted: rgba(230, 57, 70, 0.15);
-      --line: rgba(255, 255, 255, 0.04);
-      --chip: #1c1c1f;
-      --chip-hover: #252529;
-    }
-
-    * { box-sizing: border-box; }
-    
-    body {
-      margin: 0;
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(circle at 50% -20%, #1e1e24 0%, transparent 70%),
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3BaseFilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      background-blend-mode: overlay;
-      color: var(--ink);
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      line-height: 1.6;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .wrap {
-      width: 100%;
-      max-width: 800px;
-      padding: 80px 24px 100px;
-      animation: fadeIn 0.8s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    header {
-      margin-bottom: 60px;
-      text-align: center;
-    }
-
-    .brand {
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--dim);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      margin: 0;
-      letter-spacing: -0.5px;
-      background: linear-gradient(to bottom, #fff, #a0a0a0);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .subtitle {
-      color: var(--dim);
-      font-size: 1.1rem;
-      margin-top: 12px;
-      font-weight: 400;
-    }
-
-    /* 안내 패널 */
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 32px;
-      margin-bottom: 48px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 4px; height: 100%;
-      background: var(--accent);
-    }
-
-    .panel h2 {
-      margin: 0 0 16px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .panel ul {
-      margin: 0;
-      padding-left: 0;
-      list-style: none;
-    }
-
-    .panel li {
-      margin: 12px 0;
-      color: var(--ink);
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-
-    .panel li::before {
-      content: '•';
-      color: var(--accent);
-      font-weight: 800;
-    }
-
-    .panel strong {
-      color: var(--accent);
-      font-weight: 700;
-      background: var(--accent-muted);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
-    /* 엔딩 리스트 */
-    .endings {
-      display: grid;
-      gap: 16px;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .card:hover {
-      background: var(--bg-accent);
-      border-color: rgba(230, 57, 70, 0.3);
-      transform: scale(1.01);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-
-    .meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--accent);
-      text-transform: uppercase;
-    }
-
-    /* --- Storytelling Utility Classes --- */
-    .hl { color: #fff; font-weight: 700; border-bottom: 2px solid var(--accent); }
-    .danger { color: var(--accent); font-weight: 800; text-shadow: 0 0 10px rgba(230, 57, 70, 0.3); }
-    .redact { background: #111; color: #111; cursor: help; transition: all 0.2s ease; padding: 0 2px; border-radius: 2px; }
-    .redact:hover { background: var(--accent-muted); color: var(--ink); }
-    /* ------------------------------------ */
-
-    .title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .title strong {
-        color: var(--accent);
-    }
-
-    .btn-arrow {
-      width: 44px;
-      height: 44px;
-      background: var(--chip);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      border: 1px solid var(--line);
-    }
-
-    .card:hover .btn-arrow {
-      background: var(--accent);
-      border-color: var(--accent);
-      transform: translateX(4px);
-    }
-
-    .btn-arrow svg {
-      width: 20px;
-      height: 20px;
-      fill: none;
-      stroke: var(--ink);
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    
-    .card:hover .btn-arrow svg {
-        stroke: #fff;
-    }
-
-    /* 사건의 전말 버튼 */
-    .footer-actions {
-      margin-top: 60px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .btn-story {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 32px;
-      background: var(--chip);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      border-radius: 50px;
-      border: 1px solid var(--line);
-      transition: all 0.3s ease;
-    }
-
-    .btn-story:hover {
-      background: var(--chip-hover);
-      border-color: var(--dim);
-      transform: translateY(-2px);
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 80px;
-      color: var(--dim);
-      font-size: 0.85rem;
-      letter-spacing: 0.5px;
-    }
-
-    @media (max-width: 600px) {
-      .wrap { padding: 60px 20px; }
-      h1 { font-size: 1.8rem; }
-      .card { padding: 20px; }
-      .title { font-size: 1rem; }
-    }
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.2">
+  <style type="text/css">
+    body {background-color: #0b0b0b}
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 10.2px 'Helvetica Neue'; color: #6f6d79; -webkit-text-stroke: #6f6d79}
+    p.p3 {margin: 0.0px 0.0px 13.2px 0.0px; text-align: center; font: 13.2px 'Apple SD Gothic Neo'; color: #6f6d79; -webkit-text-stroke: #6f6d79}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 10.2px 'Apple SD Gothic Neo'; color: #d2012a; -webkit-text-stroke: #d2012a}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 11.4px 'Apple SD Gothic Neo'; color: #7d8499; -webkit-text-stroke: #7d8499}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #244ef0}
+    p.p9 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.8px 'Apple SD Gothic Neo'; color: #ffffff; -webkit-text-stroke: #ffffff}
+    p.p10 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #d0cfd9; -webkit-text-stroke: #d0cfd9; min-height: 14.0px}
+    p.p11 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #7a3d0b}
+    p.p12 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #a40021}
+    p.p13 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #da0774}
+    p.p14 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #6f7e98}
+    p.p15 {margin: 0.0px 0.0px 0.0px 0.0px; font: 9.0px 'Helvetica Neue'; color: #0000e9; -webkit-text-stroke: #414d65}
+    p.p16 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.8px 'Apple SD Gothic Neo'; color: #0000e9; -webkit-text-stroke: #ffffff}
+    p.p17 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; color: #ffffff; -webkit-text-stroke: #ffffff; min-height: 14.0px}
+    p.p18 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Apple SD Gothic Neo'; color: #0000e9; -webkit-text-stroke: #ffffff}
+    li.li7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Apple SD Gothic Neo'; color: #d0cfd9; -webkit-text-stroke: #d0cfd9}
+    span.s1 {font-kerning: none; background-color: #0b0b0b}
+    span.s2 {font: 28.8px 'Helvetica Neue'; font-kerning: none; background-color: #0b0b0b}
+    span.s3 {font: 13.2px 'Helvetica Neue'; font-kerning: none; background-color: #0b0b0b}
+    span.s4 {font: 10.2px 'Helvetica Neue'; font-kerning: none; background-color: #0b0b0b}
+    span.s5 {font: 11.4px 'Helvetica Neue'; font-kerning: none; background-color: #0b0b0b}
+    span.s6 {font-kerning: none; background-color: #0e0e0e}
+    span.s7 {font: 15.0px 'Helvetica Neue'; font-kerning: none; background-color: #0e0e0e}
+    span.s8 {background-color: #0e0e0e; -webkit-text-stroke: 0px #000000}
+    span.s9 {font: 12.0px 'Helvetica Neue'; font-kerning: none; background-color: #0e0e0e}
+    span.s10 {font-kerning: none; color: #d2012a; background-color: rgba(210, 1, 42, 0.15); -webkit-text-stroke: 0px #d2012a}
+    span.s11 {font: 12.0px 'Helvetica Neue'; font-kerning: none; color: #d2012a; background-color: rgba(210, 1, 42, 0.15); -webkit-text-stroke: 0px #d2012a}
+    span.s12 {font: 12.0px 'Helvetica Neue'; font-kerning: none; color: #d2012a; -webkit-text-stroke: 0px #d2012a}
+    span.s13 {text-decoration: underline ; font-kerning: none; background-color: #0e0e0e}
+    span.s14 {text-decoration: underline ; font-kerning: none}
+    span.s15 {text-decoration: underline ; font-kerning: none; color: #0000e9; background-color: #0e0e0e; -webkit-text-stroke: 0px #244ef0}
+    span.s16 {font: 13.8px 'Helvetica Neue'; text-decoration: underline ; font-kerning: none}
+    span.s17 {text-decoration: underline ; font-kerning: none; color: #ffffff; -webkit-text-stroke: 0px #ffffff}
+    span.s18 {font: 13.8px 'Helvetica Neue'; text-decoration: underline ; font-kerning: none; color: #ffffff; -webkit-text-stroke: 0px #ffffff}
+    span.s19 {font-kerning: none}
+    span.s20 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #7a3d0b}
+    span.s21 {text-decoration: underline ; font-kerning: none; color: #0000e9; background-color: #0e0e0e; -webkit-text-stroke: 0px #7a3d0b}
+    span.s22 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #a40021}
+    span.s23 {text-decoration: underline ; font-kerning: none; color: #0000e9; background-color: #0e0e0e; -webkit-text-stroke: 0px #a40021}
+    span.s24 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #da0774}
+    span.s25 {text-decoration: underline ; font-kerning: none; color: #0000e9; background-color: #0e0e0e; -webkit-text-stroke: 0px #da0774}
+    span.s26 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #6f7e98}
+    span.s27 {text-decoration: underline ; font-kerning: none; color: #0000e9; background-color: #0e0e0e; -webkit-text-stroke: 0px #6f7e98}
+    span.s28 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #414d65}
+    span.s29 {font: 13.8px 'Helvetica Neue'; text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #ffffff}
+    span.s30 {font: 13.8px 'Apple SD Gothic Neo'; text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #ffffff}
+    span.s31 {font: 13.8px 'Apple SD Gothic Neo'; text-decoration: underline ; font-kerning: none; color: #414d65; -webkit-text-stroke: 0px #414d65}
+    span.s32 {text-decoration: underline ; font-kerning: none; background-color: #111113}
+    span.s33 {font: 12.0px 'Helvetica Neue'; text-decoration: underline ; font-kerning: none}
+    span.s34 {font: 10.2px 'Apple SD Gothic Neo'; font-kerning: none; background-color: #0b0b0b}
+    ul.ul1 {list-style-type: none}
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <header>
-      <div class="brand">Project DullG Investigation</div>
-      <h1>〈뱀이 죽은 축제〉</h1>
-      <p class="subtitle">사건의 종결, 그 너머의 이야기</p>
-    </header>
-
-    <section class="panel">
-      <h2>최종 투표 결과에 따른 분기</h2>
-      <ul>
-        <li>참가자들의 투표를 통해 지목된 인물은 사건의 범인으로 소환됩니다.</li>
-        <li><strong>지목된 가면</strong>에 따라 서로 다른 진실과 마주하게 됩니다.</li>
-      </ul>
-    </section>
-
-    <section class="endings">
-      <a href="ending-a.html" class="card">
-        <div class="meta">
-          <div class="tag">Ending A</div>
-          <div class="title"><strong>용 가면</strong>이 지목된 경우</div>
-        </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <a href="ending-b.html" class="card">
-        <div class="meta">
-          <div class="tag">Ending B</div>
-          <div class="title"><strong>쥐 가면</strong>이 지목된 경우</div>
-        </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <a href="ending-c.html" class="card">
-        <div class="meta">
-          <div class="tag">Ending C</div>
-          <div class="title"><strong>닭 가면</strong>이 지목된 경우</div>
-        </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <a href="ending-d.html" class="card">
-        <div class="meta">
-          <div class="tag">Ending D</div>
-          <div class="title"><strong>돼지 가면</strong>이 지목된 경우</div>
-        </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <a href="ending-e.html" class="card">
-        <div class="meta">
-          <div class="tag">Ending E</div>
-          <div class="title"><strong>기타 가면</strong>이 지목된 경우</div>
-        </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <a href="ending-f.html" class="card">
-        <div class="meta">
-          <div class="tag">Ending F</div>
-          <div class="title">두 번 연속 표가 <strong>갈린</strong> 경우</div>
-        </div>
-        <div class="btn-arrow">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-    </section>
-
-    <div class="footer-actions">
-      <a class="btn-story" href="story.html">
-        <span>🕯</span> 사건의 전말 확인하기
-      </a>
-    </div>
-
-    <footer>© Project DullG · Snake Carnival Investigation</footer>
-  </main>
-  <script src="bgm.js"></script>
+<p class="p1"><span class="s1">PROJECT DULLG</span></p>
+<h1 style="margin: 0.0px 0.0px 0.0px 0.0px; text-align: center; font: 28.8px 'Apple SD Gothic Neo'; color: #d0cfd9; -webkit-text-stroke: #d0cfd9"><span class="s1">〈뱀이</span><span class="s2"> </span><span class="s1">죽은</span><span class="s2"> </span><span class="s1">축제〉</span></h1>
+<p class="p3"><span class="s1">사건의</span><span class="s3"> </span><span class="s1">종결</span><span class="s3">, </span><span class="s1">그</span><span class="s3"> </span><span class="s1">너머의</span><span class="s3"> </span><span class="s1">이야기</span></p>
+<p class="p4"><span class="s1">엔딩</span><span class="s4"> </span><span class="s1">진행</span><span class="s4"> </span><span class="s1">안내</span></p>
+<p class="p5"><span class="s1">최종</span><span class="s5"> </span><span class="s1">투표</span><span class="s5"> </span><span class="s1">결과에</span><span class="s5"> </span><span class="s1">따른</span><span class="s5"> </span><span class="s1">분기를</span><span class="s5"> </span><span class="s1">확인하기</span><span class="s5"> </span><span class="s1">전에</span><span class="s5">, </span><span class="s1">먼저</span><span class="s5"> </span><span class="s1">점수</span><span class="s5"> </span><span class="s1">계산을</span><span class="s5"> </span><span class="s1">진행해주세요</span><span class="s5">.</span></p>
+<h2 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 15.0px 'Apple SD Gothic Neo'; color: #ffffff; -webkit-text-stroke: #ffffff"><span class="s6">최종</span><span class="s7"> </span><span class="s6">투표</span><span class="s7"> </span><span class="s6">결과에</span><span class="s7"> </span><span class="s6">따른</span><span class="s7"> </span><span class="s6">분기</span></h2>
+<ul class="ul1">
+  <li class="li7"><span class="s8"></span><span class="s6">참가자들의</span><span class="s9"> </span><span class="s6">투표를</span><span class="s9"> </span><span class="s6">통해</span><span class="s9"> </span><span class="s6">지목된</span><span class="s9"> </span><span class="s6">인물은</span><span class="s9"> </span><span class="s6">사건의</span><span class="s9"> </span><span class="s6">범인으로</span><span class="s9"> </span><span class="s6">소환됩니다</span><span class="s9">. </span><span class="s10">지목된</span><span class="s11"> </span><span class="s10">가면</span><span class="s12"><br>
+</span><span class="s6">에</span><span class="s9"> </span><span class="s6">따라</span><span class="s9"> </span><span class="s6">서로</span><span class="s9"> </span><span class="s6">다른</span><span class="s9"> </span><span class="s6">진실과</span><span class="s9"> </span><span class="s6">마주하게</span><span class="s9"> </span><span class="s6">됩니다</span><span class="s9">.</span></li>
+</ul>
+<p class="p8"><span class="s13"><a href="ending-a.html">ENDING A<span class="s14"></span></a></span></p>
+<p class="p9"><span class="s15"><a href="ending-a.html">용<span class="s16"> </span><span class="s14">가면</span><span class="s17">이</span><span class="s18"> </span><span class="s17">지목된</span><span class="s18"> </span><span class="s17">경우</span></a></span></p>
+<p class="p10"><span class="s19"></span><br></p>
+<p class="p11"><span class="s13"><a href="ending-b.html">ENDING B<span class="s20"></span></a></span></p>
+<p class="p9"><span class="s21"><a href="ending-b.html">쥐<span class="s16"> </span><span class="s14">가면</span><span class="s17">이</span><span class="s18"> </span><span class="s17">지목된</span><span class="s18"> </span><span class="s17">경우</span></a></span></p>
+<p class="p10"><span class="s19"></span><br></p>
+<p class="p12"><span class="s13"><a href="ending-c.html">ENDING C<span class="s22"></span></a></span></p>
+<p class="p9"><span class="s23"><a href="ending-c.html">닭<span class="s16"> </span><span class="s14">가면</span><span class="s17">이</span><span class="s18"> </span><span class="s17">지목된</span><span class="s18"> </span><span class="s17">경우</span></a></span></p>
+<p class="p10"><span class="s19"></span><br></p>
+<p class="p13"><span class="s13"><a href="ending-d.html">ENDING D<span class="s24"></span></a></span></p>
+<p class="p9"><span class="s25"><a href="ending-d.html">돼지<span class="s16"> </span><span class="s14">가면</span><span class="s17">이</span><span class="s18"> </span><span class="s17">지목된</span><span class="s18"> </span><span class="s17">경우</span></a></span></p>
+<p class="p10"><span class="s19"></span><br></p>
+<p class="p14"><span class="s13"><a href="ending-e.html">ENDING E<span class="s26"></span></a></span></p>
+<p class="p9"><span class="s27"><a href="ending-e.html">기타<span class="s16"> </span><span class="s14">가면</span><span class="s17">이</span><span class="s18"> </span><span class="s17">지목된</span><span class="s18"> </span><span class="s17">경우</span></a></span></p>
+<p class="p10"><span class="s19"></span><br></p>
+<p class="p15"><span class="s13"><a href="ending-f.html">ENDING F<span class="s28"></span></a></span></p>
+<p class="p16"><span class="s13"><a href="ending-f.html">두<span class="s29"> </span><span class="s30">번</span><span class="s29"> </span><span class="s30">연속</span><span class="s29"> </span><span class="s30">표가</span><span class="s29"> </span><span class="s31">갈린</span><span class="s29"> </span><span class="s30">경우</span></a></span></p>
+<p class="p10"><span class="s19"></span><br></p>
+<p class="p17"><span class="s19"></span><br></p>
+<p class="p18"><span class="s32"><a href="story.html">사건의<span class="s33"> </span><span class="s14">전말</span><span class="s33"> </span><span class="s14">확인하기</span></a></span></p>
+<p class="p1"><span class="s1">© Project DullG · </span><span class="s34">뱀이</span><span class="s1"> </span><span class="s34">죽은</span><span class="s1"> </span><span class="s34">축제</span></p>
 </body>
 </html>
