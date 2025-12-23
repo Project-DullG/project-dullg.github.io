@@ -13,7 +13,9 @@
       --ink: #e8e8ec;
       --dim: #7a7a85;
       --accent: #c41e3a;
+      --accent-glow: rgba(196, 30, 58, 0.3);
       --gold: #d4a855;
+      --gold-glow: rgba(212, 168, 85, 0.3);
       --panel: rgba(20, 20, 24, 0.9);
       --line: rgba(255, 255, 255, 0.06);
     }
@@ -50,14 +52,28 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+      50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px var(--accent-glow); }
+    }
+
     .tag {
       display: inline-block;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--dim);
+      letter-spacing: 4px;
+      color: var(--accent);
       text-transform: uppercase;
-      margin-bottom: 16px;
+      padding: 8px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      margin-bottom: 24px;
+      animation: pulse 3s ease-in-out infinite;
     }
 
     h1 {
@@ -65,6 +81,7 @@
       font-weight: 800;
       color: #fff;
       margin-bottom: 12px;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
     }
 
     .subtitle {
@@ -80,10 +97,16 @@
       padding: 24px;
       margin-bottom: 40px;
       animation: fadeUp 1s ease-out;
+      transition: all 0.3s ease;
+    }
+
+    .guide-box:hover {
+      border-color: rgba(196, 30, 58, 0.5);
+      box-shadow: 0 0 30px var(--accent-glow);
     }
 
     .guide-box .guide-title {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--accent);
       letter-spacing: 2px;
@@ -97,11 +120,6 @@
       line-height: 1.7;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     /* 섹션 */
     .section-title {
       font-size: 0.85rem;
@@ -110,6 +128,7 @@
       margin-bottom: 20px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--line);
+      animation: fadeUp 1.1s ease-out;
     }
 
     .section-desc {
@@ -117,6 +136,7 @@
       color: #888;
       margin-bottom: 24px;
       line-height: 1.7;
+      animation: fadeUp 1.2s ease-out;
     }
 
     .highlight {
@@ -130,7 +150,6 @@
       flex-direction: column;
       gap: 16px;
       margin-bottom: 40px;
-      animation: fadeUp 1.2s ease-out;
     }
 
     .ending-card {
@@ -138,7 +157,7 @@
       align-items: center;
       gap: 20px;
       padding: 24px;
-      background: var(--panel);
+      background: linear-gradient(135deg, rgba(30,30,35,0.9) 0%, rgba(20,20,25,0.9) 100%);
       border: 1px solid var(--line);
       border-radius: 12px;
       text-decoration: none;
@@ -146,7 +165,14 @@
       transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       position: relative;
       overflow: hidden;
+      animation: fadeUp 1.3s ease-out;
     }
+
+    .ending-card:nth-child(2) { animation-delay: 0.1s; }
+    .ending-card:nth-child(3) { animation-delay: 0.2s; }
+    .ending-card:nth-child(4) { animation-delay: 0.3s; }
+    .ending-card:nth-child(5) { animation-delay: 0.4s; }
+    .ending-card:nth-child(6) { animation-delay: 0.5s; }
 
     .ending-card::before {
       content: '';
@@ -161,9 +187,10 @@
     }
 
     .ending-card:hover {
-      background: rgba(30, 30, 35, 0.95);
+      background: linear-gradient(135deg, rgba(40,40,48,0.95) 0%, rgba(30,30,38,0.95) 100%);
+      border-color: var(--card-color, var(--accent));
       transform: translateX(8px);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 20px var(--card-glow, var(--accent-glow));
     }
 
     .ending-card:hover::before {
@@ -174,11 +201,19 @@
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 1px;
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 10px 14px;
+      border-radius: 8px;
       background: rgba(255,255,255,0.05);
       color: var(--card-color, var(--dim));
       flex-shrink: 0;
+      border: 1px solid var(--card-color, var(--line));
+      transition: all 0.3s ease;
+    }
+
+    .ending-card:hover .ending-badge {
+      background: var(--card-color, var(--accent));
+      color: #fff;
+      box-shadow: 0 4px 15px var(--card-glow, var(--accent-glow));
     }
 
     .ending-info {
@@ -190,6 +225,11 @@
       font-weight: 700;
       color: #fff;
       margin-bottom: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .ending-card:hover .ending-title {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
     .ending-desc {
@@ -209,33 +249,36 @@
     }
 
     /* 캐릭터별 색상 */
-    .ending-a { --card-color: #3b82f6; }
-    .ending-b { --card-color: #a16207; }
-    .ending-c { --card-color: #c41e3a; }
-    .ending-d { --card-color: #ec4899; }
-    .ending-e { --card-color: #6f7e98; }
-    .ending-f { --card-color: #414d65; }
+    .ending-a { --card-color: #3b82f6; --card-glow: rgba(59, 130, 246, 0.3); }
+    .ending-b { --card-color: #a16207; --card-glow: rgba(161, 98, 7, 0.3); }
+    .ending-c { --card-color: #c41e3a; --card-glow: rgba(196, 30, 58, 0.3); }
+    .ending-d { --card-color: #ec4899; --card-glow: rgba(236, 72, 153, 0.3); }
+    .ending-e { --card-color: #6f7e98; --card-glow: rgba(111, 126, 152, 0.3); }
+    .ending-f { --card-color: #8b5cf6; --card-glow: rgba(139, 92, 246, 0.3); }
 
     /* 사건의 전말 링크 */
     .story-link {
       display: block;
       text-align: center;
       padding: 20px;
-      background: var(--panel);
+      background: linear-gradient(135deg, rgba(30,30,35,0.9) 0%, rgba(20,20,25,0.9) 100%);
       border: 1px solid var(--line);
       border-radius: 12px;
       text-decoration: none;
       color: var(--ink);
       font-size: 1rem;
       font-weight: 600;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       margin-bottom: 48px;
+      animation: fadeUp 1.8s ease-out;
     }
 
     .story-link:hover {
-      background: rgba(30, 30, 35, 0.95);
+      background: linear-gradient(135deg, rgba(40,40,48,0.95) 0%, rgba(30,30,38,0.95) 100%);
       border-color: var(--gold);
       color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 30px var(--gold-glow);
     }
 
     /* 푸터 */
@@ -245,6 +288,7 @@
       font-size: 0.8rem;
       padding-top: 24px;
       border-top: 1px solid var(--line);
+      animation: fadeUp 2s ease-out;
     }
 
     /* 반응형 */
