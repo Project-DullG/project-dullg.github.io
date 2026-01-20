@@ -618,10 +618,9 @@
           })
         });
 
-        // 성공 처리 (no-cors라서 응답을 확인할 수 없음)
-        document.getElementById('reviewForm').classList.add('hide');
-        document.getElementById('successMessage').classList.add('show');
-        document.getElementById('backLink').style.display = 'none';
+        // 성공 처리 - 메인 페이지로 리다이렉트
+        alert('소중한 후기가 등록되었습니다. 감사합니다!');
+        window.location.href = 'index.html';
 
       } catch (error) {
         console.error('Error:', error);
