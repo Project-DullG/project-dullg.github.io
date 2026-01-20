@@ -255,9 +255,75 @@
 
     /* 반응형 */
     @media (max-width: 600px) {
+      body {
+        padding: 40px 16px;
+      }
+
       h1 { font-size: 1.8rem; }
-      .chapter { padding: 24px; }
+      .chapter { padding: 20px; }
       .chapter-title { font-size: 1.1rem; }
+
+      /* 프로필 카드 모바일 최적화 */
+      .profile-card {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left;
+      }
+
+      .profile-card .profile-image {
+        width: 80px !important;
+        height: 80px !important;
+        margin-bottom: 16px;
+        align-self: center;
+      }
+
+      .profile-card .profile-image img {
+        width: 60px !important;
+      }
+
+      .profile-card .profile-info {
+        width: 100%;
+      }
+
+      /* 테이블 모바일 최적화 */
+      .mask-list table {
+        font-size: 0.8rem;
+      }
+
+      .mask-list th,
+      .mask-list td {
+        padding: 8px 4px !important;
+      }
+
+      /* 결말 박스 */
+      .conclusion p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      body {
+        padding: 32px 12px;
+      }
+
+      .chapter { padding: 16px; }
+
+      .profile-card .profile-image {
+        width: 70px !important;
+        height: 70px !important;
+      }
+
+      .profile-card .profile-image img {
+        width: 52px !important;
+      }
+
+      .profile-card .profile-info p {
+        font-size: 0.85rem !important;
+      }
+
+      .mask-list table {
+        font-size: 0.75rem;
+      }
     }
   </style>
 </head>
@@ -274,15 +340,15 @@
 
       <div style="display: grid; gap: 24px; margin-top: 20px;">
         <!-- 용 가면 -->
-        <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px;">
-          <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(59, 130, 246, 0.6); background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(59, 130, 246, 0.1); overflow: hidden;">
+        <div class="profile-card" style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 12px;">
+          <div class="profile-image" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(59, 130, 246, 0.6); background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(59, 130, 246, 0.1); overflow: hidden;">
             <img src="images/profile-dragon.png" alt="용 가면" style="width: 110px; height: auto;">
           </div>
-          <div style="flex: 1;">
+          <div class="profile-info" style="flex: 1;">
             <p style="font-size: 1.2rem; font-weight: 700; color: #3b82f6; margin-bottom: 6px;">용 가면 · 김용환</p>
             <p style="font-size: 0.85rem; color: var(--dim); margin-bottom: 12px;">1952.09.22 (만 73세) · 남성 · B형 · S기업 회장</p>
             <p style="font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px;">용 가면을 쓴 노년의 남성. 강하면서 낮은 목소리에서 자연스레 권위감이 느껴진다. 의식을 앞두고 평소와 달리 생각이 많아보인다.</p>
-            <div style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+            <div class="profile-items" style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
               <p style="font-size: 0.8rem; font-weight: 600; color: #3b82f6; margin-bottom: 10px;">소지품</p>
               <div style="font-size: 0.85rem; color: #b8b8c0; line-height: 1.8;">
                 <p style="margin-bottom: 6px;"><span style="color: #3b82f6;">●</span> <strong>붉은 색 마커펜</strong> — 뱀 가면과 소통을 위해 사용. 제안을 받을 때마다 늘 거절했고, 그 의미로 쪽지에 X 표시를 새겨 두었다.</p>
@@ -293,15 +359,15 @@
         </div>
 
         <!-- 쥐 가면 -->
-        <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(161, 98, 7, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(161, 98, 7, 0.3); border-radius: 12px;">
-          <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(161, 98, 7, 0.6); background: radial-gradient(circle, rgba(161, 98, 7, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(161, 98, 7, 0.3), inset 0 0 20px rgba(161, 98, 7, 0.1); overflow: hidden;">
+        <div class="profile-card" style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(161, 98, 7, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(161, 98, 7, 0.3); border-radius: 12px;">
+          <div class="profile-image" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(161, 98, 7, 0.6); background: radial-gradient(circle, rgba(161, 98, 7, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(161, 98, 7, 0.3), inset 0 0 20px rgba(161, 98, 7, 0.1); overflow: hidden;">
             <img src="images/profile-rat.png" alt="쥐 가면" style="width: 100px; height: auto; filter: drop-shadow(0 0 15px rgba(161, 98, 7, 0.5));">
           </div>
-          <div style="flex: 1;">
+          <div class="profile-info" style="flex: 1;">
             <p style="font-size: 1.2rem; font-weight: 700; color: #a16207; margin-bottom: 6px;">쥐 가면 · 김은비</p>
             <p style="font-size: 0.85rem; color: var(--dim); margin-bottom: 12px;">1984.12.04 (만 41세) · 여성 · O형 · 예술가</p>
             <p style="font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px;">쥐 가면을 쓴 중년의 여성. 가면으로 가릴 수 없는 고고한 기품이 느껴진다. 오늘따라 왠지 모르게 매우 슬퍼보인다.</p>
-            <div style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+            <div class="profile-items" style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
               <p style="font-size: 0.8rem; font-weight: 600; color: #a16207; margin-bottom: 10px;">소지품</p>
               <div style="font-size: 0.85rem; color: #b8b8c0; line-height: 1.8;">
                 <p style="margin-bottom: 6px;"><span style="color: #a16207;">●</span> <strong>은반지</strong> — 교주와의 커플 반지. 장갑 안에 숨겨져 티가 나지 않는다.</p>
@@ -312,15 +378,15 @@
         </div>
 
         <!-- 닭 가면 -->
-        <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(196, 30, 58, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(196, 30, 58, 0.3); border-radius: 12px;">
-          <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(196, 30, 58, 0.6); background: radial-gradient(circle, rgba(196, 30, 58, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(196, 30, 58, 0.3), inset 0 0 20px rgba(196, 30, 58, 0.1); overflow: hidden;">
+        <div class="profile-card" style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(196, 30, 58, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(196, 30, 58, 0.3); border-radius: 12px;">
+          <div class="profile-image" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(196, 30, 58, 0.6); background: radial-gradient(circle, rgba(196, 30, 58, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(196, 30, 58, 0.3), inset 0 0 20px rgba(196, 30, 58, 0.1); overflow: hidden;">
             <img src="images/profile-chicken.png" alt="닭 가면" style="width: 100px; height: auto; filter: drop-shadow(0 0 15px rgba(196, 30, 58, 0.5));">
           </div>
-          <div style="flex: 1;">
+          <div class="profile-info" style="flex: 1;">
             <p style="font-size: 1.2rem; font-weight: 700; color: #c41e3a; margin-bottom: 6px;">닭 가면 · 오지환</p>
             <p style="font-size: 0.85rem; color: var(--dim); margin-bottom: 12px;">1982.06.18 (만 43세) · 남성 · AB형 · 국가요원</p>
             <p style="font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px;">닭 가면을 쓴 중년의 남성. 주위를 자주 둘러보는 모습이 어딘가 불안해보인다. 최근 운동을 시작했는지, 작년보다 체격이 눈에 띄게 좋아졌다.</p>
-            <div style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+            <div class="profile-items" style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
               <p style="font-size: 0.8rem; font-weight: 600; color: #c41e3a; margin-bottom: 10px;">소지품</p>
               <div style="font-size: 0.85rem; color: #b8b8c0; line-height: 1.8;">
                 <p style="margin-bottom: 6px;"><span style="color: #c41e3a;">●</span> <strong>보석이 박힌 은반지</strong> — 교단 정보 기록용 소형 녹음 장치가 보석 안에 숨겨져 있다. 장치는 장갑 속에 숨겨 외관상으로는 드러나지 않는다. 예배 직전에 녹음을 시작했다.</p>
@@ -331,15 +397,15 @@
         </div>
 
         <!-- 돼지 가면 -->
-        <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: 12px;">
-          <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(236, 72, 153, 0.6); background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(236, 72, 153, 0.3), inset 0 0 20px rgba(236, 72, 153, 0.1); overflow: hidden;">
+        <div class="profile-card" style="display: flex; align-items: center; gap: 20px; padding: 20px; background: linear-gradient(135deg, rgba(236, 72, 153, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(236, 72, 153, 0.3); border-radius: 12px;">
+          <div class="profile-image" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border-radius: 50%; border: 3px solid rgba(236, 72, 153, 0.6); background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, rgba(20, 20, 24, 0.9) 70%); box-shadow: 0 0 30px rgba(236, 72, 153, 0.3), inset 0 0 20px rgba(236, 72, 153, 0.1); overflow: hidden;">
             <img src="images/profile-pig.png" alt="돼지 가면" style="width: 100px; height: auto; filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.5));">
           </div>
-          <div style="flex: 1;">
+          <div class="profile-info" style="flex: 1;">
             <p style="font-size: 1.2rem; font-weight: 700; color: #ec4899; margin-bottom: 6px;">돼지 가면 · 김진철</p>
             <p style="font-size: 0.85rem; color: var(--dim); margin-bottom: 12px;">1971.07.17 (만 54세) · 남성 · A형 · 군인</p>
             <p style="font-size: 0.9rem; line-height: 1.7; margin-bottom: 16px;">돼지 가면을 쓴 중년의 남성. 크고 넓은 체격으로 멀리서도 단번에 눈에 띈다. 요즘 들어 어딘가 넋이 나간 듯한 기색이 보인다.</p>
-            <div style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+            <div class="profile-items" style="padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
               <p style="font-size: 0.8rem; font-weight: 600; color: #ec4899; margin-bottom: 10px;">소지품</p>
               <div style="font-size: 0.85rem; color: #b8b8c0; line-height: 1.8;">
                 <p style="margin-bottom: 6px;"><span style="color: #ec4899;">●</span> <strong>검은 가죽 장갑</strong> — 예배 중 환상을 차단할 목적으로 장갑 안쪽 면에 역삼각형 문양을 각인했다.</p>
@@ -391,11 +457,11 @@
     <article class="chapter">
       <div class="chapter-num">05.</div>
       <h2 class="chapter-title">사건의 전말</h2>
-      <p>그러나 이 예배는 처음부터 온전할 수 없었다. <span class="mask-chicken">닭 가면</span>의 자리에 앉은 것은 유띠인 김용주가 아니라, <span class="highlight">개띠</span>인 오지환이었기 때문이다. &lt;검은 책&gt;에 기록된 대로, 예배에 참여한 가면들의 기운이 충돌할 경우 의식은 실패하며 전원에게 이상 반응이 발생한다.</p>
+      <p>그러나 이 예배는 처음부터 온전할 수 없었다. <span class="mask-chicken">닭 가면</span>의 자리에 앉은 것은 <span class="highlight">닭띠</span>인 김용지가 아니라, <span class="highlight">개띠</span>인 오지환이었기 때문이다. &lt;검은 책&gt;에 기록된 대로, 예배에 참여한 가면들의 기운이 충돌할 경우 의식은 실패하며 전원에게 이상 반응이 발생한다.</p>
       <div class="quote">"개는 돼지를 물어뜯고, 스스로 깨어날 수 없게 된다."</div>
       <p><span class="mask-rat">쥐 가면</span>, <span class="mask-chicken">닭 가면</span>, <span class="mask-dragon">용 가면</span>은 기운 충돌로 인해 평소와는 다른 끔찍한 환상에 빠졌다. 그러나 <span class="mask-pig">돼지 가면</span>은 이교도의 문양으로 환상을 차단했기에, 이번 예배가 평소와 다르다는 것을 알아채지 못했다.</p>
       <p>의식용 향이 피워지고 모두가 환상에 빠진 순간, 유일하게 정신이 멀쩡했던 <span class="mask-pig">돼지 가면</span>이 움직였다. 그는 무방비 상태인 뱀 가면의 심장을 찔러 즉사시켰다. 시신에는 어떠한 저항의 흔적도 남아 있지 않았다.</p>
-      <p>범행을 마친 그는 다시 환각에 취한 척 곁으로 돌아가 잠들었다. 그 밤, 제단 위에는 오직 차가운 시신만이 남겨졌다.</p>
+      <p>범행을 마친 그는 다시 환각에 취한 척 곁으로 돌아가 잠들었다. 그 밤, 제단 위에는 오직 차가운 시신만이 남겨졌다. <span class="mask-pig">돼지 가면</span>을 제외한 나머지 가면들은 저주의 현상으로 스스로 깨어날 수 없었고, 예배실 밖에서 대기하고 있던 가면들이 깨움으로써 이 사건이 시작되었다.</p>
     </article>
 
     <div class="conclusion">
