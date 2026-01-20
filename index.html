@@ -306,30 +306,13 @@
     }
 
     /* 제작 예정 */
-    .upcoming-section {
-      margin-bottom: 32px;
-      animation: fadeUp 1.5s ease-out;
+    .work-detail.upcoming .work-header {
+      background: linear-gradient(135deg, rgba(100, 100, 120, 0.1) 0%, rgba(20,20,25,0.95) 100%);
     }
 
-    .upcoming-title {
-      font-size: 0.8rem;
-      color: var(--dim);
-      margin-bottom: 12px;
-    }
-
-    .upcoming-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .upcoming-item {
-      padding: 10px 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #888;
+    .work-detail.upcoming .work-status {
+      background: rgba(100, 100, 120, 0.2);
+      color: #8888a0;
     }
 
     /* 푸터 */
@@ -413,13 +396,55 @@
       </details>
     </div>
 
-    <div class="upcoming-section">
-      <div class="upcoming-title">제작 예정</div>
-      <div class="upcoming-list">
-        <div class="upcoming-item">미식의 대가</div>
-        <div class="upcoming-item">레드가 죽은 연구소</div>
-        <div class="upcoming-item">의사가 너무 많아</div>
-      </div>
+    <div class="section-title">UPCOMING</div>
+
+    <div class="works-list">
+      <details class="work-detail upcoming">
+        <summary class="work-header">
+          <div class="work-header-left">
+            <span class="work-status">COMING SOON</span>
+            <span class="work-title">미식의 대가</span>
+          </div>
+          <span class="work-toggle">▼</span>
+        </summary>
+        <div class="work-synopsis">
+          <p>가을이 찾아오면 떠오르는 것들이 있다. 넉넉한 인심의 사람들과, 노랗게 물든 밀밭, 그리고... 4년마다 열리는 왕국의 가장 큰 축제의 시작, '왕실 요리사 선발 대회'가 있다.</p>
+          <p>이 대회는 단순한 축제가 아니다. 왕실의 부엌을 책임질 최고의 요리사를 뽑는 자리이자, 자리를 지키는 자와 자리를 노리는 자가 맞붙는 잔혹한 '승강전'의 장. 오직 실력만이 그들의 운명을 결정한다.</p>
+          <p>오늘, 네 명의 요리사가 각자의 사연과 욕망을 품고 도마 앞에 섰다.</p>
+          <p>가장 화려하고 맛있는 축제가 절정에 달한 순간, 결과를 발표할 왕실 요리장이 보라색 거품을 물고 쓰러졌다.</p>
+          <p><em>화려한 만찬 뒤에 숨겨진 차가운 살의. 용의자는 현장에 있던 네 명의 참가자뿐. 남겨진 접시 위, 요리에 담긴 거짓과 진실을 파헤쳐 범인을 찾아야 한다.</em></p>
+        </div>
+      </details>
+
+      <details class="work-detail upcoming">
+        <summary class="work-header">
+          <div class="work-header-left">
+            <span class="work-status">COMING SOON</span>
+            <span class="work-title">레드가 죽은 연구소</span>
+          </div>
+          <span class="work-toggle">▼</span>
+        </summary>
+        <div class="work-synopsis">
+          <p>쾅— "꺄악! 괴인이다!" 오늘도 괴인이 나타났어. 근데 괜찮아. 미라클 레인저가 있거든!</p>
+          <p>레드, 블랙, 블루, 옐로, 핑크! 다섯 명의 영웅들! 괴인을 물리치고, 사람들의 환호를 받고, 멋지게 손 흔들고 사라져.</p>
+          <p>근데 있잖아. 영웅들은 싸움이 끝나면 어디로 가는 걸까? 비밀 기지가 있을까? 거기서 뭘 할까? 영웅들끼리는 다들 친할까?</p>
+          <p>카오스 괴인과의 전투가 끝났고, 영웅들이 비밀 연구소로 돌아왔다. 평소와 다름없는 시끄러운 하루였다. 불이 하나둘 꺼지고, 연구소가 어둠에 잠겼다.</p>
+          <p>다음 날 아침. 레드의 자리가 비어 있었다. 문을 열자 레드가 침대에 누워 있었다. 그러나 레드의 머리에서 피가 흘러내리고 있었다. <em>레드는 죽어 있었다.</em></p>
+        </div>
+      </details>
+
+      <details class="work-detail upcoming">
+        <summary class="work-header">
+          <div class="work-header-left">
+            <span class="work-status">COMING SOON</span>
+            <span class="work-title">의사가 너무 많아</span>
+          </div>
+          <span class="work-toggle">▼</span>
+        </summary>
+        <div class="work-synopsis">
+          <p>시놉시스 준비 중입니다.</p>
+        </div>
+      </details>
     </div>
 
     <footer class="footer">
