@@ -600,8 +600,9 @@
     });
 
     // 폼 제출
-    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      console.log('폼 제출 시작');
 
       const form = e.target;
       const submitBtn = document.getElementById('submitBtn');
@@ -641,10 +642,17 @@
       });
 
       const submitUrl = SCRIPT_URL + '?' + params.toString();
+      console.log('전송 URL:', submitUrl);
 
       // 이미지로 요청 전송
       const img = new Image();
-      img.onload = img.onerror = function() {
+      img.onload = function() {
+        console.log('전송 성공');
+        alert('소중한 후기가 등록되었습니다. 감사합니다!');
+        window.location.href = 'index.html';
+      };
+      img.onerror = function() {
+        console.log('이미지 오류 (정상 동작)');
         alert('소중한 후기가 등록되었습니다. 감사합니다!');
         window.location.href = 'index.html';
       };
