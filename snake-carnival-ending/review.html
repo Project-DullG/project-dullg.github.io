@@ -629,36 +629,49 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="loading"></span>제출 중...';
 
-      try {
-        // URL 파라미터로 전송
-        const params = new URLSearchParams();
-        params.append('rating', rating);
-        params.append('character', character);
-        params.append('difficulty', difficulty);
-        params.append('recommend', recommend);
-        params.append('review', review);
-        params.append('author', nickname || '익명');
-        params.append('timestamp', new Date().toISOString());
+      // 숨겨진 폼으로 제출 (CORS 우회)
+      const hiddenForm = document.createElement('form');
+      hiddenForm.method = 'POST';
+      hiddenForm.action = SCRIPT_URL;
+      hiddenForm.target = 'hidden_iframe';
 
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: params.toString()
-        });
+      const fields = {
+        rating: rating,
+        character: character,
+        difficulty: difficulty,
+        recommend: recommend,
+        review: review,
+        author: nickname || '익명',
+        timestamp: new Date().toISOString()
+      };
 
-        // 성공 처리 - 메인 페이지로 리다이렉트 (no-cors라서 응답 확인 불가)
+      for (const [key, value] of Object.entries(fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        hiddenForm.appendChild(input);
+      }
+
+      // 숨겨진 iframe 생성
+      let iframe = document.getElementById('hidden_iframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe';
+        iframe.id = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+
+      document.body.appendChild(hiddenForm);
+      hiddenForm.submit();
+      hiddenForm.remove();
+
+      // 잠시 후 성공 처리
+      setTimeout(() => {
         alert('소중한 후기가 등록되었습니다. 감사합니다!');
         window.location.href = 'index.html';
-
-      } catch (error) {
-        console.error('Error:', error);
-        alert('제출 중 오류가 발생했습니다. 다시 시도해 주세요.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = '후기 제출하기';
-      }
+      }, 1500);
     });
   </script>
 </body>
