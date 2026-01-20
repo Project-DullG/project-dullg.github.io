@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>[Snake Carnival] 후기 남기기</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #080808;
+      --bg-gradient: radial-gradient(ellipse at 50% 0%, #1a1a1f 0%, #080808 60%);
+      --ink: #e8e8ec;
+      --dim: #7a7a85;
+      --accent: #c41e3a;
+      --accent-glow: rgba(196, 30, 58, 0.3);
+      --gold: #d4a855;
+      --gold-glow: rgba(212, 168, 85, 0.3);
+      --panel: rgba(20, 20, 24, 0.9);
+      --line: rgba(255, 255, 255, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--ink);
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      line-height: 1.8;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .form-container {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 28px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .form-label .required {
+      color: var(--accent);
+      margin-left: 4px;
+    }
+
+    /* 평점 (별점) */
+    .rating-container {
+      display: flex;
+      gap: 8px;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+    }
+
+    .rating-container input {
+      display: none;
+    }
+
+    .rating-container label {
+      font-size: 2rem;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .rating-container label:hover,
+    .rating-container label:hover ~ label,
+    .rating-container input:checked ~ label {
+      color: var(--gold);
+      text-shadow: 0 0 10px var(--gold-glow);
+    }
+
+    .rating-text {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: var(--dim);
+      min-height: 20px;
+    }
+
+    /* 텍스트 입력 */
+    .form-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .form-input::placeholder {
+      color: #555;
+    }
+
+    textarea.form-input {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    /* 작성자 타입 선택 */
+    .author-type {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .author-type label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .author-type input {
+      display: none;
+    }
+
+    .author-type input:checked + label {
+      border-color: var(--gold);
+      background: rgba(212, 168, 85, 0.1);
+      color: var(--gold);
+    }
+
+    .author-type label:hover {
+      border-color: rgba(212, 168, 85, 0.5);
+    }
+
+    .nickname-input {
+      display: none;
+    }
+
+    .nickname-input.show {
+      display: block;
+    }
+
+    /* 제출 버튼 */
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--gold) 0%, #b8942d 100%);
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-family: inherit;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--gold-glow);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      background: #444;
+      color: #888;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* 뒤로가기 */
+    .back-link {
+      display: block;
+      text-align: center;
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 16px;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: var(--ink);
+    }
+
+    /* 성공 메시지 */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 60px 32px;
+      background: var(--panel);
+      border: 1px solid rgba(212, 168, 85, 0.3);
+      border-radius: 16px;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .success-message h2 {
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .success-message p {
+      color: var(--dim);
+      margin-bottom: 24px;
+    }
+
+    .form-container.hide {
+      display: none;
+    }
+
+    /* 로딩 */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 1.6rem; }
+      .form-container { padding: 24px; }
+      .author-type { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="tag">Review</div>
+      <h1>후기 남기기</h1>
+      <div class="subtitle">〈뱀이 죽은 축제(畜祭)〉를 플레이해 주셔서 감사합니다</div>
+    </header>
+
+    <form id="reviewForm" class="form-container">
+      <!-- 평점 -->
+      <div class="form-group">
+        <label class="form-label">평점<span class="required">*</span></label>
+        <div class="rating-container">
+          <input type="radio" name="rating" id="star5" value="5" required>
+          <label for="star5" title="5점">★</label>
+          <input type="radio" name="rating" id="star4" value="4">
+          <label for="star4" title="4점">★</label>
+          <input type="radio" name="rating" id="star3" value="3">
+          <label for="star3" title="3점">★</label>
+          <input type="radio" name="rating" id="star2" value="2">
+          <label for="star2" title="2점">★</label>
+          <input type="radio" name="rating" id="star1" value="1">
+          <label for="star1" title="1점">★</label>
+        </div>
+        <div class="rating-text" id="ratingText"></div>
+      </div>
+
+      <!-- 후기 내용 -->
+      <div class="form-group">
+        <label class="form-label">후기<span class="required">*</span></label>
+        <textarea class="form-input" name="review" placeholder="게임에 대한 소감을 자유롭게 작성해 주세요..." required></textarea>
+      </div>
+
+      <!-- 작성자 -->
+      <div class="form-group">
+        <label class="form-label">작성자</label>
+        <div class="author-type">
+          <input type="radio" name="authorType" id="anonymous" value="anonymous" checked>
+          <label for="anonymous">익명</label>
+          <input type="radio" name="authorType" id="nickname" value="nickname">
+          <label for="nickname">닉네임</label>
+        </div>
+        <div class="nickname-input" id="nicknameInput">
+          <input type="text" class="form-input" name="nickname" placeholder="닉네임을 입력하세요">
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">후기 제출하기</button>
+    </form>
+
+    <div class="success-message" id="successMessage">
+      <div class="success-icon">✨</div>
+      <h2>감사합니다!</h2>
+      <p>소중한 후기가 등록되었습니다.</p>
+      <a href="index.html" class="submit-btn" style="display: inline-block; text-decoration: none; padding: 14px 32px; font-size: 1rem;">메인으로 돌아가기</a>
+    </div>
+
+    <a href="index.html" class="back-link" id="backLink">&larr; 메인으로 돌아가기</a>
+  </div>
+
+  <script>
+    // Google Apps Script Web App URL (설정 필요)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/exec';
+
+    // 평점 텍스트
+    const ratingTexts = {
+      1: '아쉬워요',
+      2: '그저 그래요',
+      3: '괜찮아요',
+      4: '재미있어요',
+      5: '최고예요!'
+    };
+
+    // 평점 선택 시 텍스트 표시
+    document.querySelectorAll('input[name="rating"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        document.getElementById('ratingText').textContent = ratingTexts[e.target.value];
+      });
+    });
+
+    // 작성자 타입 변경 시 닉네임 입력 표시/숨김
+    document.querySelectorAll('input[name="authorType"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const nicknameInput = document.getElementById('nicknameInput');
+        if (e.target.value === 'nickname') {
+          nicknameInput.classList.add('show');
+        } else {
+          nicknameInput.classList.remove('show');
+        }
+      });
+    });
+
+    // 폼 제출
+    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const form = e.target;
+      const submitBtn = document.getElementById('submitBtn');
+
+      // 데이터 수집
+      const rating = form.querySelector('input[name="rating"]:checked')?.value;
+      const review = form.querySelector('textarea[name="review"]').value;
+      const authorType = form.querySelector('input[name="authorType"]:checked').value;
+      const nickname = authorType === 'nickname' ? form.querySelector('input[name="nickname"]').value : '익명';
+
+      if (!rating) {
+        alert('평점을 선택해 주세요.');
+        return;
+      }
+
+      if (!review.trim()) {
+        alert('후기를 작성해 주세요.');
+        return;
+      }
+
+      // 로딩 상태
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="loading"></span>제출 중...';
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            rating: rating,
+            review: review,
+            author: nickname || '익명',
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        // 성공 처리 (no-cors라서 응답을 확인할 수 없음)
+        document.getElementById('reviewForm').classList.add('hide');
+        document.getElementById('successMessage').classList.add('show');
+        document.getElementById('backLink').style.display = 'none';
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('제출 중 오류가 발생했습니다. 다시 시도해 주세요.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '후기 제출하기';
+      }
+    });
+  </script>
+</body>
+</html>
