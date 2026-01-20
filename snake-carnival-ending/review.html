@@ -487,6 +487,21 @@
         </div>
       </div>
 
+      <!-- 추천 대상 -->
+      <div class="form-group">
+        <label class="form-label">추천 대상</label>
+        <div class="character-select">
+          <input type="radio" name="recommend" id="rec-beginner" value="입문자">
+          <label for="rec-beginner">입문자</label>
+          <input type="radio" name="recommend" id="rec-normal" value="보통">
+          <label for="rec-normal">보통</label>
+          <input type="radio" name="recommend" id="rec-expert" value="숙련자">
+          <label for="rec-expert">숙련자</label>
+          <input type="radio" name="recommend" id="rec-none" value="해당 없음" checked>
+          <label for="rec-none">해당 없음</label>
+        </div>
+      </div>
+
       <!-- 후기 내용 -->
       <div class="form-group">
         <label class="form-label">후기<span class="required">*</span></label>
@@ -595,6 +610,7 @@
       const rating = form.querySelector('input[name="rating"]:checked')?.value;
       const character = form.querySelector('input[name="character"]:checked')?.value || '비공개';
       const difficulty = form.querySelector('input[name="difficulty"]:checked')?.value || '적당함';
+      const recommend = form.querySelector('input[name="recommend"]:checked')?.value || '해당 없음';
       const review = form.querySelector('textarea[name="review"]').value;
       const authorType = form.querySelector('input[name="authorType"]:checked').value;
       const nickname = authorType === 'nickname' ? form.querySelector('input[name="nickname"]').value : '익명';
@@ -624,6 +640,7 @@
             rating: rating,
             character: character,
             difficulty: difficulty,
+            recommend: recommend,
             review: review,
             author: nickname || '익명',
             timestamp: new Date().toISOString()
