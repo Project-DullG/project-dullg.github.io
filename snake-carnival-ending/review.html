@@ -629,7 +629,7 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="loading"></span>제출 중...';
 
-      // GET 방식으로 직접 호출
+      // 이미지 비콘 방식으로 전송 (가장 안정적)
       const params = new URLSearchParams({
         rating: rating,
         character: character,
@@ -640,15 +640,15 @@
         timestamp: new Date().toISOString()
       });
 
-      // 새 창에서 스크립트 호출 후 닫기
       const submitUrl = SCRIPT_URL + '?' + params.toString();
-      const popup = window.open(submitUrl, '_blank', 'width=1,height=1');
 
-      setTimeout(() => {
-        if (popup) popup.close();
+      // 이미지로 요청 전송
+      const img = new Image();
+      img.onload = img.onerror = function() {
         alert('소중한 후기가 등록되었습니다. 감사합니다!');
         window.location.href = 'index.html';
-      }, 2000);
+      };
+      img.src = submitUrl;
     });
   </script>
 </body>
