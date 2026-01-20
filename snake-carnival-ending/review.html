@@ -210,6 +210,38 @@
       display: block;
     }
 
+    /* 캐릭터 선택 */
+    .character-select {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .character-select input {
+      display: none;
+    }
+
+    .character-select label {
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .character-select input:checked + label {
+      border-color: var(--char-color, var(--gold));
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--char-color, var(--gold));
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .character-select label:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
     /* 제출 버튼 */
     .submit-btn {
       width: 100%;
@@ -346,6 +378,36 @@
         <div class="rating-text" id="ratingText"></div>
       </div>
 
+      <!-- 담당 캐릭터 -->
+      <div class="form-group">
+        <label class="form-label">담당 캐릭터</label>
+        <div class="character-select">
+          <input type="radio" name="character" id="char-dragon" value="용 가면">
+          <label for="char-dragon" style="--char-color: #3b82f6;">용 가면</label>
+          <input type="radio" name="character" id="char-rat" value="쥐 가면">
+          <label for="char-rat" style="--char-color: #a16207;">쥐 가면</label>
+          <input type="radio" name="character" id="char-chicken" value="닭 가면">
+          <label for="char-chicken" style="--char-color: #c41e3a;">닭 가면</label>
+          <input type="radio" name="character" id="char-pig" value="돼지 가면">
+          <label for="char-pig" style="--char-color: #ec4899;">돼지 가면</label>
+          <input type="radio" name="character" id="char-private" value="비공개" checked>
+          <label for="char-private" style="--char-color: #7a7a85;">비공개</label>
+        </div>
+      </div>
+
+      <!-- 추리 난이도 -->
+      <div class="form-group">
+        <label class="form-label">추리 난이도</label>
+        <div class="character-select">
+          <input type="radio" name="difficulty" id="diff-easy" value="쉬움">
+          <label for="diff-easy">쉬움</label>
+          <input type="radio" name="difficulty" id="diff-normal" value="적당함" checked>
+          <label for="diff-normal">적당함</label>
+          <input type="radio" name="difficulty" id="diff-hard" value="어려움">
+          <label for="diff-hard">어려움</label>
+        </div>
+      </div>
+
       <!-- 후기 내용 -->
       <div class="form-group">
         <label class="form-label">후기<span class="required">*</span></label>
@@ -420,6 +482,8 @@
 
       // 데이터 수집
       const rating = form.querySelector('input[name="rating"]:checked')?.value;
+      const character = form.querySelector('input[name="character"]:checked')?.value || '비공개';
+      const difficulty = form.querySelector('input[name="difficulty"]:checked')?.value || '적당함';
       const review = form.querySelector('textarea[name="review"]').value;
       const authorType = form.querySelector('input[name="authorType"]:checked').value;
       const nickname = authorType === 'nickname' ? form.querySelector('input[name="nickname"]').value : '익명';
@@ -447,6 +511,8 @@
           },
           body: JSON.stringify({
             rating: rating,
+            character: character,
+            difficulty: difficulty,
             review: review,
             author: nickname || '익명',
             timestamp: new Date().toISOString()
