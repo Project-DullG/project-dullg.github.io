@@ -247,6 +247,14 @@
       margin-bottom: 20px;
     }
 
+    .work-author {
+      font-size: 0.85rem;
+      color: var(--gold);
+      margin-bottom: 16px !important;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
     .ending-btn {
       display: inline-block;
       padding: 12px 24px;
@@ -262,6 +270,20 @@
     .ending-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .ending-btn.secondary {
+      background: linear-gradient(135deg, #3b3b45 0%, #2a2a32 100%);
+    }
+
+    .ending-btn.secondary:hover {
+      box-shadow: 0 8px 20px rgba(100, 100, 120, 0.3);
+    }
+
+    .work-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     /* 제작 예정 */
@@ -334,6 +356,7 @@
           <span class="work-toggle">▼</span>
         </summary>
         <div class="work-synopsis">
+          <p class="work-author">작가: 안강한, 매튜, 레듬 · 플랫폼: 실물</p>
           <p>12년마다 열리는 비밀스러운 가면 축제. 열두 개의 동물 가면을 쓴 자들이 모인 이 축제에서, 주최자인 뱀 가면이 싸늘한 주검으로 발견된다.</p>
           <p>참가자들은 서로를 의심하며 범인을 찾아야 한다. 하지만 이 축제에는 단순한 살인 이상의 비밀이 숨겨져 있는데...</p>
           <a href="/snake-carnival-ending/" class="ending-btn">엔딩 페이지 보기 →</a>
@@ -349,7 +372,12 @@
           <span class="work-toggle">▼</span>
         </summary>
         <div class="work-synopsis">
+          <p class="work-author">작가: 안강한 · 플랫폼: uzu</p>
           <p>시놉시스 준비 중입니다.</p>
+          <div class="work-links">
+            <a href="https://www.uzu-app.com/ko/scenario/15536" target="_blank" class="ending-btn">uzu에서 플레이 →</a>
+            <a href="https://bit.ly/4johbsr" target="_blank" class="ending-btn secondary">테마 미니게임 →</a>
+          </div>
         </div>
       </details>
     </div>
