@@ -263,9 +263,36 @@
     .mask-pig { color: #ec4899; font-weight: 600; }
 
     @media (max-width: 600px) {
+      body {
+        padding: 32px 16px;
+      }
+
       h1 { font-size: 1.7rem; }
       .story-panel { padding: 24px; }
       .choice-btn { padding: 20px; }
+      .guide-box { padding: 20px; }
+
+      .header > div[style*="width: 80px"] {
+        width: 70px !important;
+        height: 70px !important;
+      }
+
+      .header > div[style*="width: 80px"] img {
+        width: 50px !important;
+      }
+    }
+
+    @media (max-width: 400px) {
+      body {
+        padding: 24px 12px;
+      }
+
+      h1 { font-size: 1.5rem; }
+      .story-panel { padding: 20px; }
+      .story-panel p { font-size: 1rem; }
+      .choice-btn { padding: 16px; gap: 12px; }
+      .choice-title { font-size: 1rem; }
+      .guide-box { padding: 16px; }
     }
   </style>
 </head>

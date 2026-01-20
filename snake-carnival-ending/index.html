@@ -293,9 +293,28 @@
 
     /* 반응형 */
     @media (max-width: 600px) {
+      body {
+        padding: 32px 16px;
+      }
+
       h1 { font-size: 1.8rem; }
       .ending-card { padding: 20px; flex-wrap: wrap; }
       .ending-badge { order: -1; }
+
+      .guide-box { padding: 20px; }
+      .story-link { padding: 16px; }
+    }
+
+    @media (max-width: 400px) {
+      body {
+        padding: 24px 12px;
+      }
+
+      h1 { font-size: 1.5rem; }
+      .ending-card { padding: 16px; gap: 12px; }
+      .ending-title { font-size: 1rem; }
+      .guide-box { padding: 16px; }
+      .guide-box p { font-size: 0.9rem; }
     }
   </style>
 </head>
