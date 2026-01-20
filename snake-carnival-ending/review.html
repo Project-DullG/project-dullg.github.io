@@ -629,13 +629,8 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="loading"></span>제출 중...';
 
-      // 숨겨진 폼으로 제출 (CORS 우회)
-      const hiddenForm = document.createElement('form');
-      hiddenForm.method = 'POST';
-      hiddenForm.action = SCRIPT_URL;
-      hiddenForm.target = 'hidden_iframe';
-
-      const fields = {
+      // GET 방식으로 직접 호출
+      const params = new URLSearchParams({
         rating: rating,
         character: character,
         difficulty: difficulty,
@@ -643,35 +638,17 @@
         review: review,
         author: nickname || '익명',
         timestamp: new Date().toISOString()
-      };
+      });
 
-      for (const [key, value] of Object.entries(fields)) {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = value;
-        hiddenForm.appendChild(input);
-      }
+      // 새 창에서 스크립트 호출 후 닫기
+      const submitUrl = SCRIPT_URL + '?' + params.toString();
+      const popup = window.open(submitUrl, '_blank', 'width=1,height=1');
 
-      // 숨겨진 iframe 생성
-      let iframe = document.getElementById('hidden_iframe');
-      if (!iframe) {
-        iframe = document.createElement('iframe');
-        iframe.name = 'hidden_iframe';
-        iframe.id = 'hidden_iframe';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-      }
-
-      document.body.appendChild(hiddenForm);
-      hiddenForm.submit();
-      hiddenForm.remove();
-
-      // 잠시 후 성공 처리
       setTimeout(() => {
+        if (popup) popup.close();
         alert('소중한 후기가 등록되었습니다. 감사합니다!');
         window.location.href = 'index.html';
-      }, 1500);
+      }, 2000);
     });
   </script>
 </body>
