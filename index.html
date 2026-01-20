@@ -184,6 +184,86 @@
       transform: translateX(5px);
     }
 
+    /* 작품 상세 */
+    .work-detail {
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      animation: fadeUp 1.3s ease-out;
+    }
+
+    .work-detail:nth-child(2) { animation-delay: 0.1s; }
+
+    .work-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(30,30,35,0.9) 0%, rgba(20,20,25,0.9) 100%);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .work-detail.featured .work-header {
+      background: linear-gradient(135deg, rgba(196, 30, 58, 0.1) 0%, rgba(20,20,25,0.95) 100%);
+      border-bottom: 1px solid rgba(196, 30, 58, 0.2);
+    }
+
+    .work-header:hover {
+      background: linear-gradient(135deg, rgba(40,40,48,0.95) 0%, rgba(30,30,38,0.95) 100%);
+    }
+
+    .work-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .work-toggle {
+      font-size: 0.7rem;
+      color: var(--dim);
+      transition: transform 0.3s ease;
+    }
+
+    .work-detail[open] .work-toggle {
+      transform: rotate(180deg);
+    }
+
+    .work-synopsis {
+      padding: 20px 24px;
+      background: rgba(10, 10, 14, 0.8);
+      border-top: 1px solid var(--line);
+    }
+
+    .work-synopsis p {
+      color: #a0a8b8;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .work-synopsis p:last-of-type {
+      margin-bottom: 20px;
+    }
+
+    .ending-btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--accent) 0%, #a01830 100%);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .ending-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
     /* 제작 예정 */
     .upcoming-section {
       margin-bottom: 32px;
@@ -245,20 +325,33 @@
     <div class="section-title">WORKS</div>
 
     <div class="works-list">
-      <a href="/snake-carnival-ending/" class="work-card featured">
-        <div class="work-info">
-          <span class="work-status released">RELEASED</span>
-          <span class="work-title">뱀이 죽은 축제(畜祭)</span>
+      <details class="work-detail featured">
+        <summary class="work-header">
+          <div class="work-header-left">
+            <span class="work-status released">RELEASED</span>
+            <span class="work-title">뱀이 죽은 축제(畜祭)</span>
+          </div>
+          <span class="work-toggle">▼</span>
+        </summary>
+        <div class="work-synopsis">
+          <p>12년마다 열리는 비밀스러운 가면 축제. 열두 개의 동물 가면을 쓴 자들이 모인 이 축제에서, 주최자인 뱀 가면이 싸늘한 주검으로 발견된다.</p>
+          <p>참가자들은 서로를 의심하며 범인을 찾아야 한다. 하지만 이 축제에는 단순한 살인 이상의 비밀이 숨겨져 있는데...</p>
+          <a href="/snake-carnival-ending/" class="ending-btn">엔딩 페이지 보기 →</a>
         </div>
-        <span class="work-arrow">&#10095;</span>
-      </a>
+      </details>
 
-      <div class="work-card" style="cursor: default;">
-        <div class="work-info">
-          <span class="work-status">RELEASED</span>
-          <span class="work-title">잿빛 소녀가 죽은 추억</span>
+      <details class="work-detail">
+        <summary class="work-header">
+          <div class="work-header-left">
+            <span class="work-status">RELEASED</span>
+            <span class="work-title">잿빛 소녀가 죽은 추억</span>
+          </div>
+          <span class="work-toggle">▼</span>
+        </summary>
+        <div class="work-synopsis">
+          <p>시놉시스 준비 중입니다.</p>
         </div>
-      </div>
+      </details>
     </div>
 
     <div class="upcoming-section">
