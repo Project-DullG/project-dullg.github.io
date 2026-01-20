@@ -305,6 +305,55 @@
       flex-wrap: wrap;
     }
 
+    /* 주의 사항 */
+    .work-caution {
+      margin: 20px 0;
+      padding: 16px;
+      background: rgba(196, 30, 58, 0.08);
+      border: 1px solid rgba(196, 30, 58, 0.2);
+      border-radius: 8px;
+    }
+
+    .caution-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .caution-badge {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 4px;
+    }
+
+    .caution-item {
+      margin-bottom: 12px;
+    }
+
+    .caution-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .caution-item strong {
+      display: block;
+      font-size: 0.8rem;
+      color: #d0d0d8;
+      margin-bottom: 4px;
+    }
+
+    .caution-item p {
+      font-size: 0.8rem !important;
+      color: #909098 !important;
+      line-height: 1.6 !important;
+      margin-bottom: 0 !important;
+    }
+
     /* 제작 예정 */
     .work-detail.upcoming .work-header {
       background: linear-gradient(135deg, rgba(100, 100, 120, 0.1) 0%, rgba(20,20,25,0.95) 100%);
@@ -360,7 +409,7 @@
         <div class="work-synopsis">
           <div class="work-author">
             <div class="author-row"><span class="author-label">작가</span> 안강한, 매튜, 레듬</div>
-            <div class="author-row"><span class="author-label">플랫폼</span> 실물</div>
+            <div class="author-row"><span class="author-label">플랫폼</span> 실물 보드게임</div>
           </div>
           <p>달빛조차 닿지 않는 도심의 깊숙한 지하. 매년 12월 12일에는 잊힌 신을 숭배하는 비밀스러운 제단에 짐승 가면을 쓴 12명이 모인다.</p>
           <p>올해도 마찬가지였다. 교주인 뱀 가면과 함께 점지된 용·쥐·닭·돼지 가면이 예배실에 들어섰다. 문은 굳게 닫히고, 올해도 여느 때와 같이 예배가 시작되는 줄로만 알았다.</p>
@@ -381,15 +430,30 @@
         <div class="work-synopsis">
           <div class="work-author">
             <div class="author-row"><span class="author-label">작가</span> 안강한</div>
-            <div class="author-row"><span class="author-label">플랫폼</span> uzu</div>
+            <div class="author-row"><span class="author-label">플랫폼</span> UZU</div>
           </div>
           <p>오래전, 욕심 많은 잿빛 일족은 끊임없이 다른 세계에서 강한 존재들을 불러냈다. 그들은 더 큰 힘을 갈망하며, 어떤 대가도 치를 각오가 되어 있었다.</p>
           <p>그 욕망이 낳은 마왕은 세상을 파괴했고, 무수한 생명을 앗아갔다. 수많은 영웅들의 희생 끝에 세상은 간신히 지켜졌다.</p>
           <p>자비롭고도 어리석었던 영웅이었기에 그들은 잿빛 일족에게 다시 기회를 주었다. 그러나 잿빛 일족이 불러낸 또 다른 재앙에 세상은 잿빛을 증오하게 되었다.</p>
           <p>…그리고 오늘날. 잿빛 머리 소녀는 자신이 꿰매 만든 사람만한 크기의 인형들을 지켜보며 말했다.</p>
           <p><em>"그저 내 명령에만 따르지만.. 달이 뜨지 않는 내일이 오면..."</em></p>
+          <div class="work-caution">
+            <div class="caution-title">주의 사항 <span class="caution-badge">고난이도</span></div>
+            <div class="caution-item">
+              <strong>세계관 설정에 기반한 추리</strong>
+              <p>본 시나리오는 세계관 고유의 규칙과 설정이 사건 해결의 핵심 단서로 작용합니다. 따라서 일반적인 상식에 의존하기보다, 작품 속 설정을 세밀하게 파악하고 이를 논리의 근거로 활용하는 과정이 필요합니다.</p>
+            </div>
+            <div class="caution-item">
+              <strong>난이도 및 문장 구조의 특징</strong>
+              <p>전체적으로 추리 난이도가 높게 설계되어 있습니다. 특히 작품의 분위기를 구현하는 특성상 문장 구조가 다소 복잡하거나 읽기에 난해하게 느껴질 수 있는 점, 플레이 시 미리 참고와 확인을 부탁드립니다.</p>
+            </div>
+            <div class="caution-item">
+              <strong>권장 플레이 방식</strong>
+              <p>모든 정보가 유기적으로 연결되어 있어 작은 단서라도 꼼꼼히 살피는 것이 무엇보다 중요합니다. 파편화된 정보를 직접 분석하고 조합하여 진실을 찾아가는 과정을 즐기시는 숙련자분들께 플레이를 권장합니다.</p>
+            </div>
+          </div>
           <div class="work-links">
-            <a href="https://www.uzu-app.com/ko/scenario/15536" target="_blank" class="ending-btn">uzu에서 플레이 →</a>
+            <a href="https://www.uzu-app.com/ko/scenario/15536" target="_blank" class="ending-btn">UZU에서 플레이 →</a>
             <a href="https://bit.ly/4johbsr" target="_blank" class="ending-btn secondary">테마 미니게임 →</a>
           </div>
         </div>
