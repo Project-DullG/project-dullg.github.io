@@ -630,21 +630,19 @@
       submitBtn.innerHTML = '<span class="loading"></span>제출 중...';
 
       try {
+        // FormData로 전송
+        const formData = new FormData();
+        formData.append('rating', rating);
+        formData.append('character', character);
+        formData.append('difficulty', difficulty);
+        formData.append('recommend', recommend);
+        formData.append('review', review);
+        formData.append('author', nickname || '익명');
+        formData.append('timestamp', new Date().toISOString());
+
         const response = await fetch(SCRIPT_URL, {
           method: 'POST',
-          mode: 'no-cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            rating: rating,
-            character: character,
-            difficulty: difficulty,
-            recommend: recommend,
-            review: review,
-            author: nickname || '익명',
-            timestamp: new Date().toISOString()
-          })
+          body: formData
         });
 
         // 성공 처리 - 메인 페이지로 리다이렉트
