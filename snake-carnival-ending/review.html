@@ -474,9 +474,9 @@
         </div>
       </div>
 
-      <!-- 추리 난이도 -->
+      <!-- 추리 난이도 / 범인 난이도 -->
       <div class="form-group">
-        <label class="form-label">추리 난이도</label>
+        <label class="form-label" id="difficultyLabel">추리 난이도</label>
         <div class="character-select">
           <input type="radio" name="difficulty" id="diff-easy" value="쉬움">
           <label for="diff-easy">쉬움</label>
@@ -568,6 +568,18 @@
           nicknameInput.classList.add('show');
         } else {
           nicknameInput.classList.remove('show');
+        }
+      });
+    });
+
+    // 캐릭터 선택 시 난이도 라벨 변경 (돼지 가면 → 범인 난이도)
+    document.querySelectorAll('input[name="character"]').forEach(input => {
+      input.addEventListener('change', (e) => {
+        const difficultyLabel = document.getElementById('difficultyLabel');
+        if (e.target.value === '돼지 가면') {
+          difficultyLabel.textContent = '범인 난이도';
+        } else {
+          difficultyLabel.textContent = '추리 난이도';
         }
       });
     });
