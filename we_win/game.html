@@ -168,9 +168,10 @@
         <ul id="detailLog" class="space-y-2 text-xs text-slate-700 max-h-60 overflow-y-auto"></ul>
       </div>
 
-      <h3 class="font-semibold mt-6 mb-2 text-orange-700">플레이어 현황</h3>
-      <ul id="players" class="space-y-2 text-sm"></ul>
-      <div class="text-xs text-slate-500 mt-2">※ 잔액은 본인만 확인 가능</div>
+      <div id="playersWrap" class="hidden">
+        <h3 class="font-semibold mt-6 mb-2 text-orange-700">최종 플레이어 현황</h3>
+        <ul id="players" class="space-y-2 text-sm"></ul>
+      </div>
     </section>
 
   </div>
@@ -748,26 +749,23 @@
       }catch(_){}
     }
 
-    // 플레이어 현황
-    const ul=$("#players");
-    ul.innerHTML="";
-    players.forEach((p,i)=>{
-      const isReadyPart = (p.readyPart===true) || (p.ready===true);
-      const isReadyBid  = (p.readyBid===true)  || (p.committed===true);
-      const tag = d.phase==="choose" ? (isReadyPart ? "응찰 확정":"대기")
-                : d.phase==="bid"    ? (isReadyBid  ? "입찰 확정":"대기")
-                : d.phase==="reveal_single" ? (isReadyPart ? "응찰 확정":"대기")
-                : "대기";
-      const stClass = /확정/.test(tag) ? "bg-emerald-100" : "bg-slate-100";
-      const li=document.createElement("li");
-      li.className="flex items-center justify-between border border-orange-200 rounded px-3 py-2 bg-white";
-      li.innerHTML=`<div class="flex items-center gap-2">
-        <span>${i+1}. ${p.name}</span>
-        <span class="badge ${stClass}">${tag}</span>
-      </div>
-      <span class="text-xs text-slate-500">${(p.items||[]).length}장</span>`;
-      ul.appendChild(li);
-    });
+    // 플레이어 현황 (게임 종료 후에만 표시)
+    show("#playersWrap", !!d.gameOver);
+    if(d.gameOver){
+      const ul=$("#players");
+      ul.innerHTML="";
+      players.forEach((p,i)=>{
+        const li=document.createElement("li");
+        li.className="flex items-center justify-between border border-orange-200 rounded px-3 py-2 bg-white";
+        const pItems = p.items||[];
+        li.innerHTML=`<div class="flex items-center gap-2">
+          <span>${i+1}. ${p.name}</span>
+          <span class="badge ${checkWin(pItems)?"bg-emerald-100":"bg-slate-100"}">${pItems.length}장</span>
+        </div>
+        <span class="text-xs text-slate-500">${fmt(p.balance||0)}원</span>`;
+        ul.appendChild(li);
+      });
+    }
 
     // 응찰자 공개
     if(Array.isArray(d.participants) && d.participants.length>0){
