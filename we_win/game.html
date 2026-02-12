@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>우리가 이김 · 게임(game)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Firebase -->
+<script type="module" id="fb-sdk">
+  const firebaseConfig = {
+    apiKey: "AIzaSyBwHIITHru4Od1fjwg6OOMNTjRFbvwpVkg",
+    authDomain: "boardgame-1a3dd.firebaseapp.com",
+    projectId: "boardgame-1a3dd",
+    storageBucket: "boardgame-1a3dd.firebasestorage.app",
+    messagingSenderId: "278191503167",
+    appId: "1:278191503167:web:a02892e0d742e12339058a",
+    measurementId: "G-0EQB5WN6QE"
+  };
+  const ready=(async()=>{
+    const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js");
+    const app = initializeApp(firebaseConfig);
+    const fs  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js");
+    const au  = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js");
+    try { const { getAnalytics } = await import("https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js"); getAnalytics(app); } catch {}
+    window.__fb = { app, ...fs, ...au };
+  })();
+  window.firebaseReady = ready;
+</script>
+
+<style>
+  .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum";}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .badge{font-size:.75rem;padding:.125rem .5rem;border-radius:.375rem}
+  .card{background:#fff;border-radius:1rem;box-shadow:0 2px 8px rgb(0 0 0 / .08);border:1px solid rgb(253 186 116 / .5);}
+  .safe-bottom{padding-bottom:calc(env(safe-area-inset-bottom,0) + 90px);}
+  .icon-btn{display:inline-flex;align-items:center;justify-content:center;border-radius:.5rem;border:1px solid rgb(253 186 116);background:#fffbeb;padding:.5rem}
+  .icon-btn svg{width:16px;height:16px}
+  .item-img{width:48px;height:48px;object-fit:cover;border-radius:8px;border:2px solid #fb923c;}
+  .joker-border{border-color:#ef4444 !important;box-shadow:0 0 8px rgba(239,68,68,.4);}
+</style>
+</head>
+<body class="bg-gradient-to-br from-amber-50 to-orange-100 text-slate-900 safe-bottom min-h-screen">
+<div class="max-w-7xl mx-auto p-3 md:p-6 space-y-4 md:space-y-6">
+
+  <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <div>
+      <h1 class="text-lg md:text-2xl font-bold text-orange-800">우리가 이김 <span class="text-orange-500">· 게임</span></h1>
+      <div class="text-xs sm:text-sm text-slate-600 mt-1 flex flex-wrap gap-x-2">
+        <span>Room <span id="roomId" class="mono">—</span></span>
+        <span>Round <span id="round" class="mono">0</span></span>
+        <span>You: <span id="you" class="font-medium"></span></span>
+        <span>Role: <span id="role" class="font-medium">guest</span></span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="rules.html" class="text-xs text-orange-600 underline">규칙</a>
+      <span id="badge" class="badge bg-slate-200">연결 준비중…</span>
+    </div>
+  </header>
+
+  <div id="endedBox" class="hidden p-4 rounded-xl border-2 bg-gradient-to-r from-emerald-50 to-green-100 border-emerald-300 text-emerald-800 text-sm">
+    <span id="endMsg">게임이 종료되었습니다.</span>
+    <a id="btnReplay" href="room.html" class="ml-3 underline font-semibold">다시하기</a>
+  </div>
+
+  <div id="grid" class="grid gap-4 lg:grid-cols-12">
+
+    <!-- 내 정보 + 단계 액션 -->
+    <section id="panelMe" class="card p-4 md:p-6 lg:col-span-5 xl:col-span-4">
+      <h2 class="font-semibold mb-3 text-orange-700">내 정보</h2>
+      <div class="text-sm">닉네임: <span id="myName" class="font-medium"></span></div>
+      <div class="text-sm mt-1">소지금: <span id="myBalance" class="mono font-bold text-orange-600">0</span>원</div>
+      <div class="text-sm mt-1">보류금: <span id="myHold" class="mono font-bold">0</span>원</div>
+
+      <hr class="my-4 border-orange-200">
+
+      <!-- 1단계: 응찰 선택 -->
+      <div id="phaseChoose" class="space-y-3">
+        <h3 class="font-semibold text-orange-700">1) 응찰 여부 선택</h3>
+        <div class="text-sm flex items-center gap-2">
+          이번 카드: <b id="currentItemMe">-</b>
+          <img id="imgCurrentMe" alt="" class="item-img" style="display:none;">
+        </div>
+
+        <div class="flex items-center gap-4 mt-2">
+          <label class="flex items-center gap-2 text-sm">
+            <input type="radio" name="part" value="yes" /> 응찰 참여
+          </label>
+          <label class="flex items-center gap-2 text-sm">
+            <input type="radio" name="part" value="no" /> 불응찰(+50,000원)
+          </label>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <button id="btnLockPart" class="btn bg-orange-500 hover:bg-orange-600 text-white rounded px-4 py-2 text-sm">응찰 확정</button>
+          <button id="btnResyncPart" class="icon-btn" aria-label="새로고침" title="새로고침">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+          </button>
+          <span id="partStatus" class="badge bg-slate-100">미확정</span>
+        </div>
+        <p class="text-xs text-slate-500">※ 불응찰 확정 시 즉시 50,000원 지급</p>
+        <p id="chooseHint" class="text-xs text-orange-600 hidden">※ 방장이 카드를 선택해야 응찰 확정 가능</p>
+      </div>
+
+      <!-- 2단계: 입찰 -->
+      <div id="phaseBid" class="hidden space-y-3">
+        <h3 class="font-semibold text-orange-700">2) 비공개 입찰</h3>
+        <div class="text-sm flex items-center gap-2">
+          이번 카드: <b id="currentItemBid">-</b>
+          <img id="imgCurrentBid" alt="" class="item-img" style="display:none;">
+        </div>
+
+        <div id="bidDisabled" class="hidden text-sm text-slate-500">이번 라운드 불응찰하여 입찰 불가</div>
+
+        <div id="bidBox" class="hidden">
+          <div class="flex items-center gap-2 mb-2 flex-wrap">
+            <button data-step="-5" class="shrink-0 px-3 py-2 rounded bg-orange-200 text-xs">-5만</button>
+            <button data-step="-1" class="shrink-0 px-3 py-2 rounded bg-orange-200 text-xs">-1만</button>
+            <input id="bidInput" inputmode="numeric" class="mono w-28 border border-orange-300 rounded px-3 py-2 text-right" placeholder="0" />
+            <button data-step="1"  class="shrink-0 px-3 py-2 rounded bg-orange-200 text-xs">+1만</button>
+            <button data-step="5"  class="shrink-0 px-3 py-2 rounded bg-orange-200 text-xs">+5만</button>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <button id="btnConfirmBid" class="btn bg-orange-500 hover:bg-orange-600 text-white rounded px-4 py-2 text-sm">입찰 확정</button>
+            <button id="btnCancelBid" class="btn bg-slate-300 hover:bg-slate-400 rounded px-4 py-2 text-sm">입찰 취소</button>
+            <span id="bidStatus" class="badge bg-slate-100">대기중</span>
+          </div>
+          <p class="text-xs text-slate-500">※ 입찰액은 비공개</p>
+        </div>
+      </div>
+
+      <hr class="my-4 border-orange-200">
+
+      <h3 class="font-semibold mb-2 text-orange-700">내 소지품</h3>
+      <ul id="myItems" class="mt-2 space-y-2 text-sm"></ul>
+
+      <div class="mt-4 p-3 rounded-lg border border-orange-200 bg-orange-50 text-sm">
+        <div class="font-semibold mb-1 text-orange-700">승리 조건</div>
+        <ul class="list-disc ml-5 space-y-1 text-slate-700">
+          <li>모두 같은 카드 <b>3개</b></li>
+          <li>모두 다른 카드 <b>4개</b></li>
+          <li>카드 <b>5개</b></li>
+        </ul>
+        <p class="text-xs text-red-600 mt-2">* 조커는 어떤 카드로도 대체 가능!</p>
+      </div>
+    </section>
+
+    <!-- 공개 정보 -->
+    <section id="panelPublic" class="card p-4 md:p-6 lg:col-span-7 xl:col-span-5">
+      <h2 class="font-semibold mb-3 text-orange-700">라운드 정보</h2>
+      <div class="text-sm text-slate-600 mb-2 flex flex-wrap items-center gap-2">
+        <span>단계: <b id="phaseText">-</b></span>
+        <span>이번 카드: <b id="currentItem">-</b></span>
+        <img id="imgCurrentPublic" alt="" class="item-img" style="display:none;">
+      </div>
+
+      <div id="revealBox" class="hidden mt-4 p-3 rounded-lg bg-orange-50 border border-orange-200">
+        <h3 class="font-semibold mb-2 text-orange-700">이번 라운드 응찰자</h3>
+        <ul id="participantList" class="space-y-1 text-sm"></ul>
+        <p class="text-xs text-slate-500 mt-2">※ 입찰액은 공개되지 않습니다</p>
+      </div>
+
+      <h3 class="font-semibold mt-6 mb-2 text-orange-700">라운드 로그</h3>
+      <ul id="roundLog" class="space-y-2 text-xs text-slate-700 max-h-40 overflow-y-auto"></ul>
+
+      <div id="detailLogWrap" class="hidden">
+        <h3 class="font-semibold mt-6 mb-2 text-orange-700">게임 기록(상세)</h3>
+        <ul id="detailLog" class="space-y-2 text-xs text-slate-700 max-h-60 overflow-y-auto"></ul>
+      </div>
+
+      <h3 class="font-semibold mt-6 mb-2 text-orange-700">플레이어 현황</h3>
+      <ul id="players" class="space-y-2 text-sm"></ul>
+      <div class="text-xs text-slate-500 mt-2">※ 잔액은 본인만 확인 가능</div>
+    </section>
+
+    <!-- 방장: 카드 제어 -->
+    <section id="hostPanel" class="hidden card p-4 md:p-6 lg:col-span-12 xl:col-span-3">
+      <h2 class="font-semibold mb-3 text-orange-700">방장 설정</h2>
+      <div id="modeNotice" class="text-xs text-slate-600 mb-2"></div>
+
+      <label class="text-sm block mb-1">이번 카드</label>
+      <div class="flex items-center gap-2 mb-3">
+        <select id="roundItem" class="flex-1 border border-orange-300 rounded px-3 py-2 text-sm">
+          <option value="">— 선택 —</option>
+          <option>두 정치 세력</option>
+          <option>준영이의 바나나</option>
+          <option>킹 신웅 교수님</option>
+          <option>하영이의 클로버</option>
+          <option>조커 이성로</option>
+        </select>
+        <button id="btnRandom" class="btn bg-orange-200 hover:bg-orange-300 rounded px-3 py-2 text-sm">랜덤</button>
+      </div>
+      <p class="text-xs text-slate-500 mb-3">카드를 선택하면 라운드가 시작됩니다</p>
+
+      <hr class="my-4 border-orange-200">
+      <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2 text-sm">
+        게임 종료
+      </button>
+      <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
+    </section>
+  </div>
+
+  <!-- 토스트 -->
+  <div id="toast" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 bg-black/80 text-white px-4 py-2 rounded-lg z-40 flex items-center gap-2 text-sm">
+    <img id="toastImg" width="24" height="24" style="display:none" alt="" class="rounded">
+    <span id="toastMsg"></span>
+  </div>
+</div>
+
+<!-- 모바일 하단 입찰 바 -->
+<div id="mobileBidBar" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-orange-200 shadow-lg z-50 hidden">
+  <div class="max-w-7xl mx-auto px-3 py-2">
+    <div class="text-xs text-slate-600 mb-1 flex items-center gap-2">
+      이번 카드: <b id="currentItemMobile">-</b>
+      <img id="imgCurrentMobile" alt="" class="w-6 h-6 rounded object-cover border border-orange-300" style="display:none;">
+    </div>
+    <div class="flex items-center gap-1 mt-1">
+      <button data-step="-5" class="flex-1 py-2 rounded bg-orange-200 text-xs">-5만</button>
+      <button data-step="-1" class="flex-1 py-2 rounded bg-orange-200 text-xs">-1만</button>
+      <input id="bidInputMobile" inputmode="numeric" class="mono w-24 flex-none border border-orange-300 rounded px-2 py-2 text-right text-sm" placeholder="0" />
+      <button data-step="1"  class="flex-1 py-2 rounded bg-orange-200 text-xs">+1만</button>
+      <button data-step="5"  class="flex-1 py-2 rounded bg-orange-200 text-xs">+5만</button>
+    </div>
+    <div class="flex items-center gap-2 mt-2">
+      <button id="btnConfirmBidMobile" class="flex-1 py-2 rounded bg-orange-500 text-white text-sm font-semibold">확정</button>
+      <button id="btnCancelBidMobile"  class="flex-1 py-2 rounded bg-slate-300 text-sm">취소</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  const $=s=>document.querySelector(s);
+  const fmt=n=>Number(n||0).toLocaleString("ko-KR");
+  const show=(sel,yes)=>$(sel)?.classList.toggle("hidden",!yes);
+  const toast=(msg,img)=>{
+    $("#toastMsg").textContent=msg;
+    const im=$("#toastImg");
+    if(img){im.src=img; im.style.display="";}else{im.style.display="none";}
+    $("#toast").classList.remove("hidden");
+    setTimeout(()=>$("#toast").classList.add("hidden"), 2500);
+  };
+
+  const params=new URL(location.href).searchParams;
+  const roomId=(params.get("room")||"");
+  const myName=(params.get("name")||"").trim();
+
+  $("#roomId").textContent=roomId||"—";
+  $("#you").textContent=myName||"—";
+  $("#myName").textContent=myName||"—";
+
+  if (!roomId || !myName) {
+    alert("방 정보 또는 닉네임이 없습니다.");
+    location.href = "room.html";
+    throw new Error("Invalid room or name");
+  }
+
+  await window.firebaseReady;
+  const { getFirestore, doc, getDoc, updateDoc, onSnapshot, deleteDoc, serverTimestamp,
+          getAuth, signInAnonymously, runTransaction } = window.__fb;
+
+  const db=getFirestore(), auth=getAuth();
+  try{
+    if(!auth.currentUser) await signInAnonymously(auth);
+    $("#badge").textContent="연결됨";
+    $("#badge").className="badge bg-orange-500 text-white";
+  }catch(e){
+    $("#badge").textContent="연결 실패";
+    $("#badge").className="badge bg-rose-600 text-white";
+  }
+
+  const ref=doc(db,"wewin_rooms",roomId);
+
+  /* ───────── 상수 ───────── */
+  const STALE_MS = 60 * 60 * 1000;
+  const NO_BID_BONUS = 50000;
+
+  // 카드 목록 (조커 제외 기본 4개)
+  const BASE_ITEMS = ["두 정치 세력", "준영이의 바나나", "킹 신웅 교수님", "하영이의 클로버"];
+  const JOKER = "조커 이성로";
+  const JOKER_CHANCE = 0.1; // 10% 확률로 조커 등장
+
+  // 이미지 매핑
+  const ITEM_IMG = {
+    "두 정치 세력": "politics.jpeg",
+    "준영이의 바나나": "banana.png",
+    "킹 신웅 교수님": "king.png",
+    "하영이의 클로버": "clover.png",
+    "조커 이성로": "joker.jpeg"
+  };
+  const RESULT_IMG = { success:"success.jpeg", fail:"fail.svg" };
+
+  function setItemImg(el, item){
+    if(!el) return;
+    const file = ITEM_IMG[item||""];
+    if(file){
+      el.src = file;
+      el.style.display = "";
+      el.alt = item || "카드";
+      el.classList.toggle("joker-border", item === JOKER);
+    }else{
+      el.style.display = "none";
+    }
+  }
+  function renderItemImages(item){
+    setItemImg($("#imgCurrentMe"), item);
+    setItemImg($("#imgCurrentBid"), item);
+    setItemImg($("#imgCurrentPublic"), item);
+    setItemImg($("#imgCurrentMobile"), item);
+  }
+
+  // 랜덤 카드 선택 (조커 10% 확률)
+  function randItem(){
+    if(Math.random() < JOKER_CHANCE) return JOKER;
+    return BASE_ITEMS[Math.floor(Math.random() * BASE_ITEMS.length)];
+  }
+
+  const isStale = (d)=>{
+    try{ const ts=d?.updatedAt?.toMillis?.(); return ts ? (Date.now()-ts>STALE_MS) : false; }catch{return false;}
+  };
+
+  function guessHost(r){
+    const a=(r?.hostName||"").trim().toLowerCase();
+    const b=(myName||"").trim().toLowerCase();
+    const p1=(r?.players||[])[0];
+    const p1n=(p1?.name||"").trim().toLowerCase();
+    return (a&&a===b)||(p1n&&p1n===b);
+  }
+
+  // 승리 조건 체크 (조커 = 와일드카드)
+  function checkWin(items=[]){
+    const t = items.length;
+    if(t < 3) return "";
+
+    // 조커 개수
+    const jokers = items.filter(x => x === JOKER).length;
+    const nonJokers = items.filter(x => x !== JOKER);
+
+    // 5개 이상이면 무조건 승리
+    if(t >= 5) return "any5";
+
+    // 같은 카드 3개 체크 (조커 포함)
+    const counts = {};
+    nonJokers.forEach(it => counts[it] = (counts[it]||0) + 1);
+    const maxCount = Math.max(0, ...Object.values(counts));
+    if(maxCount + jokers >= 3) return "same3";
+
+    // 다른 카드 4개 체크 (조커는 아무거나 대체)
+    const uniqueNonJoker = new Set(nonJokers).size;
+    // 조커는 uniqueNonJoker에 없는 카드로 대체 가능
+    const possibleUnique = Math.min(uniqueNonJoker + jokers, BASE_ITEMS.length);
+    if(t >= 4 && possibleUnique >= 4) return "diff4";
+
+    return "";
+  }
+
+  let isHost=false, currentPlayers=[], currentMe=null;
+  let lastSeenResultRound=0, singleRevealTimerSet=false;
+  let boardMode=false;
+  let endedLocally=false, deletedOnce=false;
+
+  // 입찰(1만 단위)
+  let bidStep=10000, stagedBid=0;
+  const parseMoney=s=>Number((s||"0").replace(/[^\d]/g,""))||0;
+  const snapToStep=n=>Math.floor(Number(n||0)/bidStep)*bidStep;
+  const bidInput=$("#bidInput"), bidInputMobile=$("#bidInputMobile");
+
+  function syncBidInputs(){
+    const v=snapToStep(stagedBid);
+    if(bidInput) bidInput.value=v.toLocaleString("ko-KR");
+    if(bidInputMobile) bidInputMobile.value=v.toLocaleString("ko-KR");
+  }
+  function clampToAvail(a){
+    stagedBid=Math.max(0, Math.min(snapToStep(stagedBid), a));
+    syncBidInputs();
+  }
+  function bindStepButtons(){
+    document.querySelectorAll("[data-step]").forEach(btn=>{
+      if(btn._bound) return;
+      btn._bound=true;
+      btn.addEventListener("click", ()=>{
+        const factor=Number(btn.getAttribute("data-step"));
+        const delta=factor*bidStep;
+        const avail=(currentMe?.balance||0)+(currentMe?.hold||0);
+        stagedBid=stagedBid+delta;
+        clampToAvail(avail);
+      });
+    });
+  }
+  syncBidInputs();
+  bindStepButtons();
+  bidInput?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInput.value); syncBidInputs(); });
+  bidInput?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
+  bidInputMobile?.addEventListener("input", ()=>{ stagedBid=parseMoney(bidInputMobile.value); syncBidInputs(); });
+  bidInputMobile?.addEventListener("blur", ()=>{ const a=(currentMe?.balance||0)+(currentMe?.hold||0); clampToAvail(a); });
+
+  function endUI(msg, winners=[]){
+    if (winners.length){
+      $("#endMsg").textContent = `게임 종료! 우승: ${winners.join(", ")}`;
+    } else if (!endedLocally) {
+      $("#endMsg").textContent = msg;
+    }
+    $("#endedBox").classList.remove("hidden");
+    ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
+      .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
+    show("#mobileBidBar", false);
+  }
+
+  async function ensurePhaseDefault(){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        if(!r.phase){ tx.update(ref,{phase:"choose",updatedAt:serverTimestamp()}); }
+      });
+    }catch(e){ console.warn("ensurePhaseDefault:", e); }
+  }
+
+  async function ensureRandomItemIfEmpty(){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        if(r.boardMode===true) return;
+        if((r.phase||"choose")==="choose" && !r.currentItem){
+          tx.update(ref,{currentItem:randItem(),updatedAt:serverTimestamp()});
+        }
+      });
+    }catch(e){ console.warn("ensureRandomItemIfEmpty:", e); }
+  }
+
+  async function resetRoundForItemChange(nextItem){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        const players=(r.players||[]).map(p=>({
+          ...p, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null
+        }));
+        tx.update(ref,{
+          players,
+          participants: [],
+          participantsBackup: [],
+          lastItem: "",
+          currentItem: nextItem||"",
+          phase: "choose",
+          updatedAt: serverTimestamp()
+        });
+      });
+      toast("카드가 변경되어 라운드를 다시 시작합니다.");
+    }catch(e){ console.warn("resetRoundForItemChange:", e); }
+  }
+
+  async function afterAllLockedAdvance(){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        if((r.phase||"choose")!=="choose") return;
+        const players=(r.players||[]);
+        if(players.length===0) return;
+
+        const item=(r.currentItem||"").trim();
+        if(r.boardMode===true && !item) return;
+
+        const allLocked=players.every(p=>p.readyPart===true || p.ready===true);
+        if(!allLocked) return;
+
+        const parts=players
+          .filter(p=>p.willParticipate===true || (p.willParticipate===undefined && p.committed===true))
+          .map(p=>p.name);
+
+        const chosenItem = item || randItem();
+
+        if(parts.length===0){
+          const reset=players.map(p=>({...p,hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null}));
+          const logs=[...(r.roundLogs||[])];
+          logs.push({round:(r.round||0)+1, item:chosenItem, participants:[], winners:[]});
+          tx.update(ref,{
+            players:reset,
+            round:(r.round||0)+1,
+            currentItem:"",
+            participants:[],
+            participantsBackup:[],
+            lastItem:"",
+            lastWinners:[],
+            resultRound:(r.round||0)+1,
+            phase:"choose",
+            roundLogs:logs.slice(-30),
+            updatedAt:serverTimestamp()
+          });
+          return;
+        }
+
+        if(parts.length===1){
+          tx.update(ref,{
+            participants:parts,
+            participantsBackup:parts,
+            currentItem:chosenItem,
+            lastItem:chosenItem,
+            phase:"reveal_single",
+            revealRound:(r.round||0)+1,
+            revealAt:serverTimestamp(),
+            updatedAt:serverTimestamp()
+          });
+          return;
+        }
+
+        tx.update(ref,{
+          participants:parts,
+          participantsBackup:parts,
+          currentItem:chosenItem,
+          lastItem:chosenItem,
+          phase:"bid",
+          updatedAt:serverTimestamp()
+        });
+      });
+    }catch(e){ console.warn("afterAllLockedAdvance:", e); }
+  }
+
+  async function attemptSettleFromBid(){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        if(r.phase!=="bid") return;
+
+        let players=(r.players||[]).map(p=>({...p}));
+        const partNames=(r.participants||[]);
+        const participants=players.filter(p=>partNames.includes(p.name));
+        const readyAll = participants.length===0 ? true : participants.every(p=>p.readyBid===true || p.committed===true);
+        if(!readyAll) return;
+
+        const item = (r.currentItem || r.lastItem || "").trim();
+        if (!item) return;
+
+        const bids = {};
+        participants.forEach(p => { bids[p.name] = Number(p.hold||0); });
+
+        let winners=[]; let winningBid=0;
+
+        if(participants.length){
+          const holds = participants.map(p=>Number(p.hold||0));
+          const maxHold = Math.max(0, ...holds);
+          const allZero = holds.every(h=>h===0);
+
+          if(allZero){
+            winners = [...partNames];
+            winningBid = 0;
+            players = players.map(p=>{
+              if(partNames.includes(p.name)){
+                const refund=Number(p.hold||0);
+                return {
+                  ...p,
+                  balance:Number(p.balance||0)+refund,
+                  hold:0,bid:0,
+                  committed:false,readyPart:false,readyBid:false,willParticipate:null,
+                  items:[...(p.items||[]), item]
+                };
+              }
+              return {...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null};
+            });
+          }else if(maxHold>0){
+            winners=participants.filter(p=>Number(p.hold||0)===maxHold).map(p=>p.name);
+            winningBid = maxHold;
+            players=players.map(p=>{
+              const isPart=partNames.includes(p.name);
+              let balance=Number(p.balance||0), hold=Number(p.hold||0);
+              const items=[...(p.items||[])];
+              if(isPart){
+                if(winners.includes(p.name)) items.push(item);
+                else balance+=hold;
+              }
+              return {
+                ...p,
+                balance,
+                hold:0,bid:0,
+                committed:false,readyPart:false,readyBid:false,willParticipate:null,
+                items
+              };
+            });
+          }else{
+            players=players.map(p=>({
+              ...p,
+              hold:0,bid:0,
+              committed:false,readyPart:false,readyBid:false,willParticipate:null
+            }));
+          }
+        }else{
+          players=players.map(p=>({
+            ...p,
+            hold:0,bid:0,
+            committed:false,readyPart:false,readyBid:false,willParticipate:null
+          }));
+        }
+
+        const logs=[...(r.roundLogs||[])];
+        logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
+
+        const detail = {
+          round: (r.round||0)+1,
+          item,
+          participants: partNames,
+          bids,
+          winners,
+          winningBid,
+          skipped: (r.players||[]).filter(p=>!partNames.includes(p.name)).map(p=>p.name),
+          mode: r.boardMode===true ? "board" : "web",
+          ts: Date.now()
+        };
+        const detailed = [...(r.roundLogsDetailed||[]), detail].slice(-200);
+
+        tx.update(ref,{
+          players,
+          round:(r.round||0)+1,
+          currentItem:"",
+          participants:[],
+          lastWinners:winners,
+          lastItem:item,
+          resultRound:(r.round||0)+1,
+          phase:"choose",
+          roundLogs:logs.slice(-30),
+          roundLogsDetailed: detailed,
+          updatedAt:serverTimestamp()
+        });
+      });
+    }catch(e){ console.warn("attemptSettleFromBid:", e); }
+  }
+
+  async function settleAfterSingleReveal(){
+    try{
+      await runTransaction(db, async tx=>{
+        const s=await tx.get(ref); if(!s.exists()) return;
+        const r=s.data();
+        if(r.phase!=="reveal_single") return;
+
+        let players=(r.players||[]).map(p=>({...p}));
+        const partNames=(r.participants||[]);
+        if(partNames.length!==1) return;
+
+        const item = (r.currentItem || r.lastItem || "").trim();
+        if (!item) return;
+
+        const only=partNames[0];
+        const winners=[only];
+
+        const bids = {};
+        bids[only] = Number((players.find(p=>p.name===only)||{}).hold||0) || 0;
+        const winningBid = 0;
+
+        players=players.map(p=>{
+          if(p.name===only){
+            const refund=Number(p.hold||0);
+            return {
+              ...p,
+              balance:Number(p.balance||0)+refund,
+              hold:0,bid:0,
+              committed:false,readyPart:false,readyBid:false,willParticipate:null,
+              items:[...(p.items||[]),item]
+            };
+          }
+          return {
+            ...p,
+            hold:0,bid:0,
+            committed:false,readyPart:false,readyBid:false,willParticipate:null
+          };
+        });
+
+        const logs=[...(r.roundLogs||[])];
+        logs.push({round:(r.round||0)+1, item, participants:partNames, winners});
+
+        const detail = {
+          round:(r.round||0)+1,
+          item,
+          participants: partNames,
+          bids,
+          winners,
+          winningBid,
+          skipped: (r.players||[]).filter(p=>!partNames.includes(p.name)).map(p=>p.name),
+          mode: r.boardMode===true ? "board" : "web",
+          ts: Date.now()
+        };
+        const detailed = [...(r.roundLogsDetailed||[]), detail].slice(-200);
+
+        tx.update(ref,{
+          players,
+          round:(r.round||0)+1,
+          currentItem:"",
+          participants:[],
+          lastWinners:winners,
+          lastItem:item,
+          resultRound:(r.round||0)+1,
+          phase:"choose",
+          roundLogs:logs.slice(-30),
+          roundLogsDetailed: detailed,
+          updatedAt:serverTimestamp()
+        });
+      });
+    }catch(e){ console.warn("settleAfterSingleReveal:", e); }
+  }
+
+  await ensurePhaseDefault();
+
+  onSnapshot(ref, async (s)=>{
+    if(!s.exists()){
+      endUI("방이 종료(삭제)되었습니다.");
+      return;
+    }
+    const d=s.data();
+    window.__lastRoomSnap = d;
+
+    if(!d.gameOver && isStale(d)){
+      try{ await deleteDoc(ref); }catch(_){}
+      return;
+    }
+
+    boardMode = d.boardMode===true;
+
+    $("#round").textContent=d.round??0;
+    const phaseLabel = d.phase==="choose" ? "응찰 선택" :
+                       d.phase==="bid" ? "비공개 입찰" :
+                       d.phase==="reveal_single" ? "단독 응찰" : "-";
+    $("#phaseText").textContent = phaseLabel;
+
+    const itemName = d.currentItem || "-";
+    const isJoker = itemName === JOKER;
+    $("#currentItem").textContent = itemName;
+    $("#currentItemMe").textContent = itemName;
+    $("#currentItemBid").textContent= itemName;
+    $("#currentItemMobile").textContent = itemName;
+    renderItemImages(d.currentItem || "");
+
+    isHost=guessHost(d);
+    $("#role").textContent=isHost?"host":"guest";
+    show("#hostPanel", isHost);
+    $("#modeNotice").textContent = boardMode
+      ? "보드게임 모드: 방장이 카드를 수동 선택"
+      : "웹 전용 모드: 카드 자동 결정";
+
+    const players = Array.isArray(d.players)? d.players : [];
+    const me = players.find(p=>p.name===myName) || null;
+    currentPlayers = players;
+    currentMe = me;
+
+    $("#myBalance").textContent = fmt(me?.balance||0);
+    $("#myHold").textContent = fmt(me?.hold||0);
+
+    // 소지품 렌더링
+    const myItems=Array.isArray(me?.items)? me.items : [];
+    const ulItems=$("#myItems");
+    ulItems.innerHTML="";
+    myItems.forEach((it,i)=>{
+      const li=document.createElement("li");
+      const isJ = it === JOKER;
+      li.className="flex items-center gap-2 border rounded px-3 py-2 " + (isJ ? "border-red-400 bg-red-50" : "border-orange-200 bg-orange-50");
+      const imgFile = ITEM_IMG[it] || "";
+      li.innerHTML = `
+        ${imgFile ? `<img src="${imgFile}" alt="${it}" class="w-8 h-8 rounded object-cover border ${isJ?'border-red-400':'border-orange-300'}">` : ''}
+        <span class="${isJ?'text-red-600 font-bold':''}">${i+1}. ${it}</span>
+      `;
+      ulItems.appendChild(li);
+    });
+
+    // 승리 체크
+    const reason=checkWin(myItems);
+    if(reason && !d.gameOver){
+      try{
+        await runTransaction(db, async tx=>{
+          const s2=await tx.get(ref); if(!s2.exists()) return;
+          const r=s2.data();
+          const winners = (r.players||[]).filter(p=>checkWin(p.items||[])!=="").map(p=>p.name);
+          tx.update(ref,{
+            gameOver:true,
+            endedAt: serverTimestamp(),
+            finalWinners: winners,
+            victoryReason: reason,
+            updatedAt: serverTimestamp()
+          });
+        });
+      }catch(_){}
+    }
+
+    // 플레이어 현황
+    const ul=$("#players");
+    ul.innerHTML="";
+    players.forEach((p,i)=>{
+      const isReadyPart = (p.readyPart===true) || (p.ready===true);
+      const isReadyBid  = (p.readyBid===true)  || (p.committed===true);
+      const tag = d.phase==="choose" ? (isReadyPart ? "응찰 확정":"대기")
+                : d.phase==="bid"    ? (isReadyBid  ? "입찰 확정":"대기")
+                : d.phase==="reveal_single" ? (isReadyPart ? "응찰 확정":"대기")
+                : "대기";
+      const stClass = /확정/.test(tag) ? "bg-emerald-100" : "bg-slate-100";
+      const li=document.createElement("li");
+      li.className="flex items-center justify-between border border-orange-200 rounded px-3 py-2 bg-white";
+      li.innerHTML=`<div class="flex items-center gap-2">
+        <span>${i+1}. ${p.name}</span>
+        <span class="badge ${stClass}">${tag}</span>
+      </div>
+      <span class="text-xs text-slate-500">${(p.items||[]).length}장</span>`;
+      ul.appendChild(li);
+    });
+
+    // 응찰자 공개
+    if(Array.isArray(d.participants) && d.participants.length>0){
+      show("#revealBox", true);
+      const pu=$("#participantList");
+      pu.innerHTML="";
+      d.participants.forEach((nm,idx)=>{
+        const li=document.createElement("li");
+        li.className="border border-orange-200 rounded px-3 py-2 bg-white";
+        li.textContent = `${idx+1}. ${nm}`;
+        pu.appendChild(li);
+      });
+    }else{
+      show("#revealBox", false);
+    }
+
+    // 라운드 로그
+    const logUl = $("#roundLog");
+    logUl.innerHTML="";
+    (d.roundLogs||[]).slice().reverse().slice(0,10).forEach(entry=>{
+      const li=document.createElement("li");
+      const parts = (entry.participants||[]).length ? entry.participants.join(", ") : "—";
+      const isJ = entry.item === JOKER;
+      li.className="border rounded px-3 py-2 " + (isJ ? "border-red-300 bg-red-50" : "border-orange-200 bg-orange-50");
+      li.innerHTML = `<div class="flex items-center justify-between">
+        <div>R${entry.round} · <b class="${isJ?'text-red-600':''}">${entry.item||"-"}</b></div>
+        <div class="text-slate-500">응찰: ${parts}</div>
+      </div>`;
+      logUl.appendChild(li);
+    });
+
+    // 상세 로그 (종료 후)
+    show("#detailLogWrap", !!d.gameOver);
+    if(d.gameOver){
+      const detUl = $("#detailLog");
+      detUl.innerHTML="";
+      const dlogs = d.roundLogsDetailed || [];
+      dlogs.slice().reverse().forEach(entry=>{
+        const li=document.createElement("li");
+        const bidsTxt = Object.keys(entry.bids||{}).length
+          ? Object.entries(entry.bids).map(([nm,amt])=>`${nm}:${fmt(amt)}원`).join(", ")
+          : "—";
+        const skips = (entry.skipped||[]).length ? entry.skipped.join(", ") : "없음";
+        const isJ = entry.item === JOKER;
+        li.className="border rounded px-3 py-2 " + (isJ ? "border-red-200 bg-red-50" : "bg-white");
+        li.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div>R${entry.round} · <b class="${isJ?'text-red-600':''}">${entry.item||"-"}</b></div>
+            <div class="text-slate-500">낙찰가: ${fmt(entry.winningBid||0)}원</div>
+          </div>
+          <div class="mt-1 text-slate-700">응찰액: ${bidsTxt}</div>
+          <div class="mt-1 text-slate-700">낙찰: ${(entry.winners||[]).join(", ") || "—"}</div>
+          <div class="mt-1 text-slate-500">불응찰: ${skips}</div>
+        `;
+        detUl.appendChild(li);
+      });
+
+      const winnersArr = d.finalWinners || [];
+      endedLocally = true;
+      endUI("", winnersArr);
+
+      if (!deletedOnce) {
+        deletedOnce = true;
+        try{ await deleteDoc(ref); }catch(_){}
+      }
+    }
+
+    // 단계별 UI
+    if(d.phase==="choose" || d.phase===undefined){
+      show("#phaseChoose", true);
+      show("#phaseBid", false);
+      show("#mobileBidBar", false);
+      $("#chooseHint").classList.toggle("hidden", !(boardMode && !d.currentItem));
+
+      if(!boardMode && !d.currentItem) await ensureRandomItemIfEmpty();
+
+      const partRadios=[...document.querySelectorAll('input[name="part"]')];
+      const partVal = me?.willParticipate===true ? "yes" : me?.willParticipate===false? "no" : null;
+      partRadios.forEach(r=>{ r.checked=(r.value===partVal); r.disabled=((me?.readyPart===true)||(me?.ready===true)); });
+
+      $("#btnLockPart").disabled = ((me?.readyPart===true)||(me?.ready===true)) || !(d.currentItem);
+      $("#partStatus").textContent = ((me?.readyPart===true)||(me?.ready===true))
+        ? (me?.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
+
+      await afterAllLockedAdvance();
+    }
+    else if(d.phase==="reveal_single"){
+      show("#phaseChoose", true);
+      show("#phaseBid", false);
+      show("#mobileBidBar", false);
+      if(!singleRevealTimerSet){
+        singleRevealTimerSet=true;
+        setTimeout(async()=>{
+          singleRevealTimerSet=false;
+          await settleAfterSingleReveal();
+        }, 1000);
+      }
+    }
+    else if(d.phase==="bid"){
+      const isParticipant = me?.willParticipate===true || (Array.isArray(d.participants)&&d.participants.includes(myName));
+      show("#phaseChoose", false);
+      show("#phaseBid", true);
+      show("#bidBox", isParticipant);
+      show("#bidDisabled", !isParticipant);
+      show("#mobileBidBar", isParticipant);
+      const isReadyBid = (me?.readyBid===true)||(me?.committed===true);
+      $("#bidStatus").textContent = isReadyBid ? "입찰 확정됨" : "대기중";
+      const avail=(me?.balance||0)+(me?.hold||0);
+      clampToAvail(avail);
+
+      await attemptSettleFromBid();
+    }
+
+    bindStepButtons();
+  });
+
+  function showErr(msg){
+    const b=$("#errHost");
+    if(!b) return;
+    b.textContent=msg;
+    b.classList.remove("hidden");
+  }
+
+  // 방장: 카드 변경/랜덤
+  $("#roundItem").addEventListener("change", async ()=>{
+    const val=$("#roundItem").value;
+    await resetRoundForItemChange(val||"");
+  });
+  $("#btnRandom").addEventListener("click", async ()=>{
+    const r=randItem();
+    $("#roundItem").value=r;
+    await resetRoundForItemChange(r);
+  });
+
+  // 게임 종료
+  $("#btnEndGame").onclick = async ()=>{
+    try{
+      await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
+      alert("게임을 종료합니다.");
+    }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
+  };
+
+  // 응찰 확정
+  $("#btnLockPart").addEventListener("click", async ()=>{
+    const cur=document.querySelector('input[name="part"]:checked');
+    if(!cur){ alert("응찰/불응찰을 선택하세요."); return; }
+    const choice = cur.value==="yes";
+    try{
+      const snap=await getDoc(ref);
+      if(!snap.exists()) return;
+      const r=snap.data();
+      const players=(r.players||[]).map(p=>({...p}));
+      const me=players.find(p=>p.name===myName);
+      if(!me) return;
+      if(me.readyPart===true || me.ready===true){ toast("이미 응찰 확정했습니다."); return; }
+      if(r.boardMode===true && !r.currentItem){ alert("방장이 카드를 선택해야 합니다."); return; }
+
+      me.willParticipate = choice;
+      me.readyPart = true;
+      delete me.ready;
+      if(choice===false){
+        me.balance = Number(me.balance||0) + NO_BID_BONUS;
+      }
+      await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
+      toast(choice ? "응찰 참여를 확정했습니다." : `불응찰(+${fmt(NO_BID_BONUS)}원)을 확정했습니다.`);
+    }catch(err){ alert(`응찰 확정 실패: ${err.message||err}`); }
+  });
+
+  // 응찰 새로고침
+  $("#btnResyncPart").addEventListener("click", async ()=>{
+    try{
+      const s=await getDoc(ref);
+      if(!s.exists()) return;
+      const d=s.data();
+      const me=(d.players||[]).find(p=>p.name===myName) || {};
+      const canEdit = !(me.readyPart===true || me.ready===true);
+      [...document.querySelectorAll('input[name="part"]')].forEach(r=> r.disabled = !canEdit);
+      $("#btnLockPart").disabled = !canEdit || !(d.currentItem);
+      $("#partStatus").textContent = me.readyPart||me.ready ? (me.willParticipate ? "응찰 참여 확정" : "불응찰 확정(+5만)") : "미확정";
+      toast("상태를 새로고침했어요.");
+    }catch(e){ alert(`새로고침 실패: ${e.message||e}`); }
+  });
+
+  // 입찰 확정/취소
+  async function doConfirmBid(){
+    const snap=await getDoc(ref);
+    if(!snap.exists()) return;
+    const r=snap.data();
+    if(r.phase!=="bid"){ toast("아직 입찰 단계가 아닙니다."); return; }
+    const players=(r.players||[]).map(p=>({...p}));
+    const me=players.find(p=>p.name===myName);
+    if(!me) return;
+    const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
+    if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
+    const avail=Number(me.balance||0)+Number(me.hold||0);
+    let val = snapToStep(stagedBid);
+    val = Math.max(0, Math.min(val, avail));
+    me.hold=val;
+    me.bid=val;
+    me.balance=avail - val;
+    me.committed=true;
+    me.readyBid=true;
+    await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
+    toast("입찰을 확정했습니다.");
+  }
+  async function doCancelBid(){
+    const snap=await getDoc(ref);
+    if(!snap.exists()) return;
+    const r=snap.data();
+    if(r.phase!=="bid"){ toast("아직 입찰 단계가 아닙니다."); return; }
+    const players=(r.players||[]).map(p=>({...p}));
+    const me=players.find(p=>p.name===myName);
+    if(!me) return;
+    const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
+    if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
+    const refund=Number(me.hold||0);
+    me.balance=Number(me.balance||0)+refund;
+    me.hold=0;
+    me.bid=0;
+    me.committed=false;
+    me.readyBid=true;
+    await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
+    toast("입찰을 취소했습니다.");
+  }
+  $("#btnConfirmBid")?.addEventListener("click", doConfirmBid);
+  $("#btnCancelBid")?.addEventListener("click", doCancelBid);
+  $("#btnConfirmBidMobile")?.addEventListener("click", doConfirmBid);
+  $("#btnCancelBidMobile")?.addEventListener("click", doCancelBid);
+
+  // 라운드 결과 토스트
+  onSnapshot(ref,(s)=>{
+    if(!s.exists()) return;
+    const d=s.data();
+    if((d.resultRound||0) <= lastSeenResultRound) return;
+    lastSeenResultRound = d.resultRound||0;
+
+    const winners = Array.isArray(d.lastWinners)? d.lastWinners : [];
+    const wasPart = Array.isArray(d.participantsBackup) ? d.participantsBackup.includes(myName)
+                    : Array.isArray(d.participants) ? d.participants.includes(myName) : null;
+
+    if (winners.includes(myName)) toast(`낙찰! (${d.lastItem||d.currentItem||""})`, RESULT_IMG.success);
+    else if (wasPart===true)      toast(`입찰 실패(환불 완료)`, RESULT_IMG.fail);
+    else                          toast(`불응찰 라운드 종료.`);
+  });
+
+  // 5분마다 비활성 방 정리
+  setInterval(async ()=>{
+    try{
+      const s=await getDoc(ref);
+      if(s.exists()){
+        const d=s.data();
+        if(!d.gameOver && isStale(d)){
+          await deleteDoc(ref);
+        }
+      }
+    }catch(_){}
+  }, 5 * 60 * 1000);
+</script>
+</body>
+</html>

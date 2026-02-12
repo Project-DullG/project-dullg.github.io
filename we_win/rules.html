@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>우리가 이김 · 게임 규칙</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .card-preview{width:64px;height:64px;object-fit:cover;border-radius:12px;border:3px solid #fb923c;}
+  .joker-card{border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.4);}
+</style>
+</head>
+<body class="bg-gradient-to-br from-amber-50 to-orange-100 text-slate-900 min-h-screen">
+<div class="max-w-3xl mx-auto p-4 md:p-8">
+
+  <header class="text-center mb-8">
+    <img src="title.jpeg" alt="우리가 이김" class="mx-auto max-w-xs w-full rounded-2xl shadow-lg mb-4" />
+    <h1 class="text-2xl md:text-3xl font-bold text-orange-800">게임 규칙</h1>
+    <p class="text-slate-600 mt-2">경매로 카드를 모아 승리하세요!</p>
+  </header>
+
+  <!-- 게임 개요 -->
+  <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-orange-200">
+    <h2 class="text-xl font-bold text-orange-700 mb-4">게임 개요</h2>
+    <ul class="space-y-2 text-slate-700">
+      <li><b>인원:</b> 3~8명</li>
+      <li><b>초기 자금:</b> 1,000,000원</li>
+      <li><b>목표:</b> 카드를 모아 승리 조건을 달성하세요!</li>
+    </ul>
+  </section>
+
+  <!-- 카드 소개 -->
+  <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-orange-200">
+    <h2 class="text-xl font-bold text-orange-700 mb-4">카드 종류</h2>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+      <div class="text-center">
+        <img src="politics.jpeg" alt="두 정치 세력" class="card-preview mx-auto" />
+        <p class="text-sm mt-2 font-medium">두 정치 세력</p>
+      </div>
+      <div class="text-center">
+        <img src="banana.png" alt="준영이의 바나나" class="card-preview mx-auto" />
+        <p class="text-sm mt-2 font-medium">준영이의 바나나</p>
+      </div>
+      <div class="text-center">
+        <img src="king.png" alt="킹 신웅 교수님" class="card-preview mx-auto" />
+        <p class="text-sm mt-2 font-medium">킹 신웅 교수님</p>
+      </div>
+      <div class="text-center">
+        <img src="clover.png" alt="하영이의 클로버" class="card-preview mx-auto" />
+        <p class="text-sm mt-2 font-medium">하영이의 클로버</p>
+      </div>
+    </div>
+
+    <!-- 조커 카드 -->
+    <div class="bg-red-50 border-2 border-red-300 rounded-xl p-4">
+      <div class="flex items-center gap-4">
+        <img src="joker.jpeg" alt="조커 이성로" class="card-preview joker-card" />
+        <div>
+          <h3 class="font-bold text-red-600 text-lg">조커 이성로</h3>
+          <p class="text-sm text-slate-700 mt-1">
+            <b>희귀 카드!</b> 약 10% 확률로 등장합니다.
+          </p>
+          <p class="text-sm text-red-600 mt-1 font-medium">
+            어떤 카드로도 대체 가능한 와일드카드입니다!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 승리 조건 -->
+  <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-orange-200">
+    <h2 class="text-xl font-bold text-orange-700 mb-4">승리 조건</h2>
+    <p class="text-slate-600 mb-4">아래 조건 중 하나를 먼저 달성하면 승리!</p>
+
+    <div class="space-y-4">
+      <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold shrink-0">1</div>
+        <div>
+          <h3 class="font-bold text-orange-700">같은 카드 3개</h3>
+          <p class="text-sm text-slate-600">동일한 카드를 3개 모으세요!</p>
+          <p class="text-xs text-red-600 mt-1">예: 바나나 2개 + 조커 1개 = 바나나 3개로 인정!</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold shrink-0">2</div>
+        <div>
+          <h3 class="font-bold text-orange-700">다른 카드 4개</h3>
+          <p class="text-sm text-slate-600">서로 다른 종류의 카드 4개를 모으세요!</p>
+          <p class="text-xs text-red-600 mt-1">예: 3종류 + 조커 1개 = 4종류로 인정!</p>
+        </div>
+      </div>
+
+      <div class="flex items-start gap-3 p-4 bg-orange-50 rounded-xl">
+        <div class="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold shrink-0">3</div>
+        <div>
+          <h3 class="font-bold text-orange-700">카드 5개</h3>
+          <p class="text-sm text-slate-600">종류 상관없이 카드 5개를 모으세요!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 게임 진행 -->
+  <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-orange-200">
+    <h2 class="text-xl font-bold text-orange-700 mb-4">게임 진행</h2>
+
+    <div class="space-y-6">
+      <div>
+        <h3 class="font-bold text-orange-600 mb-2">1단계: 응찰 여부 선택</h3>
+        <ul class="list-disc ml-5 space-y-1 text-slate-700 text-sm">
+          <li>이번 라운드 카드가 공개됩니다</li>
+          <li><b>응찰 참여:</b> 경매에 참여합니다</li>
+          <li><b>불응찰:</b> 이번 라운드를 포기하고 <span class="text-green-600 font-bold">+50,000원</span>을 받습니다</li>
+          <li>모든 플레이어가 선택을 완료하면 다음 단계로 진행</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-orange-600 mb-2">2단계: 비공개 입찰</h3>
+        <ul class="list-disc ml-5 space-y-1 text-slate-700 text-sm">
+          <li>응찰자들만 입찰에 참여합니다</li>
+          <li>입찰 금액은 <b>비공개</b>로 진행됩니다</li>
+          <li>1만원 단위로 입찰 가능</li>
+          <li><b>입찰 취소:</b> 0원으로 입찰 (포기)</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-orange-600 mb-2">3단계: 낙찰</h3>
+        <ul class="list-disc ml-5 space-y-1 text-slate-700 text-sm">
+          <li><b>최고가 입찰자</b>가 카드를 획득합니다</li>
+          <li>낙찰자는 입찰 금액을 지불합니다</li>
+          <li>낙찰되지 않은 응찰자는 <b>입찰금 전액 환불</b></li>
+          <li><b>동점:</b> 동점자 모두 카드를 획득합니다!</li>
+          <li><b>전원 0원:</b> 응찰자 모두 무료로 카드를 획득!</li>
+          <li><b>응찰자 1명:</b> 무료로 카드 획득!</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 진행 모드 -->
+  <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-orange-200">
+    <h2 class="text-xl font-bold text-orange-700 mb-4">진행 모드</h2>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="p-4 bg-blue-50 rounded-xl border border-blue-200">
+        <h3 class="font-bold text-blue-700 mb-2">보드게임 모드</h3>
+        <p class="text-sm text-slate-700">방장이 매 라운드 카드를 직접 선택합니다. 실제 카드와 함께 플레이할 때 사용하세요!</p>
+      </div>
+      <div class="p-4 bg-green-50 rounded-xl border border-green-200">
+        <h3 class="font-bold text-green-700 mb-2">웹 전용 모드</h3>
+        <p class="text-sm text-slate-700">카드가 자동으로 랜덤 선택됩니다. 온라인으로만 플레이할 때 편리합니다!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 팁 -->
+  <section class="bg-gradient-to-r from-orange-100 to-amber-100 rounded-2xl shadow-lg p-6 mb-6 border border-orange-300">
+    <h2 class="text-xl font-bold text-orange-800 mb-4">전략 팁</h2>
+    <ul class="space-y-2 text-slate-700">
+      <li>💡 불응찰로 자금을 모아 중요한 순간에 대규모 입찰!</li>
+      <li>💡 다른 플레이어의 카드 현황을 주시하세요</li>
+      <li>💡 조커 카드는 매우 희귀합니다 - 등장하면 적극적으로 노려보세요!</li>
+      <li>💡 동점 전략: 상대와 같은 금액을 입찰하면 둘 다 카드 획득!</li>
+    </ul>
+  </section>
+
+  <!-- 돌아가기 -->
+  <div class="text-center">
+    <a href="room.html" class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-xl shadow-lg transition">
+      게임 시작하기
+    </a>
+  </div>
+
+  <footer class="text-center mt-8 text-sm text-slate-500">
+    <p>우리가 이김 - 경매 보드게임</p>
+  </footer>
+</div>
+</body>
+</html>
