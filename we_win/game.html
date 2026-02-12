@@ -787,12 +787,12 @@
     logUl.innerHTML="";
     (d.roundLogs||[]).slice().reverse().slice(0,10).forEach(entry=>{
       const li=document.createElement("li");
-      const parts = (entry.participants||[]).length ? entry.participants.join(", ") : "—";
+      const winners = (entry.winners||[]).length ? entry.winners.join(", ") : "없음";
       const isJ = entry.item === JOKER;
       li.className="border rounded px-3 py-2 " + (isJ ? "border-red-300 bg-red-50" : "border-orange-200 bg-orange-50");
       li.innerHTML = `<div class="flex items-center justify-between">
         <div>R${entry.round} · <b class="${isJ?'text-red-600':''}">${entry.item||"-"}</b></div>
-        <div class="text-slate-500">응찰: ${parts}</div>
+        <div class="text-emerald-600 font-medium">낙찰: ${winners}</div>
       </div>`;
       logUl.appendChild(li);
     });
