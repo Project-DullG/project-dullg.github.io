@@ -173,31 +173,6 @@
       <div class="text-xs text-slate-500 mt-2">※ 잔액은 본인만 확인 가능</div>
     </section>
 
-    <!-- 방장: 카드 제어 -->
-    <section id="hostPanel" class="hidden card p-4 md:p-6 lg:col-span-12 xl:col-span-3">
-      <h2 class="font-semibold mb-3 text-orange-700">방장 설정</h2>
-      <div id="modeNotice" class="text-xs text-slate-600 mb-2"></div>
-
-      <label class="text-sm block mb-1">이번 카드</label>
-      <div class="flex items-center gap-2 mb-3">
-        <select id="roundItem" class="flex-1 border border-orange-300 rounded px-3 py-2 text-sm">
-          <option value="">— 선택 —</option>
-          <option>두 정치 세력</option>
-          <option>준영이의 바나나</option>
-          <option>킹 신웅 교수님</option>
-          <option>보금이의 클로버를 든 하영이</option>
-          <option>조커 이성로</option>
-        </select>
-        <button id="btnRandom" class="btn bg-orange-200 hover:bg-orange-300 rounded px-3 py-2 text-sm">랜덤</button>
-      </div>
-      <p class="text-xs text-slate-500 mb-3">카드를 선택하면 라운드가 시작됩니다</p>
-
-      <hr class="my-4 border-orange-200">
-      <button id="btnEndGame" class="btn w-full bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2 text-sm">
-        게임 종료
-      </button>
-      <div id="errHost" class="hidden mt-3 p-3 rounded bg-rose-50 border border-rose-200 text-rose-700 text-sm"></div>
-    </section>
   </div>
 
   <!-- 토스트 -->
@@ -328,6 +303,7 @@
 
   // 승리 조건 체크 (조커 = 와일드카드)
   function checkWin(items=[]){
+    if(!Array.isArray(items)) return "";
     const t = items.length;
     if(t < 3) return "";
 
@@ -339,23 +315,26 @@
     if(t >= 5) return "any5";
 
     // 같은 카드 3개 체크 (조커 포함)
+    // 조커는 가장 많은 카드와 같은 것으로 취급
     const counts = {};
     nonJokers.forEach(it => counts[it] = (counts[it]||0) + 1);
-    const maxCount = Math.max(0, ...Object.values(counts));
+    const maxCount = Object.values(counts).length > 0 ? Math.max(...Object.values(counts)) : 0;
+    // 조커만 3개 이상이거나, 특정 카드 + 조커로 3개 이상
     if(maxCount + jokers >= 3) return "same3";
 
-    // 다른 카드 4개 체크 (조커는 아무거나 대체)
-    const uniqueNonJoker = new Set(nonJokers).size;
-    // 조커는 uniqueNonJoker에 없는 카드로 대체 가능
-    const possibleUnique = Math.min(uniqueNonJoker + jokers, BASE_ITEMS.length);
-    if(t >= 4 && possibleUnique >= 4) return "diff4";
+    // 다른 카드 4개 체크 (t가 4 이상일 때만)
+    if(t >= 4) {
+      const uniqueNonJoker = new Set(nonJokers).size;
+      // 조커는 없는 카드 종류를 대체 (최대 4종류까지)
+      const possibleUnique = Math.min(uniqueNonJoker + jokers, BASE_ITEMS.length);
+      if(possibleUnique >= 4) return "diff4";
+    }
 
     return "";
   }
 
   let isHost=false, currentPlayers=[], currentMe=null;
   let lastSeenResultRound=0, singleRevealTimerSet=false;
-  let boardMode=false;
   let endedLocally=false, deletedOnce=false;
 
   // 버튼 중복 클릭 방지
@@ -417,7 +396,7 @@
       $("#endMsg").textContent = msg;
     }
     $("#endedBox").classList.remove("hidden");
-    ["btnEndGame","roundItem","btnRandom","btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
+    ["btnConfirmBid","btnCancelBid","btnConfirmBidMobile","btnCancelBidMobile","btnLockPart","btnResyncPart"]
       .forEach(id=>{ const el=$("#"+id); if(el) el.setAttribute("disabled","true"); });
     show("#mobileBidBar", false);
   }
@@ -437,34 +416,11 @@
       await runTransaction(db, async tx=>{
         const s=await tx.get(ref); if(!s.exists()) return;
         const r=s.data();
-        if(r.boardMode===true) return;
         if((r.phase||"choose")==="choose" && !r.currentItem){
           tx.update(ref,{currentItem:randItem(),updatedAt:serverTimestamp()});
         }
       });
     }catch(e){ console.warn("ensureRandomItemIfEmpty:", e); }
-  }
-
-  async function resetRoundForItemChange(nextItem){
-    try{
-      await runTransaction(db, async tx=>{
-        const s=await tx.get(ref); if(!s.exists()) return;
-        const r=s.data();
-        const players=(r.players||[]).map(p=>({
-          ...p, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null
-        }));
-        tx.update(ref,{
-          players,
-          participants: [],
-          participantsBackup: [],
-          lastItem: "",
-          currentItem: nextItem||"",
-          phase: "choose",
-          updatedAt: serverTimestamp()
-        });
-      });
-      toast("카드가 변경되어 라운드를 다시 시작합니다.");
-    }catch(e){ console.warn("resetRoundForItemChange:", e); }
   }
 
   async function afterAllLockedAdvance(){
@@ -477,7 +433,6 @@
         if(players.length===0) return;
 
         const item=(r.currentItem||"").trim();
-        if(r.boardMode===true && !item) return;
 
         const allLocked=players.every(p=>p.readyPart===true || p.ready===true);
         if(!allLocked) return;
@@ -621,7 +576,7 @@
           winners,
           winningBid,
           skipped: (r.players||[]).filter(p=>!partNames.includes(p.name)).map(p=>p.name),
-          mode: r.boardMode===true ? "board" : "web",
+          mode: "web",
           ts: Date.now()
         };
         const detailed = [...(r.roundLogsDetailed||[]), detail].slice(-200);
@@ -693,7 +648,7 @@
           winners,
           winningBid,
           skipped: (r.players||[]).filter(p=>!partNames.includes(p.name)).map(p=>p.name),
-          mode: r.boardMode===true ? "board" : "web",
+          mode: "web",
           ts: Date.now()
         };
         const detailed = [...(r.roundLogsDetailed||[]), detail].slice(-200);
@@ -730,8 +685,6 @@
       return;
     }
 
-    boardMode = d.boardMode===true;
-
     $("#round").textContent=d.round??0;
     const phaseLabel = d.phase==="choose" ? "응찰 선택" :
                        d.phase==="bid" ? "비공개 입찰" :
@@ -748,10 +701,6 @@
 
     isHost=guessHost(d);
     $("#role").textContent=isHost?"host":"guest";
-    show("#hostPanel", isHost);
-    $("#modeNotice").textContent = boardMode
-      ? "보드게임 모드: 방장이 카드를 수동 선택"
-      : "웹 전용 모드: 카드 자동 결정";
 
     const players = Array.isArray(d.players)? d.players : [];
     const me = players.find(p=>p.name===myName) || null;
@@ -777,19 +726,22 @@
       ulItems.appendChild(li);
     });
 
-    // 승리 체크
-    const reason=checkWin(myItems);
-    if(reason && !d.gameOver){
+    // 승리 체크 (모든 플레이어 확인)
+    const allWinners = players.filter(p => checkWin(p.items||[]) !== "");
+    if(allWinners.length > 0 && !d.gameOver){
       try{
         await runTransaction(db, async tx=>{
           const s2=await tx.get(ref); if(!s2.exists()) return;
           const r=s2.data();
+          if(r.gameOver) return; // 이미 종료된 경우 스킵
           const winners = (r.players||[]).filter(p=>checkWin(p.items||[])!=="").map(p=>p.name);
+          const firstWinner = winners[0] || "";
+          const winReason = firstWinner ? checkWin((r.players||[]).find(p=>p.name===firstWinner)?.items||[]) : "";
           tx.update(ref,{
             gameOver:true,
             endedAt: serverTimestamp(),
             finalWinners: winners,
-            victoryReason: reason,
+            victoryReason: winReason,
             updatedAt: serverTimestamp()
           });
         });
@@ -888,9 +840,9 @@
       show("#phaseChoose", true);
       show("#phaseBid", false);
       show("#mobileBidBar", false);
-      $("#chooseHint").classList.toggle("hidden", !(boardMode && !d.currentItem));
+      show("#chooseHint", false);
 
-      if(!boardMode && !d.currentItem) await ensureRandomItemIfEmpty();
+      if(!d.currentItem) await ensureRandomItemIfEmpty();
 
       const partRadios=[...document.querySelectorAll('input[name="part"]')];
       const partVal = me?.willParticipate===true ? "yes" : me?.willParticipate===false? "no" : null;
@@ -932,32 +884,6 @@
     bindStepButtons();
   });
 
-  function showErr(msg){
-    const b=$("#errHost");
-    if(!b) return;
-    b.textContent=msg;
-    b.classList.remove("hidden");
-  }
-
-  // 방장: 카드 변경/랜덤
-  $("#roundItem").addEventListener("change", withLock(async ()=>{
-    const val=$("#roundItem").value;
-    await resetRoundForItemChange(val||"");
-  }));
-  $("#btnRandom").addEventListener("click", withLock(async ()=>{
-    const r=randItem();
-    $("#roundItem").value=r;
-    await resetRoundForItemChange(r);
-  }));
-
-  // 게임 종료
-  $("#btnEndGame").onclick = async ()=>{
-    try{
-      await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
-      alert("게임을 종료합니다.");
-    }catch(err){ showErr(`처리 실패: ${err.message||err}`); }
-  };
-
   // 응찰 확정
   $("#btnLockPart").addEventListener("click", withLock(async ()=>{
     const cur=document.querySelector('input[name="part"]:checked');
@@ -971,7 +897,7 @@
     const me=players.find(p=>p.name===myName);
     if(!me) { toast("플레이어 정보를 찾을 수 없습니다."); return; }
     if(me.readyPart===true || me.ready===true){ toast("이미 응찰 확정했습니다."); return; }
-    if(r.boardMode===true && !r.currentItem){ toast("방장이 카드를 선택해야 합니다."); return; }
+    if(!r.currentItem){ toast("카드가 아직 선택되지 않았습니다."); return; }
 
     me.willParticipate = choice;
     me.readyPart = true;

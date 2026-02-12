@@ -74,20 +74,7 @@
     <h2 class="font-semibold mb-3 text-orange-700">새 방 만들기</h2>
 
     <label class="text-sm block mb-1">내 닉네임(방장)</label>
-    <input id="hostName" type="text" placeholder="예: 이김왕" class="w-full border border-orange-300 rounded px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400" />
-
-    <!-- 진행 방식 선택 -->
-    <div class="mb-3 text-sm space-y-2">
-      <div class="font-medium">진행 방식</div>
-      <label class="flex items-center gap-2">
-        <input type="radio" name="mode" value="board" checked>
-        <span>보드게임 카드 사용(매 라운드 방장이 카드 수동 등록)</span>
-      </label>
-      <label class="flex items-center gap-2">
-        <input type="radio" name="mode" value="web">
-        <span>웹 전용(카드 자동 결정)</span>
-      </label>
-    </div>
+    <input id="hostName" type="text" placeholder="예: 이김왕" class="w-full border border-orange-300 rounded px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-orange-400" />
 
     <button id="btnCreate" class="btn w-full bg-orange-500 hover:bg-orange-600 text-white rounded px-4 py-2 font-semibold" disabled>
       방 만들기
@@ -238,20 +225,18 @@
   const listEl = $("#roomsList");
   const errJoinList = $("#errJoinList");
 
-  function roomCard({id, hostName, players=[], started=false, boardMode}) {
+  function roomCard({id, hostName, players=[], started=false}) {
     const count = Array.isArray(players) ? players.length : 0;
     const disabled = started || count>=MAX_PLAYERS;
-    const modeLabel = boardMode ? "보드게임" : "웹 전용";
     return `
       <li class="border border-orange-200 rounded-lg p-3 flex flex-col gap-2 bg-gradient-to-br from-white to-orange-50">
         <div class="flex items-center justify-between">
           <div class="text-sm">
-            <div class="font-semibold text-orange-700">Room <span class="mono">${id}</span></div>
+            <div class="font-semibold text-orange-700">${id}</div>
             <div class="text-xs text-slate-500">방장: ${hostName || "-"}</div>
           </div>
-          <div class="text-right text-xs text-slate-600">
-            <div>${started ? "진행중" : "대기중"}</div>
-            <div class="text-slate-400">${modeLabel}</div>
+          <div class="text-right">
+            <span class="text-xs px-2 py-1 rounded ${started ? 'bg-slate-200' : 'bg-green-100 text-green-700'}">${started ? "진행중" : "대기중"}</span>
           </div>
         </div>
         <div class="flex items-center justify-between">
@@ -276,8 +261,7 @@
           players: d.players||[],
           started: !!d.started,
           gameOver: d.gameOver===true,
-          createdAt: d.createdAt?.toMillis?.() || 0,
-          boardMode: d.boardMode===true
+          createdAt: d.createdAt?.toMillis?.() || 0
         });
       });
       const rooms = all.filter(r=>!r.started && !r.gameOver)
@@ -346,7 +330,7 @@
       $("#count").textContent=n;
       $("#btnStart").disabled=!(n>=3 && n<=MAX_PLAYERS);
 
-      $("#modeInfo").textContent = data.boardMode ? "진행 방식: 보드게임(수동 카드 등록)" : "진행 방식: 웹 전용(자동 카드)";
+      $("#modeInfo").textContent = "카드가 자동으로 선택됩니다";
     });
   }
 
@@ -436,8 +420,6 @@
     const errBox=$("#errCreate");
     if(!name){ errBox.textContent="닉네임을 입력하세요."; errBox.classList.remove("hidden"); return; }
 
-    const boardMode = (document.querySelector('input[name="mode"]:checked')?.value === 'board');
-
     const roomId = await makeRoomIdFromName(name);
     const baseDir = location.origin + location.pathname.replace(/[^/]+$/, "");
     const joinUrl = new URL(baseDir + "join.html"); joinUrl.searchParams.set("room", roomId);
@@ -449,7 +431,6 @@
       started: false,
       gameOver: false,
       round: 0,
-      boardMode: boardMode,
       players: [
         { id:"P1", name, balance:1000000, hold:0, bid:0, committed:false, readyPart:false, readyBid:false, willParticipate:null, items:[] }
       ],
