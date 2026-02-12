@@ -523,21 +523,14 @@
           const allZero = holds.every(h=>h===0);
 
           if(allZero){
-            winners = [...partNames];
+            // 모두 0원 입찰 시 아무도 카드를 받지 못함
+            winners = [];
             winningBid = 0;
-            players = players.map(p=>{
-              if(partNames.includes(p.name)){
-                const refund=Number(p.hold||0);
-                return {
-                  ...p,
-                  balance:Number(p.balance||0)+refund,
-                  hold:0,bid:0,
-                  committed:false,readyPart:false,readyBid:false,willParticipate:null,
-                  items:[...(p.items||[]), item]
-                };
-              }
-              return {...p, hold:0,bid:0,committed:false,readyPart:false,readyBid:false,willParticipate:null};
-            });
+            players = players.map(p=>({
+              ...p,
+              hold:0,bid:0,
+              committed:false,readyPart:false,readyBid:false,willParticipate:null
+            }));
           }else if(maxHold>0){
             winners=participants.filter(p=>Number(p.hold||0)===maxHold).map(p=>p.name);
             winningBid = maxHold;
