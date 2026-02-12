@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
 <title>우리가 이김 · 방(lobby)</title>
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -138,26 +140,74 @@
     <h2 class="font-semibold mb-3 text-orange-700">게임 카드</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
       <div class="text-center">
-        <img src="banana.png" alt="준영이의 바나나" class="w-16 h-16 mx-auto rounded-lg object-cover border-2 border-yellow-400" />
-        <p class="text-xs mt-1">준영이의 바나나</p>
+        <img src="banana.png" alt="준영이의 바나나" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-lg object-cover border-2 border-yellow-400" />
+        <p class="text-[10px] sm:text-xs mt-1">준영이의 바나나</p>
       </div>
       <div class="text-center">
-        <img src="clover.png" alt="보금이의 클로버를 든 하영이" class="w-16 h-16 mx-auto rounded-lg object-cover border-2 border-green-400" />
-        <p class="text-xs mt-1">보금이의 클로버를 든 하영이</p>
+        <img src="clover.png" alt="보금이의 클로버를 든 하영이" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-lg object-cover border-2 border-green-400" />
+        <p class="text-[10px] sm:text-xs mt-1 leading-tight">보금이의 클로버를 든 하영이</p>
       </div>
       <div class="text-center">
-        <img src="king.png" alt="킹 신웅 교수님" class="w-16 h-16 mx-auto rounded-lg object-cover border-2 border-purple-400" />
-        <p class="text-xs mt-1">킹 신웅 교수님</p>
+        <img src="king.png" alt="킹 신웅 교수님" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-lg object-cover border-2 border-purple-400" />
+        <p class="text-[10px] sm:text-xs mt-1">킹 신웅 교수님</p>
       </div>
       <div class="text-center">
-        <img src="politics.jpeg" alt="두 정치 세력" class="w-16 h-16 mx-auto rounded-lg object-cover border-2 border-blue-400" />
-        <p class="text-xs mt-1">두 정치 세력</p>
+        <img src="politics.jpeg" alt="두 정치 세력" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-lg object-cover border-2 border-blue-400" />
+        <p class="text-[10px] sm:text-xs mt-1">두 정치 세력</p>
       </div>
       <div class="text-center">
-        <img src="joker.jpeg" alt="조커 이성로" class="w-16 h-16 mx-auto rounded-lg object-cover border-2 border-red-500 ring-2 ring-red-300" />
-        <p class="text-xs mt-1 text-red-600 font-bold">조커 이성로</p>
-        <p class="text-[10px] text-slate-500">희귀! 와일드카드</p>
+        <img src="joker.jpeg" alt="조커 이성로" class="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-lg object-cover border-2 border-red-500 ring-2 ring-red-300" />
+        <p class="text-[10px] sm:text-xs mt-1 text-red-600 font-bold">조커 이성로</p>
+        <p class="text-[9px] sm:text-[10px] text-slate-500">희귀! 와일드카드</p>
       </div>
+    </div>
+  </section>
+
+  <!-- 게임 설명 요약 -->
+  <section class="bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl shadow-lg p-4 md:p-6 text-white">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-lg">게임 방법</h2>
+      <a href="rules.html" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-sm transition">자세히 보기 →</a>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4 text-sm">
+      <div class="bg-white/10 rounded-lg p-3">
+        <div class="font-bold mb-1">🎯 목표</div>
+        <p class="text-white/90 text-xs">카드를 모아 승리 조건 달성!</p>
+      </div>
+      <div class="bg-white/10 rounded-lg p-3">
+        <div class="font-bold mb-1">💰 초기 자금</div>
+        <p class="text-white/90 text-xs">100만원으로 시작</p>
+      </div>
+      <div class="bg-white/10 rounded-lg p-3">
+        <div class="font-bold mb-1">👥 인원</div>
+        <p class="text-white/90 text-xs">3~8명</p>
+      </div>
+    </div>
+
+    <div class="mt-4 bg-white/10 rounded-lg p-3">
+      <div class="font-bold mb-2">🏆 승리 조건</div>
+      <div class="grid grid-cols-3 gap-2 text-xs text-center">
+        <div class="bg-white/10 rounded p-2">
+          <div class="font-bold">같은 카드</div>
+          <div class="text-2xl">3개</div>
+        </div>
+        <div class="bg-white/10 rounded p-2">
+          <div class="font-bold">다른 카드</div>
+          <div class="text-2xl">4개</div>
+        </div>
+        <div class="bg-white/10 rounded p-2">
+          <div class="font-bold">아무 카드</div>
+          <div class="text-2xl">5개</div>
+        </div>
+      </div>
+      <p class="text-[10px] text-white/70 mt-2 text-center">* 조커는 어떤 카드로도 대체 가능!</p>
+    </div>
+
+    <div class="mt-4 text-xs space-y-1 text-white/90">
+      <p>1️⃣ <b>응찰 선택:</b> 참여 또는 불응찰(+5만원)</p>
+      <p>2️⃣ <b>비공개 입찰:</b> 몰래 금액 입력</p>
+      <p>3️⃣ <b>낙찰:</b> 최고가 입찰자가 카드 획득!</p>
     </div>
   </section>
 </div>

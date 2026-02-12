@@ -358,6 +358,23 @@
   let boardMode=false;
   let endedLocally=false, deletedOnce=false;
 
+  // 버튼 중복 클릭 방지
+  let isProcessing = false;
+  function withLock(fn) {
+    return async (...args) => {
+      if (isProcessing) return;
+      isProcessing = true;
+      try {
+        await fn(...args);
+      } catch (e) {
+        console.error(e);
+        toast(`오류: ${e.message || e}`);
+      } finally {
+        setTimeout(() => { isProcessing = false; }, 500);
+      }
+    };
+  }
+
   // 입찰(1만 단위)
   let bidStep=10000, stagedBid=0;
   const parseMoney=s=>Number((s||"0").replace(/[^\d]/g,""))||0;
@@ -923,15 +940,15 @@
   }
 
   // 방장: 카드 변경/랜덤
-  $("#roundItem").addEventListener("change", async ()=>{
+  $("#roundItem").addEventListener("change", withLock(async ()=>{
     const val=$("#roundItem").value;
     await resetRoundForItemChange(val||"");
-  });
-  $("#btnRandom").addEventListener("click", async ()=>{
+  }));
+  $("#btnRandom").addEventListener("click", withLock(async ()=>{
     const r=randItem();
     $("#roundItem").value=r;
     await resetRoundForItemChange(r);
-  });
+  }));
 
   // 게임 종료
   $("#btnEndGame").onclick = async ()=>{
@@ -942,30 +959,29 @@
   };
 
   // 응찰 확정
-  $("#btnLockPart").addEventListener("click", async ()=>{
+  $("#btnLockPart").addEventListener("click", withLock(async ()=>{
     const cur=document.querySelector('input[name="part"]:checked');
-    if(!cur){ alert("응찰/불응찰을 선택하세요."); return; }
+    if(!cur){ toast("응찰/불응찰을 선택하세요."); return; }
     const choice = cur.value==="yes";
-    try{
-      const snap=await getDoc(ref);
-      if(!snap.exists()) return;
-      const r=snap.data();
-      const players=(r.players||[]).map(p=>({...p}));
-      const me=players.find(p=>p.name===myName);
-      if(!me) return;
-      if(me.readyPart===true || me.ready===true){ toast("이미 응찰 확정했습니다."); return; }
-      if(r.boardMode===true && !r.currentItem){ alert("방장이 카드를 선택해야 합니다."); return; }
 
-      me.willParticipate = choice;
-      me.readyPart = true;
-      delete me.ready;
-      if(choice===false){
-        me.balance = Number(me.balance||0) + NO_BID_BONUS;
-      }
-      await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
-      toast(choice ? "응찰 참여를 확정했습니다." : `불응찰(+${fmt(NO_BID_BONUS)}원)을 확정했습니다.`);
-    }catch(err){ alert(`응찰 확정 실패: ${err.message||err}`); }
-  });
+    const snap=await getDoc(ref);
+    if(!snap.exists()) { toast("방이 존재하지 않습니다."); return; }
+    const r=snap.data();
+    const players=(r.players||[]).map(p=>({...p}));
+    const me=players.find(p=>p.name===myName);
+    if(!me) { toast("플레이어 정보를 찾을 수 없습니다."); return; }
+    if(me.readyPart===true || me.ready===true){ toast("이미 응찰 확정했습니다."); return; }
+    if(r.boardMode===true && !r.currentItem){ toast("방장이 카드를 선택해야 합니다."); return; }
+
+    me.willParticipate = choice;
+    me.readyPart = true;
+    delete me.ready;
+    if(choice===false){
+      me.balance = Number(me.balance||0) + NO_BID_BONUS;
+    }
+    await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
+    toast(choice ? "응찰 참여를 확정했습니다." : `불응찰(+${fmt(NO_BID_BONUS)}원)을 확정했습니다.`);
+  }));
 
   // 응찰 새로고침
   $("#btnResyncPart").addEventListener("click", async ()=>{
@@ -983,14 +999,15 @@
   });
 
   // 입찰 확정/취소
-  async function doConfirmBid(){
+  const doConfirmBid = withLock(async ()=>{
     const snap=await getDoc(ref);
-    if(!snap.exists()) return;
+    if(!snap.exists()) { toast("방이 존재하지 않습니다."); return; }
     const r=snap.data();
     if(r.phase!=="bid"){ toast("아직 입찰 단계가 아닙니다."); return; }
     const players=(r.players||[]).map(p=>({...p}));
     const me=players.find(p=>p.name===myName);
-    if(!me) return;
+    if(!me) { toast("플레이어 정보를 찾을 수 없습니다."); return; }
+    if(me.readyBid===true || me.committed===true) { toast("이미 입찰을 확정했습니다."); return; }
     const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
     if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
     const avail=Number(me.balance||0)+Number(me.hold||0);
@@ -1002,16 +1019,18 @@
     me.committed=true;
     me.readyBid=true;
     await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
-    toast("입찰을 확정했습니다.");
-  }
-  async function doCancelBid(){
+    toast(`입찰을 확정했습니다. (${fmt(val)}원)`);
+  });
+
+  const doCancelBid = withLock(async ()=>{
     const snap=await getDoc(ref);
-    if(!snap.exists()) return;
+    if(!snap.exists()) { toast("방이 존재하지 않습니다."); return; }
     const r=snap.data();
     if(r.phase!=="bid"){ toast("아직 입찰 단계가 아닙니다."); return; }
     const players=(r.players||[]).map(p=>({...p}));
     const me=players.find(p=>p.name===myName);
-    if(!me) return;
+    if(!me) { toast("플레이어 정보를 찾을 수 없습니다."); return; }
+    if(me.readyBid===true || me.committed===true) { toast("이미 입찰을 확정했습니다."); return; }
     const isPart = (me.willParticipate===true) || (Array.isArray(r.participants)&&r.participants.includes(myName));
     if(!isPart){ toast("이번 라운드는 입찰할 수 없습니다."); return; }
     const refund=Number(me.hold||0);
@@ -1021,8 +1040,9 @@
     me.committed=false;
     me.readyBid=true;
     await updateDoc(ref,{ players, updatedAt:serverTimestamp() });
-    toast("입찰을 취소했습니다.");
-  }
+    toast("입찰을 취소(0원)했습니다.");
+  });
+
   $("#btnConfirmBid")?.addEventListener("click", doConfirmBid);
   $("#btnCancelBid")?.addEventListener("click", doCancelBid);
   $("#btnConfirmBidMobile")?.addEventListener("click", doConfirmBid);
