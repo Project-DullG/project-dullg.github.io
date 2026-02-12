@@ -811,14 +811,15 @@
         const skips = (entry.skipped||[]).length ? entry.skipped.join(", ") : "없음";
         const isJ = entry.item === JOKER;
         li.className="border rounded px-3 py-2 " + (isJ ? "border-red-200 bg-red-50" : "bg-white");
+        const winnersTxt = (entry.winners||[]).length ? entry.winners.join(", ") : "없음";
         li.innerHTML = `
           <div class="flex items-center justify-between">
             <div>R${entry.round} · <b class="${isJ?'text-red-600':''}">${entry.item||"-"}</b></div>
             <div class="text-slate-500">낙찰가: ${fmt(entry.winningBid||0)}원</div>
           </div>
           <div class="mt-1 text-slate-700">응찰액: ${bidsTxt}</div>
-          <div class="mt-1 text-slate-700">낙찰: ${(entry.winners||[]).join(", ") || "—"}</div>
-          <div class="mt-1 text-slate-500">불응찰: ${skips}</div>
+          <div class="mt-1 font-bold ${winnersTxt==="없음"?"text-slate-400":"text-emerald-600"}">🏆 낙찰: ${winnersTxt}</div>
+          <div class="mt-1 text-slate-400 text-xs">불응찰: ${skips}</div>
         `;
         detUl.appendChild(li);
       });
