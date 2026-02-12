@@ -64,6 +64,12 @@
     <a id="btnReplay" href="room.html" class="ml-3 underline font-semibold">다시하기</a>
   </div>
 
+  <!-- 방장 전용: 게임 종료 버튼 -->
+  <div id="hostEndBox" class="hidden p-3 rounded-xl border border-rose-200 bg-rose-50 flex items-center justify-between">
+    <span class="text-sm text-rose-700">방장 전용</span>
+    <button id="btnEndGame" class="btn bg-rose-600 hover:bg-rose-700 text-white rounded px-4 py-2 text-sm">게임 종료</button>
+  </div>
+
   <div id="grid" class="grid gap-4 lg:grid-cols-12">
 
     <!-- 내 정보 + 단계 액션 -->
@@ -253,7 +259,7 @@
   // 카드 목록 (조커 제외 기본 4개)
   const BASE_ITEMS = ["두 정치 세력", "준영이의 바나나", "킹 신웅 교수님", "보금이의 클로버를 든 하영이"];
   const JOKER = "조커 이성로";
-  const JOKER_CHANCE = 0.1; // 10% 확률로 조커 등장
+  const JOKER_CHANCE = 0.15; // 15% 확률로 조커 등장
 
   // 이미지 매핑
   const ITEM_IMG = {
@@ -702,6 +708,7 @@
 
     isHost=guessHost(d);
     $("#role").textContent=isHost?"host":"guest";
+    show("#hostEndBox", isHost && !d.gameOver);
 
     const players = Array.isArray(d.players)? d.players : [];
     const me = players.find(p=>p.name===myName) || null;
@@ -986,6 +993,16 @@
     if (winners.includes(myName)) toast(`낙찰! (${d.lastItem||d.currentItem||""})`, RESULT_IMG.success);
     else if (wasPart===true)      toast(`입찰 실패(환불 완료)`, RESULT_IMG.fail);
     else                          toast(`불응찰 라운드 종료.`);
+  });
+
+  // 방장: 게임 종료 버튼
+  $("#btnEndGame")?.addEventListener("click", async ()=>{
+    if(!isHost){ toast("방장만 게임을 종료할 수 있습니다."); return; }
+    if(!confirm("정말 게임을 종료하시겠습니까?")) return;
+    try{
+      await updateDoc(ref,{ gameOver:true, endedAt:serverTimestamp(), updatedAt:serverTimestamp() });
+      toast("게임을 종료했습니다.");
+    }catch(e){ toast(`종료 실패: ${e.message||e}`); }
   });
 
   // 5분마다 비활성 방 정리
