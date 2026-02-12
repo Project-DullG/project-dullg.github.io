@@ -782,17 +782,15 @@
       show("#revealBox", false);
     }
 
-    // 라운드 로그
+    // 라운드 로그 (게임 중에는 카드 정보만)
     const logUl = $("#roundLog");
     logUl.innerHTML="";
     (d.roundLogs||[]).slice().reverse().slice(0,10).forEach(entry=>{
       const li=document.createElement("li");
-      const winners = (entry.winners||[]).length ? entry.winners.join(", ") : "없음";
       const isJ = entry.item === JOKER;
       li.className="border rounded px-3 py-2 " + (isJ ? "border-red-300 bg-red-50" : "border-orange-200 bg-orange-50");
-      li.innerHTML = `<div class="flex items-center justify-between">
-        <div>R${entry.round} · <b class="${isJ?'text-red-600':''}">${entry.item||"-"}</b></div>
-        <div class="text-emerald-600 font-medium">낙찰: ${winners}</div>
+      li.innerHTML = `<div class="text-center">
+        <span>R${entry.round}</span> · <b class="${isJ?'text-red-600':''}">${entry.item||"-"}</b>
       </div>`;
       logUl.appendChild(li);
     });
