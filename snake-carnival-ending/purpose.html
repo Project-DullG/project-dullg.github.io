@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>[Snake Carnival] 프로젝트 제작 의도</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #080808;
+      --bg-gradient: radial-gradient(ellipse at 50% 0%, #1a1a1f 0%, #080808 60%);
+      --ink: #e8e8ec;
+      --dim: #7a7a85;
+      --accent: #c41e3a;
+      --accent-glow: rgba(196, 30, 58, 0.3);
+      --gold: #d4a855;
+      --gold-glow: rgba(212, 168, 85, 0.3);
+      --green: #22c55e;
+      --green-glow: rgba(34, 197, 94, 0.3);
+      --panel: rgba(20, 20, 24, 0.9);
+      --line: rgba(255, 255, 255, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--ink);
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
+      padding: 60px 24px;
+      line-height: 1.9;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* 헤더 */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      animation: fadeDown 1s ease-out;
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px var(--green-glow); }
+      50% { box-shadow: 0 0 40px var(--green-glow), 0 0 60px var(--green-glow); }
+    }
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 20px var(--green-glow); }
+      50% { text-shadow: 0 0 30px var(--green-glow), 0 0 40px var(--green-glow); }
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--green);
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border: 1px solid var(--green);
+      border-radius: 4px;
+      margin-bottom: 24px;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+
+    /* 챕터 */
+    .chapter {
+      background: linear-gradient(135deg, rgba(30,30,35,0.9) 0%, rgba(20,20,25,0.9) 100%);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+      animation: fadeUp 1s ease-out;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chapter::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: var(--chapter-color, var(--green));
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .chapter:hover {
+      border-color: var(--chapter-color, var(--green));
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 20px var(--chapter-glow, var(--green-glow));
+      transform: translateX(5px);
+    }
+
+    .chapter:hover::before {
+      transform: scaleY(1);
+    }
+
+    .chapter:nth-child(1) { --chapter-color: #22c55e; --chapter-glow: rgba(34, 197, 94, 0.3); }
+    .chapter:nth-child(2) { --chapter-color: #3b82f6; --chapter-glow: rgba(59, 130, 246, 0.3); animation-delay: 0.1s; }
+    .chapter:nth-child(3) { --chapter-color: #d4a855; --chapter-glow: rgba(212, 168, 85, 0.3); animation-delay: 0.2s; }
+
+    .chapter-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--chapter-color, var(--green));
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .chapter:hover .chapter-num {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    .chapter-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      transition: all 0.3s ease;
+    }
+
+    .chapter:hover .chapter-title {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .chapter p {
+      font-size: 1rem;
+      color: #c8c8d0;
+      margin-bottom: 16px;
+      text-align: justify;
+      word-break: keep-all;
+      line-height: 2;
+    }
+
+    .chapter p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* 하이라이트 */
+    .highlight {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .highlight-green {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .highlight-gold {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* 인용구 */
+    .quote {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid var(--gold);
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-style: italic;
+      color: #a0a0a8;
+      transition: all 0.3s ease;
+    }
+
+    .chapter:hover .quote {
+      border-color: var(--chapter-color, var(--gold));
+      box-shadow: 0 0 20px var(--chapter-glow, var(--gold-glow));
+    }
+
+    /* placeholder 스타일 */
+    .placeholder {
+      padding: 40px;
+      text-align: center;
+      border: 2px dashed var(--line);
+      border-radius: 8px;
+      color: var(--dim);
+      font-style: italic;
+    }
+
+    /* 뒤로가기 */
+    .back-link {
+      display: block;
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(30,30,35,0.9) 0%, rgba(20,20,25,0.9) 100%);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--dim);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      animation: fadeUp 1.8s ease-out;
+      margin-bottom: 16px;
+    }
+
+    .back-link:hover {
+      background: linear-gradient(135deg, rgba(40,40,48,0.95) 0%, rgba(30,30,38,0.95) 100%);
+      color: var(--ink);
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3), 0 0 30px var(--gold-glow);
+    }
+
+    /* 반응형 */
+    @media (max-width: 600px) {
+      body {
+        padding: 40px 16px;
+      }
+
+      h1 { font-size: 1.8rem; }
+      .chapter { padding: 20px; }
+      .chapter-title { font-size: 1.1rem; }
+
+      .chapter p {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 400px) {
+      body {
+        padding: 32px 12px;
+      }
+
+      .chapter { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="tag">Behind The Story</div>
+      <h1>프로젝트 제작 의도</h1>
+    </header>
+
+    <!-- 스포일러 주의 박스 -->
+    <div style="background: linear-gradient(135deg, rgba(196, 30, 58, 0.15) 0%, rgba(20, 20, 24, 0.95) 100%); border: 1px solid rgba(196, 30, 58, 0.4); border-radius: 12px; padding: 24px; margin-bottom: 32px; text-align: center; animation: fadeUp 0.8s ease-out;">
+      <p style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 12px;">SPOILER WARNING</p>
+      <p style="font-size: 0.95rem; color: #c8c8d0; line-height: 1.8;">이 페이지에는 <span style="color: #fff; font-weight: 600;">작가의 개인 주관</span>이 많이 담겨 있으며<br><span style="color: var(--accent); font-weight: 600;">시나리오에 대한 스포일러</span>가 포함되어 있습니다.</p>
+      <p style="font-size: 0.85rem; color: var(--dim); margin-top: 16px;">게임을 아직 플레이하지 않으셨다면 주의해주세요.</p>
+    </div>
+
+    <!-- 인삿말 -->
+    <article class="chapter" style="--chapter-color: #22c55e; --chapter-glow: rgba(34, 197, 94, 0.3);">
+      <div class="chapter-num">GREETING</div>
+      <h2 class="chapter-title">인삿말</h2>
+      <p>〈뱀이 죽은 축제〉를 플레이해주셔서 <span class="highlight-gold">진심으로 감사드립니다.</span></p>
+
+      <p>이 페이지는 게임을 마친 분들을 위해 준비한 <span class="highlight-gold">제작 비하인드</span>입니다. 시나리오를 만들면서 어떤 생각을 했는지, 왜 이런 시스템을 선택했는지에 대한 이야기를 담았습니다.</p>
+
+      <p>작년, 마음이 맞는 사람들과 함께 갑작스럽게 머더미스터리 프로젝트를 준비하게 되었습니다. <span class="highlight">기획에 약 2개월</span>, <span class="highlight">테스트와 수정에 약 4개월</span>. 그 과정에서 얻은 새로운 경험들은 제 인생에 큰 의미로 남을 것이라 생각합니다.</p>
+
+      <p>플레이어 여러분이 경험한 이야기가 단순한 게임을 넘어 <span class="highlight-gold">오래도록 기억에 남는 추억</span>이 되었기를 바랍니다.</p>
+    </article>
+
+    <article class="chapter" style="--chapter-color: #d4a855; --chapter-glow: rgba(212, 168, 85, 0.3);">
+      <div class="chapter-num">01.</div>
+      <h2 class="chapter-title">제작자의 머더미스터리 취향</h2>
+      <p><span class="highlight-gold">"어떻게 피해자를 죽일 수 있었는가"</span>에 집중하는 머더미스터리를 좋아합니다. 모두가 의심스럽지만, <span class="highlight">오직 범인만이 그것을 실행할 수 있었기에</span> 범인이 되는 구조를 선호하는 편입니다.</p>
+      <details style="margin: 16px 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;">
+        <summary style="padding: 14px 18px; background: rgba(0,0,0,0.3); color: #c8c8d0; font-size: 0.95rem; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between;">
+          선호하지 않는 유형의 예시
+          <span style="font-size: 0.7rem; color: var(--dim);">▼</span>
+        </summary>
+        <ul style="margin: 0; padding: 20px 20px 20px 40px; background: rgba(0,0,0,0.2); color: #a0a0a8; line-height: 2.2;">
+          <li><span class="highlight">우발적 범행</span> — 본래의 목적은 살인이 아니었으나, 예기치 못한 상황에서 충동적으로 범행에 이른 경우</li>
+          <li><span class="highlight">무자각의 살인</span> — 자신의 행위가 죽음의 원인이 되었음을 본인조차 인지하지 못한 경우</li>
+          <li><span class="highlight">우연의 중첩</span> — 복수의 인물이 각자의 의도로 행동한 결과가 우연히 맞물려, 살인이라기보다 사고에 가까운 경우</li>
+          <li><span class="highlight">분절된 인과</span> — 한 인물이 치명상 직전까지 몰아넣고, 다른 인물이 최후의 일격을 가해 사망에 이르게 한 경우</li>
+        </ul>
+      </details>
+      <p>위와 같은 유형의 사건은 "어떻게 피해자를 죽일 수 있었는가"를 따졌을 때, <span class="highlight">누구든 범인이 될 수 있는 가능성</span>이 열려 있습니다. 범인을 명확하게 특정할 근거가 부족해지고, 모두가 피해자를 <span class="highlight">"죽일 수 있었지만"</span>에 대한 가능성을 <span class="highlight-gold">명확히 해소하지 못하게</span> 됩니다.</p>
+      <p>〈뱀이 죽은 축제〉의 범인은 <span class="highlight-gold">처음부터 명확한 살의를 품고 범행을 계획</span>했습니다. 환상을 피하는 방법을 연구하고, 이교도의 문양을 장갑에 새기고, 모두가 환상에 빠진 틈을 노려 범행을 실행했습니다. <span class="highlight">우연도, 실수도, 공범도 없는 단독 범행</span>이기에, 결론에 도달했을 때 <span class="highlight-gold">범인이 범인일 수밖에 없는 완결성</span>이 성립한다고 생각합니다.</p>
+    </article>
+
+    <article class="chapter" style="--chapter-color: #3b82f6; --chapter-glow: rgba(59, 130, 246, 0.3);">
+      <div class="chapter-num">02.</div>
+      <h2 class="chapter-title">게임 시스템에 대하여</h2>
+      <p>〈뱀이 죽은 축제〉는 <span class="highlight-gold">보드 게임으로서의 재미</span>를 주고 싶어서 설계한 구조입니다. 핵심 시스템은 <span class="highlight-gold">소지품</span>입니다.</p>
+
+      <p>대부분의 머더미스터리에서 플레이어가 습득한 단서는 해당 플레이어가 <span class="highlight">자발적으로 공개하지 않는 한</span> 다른 플레이어가 알 수 없는 구조입니다. 하지만 이 작품에서는 <span class="highlight-gold">다른 방식</span>을 선택했습니다.</p>
+
+      <p>각 플레이어는 <span class="highlight">소지품 카드 2장</span>을 가지고 게임을 시작하며, 동시에 <span class="highlight-gold">최대 2장까지만</span> 보유할 수 있습니다. 탐색 페이즈에서 새로운 카드를 가져오면 보유 카드가 3장이 되므로, 그중 한 장을 <span class="highlight">맵 중앙에 뒷면으로 내려놓아야</span> 합니다.</p>
+
+      <p>여기서 핵심은 <span class="highlight-gold">중앙에 놓인 카드도 맵에 놓인 카드로 간주되어 다른 플레이어가 가져갈 수 있다</span>는 점입니다. 이 시스템을 통해 얻을 수 있는 것은 다음과 같습니다.</p>
+
+      <details style="margin: 16px 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;">
+        <summary style="padding: 14px 18px; background: rgba(0,0,0,0.3); color: #c8c8d0; font-size: 0.95rem; cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between;">
+          이 시스템의 장점
+          <span style="font-size: 0.7rem; color: var(--dim);">▼</span>
+        </summary>
+        <ul style="margin: 0; padding: 20px 20px 20px 40px; background: rgba(0,0,0,0.2); color: #a0a0a8; line-height: 2.2;">
+          <li><span class="highlight">정보의 순환</span> — 내가 버린 카드를 다른 플레이어가 습득할 수 있고, 다른 플레이어가 버린 카드를 내가 가져올 수 있습니다. 단서가 특정 플레이어에게만 독점되는 상황을 최소화합니다.</li>
+          <li><span class="highlight">거짓말 검증</span> — 카드를 조사한 플레이어가 구두로 공유한 정보가 진실인지 거짓인지 분별할 수 있습니다.</li>
+          <li><span class="highlight">전략적 선택</span> — 라운드당 새로운 정보를 조사할 수 있는 기회는 6번입니다. 해당 라운드에서 누군가가 보았던 정보를 보게 된다면 라운드는 계속 이어집니다. 이를 활용하여, 플레이어의 합의에 따라 전체가 볼 수 있는 단서가 늘어날 수도 있고 제한될 수도 있습니다.</li>
+        </ul>
+      </details>
+
+      <p>모두가 <span class="highlight">어떤 소지품을 버리고 어떤 것을 유지할지</span> 전략적으로 선택해야 하며, 그 선택에 따라 <span class="highlight-gold">게임의 흐름이 달라지게</span> 됩니다.</p>
+
+      <p>또한 카드 조사에서 <span class="highlight-gold">랜덤성을 최소화</span>하고 싶었습니다. 특정 장소의 단서를 1, 2, 3으로 표현하여 원하는 정보 및 치명적인 정보를 운에 맡겨 뽑는 경우를 최소화하려고 노력했습니다.</p>
+
+      <p>물론 특정 단서를 끝까지 숨기는 것도 가능합니다. 하지만 이는 사실 일반적인 머더미스터리에서 <span class="highlight">단서를 공유하지 않는 플레이</span>와 크게 다르지 않습니다. 이 게임은 그러한 상황을 <span class="highlight-gold">최대 2장까지로 제한</span>함으로써, 정보 독점의 폭을 조율한 것입니다.</p>
+      <p style="font-size: 0.9rem; color: var(--dim); margin-top: 8px;">(사실 범인의 경우 특정 단서(검은 가죽 장갑)를 숨기도록 의도했고, 이를 통해 해당 캐릭터가 독점해야 할 정보를 1장으로 제한한 것이기도 합니다.)</p>
+    </article>
+
+    <article class="chapter" style="--chapter-color: #a16207; --chapter-glow: rgba(161, 98, 7, 0.3);">
+      <div class="chapter-num">03.</div>
+      <h2 class="chapter-title">게임 난이도에 대하여</h2>
+      <p>〈뱀이 죽은 축제〉는 플레이어의 <span class="highlight-gold">메타적 추리 감각</span>에 따라 체감 난이도가 달라질 수 있습니다. 플레이어가 메타적 추리를 활용할 것을 고려하여 설계했기에, <span class="highlight-gold">게임 내 단서만으로도 범인을 특정할 수 있는 명확한 추리 구조</span>를 제공하는 것이 이번 작품의 핵심 방향이었습니다.</p>
+
+      <p><span class="highlight">메타적 추리</span>란 게임 내 단서가 아닌, 제작 의도나 캐릭터 설계의 패턴, 관상 등 게임 외적인 요소로 범인을 추측하는 접근법입니다. 메타적 추리는 결국 <span class="highlight">"그럴 것이다"</span>라는 추측에 불과하며, 확신을 가질 수 없습니다. 그래서 이번 작품에서는 메타적 추리를 의도적으로 모호하게 설계했습니다.</p>
+
+      <p>메타적 추리를 고려하지 않는다면 게임 내 단서에만 집중하게 되어 오히려 <span class="highlight-gold">순수한 추리</span>가 가능합니다. 실제 테스트에서 <span class="highlight">초심자 그룹</span>이 이러한 경향을 보였습니다.</p>
+
+      <p>반면 메타적 추리를 깊이 파고든다면, <span class="highlight-gold">모호하게 설계한 부분들</span>로 인해 혼란을 겪을 수 있습니다. 예를 들어 닭 가면과 쥐 가면은 표면적으로 서사의 주변부에 머무는 듯 보이지만, 메타적으로 파고들면 <span class="highlight">"비중이 너무 적어 보이는 것 자체가 수상하다"</span>는 이유로 오히려 범인처럼 느껴질 수 있습니다. 실제 테스트에서 <span class="highlight">숙련자 그룹</span>이 이러한 경향을 보였습니다.</p>
+
+      <p>그러나 메타적 추리를 표면적으로만 받아들인다면, 이 두 캐릭터가 게임 시작 전부터 플롯에서 소외된 존재로 느껴질 수 있습니다. 실제 테스트에서 <span class="highlight">중급자 그룹</span>이 이러한 반응을 보였습니다.</p>
+
+      <p>다만 쥐 가면의 경우, 게임 내에서 범인을 찾을 수 있도록 돕는 <span class="highlight-gold">탐정의 역할</span>로 설계되어 있습니다. 모든 캐릭터가 강렬한 비밀을 지니고 있다면 플레이어들은 <span class="highlight">각자의 비밀을 숨기는 데 급급해</span> 추리에 집중하지 못하게 됩니다. 이를 방지하기 위해 쥐 가면은 지닌 비밀의 비중을 줄여, <span class="highlight-gold">추리에 온전히 집중</span>할 수 있도록 했습니다.</p>
+
+      <p>하지만 결론적으로 범인을 특정하기 위해서는 <span class="highlight">여러 단서를 조합</span>해야 합니다. 메타적 추리와 관계없이, <span class="highlight-gold">게임 내 정보가 유기적으로 연결되어야</span> 비로소 진실에 도달할 수 있습니다.</p>
+
+    </article>
+
+    <article class="chapter" style="--chapter-color: #8b5cf6; --chapter-glow: rgba(139, 92, 246, 0.3);">
+      <div class="chapter-num">04.</div>
+      <h2 class="chapter-title">설정서에 대하여</h2>
+
+      <p>설정서를 작성하면서 고민했던 부분들을 공유합니다.</p>
+
+      <!-- 서브섹션: 각 플레이어의 비밀과 목적에 대하여 -->
+      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
+        <h3 style="font-size: 1.05rem; font-weight: 600; color: #06b6d4; margin-bottom: 12px;">각 플레이어의 비밀과 목적에 대하여</h3>
+        <p>범인을 제외한 플레이어의 경우, <span class="highlight">비밀을 들키는 것</span>이 감점 요인이 아닙니다. 대신 <span class="highlight-gold">직접 발설하거나 인정하는 것</span>을 감점 요인으로 두었습니다.</p>
+        <p>그 이유는 비밀을 들키는 것은 <span class="highlight">게임 진행 상 불가피</span>하기 때문입니다. 단서를 공유하고 추리하는 과정에서 비밀이 드러나는 것은 자연스러운 흐름입니다. 다만 그것을 <span class="highlight">직접 인정하는 것</span>은 별개의 문제입니다. 스스로 인정하지 않는 한, 다른 플레이어의 추측은 <span class="highlight-gold">어디까지나 추측에 불과</span>하기 때문입니다.</p>
+        <p>또한 이 규칙이 없다면 <span class="highlight">범인이 너무 쉽게 밝혀질 수</span> 있습니다. 만약 모든 플레이어가 <span class="highlight">"어차피 감점됐으니"</span>라며 자신의 비밀을 인정하고 공개해버린다면, 범인은 곧바로 특정됩니다. <span class="highlight-gold">비밀을 지키려는 동기</span>를 부여함으로써 게임의 긴장감을 유지하고자 했습니다.</p>
+      </div>
+
+      <!-- 서브섹션: 범인 검거와 지목 구분 -->
+      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
+        <h3 style="font-size: 1.05rem; font-weight: 600; color: #d4a855; margin-bottom: 12px;">범인 검거와 지목 구분</h3>
+        <p>이 게임에서는 <span class="highlight">범인 검거</span>와 <span class="highlight">지목</span>이 별개의 점수로 주어집니다.</p>
+        <p><span class="highlight">검거</span>는 최종 투표를 통해 전체 플레이어가 합의한 결과입니다. <span class="highlight-gold">과반수 이상</span>이 범인을 지목해야 검거가 성립합니다. 반면 <span class="highlight">지목</span>은 개인이 누구를 범인으로 생각하는지에 대한 기록입니다.</p>
+        <p>이렇게 분리한 이유는 <span class="highlight-gold">개인의 추리 성공</span>과 <span class="highlight-gold">집단의 합의</span>를 구분하고 싶었기 때문입니다. 본인이 올바른 추리를 했더라도 <span class="highlight">다른 플레이어들을 설득하지 못해</span> 범인 검거에 실패하는 상황이 발생할 수 있습니다. 그럴 때에도 개인 지목이 맞았다면 자신의 추리가 옳았음을 증명하고, 그에 대한 점수를 받을 수 있습니다.</p>
+        <p>즉, <span class="highlight-gold">설득에 실패했더라도 추리 자체는 인정받을 수 있는 구조</span>입니다.</p>
+      </div>
+
+      <!-- 서브섹션: 타임라인이 없는 전개 -->
+      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
+        <h3 style="font-size: 1.05rem; font-weight: 600; color: #22c55e; margin-bottom: 12px;">타임라인이 없는 전개</h3>
+        <p>이 게임에는 타임라인이 없습니다.</p>
+        <p>전통적인 머더미스터리에서는 <span class="highlight">"몇 시에 누가 어디에 있었는가"</span>를 추적하는 타임라인이 핵심입니다. 하지만 현실적으로 생각해보면, 자신이 <span class="highlight-gold">몇 시 몇 분에 무슨 행동을 했는지</span> 정확히 기억하고 있다는 것 자체가 어색합니다.</p>
+        <p>일상에서 우리는 시간을 그렇게 정밀하게 인지하지 않습니다. <span class="highlight">"8시 15분에 화장실에 갔다"</span>처럼 구체적인 시간을 기억하는 경우는 드뭅니다. 대부분 <span class="highlight-gold">"저녁 먹고 나서"</span>, <span class="highlight-gold">"누구랑 이야기한 후에"</span>처럼 사건의 전후 관계로 시간을 인식합니다.</p>
+        <p>또한 타임라인은 <span class="highlight">독점 정보</span>가 되기 쉽습니다. 각자의 행적은 본인만 알고 있기 때문입니다. 타임라인만을 맞춰서 추리하게 되면 <span class="highlight-gold">범인이 금방 드러나는 구조</span>가 되어버립니다.</p>
+        <p>이러한 점들을 고려하여, 타임라인 대신 <span class="highlight-gold">단서와 논리적 추론</span>에 집중하는 구조로 설계했습니다.</p>
+      </div>
+    </article>
+
+    <article class="chapter" style="--chapter-color: #ec4899; --chapter-glow: rgba(236, 72, 153, 0.3);">
+      <div class="chapter-num">05.</div>
+      <h2 class="chapter-title">왜 엔딩 북을 QR 코드로 제공했는지</h2>
+      <p>실물 보드게임에 종이 엔딩북을 포함하는 대신 <span class="highlight-gold">QR 코드를 통한 웹 엔딩</span>을 선택했습니다.</p>
+
+      <p>사실 게임 도중에 QR 코드를 사용하는 형태는 <span class="highlight">몰입감을 깨고 불편</span>하기 때문에 개인적으로 선호하지 않습니다. 스마트폰을 꺼내 카메라를 켜고, 링크를 열고, 페이지가 로딩되기를 기다리는 과정이 게임의 흐름을 끊기 때문입니다. 하지만 <span class="highlight-gold">엔딩 이후라면 이야기가 다릅니다.</span> 게임이 끝난 시점에서는 긴장이 풀리고, 오히려 웹의 장점을 충분히 활용할 수 있다고 생각했습니다.</p>
+
+      <p><span class="highlight">첫째, 분기별 엔딩의 효과적인 전달입니다.</span> 최종 투표 결과에 따라 <span class="highlight-gold">6가지 엔딩</span>으로 분기되고, 각 엔딩 내에서도 개인별 점수와 선택에 따른 추가 분기가 존재합니다. 예를 들어 범인 검거 여부, 개인 지목 성공 여부, 비밀 유지 여부 등에 따라 각자 다른 결말을 보게 됩니다. 이 모든 경우의 수를 종이로 제공하려면 수십 페이지가 필요하고, "○○페이지로 이동하세요"라는 안내를 따라가다 보면 <span class="highlight">다른 엔딩의 스포일러에 노출될 위험</span>도 있습니다.</p>
+
+      <p><span class="highlight">둘째, 몰입감 있는 연출입니다.</span> 배경 음악이 분위기를 고조시키고, 텍스트가 순차적으로 나타나며, 선택지를 클릭하면 다음 장면으로 자연스럽게 전환됩니다. 엔딩에 따라 <span class="highlight-gold">다른 음악과 색감</span>을 사용해 감정의 결을 달리했습니다. 종이로는 절대 표현할 수 없는 <span class="highlight-gold">시청각적 경험</span>입니다.</p>
+
+      <p><span class="highlight">셋째, 개인별 열람의 편의성입니다.</span> 각자의 스마트폰으로 엔딩을 확인할 수 있어, 한 권의 엔딩북을 돌려보는 번거로움이 없습니다. <span class="highlight-gold">6명이 동시에</span> 각자의 개인 엔딩을 확인하고, 서로의 결과를 공유하며 이야기 나눌 수 있습니다.</p>
+
+      <p style="font-size: 0.9rem; color: var(--dim); margin-top: 16px;">실물 엔딩북이 없어서 아쉬우신 분들께는 죄송합니다. 소장 가치를 중시하시는 분들의 마음을 충분히 이해합니다. 다만 위와 같은 이유로 웹 엔딩이 이 게임에서는 더 나은 경험을 제공할 수 있다고 판단했습니다.</p>
+    </article>
+
+    <article class="chapter" style="--chapter-color: #22c55e; --chapter-glow: rgba(34, 197, 94, 0.3);">
+      <div class="chapter-num">EPILOGUE</div>
+      <h2 class="chapter-title">마치며</h2>
+      <p>〈뱀이 죽은 축제〉는 저희 팀 Project DullG의 첫 번째 실물 보드게임 시나리오입니다.</p>
+
+      <p>처음 기획부터 완성까지 약 <span class="highlight">6개월</span>이라는 시간이 걸렸습니다. 기획에 2개월, 테스트와 수정에 4개월. 그 사이에 밸런스 조정, 난이도 테스트, 스토리 수정, 카드 디자인 변경 등 셀 수 없이 많은 수정을 거쳤습니다. <span class="highlight">"이게 정말 재미있을까?"</span>라는 의문과 <span class="highlight">"조금만 더 다듬으면 좋아질 것 같다"</span>는 욕심 사이에서 끊임없이 고민했습니다.</p>
+
+      <p>테스트는 정말 많이 했습니다. 가족, 동네 친구들, 지인들까지. <span class="highlight-gold">수많은 분들이 시간을 내어 테스트에 참여</span>해주셨고, 그때마다 받은 피드백은 게임을 완성하는 데 큰 힘이 되었습니다. 날카로운 지적부터 작은 격려까지, 모든 목소리가 이 게임에 녹아 있습니다.</p>
+
+      <p>사실 제작자로서 한 가지 아쉬운 점이 있습니다. <span class="highlight-gold">이 게임을 직접 플레이해볼 수 없다</span>는 것입니다. 모든 비밀과 트릭을 알고 있기에, 플레이어로서 추리하고 의심하며 진실을 향해 나아가는 그 경험을 할 수 없습니다. 테스트할 때마다 옆에서 지켜보면서 "나도 저렇게 플레이하고 싶다"는 생각을 수없이 했습니다. 그래서 더더욱 플레이해주시는 분들이 이 게임을 온전히 즐겨주셨으면 하는 바람이 있습니다.</p>
+
+      <p>완성도 안 된 작품을 믿고 후원해주신 분들께 진심으로 감사드립니다. 여러분이 없었다면 이 게임은 세상에 나오지 못했을 것입니다.</p>
+
+      <p>플레이해주신 모든 분들께도 감사드립니다. 여러분이 이 게임을 즐기고, 추리하고, <span class="highlight-gold">서로 의심하며 웃고 떠드는 그 시간</span>이 저희에게는 가장 큰 보람입니다. <span class="highlight-gold">여러분만을 위한 이야기</span>가 잘 전달되었으면 좋겠습니다.</p>
+
+      <p>아직 부족한 점이 많지만, 이번 경험을 바탕으로 <span class="highlight">더 재미있고 더 완성도 높은 시나리오</span>로 다시 찾아뵙겠습니다.</p>
+
+      <p style="margin-top: 24px; color: var(--gold); font-weight: 600;">다시 한번 감사드립니다.</p>
+      <p style="text-align: right; color: var(--dim); font-size: 0.9rem; margin-top: 16px;">— Project DullG 일동</p>
+    </article>
+
+    <a href="story.html" class="back-link">&larr; 사건의 전말로 돌아가기</a>
+    <a href="index.html" class="back-link" style="animation-delay: 0.1s;">&larr; 엔딩 선택으로 돌아가기</a>
+  </div>
+  <script src="bgm.js"></script>
+</body>
+</html>
