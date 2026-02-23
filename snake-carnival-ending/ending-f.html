@@ -162,7 +162,7 @@
     }
 
     .epilogue {
-      text-align: center;
+      text-align: left;
       padding: 32px;
       color: var(--dim);
       font-size: 1rem;
@@ -253,6 +253,19 @@
       .story p { text-align: left; }
       h1 { font-size: 1.6rem; }
       .guide-box { padding: 20px; }
+
+      .epilogue {
+        padding: 24px 16px;
+      }
+
+      .final-narration {
+        padding: 16px !important;
+        margin-top: 16px !important;
+      }
+
+      .final-narration p {
+        font-size: 0.95rem !important;
+      }
     }
 
     @media (max-width: 400px) {
@@ -265,6 +278,15 @@
       .story p { font-size: 1rem; }
       .guide-box { padding: 16px; }
       .stalemate-scene, .judgment-scene { padding: 20px; }
+
+      .epilogue {
+        padding: 20px 12px;
+      }
+
+      .final-narration p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+      }
     }
   </style>
 </head>
@@ -300,7 +322,9 @@
     <div class="epilogue">
       <p>모든 증거는 재가 되어 흩어졌고, 화장된 그들의 존재를 문제 삼는 이는 아무도 없었다. 교단의 법률에 따라 사건은 철저히 은폐되었다.</p>
       <p>처형된 용, 쥐, 닭, 돼지 가면과 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그러나 온전한 예배의 방식을 알 리 없는 그들에게 신은 더 이상 축복을 제공하지 않았다.</p>
-      <p>눈에 보이는 기적을 마주하지 못한 가면들은 서로를 의심하며 하나둘씩 어둠 속으로 흩어졌다. 시간이 흐를수록 공고했던 결속력은 불신과 탐욕으로 얼룩졌고, 한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
+      <div class="final-narration" style="margin-top: 16px; padding: 20px; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(30,30,40,0.3)); border-left: 3px solid rgba(234, 179, 8, 0.5); border-radius: 0 8px 8px 0;">
+        <p style="margin: 0; line-height: 1.8; font-style: italic; color: #d0d0d8;">눈에 보이는 기적을 마주하지 못한 가면들은 서로를 의심하며 하나둘씩 어둠 속으로 흩어졌다. 시간이 흐를수록 공고했던 결속력은 불신과 탐욕으로 얼룩졌고, <span class="highlight">한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단</span>은 그렇게 <span class="highlight-gold">이름도 없이 와해되어</span> 차가운 콘크리트 아래 묻혔다.</p>
+      </div>
     </div>
 
     <nav class="nav-links">

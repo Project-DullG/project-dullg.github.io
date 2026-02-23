@@ -154,7 +154,7 @@
     }
 
     .epilogue {
-      text-align: center;
+      text-align: left;
       padding: 32px;
       color: var(--dim);
       font-size: 1rem;
@@ -223,6 +223,19 @@
         flex-direction: column;
         gap: 8px;
       }
+
+      .epilogue {
+        padding: 24px 16px;
+      }
+
+      .final-narration {
+        padding: 16px !important;
+        margin-top: 20px !important;
+      }
+
+      .final-narration p {
+        font-size: 0.95rem !important;
+      }
     }
 
     @media (max-width: 400px) {
@@ -233,6 +246,15 @@
       h1 { font-size: 1.4rem; }
       .story { padding: 20px; }
       .story p { font-size: 1rem; }
+
+      .epilogue {
+        padding: 20px 12px;
+      }
+
+      .final-narration p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+      }
     }
   </style>
 </head>
@@ -267,7 +289,9 @@
     <div class="epilogue">
       <p>세상을 떠들썩하게 했던 광기 가득한 사건은 결국 시간이 지나 잊혀졌다.</p>
       <p>그렇게 <span class="mask-pig">돼지 가면</span>은 원하던 대로 교단에서 벗어났다. 그는 군중 속으로 녹아들어 가며 장갑을 벗어 쓰레기통에 던져 넣었다. 그의 손은 이제 더 이상 떨리지 않았다. 등 뒤로 들려오는 뉴스 소리는 더 이상 그와 상관없는 남의 이야기였다.</p>
-      <p>한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단은 그렇게 이름도 없이 와해되어 차가운 콘크리트 아래 묻혔다.</p>
+      <div class="final-narration" style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(30,30,40,0.3)); border-left: 3px solid rgba(234, 179, 8, 0.5); border-radius: 0 8px 8px 0; text-align: left;">
+        <p style="margin: 0; line-height: 1.8; font-style: italic; color: #d0d0d8;"><span class="highlight">한때 대한민국의 핵심 권력을 움직이며 역사의 흐름을 예견하던 비밀 교단</span>은 그렇게 <span class="highlight-gold">이름도 없이 와해되어</span> 차가운 콘크리트 아래 묻혔다.</p>
+      </div>
     </div>
 
     <nav class="nav-links">

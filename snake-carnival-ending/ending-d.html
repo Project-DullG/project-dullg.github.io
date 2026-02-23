@@ -183,7 +183,7 @@
     }
 
     .epilogue {
-      text-align: center;
+      text-align: left;
       padding: 32px;
       color: var(--dim);
       font-size: 1rem;
@@ -285,11 +285,15 @@
     }
 
     .branch-guide {
-      font-size: 0.9rem;
-      color: #b0b8c8;
+      font-size: 1.05rem;
+      color: #e0e0e8;
       margin-bottom: 20px;
       text-align: center;
-      line-height: 1.6;
+      line-height: 1.7;
+      padding: 16px;
+      background: rgba(196, 30, 58, 0.1);
+      border: 1px solid rgba(196, 30, 58, 0.25);
+      border-radius: 8px;
     }
 
     /* 탭 UI */
@@ -383,6 +387,24 @@
         background: none;
         padding: 12px 0;
       }
+
+      .epilogue {
+        padding: 24px 16px;
+      }
+
+      .branch-guide {
+        font-size: 0.95rem;
+        padding: 12px;
+      }
+
+      .final-narration {
+        padding: 16px !important;
+        margin-top: 20px !important;
+      }
+
+      .final-narration p {
+        font-size: 0.95rem !important;
+      }
     }
 
     @media (max-width: 400px) {
@@ -395,6 +417,20 @@
       .story p { font-size: 1rem; }
       .guide-box { padding: 16px; }
       .confession-scene, .method-reveal, .news-section { padding: 20px; }
+
+      .epilogue {
+        padding: 20px 12px;
+      }
+
+      .branch-guide {
+        font-size: 0.9rem;
+        padding: 10px;
+      }
+
+      .final-narration p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+      }
     }
   </style>
 </head>
@@ -446,22 +482,28 @@
 
       <div class="branch-section">
         <div class="branch-section-title">카드 보유 여부에 따른 분기</div>
-        <p class="branch-guide"><span class="mask-chicken">닭 가면</span>이 13번 '캐비넷' 또는 28번 '권총' 보유 여부에 따라 선택하세요.</p>
+        <p class="branch-guide"><span class="mask-chicken">닭 가면</span>이<br>13번 '캐비넷' 또는 28번 '권총'<br>보유 여부에 따라 선택하세요.</p>
         <div class="branch-tabs">
           <button class="branch-tab active" data-branch="a">보유 (A)</button>
           <button class="branch-tab" data-branch="b">미보유 (B)</button>
         </div>
 
         <div class="branch-content active" data-branch="a">
-          <p><span class="mask-pig">돼지 가면</span>은 탈출에 실패하고 처형 전 수색 과정에서 이단의 문양이 각인된 장갑이 발각되어 진범임이 밝혀졌다. 한편 <span class="mask-chicken">닭 가면</span> 오지환은 입수한 증거를 토대로 형의 행방을 추적했고, <span class="mask-pig">돼지 가면</span>이 군사 기밀 유출자 김진철이라는 사실과 자신의 형이 2년 전 교단에 의해 살해당했음을 알아냈다. 더 이상 교단에 머물 이유가 없어진 그는 형을 죽인 교단에 대한 복수를 마무리하기 위해 홀연히 잠적했다. 잠적한 닭 가면과 구속당한 돼지 가면, 그리고 뱀의 빈자리는 <span class="mask-dragon">용 가면</span> 김용환의 개입 아래 새로운 권력자들로 채워졌고, 중단되었던 예배는 다시 온전히 진행되었다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다. 그리고는 과거 있었던 사건처럼 조용히 교단을 떠나 새로운 삶을 살아갔다.</p>
+          <p><span class="mask-pig">돼지 가면</span>은 탈출에 실패하고 처형 전 수색 과정에서 이단의 문양이 각인된 장갑이 발각되어 진범임이 밝혀졌다.</p>
+          <p>한편 <span class="mask-chicken">닭 가면</span> 오지환은 입수한 증거를 토대로 형의 행방을 추적했고, <span class="mask-pig">돼지 가면</span>이 군사 기밀 유출자 김진철이라는 사실과 자신의 형이 2년 전 교단에 의해 살해당했음을 알아냈다. 더 이상 교단에 머물 이유가 없어진 그는 형을 죽인 교단에 대한 <span class="highlight-gold">복수를 마무리하기 위해 홀연히 잠적했다</span>.</p>
+          <p>잠적한 닭 가면과 구속당한 돼지 가면, 그리고 뱀의 빈자리는 <span class="mask-dragon">용 가면</span> 김용환의 개입 아래 새로운 권력자들로 채워졌고, 중단되었던 예배는 다시 온전히 진행되었다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 <span class="highlight-gold">환생하는 데 성공했다</span>. 그리고는 과거 있었던 사건처럼 조용히 교단을 떠나 새로운 삶을 살아갔다.</p>
         </div>
 
         <div class="branch-content" data-branch="b">
-          <p><span class="mask-pig">돼지 가면</span>은 탈출에 실패하고 처형 전 수색 과정에서 이단의 문양이 각인된 장갑이 발각되어 진범임이 밝혀졌다. <span class="mask-chicken">닭 가면</span> 오지환은 아직 형의 행방에 대한 단서를 찾지 못했기에 교단에 남아 수색을 이어갔다. 구속당한 돼지 가면과 뱀의 빈자리는 <span class="mask-dragon">용 가면</span> 김용환의 개입 아래 새로운 권력자들로 채워졌고, 중단되었던 예배는 다시 온전히 진행되었다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다. 그리고는 과거 있었던 사건처럼 조용히 교단을 떠나 새로운 삶을 살아갔다.</p>
+          <p><span class="mask-pig">돼지 가면</span>은 탈출에 실패하고 처형 전 수색 과정에서 이단의 문양이 각인된 장갑이 발각되어 진범임이 밝혀졌다.</p>
+          <p><span class="mask-chicken">닭 가면</span> 오지환은 아직 형의 행방에 대한 단서를 찾지 못했기에 교단에 남아 수색을 이어갔다.</p>
+          <p>구속당한 돼지 가면과 뱀의 빈자리는 <span class="mask-dragon">용 가면</span> 김용환의 개입 아래 새로운 권력자들로 채워졌고, 중단되었던 예배는 다시 온전히 진행되었다. 그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 <span class="highlight-gold">환생하는 데 성공했다</span>. 그리고는 과거 있었던 사건처럼 조용히 교단을 떠나 새로운 삶을 살아갔다.</p>
         </div>
       </div>
 
-      <p>그가 떠난 후, 참된 예배의 비밀을 모르는 교단은 결국 불신과 탐욕 속에서 무너져 내렸다.</p>
+      <div class="final-narration" style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(30,30,40,0.3)); border-left: 3px solid rgba(234, 179, 8, 0.5); border-radius: 0 8px 8px 0; text-align: left;">
+        <p style="margin: 0; line-height: 1.8; font-style: italic; color: #d0d0d8;">그가 떠난 후, <span class="highlight">참된 예배의 비밀을 모르는 교단</span>은 결국 <span class="highlight-gold">불신과 탐욕 속에서 무너져 내렸다.</span></p>
+      </div>
     </div>
 
     <nav class="nav-links">

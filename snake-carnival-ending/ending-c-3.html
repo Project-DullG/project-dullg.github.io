@@ -163,7 +163,7 @@
     }
 
     .epilogue {
-      text-align: center;
+      text-align: left;
       padding: 32px;
       color: var(--dim);
       font-size: 1rem;
@@ -226,6 +226,19 @@
         flex-direction: column;
         gap: 8px;
       }
+
+      .epilogue {
+        padding: 24px 16px;
+      }
+
+      .final-narration {
+        padding: 16px !important;
+        margin-top: 20px !important;
+      }
+
+      .final-narration p {
+        font-size: 0.95rem !important;
+      }
     }
 
     @media (max-width: 400px) {
@@ -236,6 +249,15 @@
       h1 { font-size: 1.4rem; }
       .story { padding: 20px; }
       .story p { font-size: 1rem; }
+
+      .epilogue {
+        padding: 20px 12px;
+      }
+
+      .final-narration p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+      }
     }
   </style>
 </head>
@@ -274,8 +296,10 @@
     <div class="epilogue">
       <p>세상을 떠들썩하게 했던 연예인과 언론인의 실종 그리고 한강 시신 사건은 시간이 지나 결국 잊혀졌다.</p>
       <p><span class="mask-pig">돼지 가면</span>은 홀연히 잠적했고, 처형된 닭 가면과 뱀의 빈자리는 곧 새로운 권력자들로 채워졌다. 그 과정에서 <span class="mask-dragon">용 가면</span> 김용환의 치밀한 개입이 있었으며, 중단되었던 예배는 다시 온전히 진행되었다.</p>
-      <p>그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 환생하는 데 성공했다. 그리고는 과거 있었던 사건처럼 조용히 교단을 떠나 새로운 삶을 살아갔다.</p>
-      <p>그가 떠난 후, 참된 예배의 비밀을 모르는 교단은 결국 불신과 탐욕 속에서 무너져 내렸다.</p>
+      <p>그렇게 12번째 온전한 예배가 이루어졌고, <span class="mask-dragon">용 가면</span> 김용환은 마침내 염원하던 가장 젊은 몸으로 <span class="highlight-gold">환생하는 데 성공했다</span>. 그리고는 과거 있었던 사건처럼 조용히 교단을 떠나 새로운 삶을 살아갔다.</p>
+      <div class="final-narration" style="margin-top: 24px; padding: 20px; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(30,30,40,0.3)); border-left: 3px solid rgba(234, 179, 8, 0.5); border-radius: 0 8px 8px 0; text-align: left;">
+        <p style="margin: 0; line-height: 1.8; font-style: italic; color: #d0d0d8;">그가 떠난 후, <span class="highlight">참된 예배의 비밀을 모르는 교단</span>은 결국 <span class="highlight-gold">불신과 탐욕 속에서 무너져 내렸다.</span></p>
+      </div>
     </div>
 
     <nav class="nav-links">
