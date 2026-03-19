@@ -483,6 +483,15 @@ section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2p
 
 /* ── Responsive ── */
 @media(max-width:768px) {
+  /* 모바일 성능: 무거운 연출 전부 제거 */
+  body::before, body::after { display:none !important; }
+  .hero::before { display:none !important; }
+  .reveal { opacity:1 !important; transform:none !important; transition:none !important; }
+  .reveal-d1,.reveal-d2,.reveal-d3,.reveal-d4 { transition-delay:0s !important; }
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+  .hero-brand,.hero-ornament,.hero-subtitle,.hero-title,.hero-badge,.hero-scroll-hint,.tts-start-btn { opacity:1 !important; transform:none !important; }
+  .card-mini:hover,.phase-card:hover,.comp-item:hover,.faq-q:hover { transform:none !important; }
+
   section { padding:3rem 1.2rem; }
   .section-inner { max-width:100%; }
   .phase-grid { grid-template-columns:repeat(2,1fr); }
@@ -492,7 +501,7 @@ section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2p
   .game-banner { flex-direction:column; text-align:center; }
   .rule-block { padding:1.4rem 1.2rem; }
   .faq-q { padding:1rem 1.2rem; min-height:48px; }
-  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; transform:none !important; transition:none !important; display:none; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; background:#06030e !important; will-change:auto !important; }
+  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; transform:none !important; display:none; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; background:#06030e !important; will-change:auto !important; }
   .tts-bar.visible { display:flex; }
   .tts-btn { width:40px; height:40px; font-size:.9rem; }
   .tts-btn.play { width:48px; height:48px; font-size:1.1rem; }
@@ -1066,11 +1075,13 @@ section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2p
 </div>
 
 <script>
-// Scroll reveal
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+// Scroll reveal (데스크탑만)
+if (window.innerWidth > 768) {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
 
 // ── 오디오 나레이션 시스템 (edge-tts mp3) ──
 (function() {
@@ -1101,6 +1112,7 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   const track = document.getElementById('ttsTrack');
 
   let currentMarkerIdx = -1;
+  const isMobile = window.innerWidth <= 768;
 
   function getCurrentMarker() {
     const t = audio.currentTime;
@@ -1115,19 +1127,24 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     const changed = idx !== currentMarkerIdx;
     currentMarkerIdx = idx;
     const m = markers[idx];
-    const progress = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-    fill.style.width = progress + '%';
+
+    // 라벨만 업데이트 (최소 DOM 조작)
     labelEl.textContent = `${idx + 1}/${markers.length}  ${m.label}`;
     playBtn.textContent = audio.paused ? '▶' : '⏸';
 
-    // 섹션 하이라이트
-    sections.forEach(s => s.classList.remove('tts-active'));
-    if (m.sectionIdx >= 0 && sections[m.sectionIdx]) {
-      sections[m.sectionIdx].classList.add('tts-active');
-      // 섹션 전환 시 자동 스크롤
-      if (changed && !audio.paused) {
-        sections[m.sectionIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!isMobile) {
+      // 데스크탑: 프로그레스 바 + 섹션 하이라이트
+      const progress = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+      fill.style.width = progress + '%';
+      sections.forEach(s => s.classList.remove('tts-active'));
+      if (m.sectionIdx >= 0 && sections[m.sectionIdx]) {
+        sections[m.sectionIdx].classList.add('tts-active');
       }
+    }
+
+    // 섹션 전환 시 자동 스크롤
+    if (changed && !audio.paused && m.sectionIdx >= 0 && sections[m.sectionIdx]) {
+      sections[m.sectionIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
