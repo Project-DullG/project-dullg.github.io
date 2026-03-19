@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Project DullG 머더 미스터리 규칙 설명서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --void: #06030e;
+  --abyss: #0d0719;
+  --ritual: #160e28;
+  --purple-deep: #2a1645;
+  --purple-glow: #6b3fa0;
+  --purple-soft: rgba(107,63,160,0.15);
+  --gold: #c9a84c;
+  --gold-dim: #8a7234;
+  --gold-bright: #f0d070;
+  --blood: #8b2232;
+  --blood-glow: #c0354a;
+  --bone: #e8dcc8;
+  --text: #d4cbbe;
+  --text-dim: #7a7268;
+  --emerald: #2d8a6e;
+  --emerald-glow: #40c090;
+}
+
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--purple-deep) var(--void); }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  line-height: 1.85;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(42,22,69,0.3) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(139,34,50,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(107,63,160,0.06) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+
+/* ── Animations ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+.reveal-d4 { transition-delay: .4s; }
+
+@keyframes pulse-glow { 0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)} 50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)} }
+@keyframes fade-in { to{opacity:1} }
+@keyframes title-rise { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes scroll-pulse { 0%,100%{opacity:.3;height:28px} 50%{opacity:1;height:42px} }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+
+/* ── Layout ── */
+.page-container { position: relative; z-index: 1; }
+section { position: relative; padding: 4.5rem 1.5rem; }
+.section-inner { max-width: 760px; margin: 0 auto; }
+
+/* ── SVG Icons ── */
+.icon { display: inline-block; vertical-align: middle; fill: none; stroke: var(--gold); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.icon-sm { width: 18px; height: 18px; }
+.icon-md { width: 26px; height: 26px; }
+
+/* ── Hero ── */
+.hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem 1.5rem; }
+.hero::before { content:''; position:absolute; top:30%; left:50%; transform:translate(-50%,-50%); width:500px; height:500px; background:radial-gradient(circle,rgba(107,63,160,0.12) 0%,transparent 70%); border-radius:50%; animation:pulse-glow 6s ease-in-out infinite; }
+.hero-brand { font-size:.72rem; letter-spacing:.5em; text-transform:uppercase; color:var(--purple-glow); margin-bottom:.6rem; opacity:0; animation:fade-in 1.5s .2s forwards; font-weight:500; }
+.hero-ornament { width:50px; height:1px; background:linear-gradient(90deg,transparent,var(--gold-dim),transparent); margin-bottom:1.5rem; opacity:0; animation:fade-in 1.5s .4s forwards; }
+.hero-subtitle { font-size:.75rem; letter-spacing:.3em; color:var(--gold-dim); margin-bottom:1.2rem; opacity:0; animation:fade-in 1.5s .5s forwards; }
+.hero-title { font-family:'Noto Serif KR',serif; font-weight:900; font-size:clamp(2.6rem,7vw,5rem); line-height:1.15; color:var(--bone); margin-bottom:.5em; opacity:0; animation:title-rise 1.6s .7s cubic-bezier(.16,1,.3,1) forwards; text-shadow:0 0 60px rgba(107,63,160,0.3); }
+.hero-title em { font-style:normal; background:linear-gradient(135deg,var(--gold),var(--gold-bright),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.hero-badge { display:inline-flex; gap:.5rem; margin-top:.5rem; opacity:0; animation:fade-in 1.5s 1s forwards; }
+.hero-badge span { padding:.35rem .8rem; border-radius:20px; font-size:.72rem; font-weight:500; border:1px solid rgba(107,63,160,0.3); color:var(--text-dim); background:rgba(22,14,40,0.5); }
+.hero-scroll-hint { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.5rem; opacity:0; animation:fade-in 1.5s 1.5s forwards; }
+.hero-scroll-hint span { font-size:.6rem; color:var(--text-dim); letter-spacing:.2em; }
+.scroll-arrow { width:1px; height:28px; background:linear-gradient(to bottom,var(--gold-dim),transparent); animation:scroll-pulse 2s ease-in-out infinite; }
+
+/* ── Section Styles ── */
+.divider { display:flex; align-items:center; justify-content:center; gap:1rem; margin:1rem auto 2rem; max-width:260px; }
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold-dim),transparent); }
+.divider-diamond { width:5px; height:5px; background:var(--gold-dim); transform:rotate(45deg); flex-shrink:0; }
+.section-label { font-size:.68rem; letter-spacing:.4em; text-transform:uppercase; color:var(--purple-glow); text-align:center; margin-bottom:.6rem; font-weight:500; }
+.section-title { font-family:'Noto Serif KR',serif; font-weight:900; font-size:clamp(1.6rem,4.5vw,2.4rem); color:var(--bone); text-align:center; line-height:1.3; margin-bottom:.8rem; }
+.section-desc { text-align:center; color:var(--text-dim); font-size:.9rem; max-width:520px; margin:0 auto 2rem; line-height:1.9; }
+.section-desc strong { color: var(--text); }
+
+/* ── Quick Summary ── */
+.quick-summary {
+  background: linear-gradient(135deg, rgba(42,22,69,0.4), rgba(22,14,40,0.6));
+  border: 1px solid rgba(107,63,160,0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1rem;
+}
+.quick-summary h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.summary-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+}
+.summary-step {
+  text-align: center;
+  padding: 1rem .5rem;
+  background: rgba(6,3,14,0.4);
+  border-radius: 10px;
+  border: 1px solid rgba(107,63,160,0.1);
+}
+.summary-step-num {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.summary-step-name {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--bone);
+  margin: .4rem 0 .2rem;
+}
+.summary-step-desc {
+  font-size: .7rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.summary-oneliner {
+  text-align: center;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(107,63,160,0.1);
+  font-size: .85rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+/* ── Game Specific Banner ── */
+.game-banner {
+  background: linear-gradient(135deg, rgba(42,22,69,0.3), rgba(13,7,25,0.5));
+  border: 1px solid rgba(107,63,160,0.15);
+  border-radius: 14px;
+  padding: 1.8rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.game-banner-icon {
+  width: 56px; height: 56px;
+  background: var(--purple-deep);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(107,63,160,0.3);
+}
+.game-banner-info h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 1.15rem;
+  color: var(--bone);
+  margin-bottom: .3rem;
+}
+.game-banner-meta {
+  display: flex; gap: 1rem;
+  font-size: .75rem;
+  color: var(--text-dim);
+}
+.game-banner-meta span { display:flex; align-items:center; gap:.3rem; }
+
+/* ── Phase Cards ── */
+.phase-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .8rem;
+  margin: 1.5rem 0;
+}
+.phase-card {
+  position: relative;
+  background: rgba(22,14,40,0.6);
+  border: 1px solid rgba(107,63,160,0.15);
+  border-radius: 10px;
+  padding: 1.2rem .8rem;
+  text-align: center;
+  transition: border-color .3s, transform .3s;
+}
+.phase-card:hover { border-color:rgba(201,168,76,0.3); transform:translateY(-3px); }
+.phase-num { font-family:'Crimson Pro',serif; font-size:.9rem; font-weight:700; color:var(--gold-dim); }
+.phase-name { font-weight:700; font-size:.92rem; color:var(--bone); margin:.3rem 0 .15rem; }
+.phase-time { font-size:.68rem; color:var(--text-dim); }
+
+/* ── Rule Block ── */
+.rule-block {
+  background: rgba(22,14,40,0.5);
+  border: 1px solid var(--purple-soft);
+  border-radius: 14px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 2rem;
+}
+.rule-block-header {
+  display: flex; align-items: center; gap: .7rem;
+  margin-bottom: 1rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid rgba(107,63,160,0.1);
+}
+.rule-block-icon {
+  width: 38px; height: 38px;
+  background: var(--purple-deep);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(107,63,160,0.25);
+}
+.rule-block-title {
+  font-weight: 700; font-size: 1.1rem; color: var(--bone);
+}
+.rule-block p { font-size: .88rem; line-height: 1.95; margin-bottom: .6rem; }
+.rule-block p:last-child { margin-bottom: 0; }
+.rule-block strong { color: var(--bone); }
+
+/* ── Situation Example (핵심!) ── */
+.situation-box {
+  position: relative;
+  background: linear-gradient(135deg, rgba(45,138,110,0.08), rgba(45,138,110,0.03));
+  border: 1px solid rgba(45,138,110,0.2);
+  border-left: 3px solid var(--emerald);
+  border-radius: 0 10px 10px 0;
+  padding: 1.2rem 1.4rem;
+  margin: 1rem 0;
+}
+.situation-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -3px;
+  width: 3px; height: 100%;
+  background: linear-gradient(to bottom, var(--emerald-glow), var(--emerald));
+  border-radius: 3px 0 0 3px;
+}
+.situation-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--emerald-glow);
+  letter-spacing: .05em;
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+}
+.situation-box p {
+  font-size: .84rem;
+  line-height: 1.85;
+  color: var(--text);
+  margin: 0;
+}
+.situation-box strong { color: var(--emerald-glow); }
+.situation-box .speaker {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ── Callout ── */
+.callout {
+  background: rgba(42,22,69,0.35);
+  border-left: 3px solid var(--gold-dim);
+  padding: .9rem 1.2rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1rem 0;
+}
+.callout p { font-size: .84rem; color: var(--gold); margin: 0; line-height: 1.75; }
+.callout.warning { border-left-color: var(--blood); }
+.callout.warning p { color: var(--blood-glow); }
+
+/* ── Step List ── */
+.step-list { list-style:none; padding:0; margin:.8rem 0; counter-reset:step; }
+.step-list li { counter-increment:step; position:relative; padding-left:2.2rem; margin-bottom:.8rem; font-size:.88rem; line-height:1.85; }
+.step-list li::before {
+  content:counter(step); position:absolute; left:0; top:.15em;
+  width:20px; height:20px; background:var(--purple-deep); border:1px solid var(--purple-glow);
+  border-radius:5px; display:flex; align-items:center; justify-content:center;
+  font-family:'Crimson Pro',serif; font-size:.72rem; font-weight:700; color:var(--gold);
+}
+
+/* ── Card Flow Diagram ── */
+.card-flow {
+  display: flex; align-items: center; justify-content: center;
+  gap: .5rem; margin: 1.2rem 0; padding: 1.2rem;
+  background: rgba(6,3,14,0.4);
+  border-radius: 10px; border: 1px solid var(--purple-soft);
+  flex-wrap: wrap;
+}
+.card-mini {
+  width: 38px; height: 54px; border-radius: 5px;
+  border: 1.5px solid var(--gold-dim); background: var(--purple-deep);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Crimson Pro', serif; font-size: .65rem; color: var(--gold);
+  transition: transform .3s;
+}
+.card-mini:hover { transform: translateY(-2px); }
+.card-mini.new-card { border-color: var(--gold-bright); background: linear-gradient(135deg, var(--purple-deep), #2a1a40); }
+.card-mini.discard {
+  border-color: var(--text-dim); opacity: .5; transform: translateY(3px);
+  background: linear-gradient(135deg, var(--purple-deep), #1a0f2e);
+}
+.card-mini.discard::after { content: '?'; font-size: .85rem; color: var(--text-dim); }
+.card-mini.highlight { border-color: var(--blood-glow); box-shadow: 0 0 10px rgba(192,53,74,0.25); animation: float 2s ease-in-out infinite; }
+.card-group { display:flex; gap:.3rem; align-items:flex-end; padding:.4rem; position:relative; }
+.card-group-label {
+  position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  font-size:.6rem; color:var(--text-dim); white-space:nowrap;
+}
+.flow-arrow { color:var(--gold-dim); font-size:1rem; flex-shrink:0; }
+
+/* ── Turn Order Visual ── */
+.turn-visual {
+  display:flex; align-items:center; justify-content:center;
+  gap:.5rem; margin:1rem 0; padding:1rem;
+  background:rgba(22,14,40,0.4); border-radius:10px;
+  border:1px solid var(--purple-soft); flex-wrap:wrap;
+}
+.turn-player { display:flex; flex-direction:column; align-items:center; gap:.25rem; padding:.4rem .6rem; border-radius:6px; }
+.turn-icon { width:32px; height:32px; background:var(--purple-deep); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1.5px solid rgba(107,63,160,0.3); }
+.turn-label { font-size:.65rem; color:var(--text-dim); }
+.turn-arrow { color:var(--gold-dim); font-size:.95rem; }
+.turn-player.active { background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); }
+.turn-player.active .turn-label { color:var(--gold); font-weight:700; }
+.turn-player.active .turn-icon { border-color:var(--gold-dim); }
+
+/* ── Vote Visual ── */
+.vote-visual {
+  display:flex; flex-direction:column; align-items:center;
+  gap:.8rem; margin:1rem 0; padding:1.5rem;
+  background:rgba(6,3,14,0.4); border-radius:10px;
+  border:1px solid var(--purple-soft);
+}
+.vote-players { display:flex; gap:1.2rem; }
+.vote-player .turn-icon { transition:box-shadow .3s; }
+.vote-arrows { color:var(--blood-glow); font-size:.85rem; display:flex; gap:1.5rem; }
+.vote-target .turn-icon { width:44px; height:44px; border-color:var(--blood); box-shadow:0 0 16px rgba(139,34,50,0.35); }
+.vote-label { font-size:.68rem; color:var(--text-dim); }
+
+/* ── FAQ ── */
+.faq-item {
+  background: rgba(22,14,40,0.4);
+  border: 1px solid var(--purple-soft);
+  border-radius: 10px;
+  margin-bottom: .8rem;
+  overflow: hidden;
+}
+.faq-q {
+  padding: 1rem 1.4rem;
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--bone);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  transition: background .3s;
+  user-select: none;
+}
+.faq-q:hover { background: rgba(107,63,160,0.06); }
+.faq-q::before {
+  content: 'Q';
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px;
+  background: var(--purple-deep);
+  border: 1px solid var(--purple-glow);
+  border-radius: 5px;
+  font-family: 'Crimson Pro', serif;
+  font-size: .75rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.faq-q .faq-toggle {
+  margin-left: auto;
+  font-size: .8rem;
+  color: var(--text-dim);
+  transition: transform .3s;
+}
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s cubic-bezier(0.16,1,0.3,1), padding .4s;
+  padding: 0 1.4rem;
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding: 0 1.4rem 1.2rem;
+}
+.faq-item.open .faq-toggle { transform: rotate(180deg); }
+.faq-a p { font-size: .84rem; line-height: 1.85; color: var(--text); }
+
+/* ── Components ── */
+.comp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:.6rem; margin:1.5rem 0; }
+.comp-item { background:rgba(22,14,40,0.4); border:1px solid var(--purple-soft); border-radius:8px; padding:1rem; text-align:center; transition:border-color .3s; }
+.comp-item:hover { border-color:rgba(201,168,76,0.25); }
+.comp-count { font-family:'Crimson Pro',serif; font-size:1.5rem; font-weight:700; color:var(--gold); }
+.comp-name { font-size:.78rem; color:var(--text); margin-top:.2rem; }
+
+/* ── Video CTA ── */
+.video-cta {
+  text-align: center;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, rgba(42,22,69,0.3), rgba(13,7,25,0.5));
+  border: 1px solid rgba(107,63,160,0.15);
+  border-radius: 14px;
+  margin-top: 2rem;
+}
+.video-cta h3 { font-family:'Noto Serif KR',serif; font-size:1.1rem; color:var(--bone); margin-bottom:.5rem; }
+.video-cta p { font-size:.82rem; color:var(--text-dim); }
+
+/* ── TTS Player ── */
+.tts-bar {
+  position:fixed; bottom:0; left:0; right:0; z-index:1000;
+  background:linear-gradient(180deg, rgba(6,3,14,0.0) 0%, rgba(6,3,14,0.95) 30%, #06030e 100%);
+  padding:1.2rem 1.5rem 1rem; padding-bottom:calc(1rem + env(safe-area-inset-bottom, 0px));
+  display:flex; align-items:center; justify-content:center; gap:1rem;
+  transform:translateY(100%); transition:transform .4s cubic-bezier(0.16,1,0.3,1);
+  backdrop-filter:blur(12px);
+}
+.tts-bar.visible { transform:translateY(0); }
+.tts-btn {
+  width:42px; height:42px; border-radius:50%; border:1.5px solid var(--purple-glow);
+  background:var(--purple-deep); color:var(--gold); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all .2s;
+  font-size:1rem; flex-shrink:0;
+}
+.tts-btn:hover { background:var(--purple-glow); border-color:var(--gold-dim); }
+.tts-btn.play { width:52px; height:52px; font-size:1.2rem; border-color:var(--gold); }
+.tts-btn.play:hover { background:rgba(201,168,76,0.2); }
+.tts-progress { flex:1; max-width:400px; display:flex; flex-direction:column; gap:.3rem; }
+.tts-track { width:100%; height:4px; background:var(--purple-deep); border-radius:2px; overflow:hidden; cursor:pointer; }
+.tts-track-fill { height:100%; background:var(--gold); width:0%; transition:width .3s; border-radius:2px; }
+.tts-label { font-size:.7rem; color:var(--text-dim); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tts-start-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:48px; height:48px; border-radius:50%;
+  background:linear-gradient(135deg, var(--purple-deep), #3a1f5e);
+  border:1.5px solid var(--gold-dim); color:var(--gold);
+  cursor:pointer; font-size:1.1rem;
+  box-shadow:0 4px 20px rgba(42,22,69,0.5);
+  transition:all .3s;
+  margin-top:1.2rem; opacity:0; animation:fade-in 1.5s 1.2s forwards, float 3s 2.7s ease-in-out infinite;
+}
+.tts-start-btn:hover { border-color:var(--gold); box-shadow:0 4px 30px rgba(201,168,76,0.3); transform:scale(1.05); }
+.tts-start-btn.hidden { display:none; }
+section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2px; border-radius:4px; transition:outline-color .5s; }
+
+/* ── Footer ── */
+.footer { text-align:center; padding:3rem 1.5rem; border-top:1px solid rgba(107,63,160,0.1); }
+.footer p { font-size:.72rem; color:var(--text-dim); }
+.footer-brand { font-size:.8rem; color:var(--purple-glow); letter-spacing:.2em; margin-bottom:.3rem; }
+.qr-note { margin-top:1.5rem; padding:1.2rem 1.8rem; background:rgba(22,14,40,0.5); border-radius:10px; border:1px solid var(--purple-soft); display:inline-block; }
+.qr-note a { color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold-dim); }
+
+/* ── Responsive ── */
+@media(max-width:768px) {
+  section { padding:3rem 1.2rem; }
+  .section-inner { max-width:100%; }
+  .phase-grid { grid-template-columns:repeat(2,1fr); }
+  .summary-steps { grid-template-columns:repeat(2,1fr); }
+  .comp-grid { grid-template-columns:repeat(2,1fr); }
+  .card-flow { gap:.3rem; padding:.8rem; }
+  .game-banner { flex-direction:column; text-align:center; }
+  .rule-block { padding:1.4rem 1.2rem; }
+  .faq-q { padding:1rem 1.2rem; min-height:48px; }
+  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; }
+  .tts-btn { width:40px; height:40px; font-size:.9rem; }
+  .tts-btn.play { width:48px; height:48px; font-size:1.1rem; }
+  .tts-progress { max-width:200px; }
+  .tts-label { font-size:.65rem; }
+  .tts-start-btn { width:44px; height:44px; font-size:1rem; }
+  .situation-box { padding:1rem 1.1rem; }
+  .callout { padding:.8rem 1rem; }
+}
+@media(max-width:480px) {
+  body { line-height:1.75; }
+  .hero { min-height:80vh; min-height:80dvh; padding:1.5rem 1rem; }
+  .hero-title { font-size:2.2rem; }
+  .hero-brand { font-size:.65rem; letter-spacing:.4em; }
+  .hero-subtitle { font-size:.7rem; }
+  .hero-badge span { padding:.3rem .6rem; font-size:.68rem; }
+  section { padding:2.5rem 1rem; }
+  .section-title { font-size:1.4rem; }
+  .section-desc { font-size:.84rem; }
+  .card-flow { flex-direction:column; align-items:center; gap:.5rem; }
+  .card-group-label { font-size:.55rem; }
+  .flow-arrow { font-size:.85rem; }
+  .summary-steps { grid-template-columns:1fr 1fr; gap:.5rem; }
+  .summary-step { padding:.8rem .4rem; }
+  .summary-step-num { font-size:1.2rem; }
+  .summary-step-desc { font-size:.65rem; }
+  .rule-block { padding:1.2rem 1rem; }
+  .rule-block p { font-size:.84rem; }
+  .rule-block-title { font-size:1rem; }
+  .rule-block-icon { width:34px; height:34px; }
+  .tts-bar { padding:.7rem .5rem; padding-bottom:calc(.5rem + env(safe-area-inset-bottom, 0px)); gap:.35rem; flex-wrap:nowrap; }
+  .tts-btn { width:40px; height:40px; font-size:.85rem; }
+  .tts-btn.play { width:48px; height:48px; font-size:1rem; }
+  .tts-progress { max-width:120px; flex:1; }
+  .tts-label { font-size:.6rem; }
+  .turn-visual { gap:.3rem; padding:.8rem .5rem; }
+  .turn-player { padding:.3rem .4rem; }
+  .turn-icon { width:28px; height:28px; }
+  .turn-label { font-size:.6rem; }
+  .turn-arrow { font-size:.8rem; }
+  .vote-players { gap:.8rem; }
+  .situation-box { padding:.9rem; }
+  .situation-box p { font-size:.82rem; }
+  .callout { padding:.7rem .9rem; }
+  .callout p { font-size:.8rem; }
+  .faq-q { padding:.9rem 1rem; font-size:.84rem; min-height:48px; }
+  .faq-a p { font-size:.82rem; }
+  .comp-grid { grid-template-columns:repeat(2,1fr); gap:.5rem; }
+  .comp-item { padding:.8rem; }
+  .comp-count { font-size:1.3rem; }
+  .comp-name { font-size:.72rem; }
+  .step-list li { font-size:.84rem; padding-left:2rem; }
+  .step-list li::before { width:18px; height:18px; font-size:.68rem; }
+  .footer { padding:2rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-container">
+
+  <!-- ═══ HERO — Series Branding ═══ -->
+  <section class="hero">
+    <div class="hero-brand">Project DullG</div>
+    <div class="hero-ornament"></div>
+    <p class="hero-subtitle">Murder Mystery Series</p>
+    <h1 class="hero-title"><em>규칙</em> 설명서</h1>
+    <div class="hero-badge">
+      <span>추리</span>
+      <span>심리전</span>
+      <span>역할극</span>
+    </div>
+    <button class="tts-start-btn" id="ttsStartBtn" title="규칙 음성 안내">▶</button>
+    <div class="hero-scroll-hint">
+      <span>SCROLL</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ═══ 핵심 요약 ═══ -->
+  <section>
+    <div class="section-inner">
+      <!-- ─── 핵심 요약 ─── -->
+      <div class="quick-summary reveal reveal-d1">
+        <h3>
+          <svg class="icon icon-md" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke-width="1.5"/></svg>
+          핵심 요약
+        </h3>
+        <div class="summary-steps">
+          <div class="summary-step">
+            <div class="summary-step-num">1</div>
+            <div class="summary-step-name">준비</div>
+            <div class="summary-step-desc">캐릭터를 고르고<br>시트를 읽는다</div>
+          </div>
+          <div class="summary-step">
+            <div class="summary-step-num">2</div>
+            <div class="summary-step-name">조사</div>
+            <div class="summary-step-desc">카드를 뽑아 단서를<br>모으고 토론한다</div>
+          </div>
+          <div class="summary-step">
+            <div class="summary-step-num">3</div>
+            <div class="summary-step-name">투표</div>
+            <div class="summary-step-desc">범인을 추리해<br>동시에 지목한다</div>
+          </div>
+          <div class="summary-step">
+            <div class="summary-step-num">4</div>
+            <div class="summary-step-name">결말</div>
+            <div class="summary-step-desc">투표 결과에 따라<br>엔딩이 달라진다</div>
+          </div>
+        </div>
+        <div class="summary-oneliner">
+          단서를 모으고, 추리하고, 범인을 지목하세요.<br>
+          하지만 그것만이 전부가 아닙니다. <strong>당신의 비밀을 지키는 것도 승리 조건</strong>입니다.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SCORING SYSTEM ═══ -->
+  <section>
+    <div class="section-inner">
+      <p class="section-label reveal">승리 조건</p>
+      <h2 class="section-title reveal reveal-d1">어떻게 이기나요?</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+      <p class="section-desc reveal">이 게임의 승리는 <strong>세 가지 점수</strong>로 결정됩니다. 범인을 찾는 것만이 전부가 아닙니다.</p>
+
+      <div class="rule-block reveal" style="border-color:rgba(201,168,76,0.2);">
+        <div class="rule-block-header">
+          <div class="rule-block-icon" style="background:rgba(201,168,76,0.15);border-color:rgba(201,168,76,0.3);">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="rule-block-title">검거 점수: 집단의 힘</div>
+        </div>
+        <p>최종 투표에서 <strong>과반수 이상</strong>이 실제 범인을 지목하면 <strong>검거 성공</strong>. 전체 플레이어가 점수를 얻습니다.</p>
+      </div>
+
+      <div class="rule-block reveal" style="border-color:rgba(201,168,76,0.2);">
+        <div class="rule-block-header">
+          <div class="rule-block-icon" style="background:rgba(201,168,76,0.15);border-color:rgba(201,168,76,0.3);">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="rule-block-title">지목 점수: 나의 추리</div>
+        </div>
+        <p><strong>내가 개인적으로</strong> 범인을 정확하게 지목했다면 점수를 얻습니다. 다른 플레이어를 설득하지 못해 검거에 실패했더라도, <strong>나의 추리가 맞았다면 인정</strong>받습니다.</p>
+      </div>
+
+      <div class="rule-block reveal" style="border-color:rgba(201,168,76,0.2);">
+        <div class="rule-block-header">
+          <div class="rule-block-icon" style="background:rgba(201,168,76,0.15);border-color:rgba(201,168,76,0.3);">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          </div>
+          <div class="rule-block-title">비밀 점수: 나의 비밀을 지켜라</div>
+        </div>
+        <p>각 캐릭터에게는 <strong>비밀</strong>이 있습니다. 다른 플레이어가 당신의 비밀을 추측하더라도, <strong>본인이 직접 인정하지 않는 한</strong> 비밀 점수는 유지됩니다.</p>
+      </div>
+
+      <div class="situation-box reveal">
+        <div class="situation-label">
+          <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          비밀 유지 예시
+        </div>
+        <p><span class="speaker">플레이어 B:</span> "플레이어 A, 혹시 피해자와 특별한 관계였던 거 아니에요?"<br><br><strong style="color:var(--emerald-glow);">○ 점수 유지:</strong> <span class="speaker">플레이어 A:</span> "무슨 소리예요, 증거라도 있나요?" <em style="color:var(--text-dim);">(부정 → 비밀 점수 유지)</em><br><br><strong style="color:var(--blood-glow);">✕ 점수 감점:</strong> <span class="speaker">플레이어 A:</span> "...네, 맞아요." <em style="color:var(--text-dim);">(직접 인정 → 비밀 점수 잃음)</em><br><br>다른 사람이 아무리 의심해도, <strong>본인이 인정하지 않으면 그건 어디까지나 추측</strong>일 뿐입니다.</p>
+      </div>
+
+      <div class="callout reveal">
+        <p><strong>핵심 전략:</strong> 범인을 찾으면서도, 자신의 비밀은 끝까지 지키세요. 추리와 심리전, 두 가지를 동시에 해야 합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHASE I: OPENING ═══ -->
+  <section style="background:linear-gradient(180deg,var(--void) 0%,var(--ritual) 20%,var(--ritual) 80%,var(--void) 100%);">
+    <div class="section-inner">
+      <p class="section-label reveal">Phase 1</p>
+      <h2 class="section-title reveal reveal-d1">오프닝: 게임 준비</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+      <p class="section-desc reveal">약 15분 소요. 게임을 시작하기 전 모두가 함께 진행합니다.</p>
+
+      <ol class="step-list reveal">
+        <li><strong>게임 맵 펼치기</strong>: 설명서 뒷면 이미지를 참고해 게임판을 완성합니다.</li>
+        <li><strong>캐릭터 선택</strong>: 캐릭터 소개를 읽고, 각자 맡을 인물을 정합니다.</li>
+        <li><strong>소지품 카드 받기</strong>: 자기 캐릭터의 <strong>소지품 카드 2장</strong>을 손에 듭니다. 내용을 확인하고 시작합니다. (이 카드가 첫 손패 2장이 됩니다.)</li>
+        <li><strong>캐릭터 시트 숙지</strong>: 자신의 시트를 <strong>혼자</strong> 읽으며 과거·목표·비밀을 파악합니다.</li>
+        <li><strong>자기소개</strong>: 공개된 정보만 바탕으로 자신의 캐릭터를 간단히 소개합니다.</li>
+      </ol>
+
+      <div class="callout reveal">
+        <p><strong>소지품 보관함이란?</strong> 탐색 카드는 맵 위에 원래 위치가 있어서 돌려놓을 자리가 있지만, 소지품 카드는 게임 시작 시 손에 가져왔기 때문에 <strong>돌아갈 자리가 없습니다.</strong> 그래서 소지품 카드를 버릴 때 놓아두는 공용 영역이 바로 <strong>소지품 보관함</strong>입니다.</p>
+      </div>
+
+      <div class="situation-box reveal">
+        <div class="situation-label">
+          <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          소지품 카드의 흐름
+        </div>
+        <p><strong>① 게임 시작:</strong> 각자 자기 캐릭터의 소지품 카드 2장을 손에 들고 시작합니다. (손패 2장)<br><br><strong>② 탐색 중 버리기:</strong> <span class="speaker">플레이어 A</span>가 새 카드를 가져와서 3장이 되었습니다. 이 중 자기 소지품 카드 1장을 버리기로 합니다. → 탐색 카드와 마찬가지로 <strong>중앙에 뒷면으로</strong> 내려놓습니다. (6장 카운트에 포함)<br><br><strong>③ 토론 끝난 후:</strong> 중앙에 쌓인 카드들을 원래 위치로 돌려놓습니다. 탐색 카드는 맵 원래 자리로, 소지품 카드는 <strong>소지품 보관함으로</strong> 돌아갑니다. 이때 소지품 카드는 <strong>180도 돌려서</strong> 놓으면, 이미 조사된 카드를 쉽게 구분할 수 있습니다.<br><br><strong>④ 다음 라운드:</strong> <span class="speaker">플레이어 C</span>가 보관함에서 그 소지품 카드를 가져와 읽을 수 있습니다.</p>
+      </div>
+
+      <div class="callout warning reveal">
+        <p><strong>버릴 때(라운드 중):</strong> 탐색 카드든 소지품 카드든 <strong>모두 중앙에 뒷면으로</strong> 내려놓습니다. (6장 카운트에 포함)</p>
+        <p><strong>라운드 종료 후:</strong> 중앙에 쌓인 카드 중 탐색 카드 → 맵 원래 자리로 / 소지품 카드 → 소지품 보관함으로 (이미 조사한 카드는 180도 돌려서 구분)</p>
+      </div>
+
+      <div class="situation-box reveal">
+        <div class="situation-label">
+          <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          상황 예시
+        </div>
+        <p><span class="speaker">플레이어 A:</span> "저는 피해자의 오른팔로 불리며, 조직의 재정을 관리해 왔습니다."<br><br>이때 시트에 적힌 <strong>비밀 목표</strong>는 절대 말하지 않습니다. 캐릭터 시트의 <strong>'공개 정보' 부분만</strong> 소개하세요.</p>
+      </div>
+
+      <div class="callout reveal">
+        <p><strong>핵심 규칙:</strong> 플레이어 간 <strong>밀담(귓속말)은 금지</strong>입니다. 카드를 서로 보여주는 것도 안 됩니다. 모든 대화는 <strong>전체 공개</strong>로만 진행합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHASE II: INVESTIGATION ═══ -->
+  <section style="background:linear-gradient(180deg,var(--void) 0%,var(--ritual) 30%,var(--ritual) 70%,var(--void) 100%);">
+    <div class="section-inner">
+      <p class="section-label reveal">Phase 2</p>
+      <h2 class="section-title reveal reveal-d1">탐색: 단서를 모으세요</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+      <p class="section-desc reveal">총 <strong>4라운드</strong> 반복. 매 라운드는 <strong>자료조사</strong> → <strong>토론</strong> 순서로 진행됩니다.</p>
+
+      <!-- ─── 자료조사 ─── -->
+      <div class="rule-block reveal">
+        <div class="rule-block-header">
+          <div class="rule-block-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16" y1="16" x2="21" y2="21"/></svg>
+          </div>
+          <div class="rule-block-title">자료조사 시간</div>
+        </div>
+        <p>선 플레이어부터 <strong>시계방향</strong>으로 차례대로 행동합니다. 자기 차례에는 반드시 카드 1장을 가져와야 합니다. <strong>패스는 불가합니다.</strong> 맵 위의 카드 1장을 골라 <strong>혼자</strong> 확인합니다.</p>
+        <p>자료조사 중에도 <strong>가벼운 대화는 자유</strong>입니다. "왜 그 카드를 숨기는 거야?", "수상한데?" 같은 잡담은 괜찮습니다. 단, 본격적인 추리 논의는 <strong>토론 시간</strong>에 하세요.</p>
+        <p>맵 위의 <strong>탐색 카드</strong>뿐 아니라, 소지품 보관함에 있는 <strong>소지품 카드</strong>도 가져올 수 있습니다. 자기 캐릭터에 대한 증언이나 정보가 담긴 카드도 조사 가능합니다. 어디서 가져오든 <strong>1턴에 1장</strong>, 같은 규칙입니다.</p>
+
+        <div class="situation-box">
+          <div class="situation-label">
+            <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            상황 예시
+          </div>
+          <p><span class="speaker">플레이어 A(선):</span> 맵 중앙의 탐색 카드 1장을 집어 혼자 읽습니다.<br>→ <span class="speaker">플레이어 B:</span> 소지품 보관함에서 다른 캐릭터의 소지품 카드를 가져와 확인합니다.<br><br>이렇게 <strong>한 사람씩 시계방향으로</strong> 돌아가며 조사합니다. 탐색 카드든 소지품 카드든, 자기 차례에 가져올 수 있는 건 <strong>1장</strong>입니다.</p>
+        </div>
+      </div>
+
+      <!-- ─── 카드 보유 제한 ─── -->
+      <div class="rule-block reveal">
+        <div class="rule-block-header">
+          <div class="rule-block-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><rect x="3" y="3" width="12" height="17" rx="2"/><rect x="9" y="4" width="12" height="17" rx="2" opacity=".5"/></svg>
+          </div>
+          <div class="rule-block-title">카드 보유 제한: 최대 2장</div>
+        </div>
+        <p>손에 들고 있을 수 있는 카드는 <strong>최대 2장</strong>입니다. 소지품 카드든 탐색 카드든 종류에 관계없이 합산합니다. 게임 시작 시 자기 소지품 카드 2장을 이미 들고 있으므로, <strong>첫 조사부터 카드를 버려야 합니다.</strong></p>
+        <p style="margin-top:.5rem;">손에 이미 2장이 있는 상태에서 새 카드를 가져오면 3장이 됩니다. 이때 3장 중 <strong>아무 1장</strong>을 골라 버립니다.</p>
+        <p style="margin-top:.5rem;">버릴 때는 탐색 카드든 소지품 카드든 <strong>모두 중앙에 뒷면으로</strong> 내려놓습니다.</p>
+
+        <!-- Card Flow Diagram -->
+        <div class="card-flow">
+          <div class="card-group">
+            <div class="card-group-label">내 손패 (2장)</div>
+            <div class="card-mini">A</div>
+            <div class="card-mini">B</div>
+          </div>
+          <span class="flow-arrow">+</span>
+          <div class="card-mini new-card">
+            <span style="font-size:.55rem">NEW</span>
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="card-group">
+            <div class="card-group-label">3장 중 택1 버림</div>
+            <div class="card-mini">A</div>
+            <div class="card-mini">B</div>
+            <div class="card-mini discard"></div>
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="card-group">
+            <div class="card-group-label">결과: 2장 유지</div>
+            <div class="card-mini">A</div>
+            <div class="card-mini new-card" style="font-size:.55rem">NEW</div>
+          </div>
+        </div>
+
+        <div class="situation-box">
+          <div class="situation-label">
+            <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            상황 예시
+          </div>
+          <p><span class="speaker">플레이어 C:</span> 손에 카드 A, 카드 B 2장이 있습니다. 이번 차례에 카드 C를 새로 가져왔습니다.<br><br>3장이 되었으므로 1장을 버려야 합니다. <strong>"카드 B는 별로 중요하지 않은 것 같으니 중앙에 뒷면으로 내려놓겠습니다."</strong><br><br>이제 손에는 카드 A와 카드 C, 2장만 남습니다. 새로 가져온 카드를 바로 버려도 되고, 기존 카드를 버려도 됩니다. <strong>어떤 카드를 버릴지는 자유</strong>입니다.</p>
+        </div>
+
+        <div class="callout">
+          <p>플레이 성향에 따라 특정 카드를 끝까지 손에 쥐고 공개하지 않는 것도 가능합니다. 중요한 증거를 독점할지, 버려서 다른 플레이어와 공유할지는 <strong>당신의 전략</strong>입니다.</p>
+        </div>
+
+        <div class="callout warning">
+          <p>중앙에 <strong>뒷면 카드가 6장</strong> 쌓이면 자료조사 시간이 <strong>즉시 종료</strong>됩니다. 아직 차례가 안 온 플레이어도 그 라운드에서는 더 이상 조사할 수 없습니다.</p>
+        </div>
+
+        <div class="situation-box">
+          <div class="situation-label">
+            <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            6장 종료 예시
+          </div>
+          <p>2라운드 자료조사 중. 중앙에 이미 뒷면 카드 5장이 쌓여 있습니다. <span class="speaker">플레이어 C</span>가 맵에서 새 카드를 가져와서 기존 카드 1장을 중앙에 내려놓자, 중앙 카드가 <strong>6장</strong>이 되었습니다.<br><br>→ 즉시 자료조사 종료! 아직 차례가 오지 않은 <span class="speaker">플레이어 D</span>는 이번 라운드에서 카드를 조사하지 못합니다. 바로 토론으로 넘어갑니다.<br><br><strong>팁:</strong> 만약 <span class="speaker">플레이어 C</span>가 맵이 아닌 <strong>중앙의 뒷면 카드</strong>를 가져왔다면? 중앙에서 1장을 가져오고(5→4장) 1장을 버리면(4→5장) 중앙 카드 수는 그대로입니다. 즉, 중앙 카드를 조사하면 <strong>6장에 도달하는 속도가 느려져</strong> 더 많은 차례를 확보할 수 있습니다.</p>
+        </div>
+      </div>
+
+      <!-- ─── 턴 순서 ─── -->
+      <div class="rule-block reveal">
+        <div class="rule-block-header">
+          <div class="rule-block-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M12 2a10 10 0 11-6.93 17.23"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="rule-block-title">턴 순서: 시계방향</div>
+        </div>
+        <p>첫 라운드의 선 플레이어를 자유롭게 정합니다. 같은 라운드 안에서는 <strong>시계방향</strong>으로 턴이 넘어갑니다.</p>
+
+        <div class="turn-visual">
+          <div class="turn-player active">
+            <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2C8 2 4 7 4 12s2 6 8 10c6-4 8-5 8-10S16 2 12 2z"/></svg></div>
+            <span class="turn-label">선 플레이어</span>
+          </div>
+          <span class="turn-arrow">→</span>
+          <div class="turn-player">
+            <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-6 4 3 7-7-4-7 4 3-7-6-4h7z"/></svg></div>
+            <span class="turn-label">2번째</span>
+          </div>
+          <span class="turn-arrow">→</span>
+          <div class="turn-player">
+            <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></div>
+            <span class="turn-label">3번째</span>
+          </div>
+          <span class="turn-arrow">→</span>
+          <div class="turn-player">
+            <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2c-3 0-6 4-6 8 0 3 2 6 6 12 4-6 6-9 6-12 0-4-3-8-6-8z"/></svg></div>
+            <span class="turn-label">4번째</span>
+          </div>
+        </div>
+
+        <div class="callout">
+          <p><strong>다음 라운드</strong>가 되면, 선 플레이어가 시계방향으로 한 자리 넘어갑니다. 즉, 1라운드에서 2번째였던 사람이 2라운드의 선 플레이어가 됩니다.</p>
+        </div>
+      </div>
+
+      <!-- ─── 토론 ─── -->
+      <div class="rule-block reveal">
+        <div class="rule-block-header">
+          <div class="rule-block-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="rule-block-title">토론 시간: 10분</div>
+        </div>
+        <p>자료조사 후, <strong>10분간</strong> 자유롭게 토론합니다. 자신이 발견한 내용을 <strong>공개할지, 숨길지, 거짓말할지</strong>는 완전히 자유입니다.</p>
+        <p style="margin-top:.5rem;">중앙에 뒷면으로 쌓인 카드들은 <strong>이번 라운드에 누군가가 조사한 카드</strong>입니다. 누가 어떤 카드를 가져갔다 버렸는지 기억해두면, 토론에서 상대의 말이 진실인지 판단하는 데 도움이 됩니다.</p>
+
+        <div class="situation-box">
+          <div class="situation-label">
+            <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            거짓말 예시
+          </div>
+          <p><span class="speaker">플레이어 A:</span> "제가 조사한 카드에는 별 내용이 없었어요." <em style="color:var(--text-dim);">(실제로는 결정적 증거를 발견했지만, 자신에게 불리해서 숨김)</em><br><br><span class="speaker">플레이어 B:</span> "저는 피해자의 일기장을 봤는데, 플레이어 A에 대한 의심이 적혀 있더군요." <em style="color:var(--text-dim);">(실제 내용은 플레이어 C에 대한 것이었지만, 의도적으로 다른 사람에게 의심을 돌림)</em><br><br>정보를 어떻게 활용하느냐에 따라 게임의 흐름이 완전히 달라집니다.</p>
+        </div>
+
+        <div class="callout">
+          <p>토론이 끝나면 중앙에 쌓인 카드를 정리합니다.</p>
+          <p style="margin-top:.4rem;"><strong>1)</strong> <strong>탐색 카드</strong>는 맵의 원래 자리로 되돌립니다.</p>
+          <p style="margin-top:.4rem;"><strong>2)</strong> <strong>소지품 카드</strong>는 소지품 보관함에 <strong>180도 돌려서</strong> 놓아, 이미 조사된 카드를 다음 라운드에서 구분할 수 있게 합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHASE III: VOTING ═══ -->
+  <section>
+    <div class="section-inner">
+      <p class="section-label reveal">Phase 3</p>
+      <h2 class="section-title reveal reveal-d1">투표: 범인을 지목하세요</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+      <p class="section-desc reveal">4라운드가 모두 끝나면 최종 투표를 진행합니다. 약 10분.</p>
+
+      <!-- 최종 변론 -->
+      <div class="rule-block reveal">
+        <div class="rule-block-header">
+          <div class="rule-block-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M12 2v10l4.5 2.5"/><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <div class="rule-block-title">최종 변론: 각자 2분</div>
+        </div>
+        <p>각 플레이어가 순서대로 <strong>최대 2분간</strong> 자신의 추리를 정리해 말합니다. 발언 중 <strong>끼어들 수 없습니다</strong>.</p>
+
+        <div class="situation-box">
+          <div class="situation-label">
+            <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            변론 예시
+          </div>
+          <p><span class="speaker">플레이어 D:</span> "2라운드에서 발견한 단서와 4라운드에서 본 기록을 종합하면, 범행 시각에 그 자리에 있을 수 있었던 건 <strong>플레이어 B</strong>뿐입니다. 게다가 플레이어 A가 3라운드에서 말한 내용과 제가 본 카드 내용이 모순돼요."<br><br>짧게 마무리해도 됩니다. 할 말이 없으면 "저는 패스하겠습니다"도 괜찮습니다.</p>
+        </div>
+      </div>
+
+      <!-- 동시 지목 -->
+      <div class="rule-block reveal">
+        <div class="rule-block-header">
+          <div class="rule-block-icon">
+            <svg class="icon icon-md" viewBox="0 0 24 24"><path d="M18 8h-1V6a4 4 0 00-8 0v2H8a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V10a2 2 0 00-2-2z"/><circle cx="12" cy="15" r="1.5" fill="var(--gold)" stroke="none"/></svg>
+          </div>
+          <div class="rule-block-title">동시 지목</div>
+        </div>
+        <p>모든 변론이 끝나면, <strong>"하나, 둘, 셋!"</strong>에 맞춰 전원이 동시에 범인을 지목합니다.</p>
+        <p>지목 대상은 <strong>같이 플레이하는 캐릭터뿐 아니라</strong>, 스토리에 등장하는 <strong>모든 인물</strong>(NPC 포함)이 될 수 있습니다.</p>
+
+        <div class="vote-visual">
+          <div class="vote-players">
+            <div class="vote-player">
+              <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2C8 2 4 7 4 12s2 6 8 10c6-4 8-5 8-10S16 2 12 2z"/></svg></div>
+            </div>
+            <div class="vote-player">
+              <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2l3 7h7l-6 4 3 7-7-4-7 4 3-7-6-4h7z"/></svg></div>
+            </div>
+            <div class="vote-player">
+              <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></div>
+            </div>
+            <div class="vote-player">
+              <div class="turn-icon"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2c-3 0-6 4-6 8 0 3 2 6 6 12 4-6 6-9 6-12 0-4-3-8-6-8z"/></svg></div>
+            </div>
+          </div>
+          <div class="vote-arrows">↓ ↓ ↓ ↓</div>
+          <div class="vote-target">
+            <div class="turn-icon" style="width:44px;height:44px;border-color:var(--blood);box-shadow:0 0 16px rgba(139,34,50,0.35);"><svg class="icon" style="width:20px;height:20px;" viewBox="0 0 24 24"><text x="12" y="17" text-anchor="middle" fill="var(--gold)" stroke="none" font-size="12" font-weight="700">?</text></svg></div>
+          </div>
+          <div class="vote-label">"하나, 둘, 셋!" 동시에 지목</div>
+        </div>
+
+        <div class="situation-box">
+          <div class="situation-label">
+            <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            동점 상황 예시
+          </div>
+          <p>투표 결과: <span class="speaker">캐릭터 X</span> 2표, <span class="speaker">캐릭터 Y</span> 2표 → <strong>동점!</strong><br><br>→ 캐릭터 X와 Y, <strong>이 두 사람만을 대상으로</strong> 재투표합니다.<br>→ 재투표에서도 동점이면? 그 결과 그대로 엔딩에 진입합니다.<br><br><em style="color:var(--text-dim);">참고: 재투표에서는 동점 대상 캐릭터 중에서만 선택합니다.</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PHASE IV: ENDING ═══ -->
+  <section style="background:linear-gradient(180deg,var(--void) 0%,var(--abyss) 50%,var(--void) 100%);">
+    <div class="section-inner">
+      <p class="section-label reveal">Phase 4</p>
+      <h2 class="section-title reveal reveal-d1">엔딩</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+      <p class="section-desc reveal">투표가 끝나면 QR 코드를 스캔하고 안내에 따르세요.</p>
+
+      <div class="rule-block reveal">
+        <p>투표 결과에 따라 <strong>게임의 엔딩이 달라집니다</strong>. 진짜 범인을 맞혔는지에 따라 다른 결말을 경험하게 됩니다.</p>
+        <p style="margin-top:.5rem;">또한, 각 캐릭터는 범인 지목 외에도 <strong>자신만의 비밀 목표</strong>를 가지고 있습니다. 이 목표를 달성하는 것도 또 하나의 승리 조건입니다.</p>
+      </div>
+
+      <div class="situation-box reveal">
+        <div class="situation-label">
+          <svg class="icon" style="width:14px;height:14px;stroke:var(--emerald-glow);" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          승리 조건 예시
+        </div>
+        <p>범인을 정확히 지목했더라도, 자신의 <strong>비밀 목표</strong>를 달성하지 못했다면 완전한 승리는 아닙니다.<br><br>반대로, 범인을 못 맞혀도 비밀 목표를 달성하면 <strong>부분 승리</strong>가 가능합니다. 진상 규명과 개인 목표, <strong>두 가지 모두</strong> 신경 쓰세요.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ FAQ — 자주 헷갈리는 규칙 ═══ -->
+  <section>
+    <div class="section-inner">
+      <p class="section-label reveal">FAQ</p>
+      <h2 class="section-title reveal reveal-d1">자주 묻는 질문</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">내가 중앙에 버린 카드를 다시 가져올 수 있나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p><strong>네, 가능합니다.</strong> 중앙에 뒷면으로 내려놓은 카드도 맵 위의 카드로 취급됩니다. 본인뿐 아니라 <strong>다른 플레이어도</strong> 가져갈 수 있습니다. 즉, 버려진 카드도 다시 누군가의 손에 들어갈 수 있으니, 누군가의 말이 의심된다면 <strong>그 카드를 직접 가져와 확인</strong>해보세요.</p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">카드를 안 가져오고 패스할 수 있나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p><strong>아니요.</strong> 자기 차례에는 반드시 카드 1장을 가져와야 합니다. 이미 2장을 보유 중이라면, 가져온 후 1장을 버려야 합니다. 어떤 카드를 조사할지는 <strong>당신의 전략적 판단</strong>입니다.</p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">투표할 때 NPC(비플레이어 캐릭터)도 지목할 수 있나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p><strong>네!</strong> 스토리에 등장하는 <strong>모든 인물</strong>을 지목할 수 있습니다. 증거와 논리에 따라 누구든 범인으로 의심하고 지목할 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">토론에서 카드 내용을 거짓으로 말해도 되나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p><strong>네, 완전히 자유입니다.</strong> 정확히 전달해도, 일부만 말해도, 거짓으로 꾸며도 됩니다. 단, <strong>카드 자체를 보여주는 것은 금지</strong>이며, 반드시 말로만 전달하세요.</p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">다른 사람이 내 비밀을 맞혀도 점수를 잃나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p><strong>아니요.</strong> 다른 플레이어가 당신의 비밀을 의심하거나 지적하더라도, <strong>본인이 직접 인정(자백)하지 않는 한</strong> 비밀 점수는 유지됩니다. 상대의 추측은 어디까지나 추측일 뿐입니다. 끝까지 부정하세요.</p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">재투표에서도 또 동점이 나오면 어떻게 하나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p>재투표에서도 동점이면, <strong>그 결과 그대로 특별한 엔딩에 진입</strong>합니다. 세 번째 투표는 없습니다.</p>
+        </div>
+      </div>
+
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q">6장 종료: 원래 맵에 있던 카드도 6장에 포함되나요?<span class="faq-toggle">▼</span></div>
+        <div class="faq-a">
+          <p><strong>아니요.</strong> 6장 카운트는 플레이어가 <strong>뒷면으로 중앙에 버린 카드</strong>만 셉니다. 원래 맵에 배치되어 있던 카드는 포함되지 않습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMPONENTS ═══ -->
+  <section style="background:linear-gradient(180deg,var(--void) 0%,var(--abyss) 50%,var(--void) 100%);">
+    <div class="section-inner">
+      <p class="section-label reveal">구성품</p>
+      <h2 class="section-title reveal reveal-d1">박스 안 내용물</h2>
+      <div class="divider reveal reveal-d2"><div class="divider-diamond"></div></div>
+      <div class="comp-grid">
+        <div class="comp-item reveal"><div class="comp-count">1</div><div class="comp-name">게임 설명서</div></div>
+        <div class="comp-item reveal reveal-d1"><div class="comp-count">4</div><div class="comp-name">캐릭터 시트</div></div>
+        <div class="comp-item reveal reveal-d1"><div class="comp-count">8</div><div class="comp-name">소지품 카드</div></div>
+        <div class="comp-item reveal reveal-d2"><div class="comp-count">20</div><div class="comp-name">탐색 카드</div></div>
+        <div class="comp-item reveal reveal-d2"><div class="comp-count">1</div><div class="comp-name">턴 마커</div></div>
+        <div class="comp-item reveal reveal-d3"><div class="comp-count">4</div><div class="comp-name">캐릭터 카드</div></div>
+        <div class="comp-item reveal reveal-d3"><div class="comp-count">2</div><div class="comp-name">스포일러 방지 카드</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="divider"><div class="divider-diamond"></div></div>
+    <p class="footer-brand">PROJECT DULLG</p>
+    <p>Murder Mystery Series 규칙 설명서</p>
+    <p style="margin-top:.3rem;">게임 시작 전, 이 설명서를 먼저 읽어주세요.</p>
+    <a href="/" style="display:inline-block;margin-top:1.2rem;padding:.5rem 1.2rem;border:1px solid var(--purple-glow);border-radius:8px;color:var(--text-dim);text-decoration:none;font-size:.78rem;transition:all .3s;" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--purple-glow)';this.style.color='var(--text-dim)'">← 메인으로 돌아가기</a>
+  </footer>
+
+</div>
+
+<!-- TTS 컨트롤 -->
+<div class="tts-bar" id="ttsBar">
+  <button class="tts-btn" id="ttsPrev" title="이전">⏮</button>
+  <button class="tts-btn play" id="ttsPlay" title="재생">▶</button>
+  <button class="tts-btn" id="ttsNext" title="다음">⏭</button>
+  <div class="tts-progress">
+    <div class="tts-track" id="ttsTrack">
+      <div class="tts-track-fill" id="ttsFill"></div>
+    </div>
+    <div class="tts-label" id="ttsLabel">규칙 음성 안내</div>
+  </div>
+  <button class="tts-btn" id="ttsClose" title="닫기">✕</button>
+</div>
+
+<script>
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── 오디오 나레이션 시스템 (edge-tts mp3) ──
+(function() {
+  const audio = new Audio('rulebook-narration.mp3');
+  audio.preload = 'metadata';
+
+  const sections = document.querySelectorAll('section');
+
+  // 섹션별 타임스탬프 (개별 생성 → ffprobe 정밀 측정)
+  const markers = [
+    { time:   0, label: "인트로",    sectionIdx: 0 },
+    { time:   7, label: "핵심 요약", sectionIdx: 1 },
+    { time:  21, label: "승리 조건", sectionIdx: 2 },
+    { time:  40, label: "오프닝",    sectionIdx: 3 },
+    { time:  54, label: "탐색",      sectionIdx: 4 },
+    { time:  75, label: "투표",      sectionIdx: 5 },
+    { time:  86, label: "엔딩",      sectionIdx: 6 },
+  ];
+
+  const bar = document.getElementById('ttsBar');
+  const startBtn = document.getElementById('ttsStartBtn');
+  const playBtn = document.getElementById('ttsPlay');
+  const prevBtn = document.getElementById('ttsPrev');
+  const nextBtn = document.getElementById('ttsNext');
+  const closeBtn = document.getElementById('ttsClose');
+  const fill = document.getElementById('ttsFill');
+  const labelEl = document.getElementById('ttsLabel');
+  const track = document.getElementById('ttsTrack');
+
+  let currentMarkerIdx = -1;
+
+  function getCurrentMarker() {
+    const t = audio.currentTime;
+    for (let i = markers.length - 1; i >= 0; i--) {
+      if (t >= markers[i].time) return i;
+    }
+    return 0;
+  }
+
+  function updateUI() {
+    const idx = getCurrentMarker();
+    const changed = idx !== currentMarkerIdx;
+    currentMarkerIdx = idx;
+    const m = markers[idx];
+    const progress = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    fill.style.width = progress + '%';
+    labelEl.textContent = `${idx + 1}/${markers.length}  ${m.label}`;
+    playBtn.textContent = audio.paused ? '▶' : '⏸';
+
+    // 섹션 하이라이트
+    sections.forEach(s => s.classList.remove('tts-active'));
+    if (m.sectionIdx >= 0 && sections[m.sectionIdx]) {
+      sections[m.sectionIdx].classList.add('tts-active');
+      // 섹션 전환 시 자동 스크롤
+      if (changed && !audio.paused) {
+        sections[m.sectionIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }
+
+  function scrollToCurrentSection() {
+    const m = markers[currentMarkerIdx];
+    if (m.sectionIdx >= 0 && sections[m.sectionIdx]) {
+      sections[m.sectionIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  // 재생 시간 업데이트
+  audio.addEventListener('timeupdate', updateUI);
+  audio.addEventListener('ended', () => {
+    sections.forEach(s => s.classList.remove('tts-active'));
+    updateUI();
+  });
+
+  // TTS 바 높이만큼 하단 패딩 (컨텐츠 가림 방지)
+  function updateBodyPadding(show) {
+    if (show) {
+      const barH = bar.offsetHeight || 70;
+      document.body.style.paddingBottom = barH + 'px';
+    } else {
+      document.body.style.paddingBottom = '';
+    }
+  }
+
+  // 시작 버튼
+  startBtn.addEventListener('click', () => {
+    startBtn.classList.add('hidden');
+    bar.classList.add('visible');
+    updateBodyPadding(true);
+    audio.currentTime = 0;
+    audio.play();
+    scrollToCurrentSection();
+  });
+
+  // 재생/일시정지
+  playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+    updateUI();
+  });
+
+  // 이전/다음 섹션
+  prevBtn.addEventListener('click', () => {
+    const idx = Math.max(0, getCurrentMarker() - 1);
+    audio.currentTime = markers[idx].time;
+    if (audio.paused) audio.play();
+    scrollToCurrentSection();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const idx = Math.min(markers.length - 1, getCurrentMarker() + 1);
+    audio.currentTime = markers[idx].time;
+    if (audio.paused) audio.play();
+    scrollToCurrentSection();
+  });
+
+  // 닫기
+  closeBtn.addEventListener('click', () => {
+    audio.pause();
+    audio.currentTime = 0;
+    bar.classList.remove('visible');
+    startBtn.classList.remove('hidden');
+    sections.forEach(s => s.classList.remove('tts-active'));
+    updateBodyPadding(false);
+  });
+
+  // 트랙 클릭으로 시간 이동
+  track.addEventListener('click', (e) => {
+    const ratio = e.offsetX / track.offsetWidth;
+    if (audio.duration) {
+      audio.currentTime = ratio * audio.duration;
+      if (audio.paused) audio.play();
+      scrollToCurrentSection();
+    }
+  });
+})();
+</script>
+</body>
+</html>
