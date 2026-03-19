@@ -442,8 +442,10 @@ section { position: relative; padding: 4.5rem 1.5rem; }
   display:flex; align-items:center; justify-content:center; gap:1rem;
   transform:translateY(100%); transition:transform .4s cubic-bezier(0.16,1,0.3,1);
   backdrop-filter:blur(12px);
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  will-change:transform;
 }
-.tts-bar.visible { transform:translateY(0); }
+.tts-bar.visible { transform:translate3d(0,0,0); }
 .tts-btn {
   width:42px; height:42px; border-radius:50%; border:1.5px solid var(--purple-glow);
   background:var(--purple-deep); color:var(--gold); cursor:pointer;
@@ -1141,14 +1143,9 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     updateUI();
   });
 
-  // TTS 바 높이만큼 하단 패딩 (컨텐츠 가림 방지)
+  // TTS 바 높이만큼 하단 패딩 (컨텐츠 가림 방지, 고정값으로 리플로우 방지)
   function updateBodyPadding(show) {
-    if (show) {
-      const barH = bar.offsetHeight || 70;
-      document.body.style.paddingBottom = barH + 'px';
-    } else {
-      document.body.style.paddingBottom = '';
-    }
+    document.body.style.paddingBottom = show ? '72px' : '';
   }
 
   // 시작 버튼
