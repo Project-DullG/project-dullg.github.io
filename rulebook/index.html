@@ -491,7 +491,8 @@ section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2p
   .game-banner { flex-direction:column; text-align:center; }
   .rule-block { padding:1.4rem 1.2rem; }
   .faq-q { padding:1rem 1.2rem; min-height:48px; }
-  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; }
+  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; transform:none !important; transition:none !important; display:none; }
+  .tts-bar.visible { display:flex; }
   .tts-btn { width:40px; height:40px; font-size:.9rem; }
   .tts-btn.play { width:48px; height:48px; font-size:1.1rem; }
   .tts-progress { max-width:200px; }
@@ -522,7 +523,7 @@ section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2p
   .rule-block p { font-size:.84rem; }
   .rule-block-title { font-size:1rem; }
   .rule-block-icon { width:34px; height:34px; }
-  .tts-bar { padding:.7rem .5rem; padding-bottom:calc(.5rem + env(safe-area-inset-bottom, 0px)); gap:.35rem; flex-wrap:nowrap; }
+  .tts-bar { padding:.7rem .5rem; padding-bottom:calc(.5rem + env(safe-area-inset-bottom, 0px)); gap:.35rem; flex-wrap:nowrap; transform:none !important; transition:none !important; }
   .tts-btn { width:40px; height:40px; font-size:.85rem; }
   .tts-btn.play { width:48px; height:48px; font-size:1rem; }
   .tts-progress { max-width:120px; flex:1; }
