@@ -471,7 +471,8 @@ section { position: relative; padding: 4.5rem 1.5rem; }
 }
 .tts-start-btn:hover { border-color:var(--gold); box-shadow:0 4px 30px rgba(201,168,76,0.3); transform:scale(1.05); }
 .tts-start-btn.hidden { display:none; }
-section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2px; border-radius:4px; transition:outline-color .5s; }
+section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2px; border-radius:4px; }
+@media(max-width:768px) { section.tts-active { outline:none; } }
 
 /* ── Footer ── */
 .footer { text-align:center; padding:3rem 1.5rem; border-top:1px solid rgba(107,63,160,0.1); }
@@ -491,7 +492,7 @@ section.tts-active { outline:2px solid rgba(201,168,76,0.15); outline-offset:-2p
   .game-banner { flex-direction:column; text-align:center; }
   .rule-block { padding:1.4rem 1.2rem; }
   .faq-q { padding:1rem 1.2rem; min-height:48px; }
-  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; transform:none !important; transition:none !important; display:none; }
+  .tts-bar { padding:1rem 1rem .8rem; padding-bottom:calc(.8rem + env(safe-area-inset-bottom, 0px)); gap:.6rem; transform:none !important; transition:none !important; display:none; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; background:#06030e !important; will-change:auto !important; }
   .tts-bar.visible { display:flex; }
   .tts-btn { width:40px; height:40px; font-size:.9rem; }
   .tts-btn.play { width:48px; height:48px; font-size:1.1rem; }
@@ -1137,8 +1138,14 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
     }
   }
 
-  // 재생 시간 업데이트
-  audio.addEventListener('timeupdate', updateUI);
+  // 재생 시간 업데이트 (모바일 성능을 위해 쓰로틀링)
+  let lastUpdate = 0;
+  audio.addEventListener('timeupdate', () => {
+    const now = Date.now();
+    if (now - lastUpdate < 500) return;
+    lastUpdate = now;
+    updateUI();
+  });
   audio.addEventListener('ended', () => {
     sections.forEach(s => s.classList.remove('tts-active'));
     updateUI();
