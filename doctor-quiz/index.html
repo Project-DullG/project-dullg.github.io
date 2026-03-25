@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>캐릭터 성향 테스트 — 의사가 너무 많아! | Project DullG</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #07060f;
+      --panel: rgba(14, 11, 22, 0.95);
+      --ink: #e0d8cc;
+      --dim: #6a6460;
+      --accent: #c41e3a;
+      --accent-glow: rgba(196, 30, 58, 0.25);
+      --gold: #d4a855;
+      --gold-glow: rgba(212, 168, 85, 0.2);
+      --line: rgba(255,255,255,0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(80, 20, 30, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(20, 10, 40, 0.6) 0%, transparent 60%);
+      color: var(--ink);
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px 80px;
+      line-height: 1.8;
+    }
+
+    .wrap {
+      max-width: 620px;
+      width: 100%;
+    }
+
+    /* 상단 네비 */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 52px;
+    }
+
+    .nav-back {
+      font-size: 0.8rem;
+      color: var(--dim);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--ink); }
+
+    .nav-brand {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--dim);
+      letter-spacing: 2px;
+    }
+
+    /* 헤더 */
+    .hd {
+      text-align: center;
+      margin-bottom: 52px;
+    }
+
+    .hd-eyebrow {
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 3px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .hd-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .hd-sub {
+      font-size: 0.9rem;
+      color: var(--dim);
+    }
+
+    .hd-divider {
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      margin: 20px auto 0;
+    }
+
+    /* 진행 바 */
+    .progress-wrap {
+      margin-bottom: 32px;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      transition: background 0.3s ease;
+    }
+
+    .dot.done { background: var(--accent); }
+    .dot.current { background: var(--gold); box-shadow: 0 0 6px var(--gold-glow); }
+
+    .progress-label {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--dim);
+      letter-spacing: 1.5px;
+    }
+
+    /* 퀴즈 카드 */
+    .quiz-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 40px 36px;
+    }
+
+    .part-label {
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #e8e4dc;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .opt-btn {
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      color: #a0988c;
+      font-size: 0.88rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    .opt-btn:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.14);
+      color: #d4ccc4;
+    }
+
+    .opt-btn.sel {
+      background: rgba(196, 30, 58, 0.12);
+      border-color: rgba(196, 30, 58, 0.45);
+      color: #f0e8e0;
+    }
+
+    /* 이전 버튼 */
+    .back-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--dim);
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      letter-spacing: 0.5px;
+      padding: 0;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--ink); }
+    .back-btn.visible { display: inline-block; }
+
+    /* 선택 후 버튼 비활성화 */
+    .opt-btn.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .opt-btn.sel.disabled {
+      opacity: 1;
+    }
+
+    /* 페이드 트랜지션 */
+    .quiz-inner {
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .quiz-inner.fading-fwd {
+      opacity: 0;
+      transform: translateY(-14px);
+    }
+
+    .quiz-inner.fading-back {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+
+    /* 결과 */
+    .result-card {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 52px 36px;
+      text-align: center;
+      animation: fadeUp 0.6s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-eyebrow {
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 3px;
+      margin-bottom: 28px;
+    }
+
+    .char-emblem {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 1px solid;
+    }
+
+    .char-name {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+
+    .char-role {
+      font-size: 0.82rem;
+      color: var(--dim);
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+
+    .char-divider {
+      width: 40px;
+      height: 1px;
+      margin: 0 auto 24px;
+    }
+
+    .char-desc {
+      font-size: 0.92rem;
+      color: #a0988c;
+      line-height: 1.9;
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .char-keys {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .key-tag {
+      font-size: 0.72rem;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1px solid;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .result-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-restart {
+      padding: 11px 22px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--dim);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      transition: all 0.2s;
+    }
+    .btn-restart:hover { border-color: rgba(255,255,255,0.2); color: var(--ink); }
+
+    .btn-home {
+      padding: 11px 22px;
+      background: rgba(212,168,85,0.1);
+      border: 1px solid rgba(212,168,85,0.25);
+      color: var(--gold);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-home:hover { background: rgba(212,168,85,0.18); }
+
+    .result-notice {
+      margin-top: 28px;
+      font-size: 0.72rem;
+      color: #3a3830;
+      font-style: italic;
+    }
+
+    @media (max-width: 500px) {
+      body { padding: 32px 16px 60px; }
+      .quiz-card, .result-card { padding: 28px 20px; }
+      .hd-title { font-size: 1.5rem; }
+      .char-name { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <nav class="nav">
+      <a href="/" class="nav-back">← 메인으로</a>
+      <div class="nav-brand">PROJECT DULLG</div>
+    </nav>
+
+    <header class="hd">
+      <div class="hd-eyebrow">CHARACTER TEST</div>
+      <div class="hd-title">의사가 너무 많아!</div>
+      <div class="hd-sub">나에게 어울리는 캐릭터는?</div>
+      <div class="hd-divider"></div>
+    </header>
+
+    <!-- 진행 표시 -->
+    <div class="progress-wrap" id="progress-wrap">
+      <div class="progress-dots" id="progress-dots"></div>
+      <div class="progress-label" id="progress-label">Q1 / 10</div>
+    </div>
+
+    <!-- 퀴즈 -->
+    <div class="quiz-card" id="quiz-card">
+      <div class="quiz-inner" id="quiz-inner">
+        <button class="back-btn" id="back-btn" onclick="quizBack()">← 이전 문제</button>
+        <div class="part-label" id="part-label"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options"></div>
+      </div>
+    </div>
+
+    <!-- 결과 -->
+    <div class="result-card" id="result-card">
+      <div class="result-eyebrow">RESULT — 당신에게 어울리는 캐릭터</div>
+      <div class="char-emblem" id="char-emblem"></div>
+      <div class="char-name" id="char-name"></div>
+      <div class="char-role" id="char-role"></div>
+      <div class="char-divider" id="char-divider"></div>
+      <p class="char-desc" id="char-desc"></p>
+      <div class="char-keys" id="char-keys"></div>
+      <div class="result-btns">
+        <button class="btn-restart" onclick="quizStart()">↺ 다시 하기</button>
+        <a href="/" class="btn-home">메인으로 →</a>
+      </div>
+      <p class="result-notice">* 의사가 너무 많아! 시나리오는 현재 제작 중입니다</p>
+    </div>
+
+  </div>
+
+  <script>
+    var Q = [
+      {
+        part: "PART 1 · 기초 기질",
+        q: "어지러운 세상을 잠시 뒤로하고 완벽한 휴식을 취한다면,\n어떤 공간에 머물고 싶습니까?",
+        opts: [
+          { t: "노을이 한눈에 보이는 높은 누각.", c: ["Y"] },
+          { t: "정갈하게 타오르는 촛불이 놓인 빈 방.", c: ["S"] },
+          { t: "울창하고 고요한 숲속 오두막.", c: ["R"] },
+          { t: "검은 바다가 일렁이는 밤의 해안가.", c: ["B"] },
+          { t: "묵직한 바위산 아래 오랜 세월을 지켜온 묵직한 정자.", c: ["H"] },
+          { t: "모든 것이 비치는 맑고 투명한 호수가 보이는 방.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 1 · 기초 기질",
+        q: "필기구를 선물받는다면,\n어떤 것을 가장 먼저 선택하시겠습니까?",
+        opts: [
+          { t: "세련된 곡선과 기품이 느껴지는 깃펜.", c: ["Y"] },
+          { t: "투박하지만 손에 맞게 길들여진 나무 만년필.", c: ["R"] },
+          { t: "정밀하게 설계되어 항상 날카롭게 쓸 수 있는 샤프펜슬.", c: ["C"] },
+          { t: "묵직한 무게감으로 종이를 잡아주는 금속 인장.", c: ["H"] },
+          { t: "딱 원하는 대로 뻗어나갈 것 같은 검은 잉크.", c: ["B"] },
+          { t: "정교하고 세밀하게 새겨진 도장.", c: ["S"] }
+        ]
+      },
+      {
+        part: "PART 1 · 기초 기질",
+        q: "모르는 이들과의 첫 만남,\n당신이 가장 중요하게 살피는 것은?",
+        opts: [
+          { t: "상대방이 입은 옷과 자연스럽게 배어 나오는 분위기.", c: ["Y"] },
+          { t: "상대방의 목소리 톤과 미세한 표정의 변화.", c: ["C"] },
+          { t: "상대방이 지키고 있는 예의와 태도의 무게감.", c: ["H"] },
+          { t: "상대방이 품고 있는 의도나 보이지 않는 기운.", c: ["B", "S"] },
+          { t: "상대방이 가진 잠재력이나 성장 가능성.", c: ["R"] }
+        ]
+      },
+      {
+        part: "PART 2 · 심층 가치관",
+        q: "당신의 인생에서 가장 가치 있게 여기는\n'보물'은 무엇입니까?",
+        opts: [
+          { t: "끝없이 뻗어가는 나의 영향력과 명성.", c: ["Y"] },
+          { t: "누구에게도 간섭받지 않는 지식과 자유.", c: ["R"] },
+          { t: "시간이 흘러도 변하지 않는 역사와 전통.", c: ["H"] },
+          { t: "세상을 정돈할 수 있는 확고한 진리.", c: ["S"] },
+          { t: "나만의 원대하고 이상적인 꿈.", c: ["B"] },
+          { t: "불필요한 것을 깎아내고 얻어낸본질.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 2 · 심층 가치관",
+        q: "피할 곳 없이 탁 트인 들판에서 거센 폭풍우를 만났습니다.\n당신의 행동은?",
+        opts: [
+          { t: "폭풍 속에서 가장 극적인 순간을 포착하려 한다.", c: ["Y"] },
+          { t: "주변의 풀이라도 엮어 임시 차폐막이라도 만들어 몸을 숨긴다.", c: ["R"] },
+          { t: "바닥에 몸을 밀착하고, 폭풍이 지나가길 묵묵히 견딘다.", c: ["H"] },
+          { t: "쏟아지는 빗물과 하나가 되어, 고요해질 때까지 태연히 기다린다.", c: ["B"] },
+          { t: "비바람 속에서도 꺼지지 않을 온기를 찾아 그것을 지켜낸다.", c: ["S"] },
+          { t: "빗줄기 속에서도 정신을 집중해서, 폭풍이 약한 곳을 찾아 나아간다.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 2 · 심층 가치관",
+        q: "누구에게도 방해받지 않는,\n당신이 꿈꾸는 '완벽한 휴식'의 풍경은?",
+        opts: [
+          { t: "즐거운 웃음소리가 가득한 공원.", c: ["Y"] },
+          { t: "홀로 지식을 탐구하는 조용한 시간.", c: ["R"] },
+          { t: "달빛 아래 홀로 앉아 마음을 고요히 비워내는 시간.", c: ["B", "S"] },
+          { t: "정돈된 정원을 거닐며 하나씩 기억을 되돌아보는 시간.", c: ["H"] },
+          { t: "무언가를 정밀하게 다듬어 완성해가는 시간.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 3 · 상황적 대처",
+        q: "길가에 시들어가는 꽃 한 송이를 보았습니다.\n당신의 생각은?",
+        opts: [
+          { t: "더 아름다운 꽃으로 교체하여 주변을 가꾸고 싶다.", c: ["Y"] },
+          { t: "시드는 원인을 파악해 다시 꽃피울 수 있게 돕고 싶다.", c: ["R"] },
+          { t: "자연의 섭리이니 사진만 찍고 그대로 둔다.", c: ["H"] },
+          { t: "이 꽃이 지고 나면 어떤 생명이 자라날지 생각해본다.", c: ["B"] },
+          { t: "이 꽃이 또 다른 생명으로 순환하기를 소망한다.", c: ["S"] },
+          { t: "꽃은 아쉽지만 깔끔하게 정리한다.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 3 · 상황적 대처",
+        q: "당신은 남들이 모르는 '특별한 능력'을 하나 가지고 있습니다.\n언제 그 능력을 쓸건가요?",
+        opts: [
+          { t: "나의 존재감을 증명하고 최고의 자리에 오를 때.", c: ["Y"] },
+          { t: "세상에 없는 새로운 길을 찾아낼 때.", c: ["R"] },
+          { t: "혼란을 바로잡고 질서를 세우기 위해 필요할 때.", c: ["H"] },
+          { t: "나만의 숭고한 가치를 지키기 위해 필요할 때.", c: ["S"] },
+          { t: "뒤틀린 인연을 바로잡고 잃어버린 것들을 되찾을 때.", c: ["B"] },
+          { t: "모든 문제의 본질을 찾아내어 명쾌하게 해결하는 순간에.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 3 · 상황적 대처",
+        q: "어떤 문제가 당신을 막아섰습니다.\n어떻게 이 지나가겠습니까?",
+        opts: [
+          { t: "사람들이 나를 따르게 만들고, 모두의 위세와 함께 나아간다.", c: ["Y"] },
+          { t: "예상치 못한 의외의 해결책를 찾아내어 의외의 길로 지나간다.", c: ["R"] },
+          { t: "묵직하게 기다리며 해결책이 보일 때까지 인내심을 가지고 기다린다.", c: ["H"] },
+          { t: "작은 틈이라도 보인다면 망설임 없이 기회를 찾아 운명을 건다.", c: ["B"] },
+          { t: "문제 너머의 진실을 응시하며, 문이 스스로 열리게 만든다.", c: ["S"] },
+          { t: "차가운 이성으로 문제의 본질을 찾아내어, 명쾌하게 해결하려 시도한다.", c: ["C"] }
+        ]
+      },
+      {
+        part: "PART 3 · 상황적 대처",
+        q: "만약 당신의 삶이 한 단어로 기억된다면,\n무엇이길 바랍니까?",
+        opts: [
+          { t: "시대를 밝게 비추는 눈부신 광휘.", c: ["Y"] },
+          { t: "멈추지 않고 끊임없이 나아가는 개혁.", c: ["R"] },
+          { t: "시간이 흘러도 결코 흔들리지 않는 기둥.", c: ["H"] },
+          { t: "티 없이 맑고 고결한 정신의 성결.", c: ["S"] },
+          { t: "만물의 흐름을 한눈에 꿰뚫는 통찰.", c: ["B"] },
+          { t: "한 치의 오차도 허용하지 않는 완벽.", c: ["C"] }
+        ]
+      }
+    ];
+
+    var CHARS = {
+      Y: {
+        name: "양의사",
+        role: "왕국 중앙 의사 의원회 수장",
+        desc: "25년의 경력과 왕국 의원회 수장이라는 자리가 증명하는 인물. 어떤 상황에서도 그 존재감은 흔들리지 않습니다. 당신은 타인에게 영향을 미치는 힘을 지니고 있으며, 언제나 가장 찬란한 방식으로 자신을 증명해온 사람입니다.",
+        keys: ["광휘", "리더십", "명성"],
+        color: "#d4a855",
+        bg: "rgba(212,168,85,0.08)",
+        emblem: "☽"
+      },
+      S: {
+        name: "고위 사제",
+        role: "타사칼 본산 파견 고위 사제",
+        desc: "왕국 대중 종교 타사칼의 본산에서 파견된 인물. 신앙은 당신의 힘이자 방패입니다. 당신은 흔들리는 세상에서 변하지 않는 것을 붙잡을 줄 알며, 그 확고함으로 주변을 이끄는 사람입니다.",
+        keys: ["신앙", "성결", "권위"],
+        color: "#b0a8d8",
+        bg: "rgba(176,168,216,0.08)",
+        emblem: "✦"
+      },
+      R: {
+        name: "역병의사",
+        role: "뒷골목의 기적",
+        desc: "정해진 성공에서 벗어나 스스로의 길을 증명헤 보인 아웃사이더이자, 뒷골목의 기적이라 불리운 인물. 당신은 틀에 얽매이지 않으며, 남들이 포기한 자리에서 새로운 가능성을 집요하게 찾아냅니다.",
+        keys: ["개척", "기적", "자유"],
+        color: "#4aa880",
+        bg: "rgba(74,168,128,0.08)",
+        emblem: "⬡"
+      },
+      B: {
+        name: "부적술사",
+        role: "도술에 통달한 젊은 술사",
+        desc: "젊은 나이에 도술에 통달한 신비로운 인물. 당신은 보이지 않는 흐름을 읽으며, 남들이 미처 보지 못한 것을 꿰뚫는 통찰력을 지니고 있습니다. 세상은 당신에게 아직 탐구되지 않았을 뿐인 거대한 수수께끼입니다.",
+        keys: ["통찰", "신비", "이상"],
+        color: "#9060c0",
+        bg: "rgba(144,96,192,0.08)",
+        emblem: "◈"
+      },
+      H: {
+        name: "한의사",
+        role: "대대로 이어온 가문의 의사",
+        desc: "아버지부터 아들까지 중앙 의원회에서 모셔갔다는 가문의 의사. 당신은 오랜 전통 속에서 중심을 잡아온 사람입니다. 흔들림 없이 자리를 지키는 것이 때로는 가장 강한 힘이라는 것을 알고 있습니다.",
+        keys: ["전통", "수호", "안정"],
+        color: "#c87840",
+        bg: "rgba(200,120,64,0.08)",
+        emblem: "◉"
+      },
+      C: {
+        name: "침술사",
+        role: "명예 주치의",
+        desc: "귀족 사이에서 완전히 새로운 의술 시장을 개척한 인물. 당신은 극도의 집중력과 정밀함으로 어떤 복잡한 문제의 핵심도 찾아내고, 해결할 수 있는 힘이 있습니다. 불필요한 것을 모두 걷어낸 자리에 남는 순수한 완성을 추구합니다.",
+        keys: ["정밀", "완성", "집중"],
+        color: "#60a8c8",
+        bg: "rgba(96,168,200,0.08)",
+        emblem: "◎"
+      }
+    };
+
+    var cur = 0;
+    var scores = {};
+    var sel = null;
+    var answers = []; // {idx, chars}
+
+    function buildDots() {
+      var el = document.getElementById('progress-dots');
+      el.innerHTML = '';
+      for (var i = 0; i < Q.length; i++) {
+        var d = document.createElement('div');
+        d.className = 'dot' + (i < cur ? ' done' : i === cur ? ' current' : '');
+        el.appendChild(d);
+      }
+    }
+
+    function quizStart() {
+      cur = 0;
+      scores = { Y:0, S:0, R:0, B:0, H:0, C:0 };
+      sel = null;
+      answers = [];
+
+      document.getElementById('quiz-card').style.display = 'block';
+      document.getElementById('result-card').style.display = 'none';
+      document.getElementById('progress-wrap').style.display = 'block';
+
+      renderQ(false);
+    }
+
+    function renderQ(dir, presel) {
+      // dir: false(초기), 'fwd', 'back'
+      var inner = document.getElementById('quiz-inner');
+
+      if (dir) {
+        var cls = dir === 'back' ? 'fading-back' : 'fading-fwd';
+        inner.classList.add(cls);
+        setTimeout(function() {
+          inner.classList.remove(cls);
+          _renderQ(presel);
+        }, 230);
+      } else {
+        _renderQ(presel);
+      }
+    }
+
+    function _renderQ(presel) {
+      var qd = Q[cur];
+      sel = presel !== undefined ? presel : null;
+
+      document.getElementById('part-label').textContent = qd.part;
+      document.getElementById('q-text').textContent = qd.q;
+      document.getElementById('progress-label').textContent = 'Q' + (cur+1) + ' / ' + Q.length;
+      buildDots();
+
+      var bb = document.getElementById('back-btn');
+      cur > 0 ? bb.classList.add('visible') : bb.classList.remove('visible');
+
+      var optEl = document.getElementById('options');
+      optEl.innerHTML = '';
+      qd.opts.forEach(function(opt, i) {
+        var btn = document.createElement('button');
+        btn.className = 'opt-btn' + (presel === i ? ' sel' : '');
+        btn.textContent = opt.t;
+        btn.onclick = function() { pickOpt(i); };
+        optEl.appendChild(btn);
+      });
+    }
+
+    function pickOpt(idx) {
+      sel = idx;
+      var btns = document.querySelectorAll('.opt-btn');
+      btns.forEach(function(b, i) {
+        b.classList.toggle('sel', i === idx);
+        b.classList.add('disabled');
+      });
+
+      setTimeout(function() {
+        answers.push({ idx: idx, chars: Q[cur].opts[idx].c });
+        Q[cur].opts[idx].c.forEach(function(k) { scores[k]++; });
+        cur++;
+
+        if (cur >= Q.length) {
+          showResult();
+        } else {
+          renderQ('fwd');
+        }
+      }, 320);
+    }
+
+    function quizBack() {
+      if (cur === 0) return;
+      var last = answers.pop();
+      last.chars.forEach(function(k) { scores[k]--; });
+      cur--;
+      renderQ('back', last.idx);
+    }
+
+    function showResult() {
+      var max = Math.max.apply(null, Object.values(scores));
+      var tops = Object.keys(scores).filter(function(k) { return scores[k] === max; });
+      var winner = tops[Math.floor(Math.random() * tops.length)];
+      var ch = CHARS[winner];
+
+      document.getElementById('quiz-card').style.display = 'none';
+      document.getElementById('progress-wrap').style.display = 'none';
+
+      var emblem = document.getElementById('char-emblem');
+      emblem.textContent = ch.emblem;
+      emblem.style.background = ch.bg;
+      emblem.style.borderColor = ch.color;
+      emblem.style.color = ch.color;
+
+      document.getElementById('char-name').textContent = ch.name;
+      document.getElementById('char-name').style.color = ch.color;
+      document.getElementById('char-role').textContent = ch.role;
+
+      var div = document.getElementById('char-divider');
+      div.style.background = 'linear-gradient(90deg, transparent, ' + ch.color + ', transparent)';
+
+      document.getElementById('char-desc').textContent = ch.desc;
+
+      var keysEl = document.getElementById('char-keys');
+      keysEl.innerHTML = ch.keys.map(function(k) {
+        return '<span class="key-tag" style="color:' + ch.color + ';border-color:' + ch.color.replace(')', ',0.3)').replace('rgb', 'rgba') + ';background:' + ch.bg + '">' + k + '</span>';
+      }).join('');
+
+      document.getElementById('result-card').style.display = 'block';
+    }
+
+    quizStart();
+  </script>
+</body>
+</html>
