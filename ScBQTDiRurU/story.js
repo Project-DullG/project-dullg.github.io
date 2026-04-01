@@ -267,6 +267,14 @@ var S = [
   { t: 'n', tx: '블루가 옐로의 팔을 보고는 말했다.' },
   { t: 'd', sp: '블루', cl: '#42a5f5', tx: '"여기 다쳤잖아.\n나중에 치료 받아."', ch: ['blue', 'yellow'], lo: 'left', tk: 'blue' },
   { t: 'd', sp: '옐로', cl: '#ffd54f', tx: '"에이~ 이 정도 괜찮아~"', ch: ['blue', 'yellow'], lo: 'left', tk: 'yellow' },
+  { t: 'pause', ms: 600 },
+  { t: 'd', sp: '핑크', cl: '#f48fb1', tx: '"옐로 괜찮아?!\n아까 엄청 세게 맞았잖아!!"', ch: ['pink', 'yellow'], lo: 'left', tk: 'pink' },
+  { t: 'd', sp: '옐로', cl: '#ffd54f', tx: '"괜찮다니까~\n부스터 덕분에 금방 나을 거야!"', ch: ['pink', 'yellow'], lo: 'left', tk: 'yellow' },
+  { t: 'pause', ms: 400 },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...다들 돌아가자.\n오늘은 충분히 싸웠어."', ch: ['red', 'black', 'blue', 'yellow', 'pink'], lo: 'spread', tk: 'red' },
+  { t: 'n', tx: '레드가 앞장서서 걸어갔다.\n하나둘 뒤를 따랐다.' },
+  { t: 'pause', ms: 600 },
+  { t: 'n', tx: '나도 스쿠터에 올라타\n연구소로 향했다.\n\n석양이 도시를 물들이고 있었다.', ch: ['doc'] },
   { t: 'pause', ms: 1000 },
 
   // ─── ACT 6: 연구소 저녁 ───
