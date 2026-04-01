@@ -1685,7 +1685,7 @@
       padding: 5px 4px
     }
 
-    .bt-act:hover {
+    .bt-act:hover, .bt-act.selected {
       transform: translateY(-2px)
     }
 
@@ -1700,7 +1700,7 @@
       background: linear-gradient(135deg, rgba(229, 57, 53, 0.15), rgba(229, 57, 53, 0.05))
     }
 
-    .bt-act.atk:hover {
+    .bt-act.atk:hover, .bt-act.atk.selected {
       background: linear-gradient(135deg, rgba(229, 57, 53, 0.3), rgba(229, 57, 53, 0.1));
       border-color: #e53935;
       box-shadow: 0 0 12px rgba(229, 57, 53, 0.3), inset 0 0 8px rgba(229, 57, 53, 0.1)
@@ -1712,7 +1712,7 @@
       background: linear-gradient(135deg, rgba(100, 181, 246, 0.12), rgba(100, 181, 246, 0.04))
     }
 
-    .bt-act.def:hover {
+    .bt-act.def:hover, .bt-act.def.selected {
       background: linear-gradient(135deg, rgba(100, 181, 246, 0.25), rgba(100, 181, 246, 0.08));
       border-color: #64b5f6;
       box-shadow: 0 0 12px rgba(100, 181, 246, 0.3), inset 0 0 8px rgba(100, 181, 246, 0.1)
@@ -1724,7 +1724,7 @@
       background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.04))
     }
 
-    .bt-act.skill:hover {
+    .bt-act.skill:hover, .bt-act.skill.selected {
       background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 215, 0, 0.08));
       border-color: #ffd700;
       box-shadow: 0 0 12px rgba(255, 215, 0, 0.3), inset 0 0 8px rgba(255, 215, 0, 0.1)
@@ -1736,7 +1736,7 @@
       background: linear-gradient(135deg, rgba(78, 204, 163, 0.12), rgba(78, 204, 163, 0.04))
     }
 
-    .bt-act.support:hover {
+    .bt-act.support:hover, .bt-act.support.selected {
       background: linear-gradient(135deg, rgba(78, 204, 163, 0.25), rgba(78, 204, 163, 0.08));
       border-color: #4ecca3;
       box-shadow: 0 0 12px rgba(78, 204, 163, 0.3), inset 0 0 8px rgba(78, 204, 163, 0.1)
@@ -1885,6 +1885,30 @@
       opacity: 0
     }
 
+    .bt-crit-banner {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.3);
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 32px;
+      font-weight: bold;
+      color: #ffd700;
+      text-shadow: 2px 2px 0 #c62828, -1px -1px 0 #c62828, 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+      letter-spacing: 4px;
+      pointer-events: none;
+      z-index: 25;
+      animation: critBanner 1s ease forwards
+    }
+
+    @keyframes critBanner {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.3) }
+      15% { transform: translate(-50%, -50%) scale(1.3) }
+      30% { transform: translate(-50%, -50%) scale(1.0); opacity: 1 }
+      70% { opacity: 1 }
+      100% { opacity: 0; transform: translate(-50%, -60%) scale(0.8) }
+    }
+
     .bt-drama {
       position: absolute;
       top: 0;
@@ -1988,10 +2012,10 @@
     }
 
     .bt-dmg-num.crit {
-      font-size: 42px;
+      font-size: 48px;
       color: #ffd700;
-      text-shadow: 3px 3px 0 #c62828, 0 0 16px rgba(255, 215, 0, 0.6);
-      animation: critFloat 1.2s ease forwards
+      text-shadow: 3px 3px 0 #c62828, 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4);
+      animation: critFloat 1.4s ease forwards
     }
 
     @keyframes dmgFloat {
@@ -2013,21 +2037,26 @@
     @keyframes critFloat {
       0% {
         opacity: 1;
-        transform: translateY(0) scale(0.5) rotate(-10deg)
+        transform: translateY(0) scale(0.3) rotate(-15deg)
       }
 
-      20% {
-        transform: translateY(-10px) scale(1.4) rotate(5deg);
+      15% {
+        transform: translateY(-5px) scale(1.6) rotate(5deg);
         opacity: 1
       }
 
+      30% {
+        transform: translateY(-15px) scale(1.1) rotate(-2deg)
+      }
+
       50% {
-        transform: translateY(-25px) scale(1) rotate(0deg)
+        transform: translateY(-25px) scale(1.2) rotate(0deg);
+        opacity: 1
       }
 
       100% {
         opacity: 0;
-        transform: translateY(-60px) scale(0.7)
+        transform: translateY(-70px) scale(0.6)
       }
     }
 

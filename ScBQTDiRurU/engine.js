@@ -1371,12 +1371,30 @@
         var estCombo = Math.round(calcDmg((p.atk + getBuffVal('atk')) * 2, e.def + getDebuffVal('def'), 1.5, 0.5) * 0.9);
         previews.combo = '<span class="pv-dmg">예상 ~' + estCombo + '</span> <span class="pv-buff">적 방어 50% 무시</span>';
       }
-      // 이벤트 바인딩
+      // 이벤트 바인딩 (모바일: 탭→선택+프리뷰, 재탭→실행)
+      var isTouchDevice = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+      var selectedBtAct = null;
       function bindPv(btn, key) {
         if (!btn) return;
         btn.addEventListener('mouseenter', function () { setPv(previews[key]) });
         btn.addEventListener('mouseleave', clearPv);
-        btn.addEventListener('touchstart', function () { setPv(previews[key]) }, { passive: true });
+        if (isTouchDevice) {
+          btn.addEventListener('touchstart', function (e) {
+            if (selectedBtAct !== btn) {
+              e.preventDefault();
+              if (selectedBtAct) selectedBtAct.classList.remove('selected');
+              selectedBtAct = btn;
+              btn.classList.add('selected');
+              setPv(previews[key]);
+            }
+          });
+        }
+      }
+      // 프리뷰 영역 터치 시 선택 해제
+      if (isTouchDevice) {
+        pvEl.addEventListener('touchstart', function () {
+          if (selectedBtAct) { selectedBtAct.classList.remove('selected'); selectedBtAct = null; clearPv() }
+        }, { passive: true });
       }
       bindPv(a1, 'atk'); bindPv(a2, 'def'); bindPv(focusBtn, 'focus'); bindPv(a3, 'skill'); bindPv(a3b, 'booster');
       bindPv(docBtn, 'doctor');
@@ -1450,6 +1468,11 @@
     }
     function btChainFlash(color, count) {
       var i = 0; (function go() { if (i >= count) return; btFlash(color); i++; setTimeout(go, 120) })();
+    }
+    function showCritBanner() {
+      var el = document.createElement('div'); el.className = 'bt-crit-banner'; el.textContent = 'CRITICAL!';
+      $('bt-bg').appendChild(el);
+      setTimeout(function () { el.remove() }, 1000);
     }
 
     // ── 필살기 연출 ──
@@ -1532,7 +1555,7 @@
         if (p.key === 'blue') { if (crit) { BT.blueCritChain = 0 } else { BT.blueCritChain = Math.min(3, BT.blueCritChain + 1) } }
         // 옐로 고유: 감전 마크
         if (p.key === 'yellow') { BT.yellowMarks = Math.min(3, BT.yellowMarks + 1) }
-        btFlash(p.color); btShake();
+        if (crit) { btFlash('#ffd700'); btShake(true); showCritBanner() } else { btFlash(p.color); btShake() }
         showDmgNum(dmg, 'bt-esvg', crit ? 'crit' : '');
         var logMsg = p.name + '의 공격! <span class="dmg">' + dmg + ' 데미지</span>';
         var details = [];
@@ -1547,11 +1570,6 @@
         btLog(logMsg);
         // 흡혈 강타
         if (BT.perkVamp > 0 && dmg > 0) { var vampHeal = Math.round(dmg * BT.perkVamp); p.hp = Math.min(p.maxHp, p.hp + vampHeal); showDmgNum(vampHeal, 'bt-psvg', 'heal') }
-        // 적 반격 체크 (counter)
-        if (e.special && e.special.type === 'counter' && Math.random() < e.special.val) {
-          var counterDmg = calcDmg(e.atk, 0, 0.5, 0); if (BT.perkDmgReduce > 0) counterDmg = Math.max(1, Math.round(counterDmg * (1 - BT.perkDmgReduce))); p.hp = Math.max(0, p.hp - counterDmg);
-          showDmgNum(counterDmg, 'bt-psvg', ''); btLogAppend('반격! <span class="dmg">' + counterDmg + ' 데미지</span>');
-        }
         updateBattleUI();
         // 추가 공격 확률 체크
         if (BT.perkExtraAtk > 0 && e.hp > 0 && Math.random() < BT.perkExtraAtk) {
@@ -1714,7 +1732,11 @@
             btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="buff">추가 공격 +' + Math.round(extraVal * 100) + '%!</span>' + (doubleSupport ? ' (2배!)' : ''));
           } else if (sup.type === 'regenShield') {
             BT.buffs.push({ stat: 'regenShield', healPct: sup.healPct, shieldPct: sup.shieldPct, turns: sup.turns });
-            btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="heal">' + sup.turns + '턴간 체력 ' + Math.round(sup.healPct * 100) + '% + 쉴드 ' + Math.round(sup.shieldPct * 100) + '%</span>');
+            // 즉시 첫 틱 발동
+            var immHeal = Math.round(p.maxHp * sup.healPct); p.hp = Math.min(p.maxHp, p.hp + immHeal);
+            var immShield = Math.round(p.maxHp * sup.shieldPct * (1 + BT.perkShieldUp)); BT.shield += immShield;
+            showDmgNum(immHeal, 'bt-psvg', 'heal');
+            btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="heal">HP+' + immHeal + ' 🛡️+' + immShield + ' (' + sup.turns + '턴 지속)</span>');
           } else if (sup.type === 'damage') {
             var dmg = calcDmg(p.atk, e.def, sup.multi * supMul, BT.perkArmorPen);
             if (BT.perkDmgUp > 0) dmg = Math.round(dmg * (1 + BT.perkDmgUp));
