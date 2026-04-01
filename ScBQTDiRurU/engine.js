@@ -529,29 +529,29 @@
     // ── 패시브 버프 ──
     var PASSIVE_BUFFS = {
       red: {
-        name: '리더의 의지', desc: '공격력 +15%', icon: '🔥',
-        apply: function (p) { p.atk = Math.round(p.atk * 1.15) },
-        skillDesc: '스킬 사용 시 공격력 버프 1턴'
+        name: '\uBD88\uAF43\uC758 \uC758\uC9C0', desc: '\uCE58\uBA85\uD0C0 \uB370\uBBF8\uC9C0 +40%', icon: '\uD83D\uDD25',
+        apply: function (p) { BT.perkCritDmg += 0.40 },
+        skillDesc: '\uC2A4\uD0AC \uC0AC\uC6A9 \uC2DC \uACF5\uACA9\uB825 \uBC84\uD504 1\uD134'
       },
       black: {
-        name: '사수의 눈', desc: '관통 시작 +20%, 공격력 +10%', icon: '🎯',
-        apply: function (p) { p.defIgnore = 0.10; p.atk = Math.round(p.atk * 1.10) },
-        skillDesc: '스킬이 방어력 30% 추가 무시'
+        name: '\uC0AC\uC218\uC758 \uB208', desc: '\uACF5\uACA9\uB825 +15%, \uBC29\uC5B4 \uAD00\uD1B5 +15%', icon: '\uD83C\uDFAF',
+        apply: function (p) { p.atk = Math.round(p.atk * 1.15); BT.perkArmorPen += 0.15 },
+        skillDesc: '\uC2A4\uD0AC\uC774 \uBC29\uC5B4\uB825 30% \uCD94\uAC00 \uBB34\uC2DC'
       },
       blue: {
-        name: '전술의 눈', desc: '크리확률 +8%, 회피확률 +5%', icon: '🎯',
-        apply: function (p) { p.crit += 8; p.dodge += 5; p.critBonus = 0 },
-        skillDesc: '스킬 크리티컬 +8%'
+        name: '\uC804\uC220\uC758 \uB208', desc: '\uCE58\uBA85\uD0C0 \uD655\uB960 +15%, \uCD94\uAC00 \uACF5\uACA9 8%', icon: '\uD83C\uDFAF',
+        apply: function (p) { p.crit += 15; BT.perkExtraAtk = (BT.perkExtraAtk || 0) + 0.08 },
+        skillDesc: '\uC2A4\uD0AC \uD06C\uB9AC\uD2F0\uCEEC +8%'
       },
       yellow: {
-        name: '번개의 에너지', desc: '매턴 SP 10% 회복', icon: '⚡',
-        apply: function (p) { p.spRegen = Math.round(p.maxSp * 0.10) },
-        skillDesc: '스킬 사용 시 감전 마크 +1 추가'
+        name: '\uBC88\uAC1C\uC758 \uC5D0\uB108\uC9C0', desc: '\uB9E4\uD134 SP 10% \uD68C\uBCF5, \uD68C\uD53C\uC728 +15%', icon: '\u26A1',
+        apply: function (p) { p.spRegen += Math.round(p.maxSp * 0.10); p.dodge += 15 },
+        skillDesc: '\uC2A4\uD0AC \uC0AC\uC6A9 \uC2DC \uAC10\uC804 \uB9C8\uD06C +1 \uCD94\uAC00'
       },
       pink: {
-        name: '수호의 유대', desc: '쉴드력 +8%, 피해 감소 3%, 웨이브 클리어 시 HP 7% 회복', icon: '💗',
-        apply: function (p) { p.def = Math.round(p.def * 1.08); BT.perkDmgReduce += 0.03 },
-        skillDesc: '스킬 사용 시 쉴드 5% 부여'
+        name: '\uC218\uD638\uC758 \uC720\uB300', desc: '\uD53C\uD574 \uAC10\uC18C 5%, \uC274\uB4DC\uB7C9 +10%, \uC6E8\uC774\uBE0C \uD074\uB9AC\uC5B4 HP 5% \uD68C\uBCF5', icon: '\uD83D\uDC97',
+        apply: function (p) { BT.perkDmgReduce += 0.05; BT.perkShieldUp += 0.10 },
+        skillDesc: '\uC2A4\uD0AC \uC0AC\uC6A9 \uC2DC \uC274\uB4DC 5% \uBD80\uC5EC'
       }
     };
 
@@ -1030,7 +1030,7 @@
       // 웨이브 클리어 시 회복 (연구 개발 회복 강화만 적용)
       if (BT.wave > 1) {
         var healPct = getLabBonus('heal');
-        if (BT.passiveKey === 'pink') healPct += 0.05;
+        if (BT.passiveKey === 'pink' || BT.player.key === 'pink') healPct += 0.05;
         if (healPct > 0) BT.player.hp = Math.min(BT.player.maxHp, BT.player.hp + Math.round(BT.player.maxHp * healPct));
       }
       BT.enemy = generateEnemy(BT.wave);
