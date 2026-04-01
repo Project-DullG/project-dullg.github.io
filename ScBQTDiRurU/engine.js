@@ -895,7 +895,7 @@
     }
     $('btn-defend').addEventListener('click', function () { stopAllBgm(); playBgm('daily'); initSelect(); showScr('select') });
     $('lab-to-select').addEventListener('click', function () { initSelect(); showScr('select') });
-    $('lab-to-title').addEventListener('click', function () { stopAllBgm(); showScr('title') });
+    $('lab-to-title').addEventListener('click', function () { initSelect(); showScr('select') });
     $('sel-back').addEventListener('click', function () { stopAllBgm(); showScr('title') });
     $('sel-lab').addEventListener('click', function () { initLab(); showScr('lab') });
     $('sel-tut').addEventListener('click', function () {
