@@ -404,19 +404,19 @@
         name: '\uB808\uB4DC', color: '#e53935', weapon: '\uB300\uAC80',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uBBF8\uB77C\uD074 \uC2AC\uB798\uC2DC', cost: 50, multi: 3.0, desc: '\uACF5\uACA9\uB825 300% \uB300\uAC80 \uC77C\uACA9', ignoreDef: 0 },
-        support: { name: '\uB9AC\uB354\uC758 \uACA9\uB824', desc: '\uACF5\uACA9\uB825 +35% (3\uD134)', type: 'buff', stat: 'atk', val: 0.35, turns: 3 }
+        support: { name: '\uB9AC\uB354\uC758 \uACA9\uB824', desc: '\uACF5\uACA9\uB825 +50% (2\uD134)', type: 'buff', stat: 'atk', val: 0.50, turns: 2 }
       },
       black: {
         name: '\uBE14\uB799', color: '#555', weapon: '\uCD1D',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 50, multi: 2.0, desc: '\uACF5\uACA9\uB825 200% + \uBC29\uC5B4\uBB34\uC2DC 50%', ignoreDef: 0.5 },
-        support: { name: '\uC5C4\uD638 \uC0AC\uACA9', desc: '\uC801\uC5D0\uAC8C \uACF5\uACA9\uB825 140% \uB370\uBBF8\uC9C0', type: 'damage', multi: 1.4 }
+        support: { name: '\uAD00\uD1B5 \uC0AC\uACA9', desc: '\uBC29\uC5B4 \uAD00\uD1B5 +50% (2\uD134)', type: 'armorPen', val: 0.50, turns: 2 }
       },
       blue: {
         name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uCE58\uBA85\uD0C0 \uD655\uB960 +20%', critBonus: 0.20, ignoreDef: 0 },
-        support: { name: '\uC804\uC220 \uBD84\uC11D', desc: '\uC801 \uBC29\uC5B4\uB825 -35% (3\uD134)', type: 'debuff', stat: 'def', val: 0.35, turns: 3 }
+        support: { name: '\uC804\uC220 \uBD84\uC11D', desc: '\uCE58\uBA85\uD0C0 \uD655\uB960 +50% (2\uD134)', type: 'buff', stat: 'crit', val: 0.50, turns: 2 }
       },
       yellow: {
         name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
@@ -428,7 +428,7 @@
         name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 50, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uC274\uB4DC 20% \uBD80\uC5EC', heal: 0.20, ignoreDef: 0 },
-        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '\uCCB4\uB825 30% \uD68C\uBCF5', type: 'heal', val: 0.3 }
+        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '\uCCB4\uB825 20% \uD68C\uBCF5 + \uC274\uB4DC 50%', type: 'healShield', healVal: 0.20, shieldVal: 0.50 }
       }
     };
 
@@ -804,11 +804,8 @@
             card.classList.add('picked'); BT.selectedRanger = key;
             var pb = PASSIVE_BUFFS[key];
             info.innerHTML = '<div class="sel-info-name" style="color:' + r.color + '">' + r.name + ' (' + r.weapon + ')</div>'
-              + '<div class="sel-stat"><b>체력</b> ' + r.hp + ' <b>공격력</b> ' + r.atk + ' <b>쉴드력</b> ' + r.def + '</div>'
-              + '<div class="sel-stat"><b>크리확률</b> ' + r.crit + '% <b>크리데미지</b> x1.50 <b>회피</b> ' + r.dodge + '%</div>'
-              + '<div class="sel-stat"><b>SP</b> ' + r.sp + '</div>'
               + '<div class="sel-skill">\u2728 ' + r.skill.name + ' \u2014 ' + r.skill.desc + ' (SP ' + r.skill.cost + ')</div>'
-              + '<div class="sel-skill" style="color:#4ecca3;margin-top:4px">\uD83C\uDF1F <b>[\uC9C0\uC6D0\uC2A4\uD0AC]</b> ' + r.support.name + ' \u2014 ' + r.support.desc + '</div>'
+              + '<div class="sel-skill" style="color:#4ecca3;margin-top:4px">\uD83C\uDF1F <b>[\uC9C0\uC6D0\uC2A4\uD0AC]</b> ' + r.support.name + ' \u2014 ' + r.support.desc + '<br><span style="color:#888;font-size:10px">\uCFE8\uD0C0\uC784 4\uD134 | \uC804\uD22C \uBBF8\uCC38\uC5EC \uC2DC \uC0AC\uC6A9 \uAC00\uB2A5</span></div>'
               + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' \uCD9C\uB3D9 \uD328\uC2DC\uBE0C: <b>' + pb.name + '</b> \u2014 ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">\uC2A4\uD0AC \uBCF4\uB108\uC2A4: ' + pb.skillDesc + '</span></div>';
             $('sel-go').style.display = 'block'; $('sel-go').textContent = '\u25B6 \uB2E4\uC74C: \uD30C\uD2B8\uB108 \uC120\uD0DD';
           } else if (step === 2) {
@@ -1122,37 +1119,68 @@
       else { hpBar.style.background = ''; hpBar.classList.remove('hp-warning', 'hp-critical') }
     }
 
-    // ── 상태이상 아이콘 갱신 ──
+    // ── 상태이상 아이콘 갱신 (핵심만 표시) ──
     function updateStatusIcons() {
       var row = $('bt-status'); clr(row); var p = BT.player;
-      // TG 표시 (축약)
-      if (BT.tacticalGauge === 1) { var s = document.createElement('span'); s.className = 'bt-sicon tg'; s.innerHTML = '🎯TG1'; s.title = '전술 게이지 1단계: 공격력 +10%'; row.appendChild(s) }
-      else if (BT.tacticalGauge === 2) { var s = document.createElement('span'); s.className = 'bt-sicon tg'; s.innerHTML = '🎯TG2'; s.title = '전술 게이지 2단계: 공격력 +20%'; row.appendChild(s) }
-      else if (BT.tacticalGauge >= 3) { var s = document.createElement('span'); s.className = 'bt-sicon tg buff'; s.innerHTML = '🎯TG3!'; s.title = '전술 게이지 최대: 공격력 +30%'; row.appendChild(s) }
-      if (BT.guaranteedCrit) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥확정크리!'; s.title = '다음 공격 확정 크리티컬'; row.appendChild(s) }
-      if (BT.shield > 0) { var s = document.createElement('span'); s.className = 'bt-sicon guard'; s.textContent = '🛡️' + BT.shield; s.title = '쉴드 ' + BT.shield + ' (매턴 50% 감소)'; row.appendChild(s) }
-      if (BT.perkDmgReduce > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🔰감소' + Math.round(BT.perkDmgReduce * 100) + '%'; s.title = '피해 감소 ' + Math.round(BT.perkDmgReduce * 100) + '%'; row.appendChild(s) }
-      if (BT.perkCritChance > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯크리+' + Math.round(BT.perkCritChance * 100) + '%'; s.title = '치명타 확률 +' + Math.round(BT.perkCritChance * 100) + '%'; row.appendChild(s) }
-      if (BT.perkCritDmg > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '💥크뎀+' + (BT.perkCritDmg * 100).toFixed(0) + '%'; s.title = '크리 데미지 x' + (1.5 + BT.perkCritDmg).toFixed(2); row.appendChild(s) }
-      if (BT.perkShieldUp > 0) { var s = document.createElement('span'); s.className = 'bt-sicon guard'; s.textContent = '🛡️+' + Math.round(BT.perkShieldUp * 100) + '%'; s.title = '쉴드량 +' + Math.round(BT.perkShieldUp * 100) + '%'; row.appendChild(s) }
-      if (BT.perkDmgUp > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '⚔️+' + Math.round(BT.perkDmgUp * 100) + '%'; s.title = '피해량 +' + Math.round(BT.perkDmgUp * 100) + '%'; row.appendChild(s) }
-      if (BT.perkArmorPen > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯관통' + Math.round(BT.perkArmorPen * 100) + '%'; s.title = '방어 관통 +' + Math.round(BT.perkArmorPen * 100) + '%'; row.appendChild(s) }
-      if (BT.poisonTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon poison'; s.textContent = '☠️' + BT.poisonDmg + '×' + BT.poisonTurns; s.title = '독: ' + BT.poisonDmg + ' 데미지/턴, ' + BT.poisonTurns + '턴 남음'; row.appendChild(s) }
-      if (BT.burnTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥' + BT.burnDmg + '×' + BT.burnTurns; s.title = '화상: ' + BT.burnDmg + ' 데미지/턴, ' + BT.burnTurns + '턴 남음'; row.appendChild(s) }
-      if (BT.freezeTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon freeze'; s.textContent = '❄️' + BT.freezeTurns + '턴'; s.title = '빙결: 공격력 감소 ' + BT.freezeTurns + '턴'; row.appendChild(s) }
-      if (BT.stunTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡기절!'; s.title = '적 기절 (행동불가)'; row.appendChild(s) }
-      BT.buffs.forEach(function (b) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '↑' + statKR(b.stat) + '+' + Math.round(b.val * 100) + '%'; s.title = statKR(b.stat) + ' +' + Math.round(b.val * 100) + '%, ' + b.turns + '턴 남음'; row.appendChild(s) });
-      BT.debuffs.forEach(function (d) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '↓' + statKR(d.stat) + '-' + Math.round(d.val * 100) + '%'; s.title = '적 ' + statKR(d.stat) + ' -' + Math.round(d.val * 100) + '%, ' + d.turns + '턴 남음'; row.appendChild(s) });
-      // 레인저 고유 게이지 (축약)
-      if (p.key === 'red' && BT.redMomentum > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥투지' + BT.redMomentum + '/5' + (BT.redMomentum >= 5 ? '!' : ''); s.title = '투지 ' + BT.redMomentum + '/5' + (BT.redMomentum >= 5 ? ' - 스킬 데미지 x1.5!' : ''); row.appendChild(s) }
-      if (p.key === 'black') { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🔫' + Math.round(BT.blackAim * 10) + '%' + (BT.blackAim >= 5 ? '!' : ''); s.title = '관통 ' + Math.round(BT.blackAim * 10) + '%' + (BT.blackAim >= 5 ? ' MAX' : ''); row.appendChild(s) }
-      if (p.key === 'blue' && BT.blueCritChain > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯크리+' + BT.blueCritChain * 8 + '%'; s.title = '집중 크리티컬 +' + BT.blueCritChain * 8 + '%'; row.appendChild(s) }
-      if (p.key === 'yellow' && BT.yellowMarks > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? '!' : ''); s.title = '감전 ' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? ' - 스킬 사용 시 스턴!' : ''); row.appendChild(s) }
-      if (p.key === 'pink') { var s = document.createElement('span'); s.className = 'bt-sicon heal'; s.textContent = '💗' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? '!' : ''); s.title = '유대 ' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? ' - 곧 발동!' : ''); row.appendChild(s) }
-      // 강타 예고
-      if (BT.enemyTelegraph) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.style.cssText = 'animation:blink 0.4s infinite;color:#ff4444;font-weight:bold;border-color:#f44'; s.textContent = '\u26A0\uFE0F\u26A0\uFE0F \uAC15\uD0C0 \uC608\uACE0! \uBC29\uC5B4 \uD544\uC218! \u26A0\uFE0F\u26A0\uFE0F'; row.appendChild(s) }
+      function addIcon(cls, text, tip) { var s = document.createElement('span'); s.className = 'bt-sicon ' + cls; s.textContent = text; s.title = tip; row.appendChild(s) }
+      // 강타 예고 (최우선)
+      if (BT.enemyTelegraph) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.style.cssText = 'animation:blink 0.4s infinite;color:#ff4444;font-weight:bold;border-color:#f44'; s.textContent = '\u26A0\uFE0F \uAC15\uD0C0\uC608\uACE0!'; row.appendChild(s) }
+      // 상태이상 (위험)
+      if (BT.poisonTurns > 0) addIcon('poison', '\u2620\uFE0F' + BT.poisonTurns, '\uB3C5 ' + BT.poisonDmg + '/\uD134, ' + BT.poisonTurns + '\uD134');
+      if (BT.burnTurns > 0) addIcon('charge', '\uD83D\uDD25' + BT.burnTurns, '\uD654\uC0C1 ' + BT.burnDmg + '/\uD134, ' + BT.burnTurns + '\uD134');
+      if (BT.freezeTurns > 0) addIcon('freeze', '\u2744\uFE0F' + BT.freezeTurns, '\uBE59\uACB0 ' + BT.freezeTurns + '\uD134');
+      // 전투 버프/디버프 (턴 제한)
+      BT.buffs.forEach(function (b) { addIcon('buff', '\u2191' + statKR(b.stat) + b.turns + 't', statKR(b.stat) + ' +' + Math.round(b.val * 100) + '%, ' + b.turns + '\uD134') });
+      BT.debuffs.forEach(function (d) { addIcon('buff', '\u2193\uC801' + statKR(d.stat) + d.turns + 't', '\uC801 ' + statKR(d.stat) + ' -' + Math.round(d.val * 100) + '%, ' + d.turns + '\uD134') });
+      // 적 기절
+      if (BT.stunTurns > 0) addIcon('stun', '\u26A1\uAE30\uC808!', '\uC801 \uD589\uB3D9\uBD88\uAC00');
+      // TG
+      if (BT.tacticalGauge > 0) addIcon(BT.tacticalGauge >= 3 ? 'tg buff' : 'tg', '\uD83C\uDFAFTG' + BT.tacticalGauge, '\uC804\uC220 \uAC8C\uC774\uC9C0 +' + BT.tacticalGauge * 10 + '%');
+      if (BT.guaranteedCrit) addIcon('charge', '\uD83D\uDD25\uD655\uC815\uD06C\uB9AC!', '\uB2E4\uC74C \uACF5\uACA9 \uD655\uC815 \uD06C\uB9AC\uD2F0\uCEEC');
+      // 쉴드
+      if (BT.shield > 0) addIcon('guard', '\uD83D\uDEE1\uFE0F' + BT.shield, '\uC274\uB4DC ' + BT.shield + ' (\uB9E4\uD134 50%\u2193)');
+      // 캐릭터 고유 게이지
+      if (p.key === 'red' && BT.redMomentum > 0) addIcon('charge', '\uD83D\uDD25' + BT.redMomentum + '/5', '\uD22C\uC9C0 ' + BT.redMomentum + '/5' + (BT.redMomentum >= 5 ? ' MAX!' : ''));
+      if (p.key === 'black') addIcon('buff', '\uD83D\uDD2B' + Math.round(BT.blackAim * 10) + '%', '\uAD00\uD1B5 ' + Math.round(BT.blackAim * 10) + '%');
+      if (p.key === 'blue' && BT.blueCritChain > 0) addIcon('buff', '\uD83C\uDFAF+' + BT.blueCritChain * 8 + '%', '\uC9D1\uC911 \uD06C\uB9AC +' + BT.blueCritChain * 8 + '%');
+      if (p.key === 'yellow' && BT.yellowMarks > 0) addIcon('stun', '\u26A1' + BT.yellowMarks + '/3', '\uAC10\uC804 ' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? ' \uC2A4\uD134!' : ''));
+      if (p.key === 'pink') addIcon('heal', '\uD83D\uDC97' + BT.pinkBond + '%', '\uC720\uB300 ' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? ' \uACE7 \uBC1C\uB3D9!' : ''));
+      // 정보 버튼 (패시브/퍽 상세)
+      var infoBtn = document.createElement('span'); infoBtn.className = 'bt-sicon bt-info-btn'; infoBtn.textContent = '\u2139\uFE0F';
+      infoBtn.title = '\uD328\uC2DC\uBE0C/\uC2A4\uD0EF \uC0C1\uC138';
+      infoBtn.addEventListener('click', function () { toggleBattleInfo() });
+      row.appendChild(infoBtn);
       // 골드/CE 표시
-      $('bt-pending').textContent = '✨MP ' + BT.gold + ' | 🔮CE ' + BT.ce;
+      $('bt-pending').textContent = '\u2728MP ' + BT.gold + ' | \uD83D\uDD2ECE ' + BT.ce;
+    }
+    // ── 전투 정보 패널 (패시브/퍽/스탯) ──
+    function toggleBattleInfo() {
+      var existing = document.getElementById('bt-info-panel');
+      if (existing) { existing.remove(); return }
+      var p = BT.player; var panel = document.createElement('div');
+      panel.id = 'bt-info-panel'; panel.className = 'bt-info-panel';
+      var lines = [];
+      lines.push('<b>\u2694\uFE0F ' + p.name + ' \uC2A4\uD0EF</b>');
+      lines.push('HP ' + p.hp + '/' + p.maxHp + ' | ATK ' + p.atk + ' | DEF ' + p.def + ' | CRIT ' + p.crit + '% | \uD68C\uD53C ' + p.dodge + '%');
+      // 출동 패시브
+      var passives = [];
+      if (PASSIVE_BUFFS[p.key]) passives.push(PASSIVE_BUFFS[p.key].icon + ' ' + PASSIVE_BUFFS[p.key].name + ': ' + PASSIVE_BUFFS[p.key].desc);
+      if (BT.passiveKey && BT.passiveKey !== p.key && PASSIVE_BUFFS[BT.passiveKey]) passives.push(PASSIVE_BUFFS[BT.passiveKey].icon + ' ' + PASSIVE_BUFFS[BT.passiveKey].name + ': ' + PASSIVE_BUFFS[BT.passiveKey].desc);
+      if (passives.length) { lines.push('<b>\uD83D\uDCA0 \uCD9C\uB3D9 \uD328\uC2DC\uBE0C</b>'); passives.forEach(function (pl) { lines.push(pl) }) }
+      // 영구 퍽
+      var perks = [];
+      if (BT.perkDmgReduce > 0) perks.push('\uD83D\uDD30\uD53C\uD574\uAC10\uC18C ' + Math.round(BT.perkDmgReduce * 100) + '%');
+      if (BT.perkCritChance > 0) perks.push('\uD83C\uDFAF\uD06C\uB9AC\uD655\uB960 +' + Math.round(BT.perkCritChance * 100) + '%');
+      if (BT.perkCritDmg > 0) perks.push('\uD83D\uDCA5\uD06C\uB9AC\uB370\uBBF8\uC9C0 x' + (1.5 + BT.perkCritDmg).toFixed(2));
+      if (BT.perkShieldUp > 0) perks.push('\uD83D\uDEE1\uFE0F\uC274\uB4DC\uB7C9 +' + Math.round(BT.perkShieldUp * 100) + '%');
+      if (BT.perkDmgUp > 0) perks.push('\u2694\uFE0F\uD53C\uD574\uB7C9 +' + Math.round(BT.perkDmgUp * 100) + '%');
+      if (BT.perkArmorPen > 0) perks.push('\uD83C\uDFAF\uAD00\uD1B5 ' + Math.round(BT.perkArmorPen * 100) + '%');
+      if (BT.perkExtraAtk > 0) perks.push('\u26A1\uCD94\uAC00\uACF5\uACA9 ' + Math.round(BT.perkExtraAtk * 100) + '%');
+      if (BT.perkVamp > 0) perks.push('\uD83E\uDDDB\uD761\uD608 ' + Math.round(BT.perkVamp * 100) + '%');
+      if (perks.length) { lines.push('<b>\uD83D\uDCCA \uC2A4\uD0EF \uBCF4\uB108\uC2A4</b>'); lines.push(perks.join(' \u00B7 ')) }
+      panel.innerHTML = lines.join('<br>');
+      panel.addEventListener('click', function () { panel.remove() });
+      $('bt-bg').appendChild(panel);
     }
 
     // ── 행동 선택지 표시 ──
@@ -1177,10 +1205,10 @@
       var shieldPreview = p.key === 'pink' ? Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) : Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp));
       var a2 = document.createElement('button'); a2.className = 'bt-act def';
       if (BT.defendCD > 0) { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 [' + BT.defendCD + '\uD134]'; a2.classList.add('disabled') }
-      else { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 \uD83D\uDEE1+' + shieldPreview + ' SP+5' }
+      else { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 \uD83D\uDEE1+' + shieldPreview }
       a2.addEventListener('click', function () { doPlayerAction('defend') }); primaryRow.appendChild(a2);
       // 집중
-      var focusHp = 1 + Math.round(p.maxHp * 0.10); var focusSp = 5 + Math.round(p.maxSp * 0.30);
+      var focusHp = 1 + Math.round(p.maxHp * 0.10); var focusSp = Math.round(p.maxSp * 0.25);
       var focusBtn = document.createElement('button'); focusBtn.className = 'bt-act def';
       if (BT.focusCD > 0) { focusBtn.textContent = '\uD83E\uDDD8 \uC9D1\uC911 [' + BT.focusCD + '\uD134]'; focusBtn.classList.add('disabled') }
       else { focusBtn.textContent = '\uD83E\uDDD8 \uC9D1\uC911 HP+' + focusHp + ' SP+' + focusSp }
@@ -1213,7 +1241,9 @@
         var sup = sp.data.support; var cd = BT.supportCDs[sp.key] || 0;
         var lb = '\uD83C\uDF1F ' + sp.data.name + ' ';
         if (sup.type === 'buff') lb += statKR(sup.stat) + '+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'armorPen') lb += '\uAD00\uD1B5+' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'heal') lb += '\uCCB4\uB825+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'healShield') lb += 'HP' + Math.round(sup.healVal * 100) + '%+\uC274\uB4DC' + Math.round(sup.shieldVal * 100) + '%';
         else if (sup.type === 'sp_pct') lb += 'SP' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'sp') lb += 'SP+' + sup.val;
         else if (sup.type === 'debuff') lb += '\uC801' + statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
@@ -1251,17 +1281,15 @@
       else atkPvParts.push('<span class="pv-dmg">예상 데미지 ~' + estAtk + '</span>');
       var critMultiPv = (1.5 + BT.perkCritDmg).toFixed(2);
       atkPvParts.push('크리 ' + critChance + '% (x' + critMultiPv + ')');
-      if (spRegen > 0) atkPvParts.push('<span class="pv-sp">SP+' + spRegen + ' 회복</span>');
       previews.atk = atkPvParts.join(' · ');
       // 방어 프리뷰
-      var defSpTotal = Math.min(p.maxSp, p.sp + 5) - p.sp;
       if (BT.defendCD > 0) { previews.def = '<span style="color:#f44">\uCFE8\uD0C0\uC784 ' + BT.defendCD + '\uD134 \uB0A8\uC74C</span>' }
-      var defPvParts = ['<span class="pv-shield">\uC274\uB4DC ' + shieldPreview + ' \uC0DD\uC131 (\uB9E4\uD134 50%\u2193)</span>', '<span class="pv-sp">SP +' + defSpTotal + ' \uD68C\uBCF5</span>'];
+      var defPvParts = ['<span class="pv-shield">\uC274\uB4DC ' + shieldPreview + ' \uC0DD\uC131 (\uB9E4\uD134 50%\u2193)</span>'];
       if (BT.perkGuardHeal) defPvParts.push('<span class="pv-heal">체력 +' + Math.round(p.maxHp * 0.02) + ' 치유</span>');
       previews.def = defPvParts.join(' · ');
       // 집중 프리뷰
       if (BT.focusCD > 0) previews.focus = '<span style="color:#f44">쿨타임 ' + BT.focusCD + '턴 남음</span>';
-      else previews.focus = '<span class="pv-heal">체력 +' + focusHp + ' 회복</span> · <span class="pv-sp">SP +' + focusSp + ' 충전</span> · <span class="pv-buff">쿨타임 3턴</span>';
+      else previews.focus = '<span class="pv-heal">체력 +' + focusHp + ' 회복</span> · <span class="pv-sp">SP +' + focusSp + ' (25%)</span> · <span class="pv-buff">쿨타임 3턴</span>';
       // 필살기 프리뷰
       var sklPvParts = ['<span class="pv-dmg">예상 ~' + estSkill + '</span>', '<span class="pv-sp">SP ' + effectiveCost + ' 소모</span>'];
       if (p.skill.stun) sklPvParts.push('<span class="pv-buff">적 ' + p.skill.stun + '턴 행동불가</span>');
@@ -1285,12 +1313,14 @@
         if (cd > 0) { pv.push('<span style="color:#f44">쿨타임 ' + cd + '턴 남음</span>') }
         else {
           pv.push('<span class="pv-buff">' + sp.data.name + '</span>');
-          if (sup.type === 'buff') pv.push('<span class="pv-buff">아군 ' + statKR(sup.stat) + ' +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
-          else if (sup.type === 'heal') { var ha = Math.round(p.maxHp * sup.val); pv.push('<span class="pv-heal">체력 +' + ha + ' 회복</span>') }
-          else if (sup.type === 'sp_pct') { var spAmt = Math.round(p.maxSp * sup.val); pv.push('<span class="pv-sp">SP +' + spAmt + ' (' + Math.round(sup.val * 100) + '%) 충전</span>') }
-          else if (sup.type === 'sp') pv.push('<span class="pv-sp">SP +' + sup.val + ' 충전</span>');
-          else if (sup.type === 'debuff') pv.push('<span class="pv-buff">적 ' + statKR(sup.stat) + ' -' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
-          else if (sup.type === 'damage') { var es = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), sup.multi, 0) * 0.9); pv.push('<span class="pv-dmg">예상 ~' + es + '</span>') }
+          if (sup.type === 'buff') pv.push('<span class="pv-buff">' + statKR(sup.stat) + ' +' + Math.round(sup.val * 100) + '% (' + sup.turns + '\uD134)</span>');
+          else if (sup.type === 'armorPen') pv.push('<span class="pv-buff">\uBC29\uC5B4 \uAD00\uD1B5 +' + Math.round(sup.val * 100) + '% (' + sup.turns + '\uD134)</span>');
+          else if (sup.type === 'heal') { var ha = Math.round(p.maxHp * sup.val); pv.push('<span class="pv-heal">\uCCB4\uB825 +' + ha + ' \uD68C\uBCF5</span>') }
+          else if (sup.type === 'healShield') { var ha = Math.round(p.maxHp * sup.healVal); var sa = Math.round(p.maxHp * sup.shieldVal); pv.push('<span class="pv-heal">\uCCB4\uB825 +' + ha + '</span> · <span class="pv-shield">\uC274\uB4DC +' + sa + '</span>') }
+          else if (sup.type === 'sp_pct') { var spAmt = Math.round(p.maxSp * sup.val); pv.push('<span class="pv-sp">SP +' + spAmt + ' (' + Math.round(sup.val * 100) + '%) \uCDA9\uC804</span>') }
+          else if (sup.type === 'sp') pv.push('<span class="pv-sp">SP +' + sup.val + ' \uCDA9\uC804</span>');
+          else if (sup.type === 'debuff') pv.push('<span class="pv-buff">\uC801 ' + statKR(sup.stat) + ' -' + Math.round(sup.val * 100) + '% (' + sup.turns + '\uD134)</span>');
+          else if (sup.type === 'damage') { var es = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), sup.multi, 0) * 0.9); pv.push('<span class="pv-dmg">\uC608\uC0C1 ~' + es + '</span>') }
         }
         previews['sup_' + idx] = pv.join(' · ');
       });
@@ -1509,14 +1539,13 @@
       } else if (action === 'defend') {
         if (BT.defendCD > 0) { BT.acting = false; showActions(); return }
         p.guarding = true;
-        p.sp = Math.min(p.maxSp, p.sp + 5);
         BT.defendCD = 2;
         // 쉴드 부여: DEF × 3 + MaxHP × 10% (핑크: DEF × 3.5 + MaxHP × 12%)
         var shieldAmt;
         if (p.key === 'pink') { shieldAmt = Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) }
         else { shieldAmt = Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp)) }
         BT.shield = Math.max(BT.shield, shieldAmt);
-        var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="sp-use">SP+5</span> <span class="buff">\uD83D\uDEE1\uFE0F \uC274\uB4DC ' + BT.shield + '</span>';
+        var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="buff">\uD83D\uDEE1\uFE0F \uC274\uB4DC ' + BT.shield + '</span>';
         // 핑크 고유: 방어 시 유대 게이지 +15
         if (p.key === 'pink') { BT.pinkBond = Math.min(100, BT.pinkBond + 15); defLog += ' <span class="buff">💗 유대 +15</span>' }
         // 수호의 오라
@@ -1533,7 +1562,7 @@
         // 집중: 체력/SP 회복 (쿨타임 3턴)
         if (BT.focusCD > 0) { BT.acting = false; showActions(); return }
         var hpRecover = 1 + Math.round(p.maxHp * 0.10);
-        var spRecover = 5 + Math.round(p.maxSp * 0.30);
+        var spRecover = Math.round(p.maxSp * 0.25);
         p.hp = Math.min(p.maxHp, p.hp + hpRecover);
         p.sp = Math.min(p.maxSp, p.sp + spRecover);
         BT.focusCD = 3;
@@ -1660,11 +1689,22 @@
             var spVal = Math.round(sup.val * supMul);
             p.sp = Math.min(p.maxSp, p.sp + spVal);
             btLog('🌟 ' + sup.name + '! <span class="sp-use">SP +' + spVal + '</span>' + (doubleSupport ? ' (2배!)' : ''));
+          } else if (sup.type === 'armorPen') {
+            var penVal = sup.val * supMul;
+            BT.buffs.push({ stat: 'armorPen', val: penVal, turns: sup.turns });
+            BT.perkArmorPen += penVal;
+            btLog('\uD83C\uDF1F ' + supporter.data.name + '\uC758 ' + sup.name + '! <span class="buff">\uBC29\uC5B4 \uAD00\uD1B5 +' + Math.round(penVal * 100) + '%!</span>' + (doubleSupport ? ' (2\uBC30!)' : ''));
           } else if (sup.type === 'heal') {
             var h = Math.round(p.maxHp * sup.val * supMul); p.hp = Math.min(p.maxHp, p.hp + h);
             showDmgNum(h, 'bt-psvg', 'heal');
-            btLog('🌟 ' + sup.name + '! <span class="heal">체력 +' + h + '</span>' + (doubleSupport ? ' (2배!)' : ''));
-            if (p.key === 'pink') { BT.pinkBond += Math.round(h * 0.20); if (BT.pinkBond >= 100) { BT.pinkBond = 0; var bondHeal = Math.round(p.maxHp * 0.3); p.hp = Math.min(p.maxHp, p.hp + bondHeal); p.atk += 1; btLogAppend('💗 유대 발동! 체력 30% 회복 + 공격력 +1') } }
+            btLog('\uD83C\uDF1F ' + sup.name + '! <span class="heal">\uCCB4\uB825 +' + h + '</span>' + (doubleSupport ? ' (2\uBC30!)' : ''));
+            if (p.key === 'pink') { BT.pinkBond += Math.round(h * 0.20); if (BT.pinkBond >= 100) { BT.pinkBond = 0; var bondHeal = Math.round(p.maxHp * 0.3); p.hp = Math.min(p.maxHp, p.hp + bondHeal); p.atk += 1; btLogAppend('\uD83D\uDC97 \uC720\uB300 \uBC1C\uB3D9! \uCCB4\uB825 30% \uD68C\uBCF5 + \uACF5\uACA9\uB825 +1') } }
+          } else if (sup.type === 'healShield') {
+            var h = Math.round(p.maxHp * sup.healVal * supMul); p.hp = Math.min(p.maxHp, p.hp + h);
+            var sh = Math.round(p.maxHp * sup.shieldVal * (1 + BT.perkShieldUp)); BT.shield += sh;
+            showDmgNum(h, 'bt-psvg', 'heal');
+            btLog('\uD83C\uDF1F ' + sup.name + '! <span class="heal">\uCCB4\uB825 +' + h + '</span> <span class="buff">\uD83D\uDEE1\uFE0F \uC274\uB4DC +' + sh + '</span>' + (doubleSupport ? ' (2\uBC30!)' : ''));
+            if (p.key === 'pink') { BT.pinkBond += Math.round(h * 0.20); if (BT.pinkBond >= 100) { BT.pinkBond = 0; var bondHeal = Math.round(p.maxHp * 0.3); p.hp = Math.min(p.maxHp, p.hp + bondHeal); p.atk += 1; btLogAppend('\uD83D\uDC97 \uC720\uB300 \uBC1C\uB3D9! \uCCB4\uB825 30% \uD68C\uBCF5 + \uACF5\uACA9\uB825 +1') } }
           }
           updateBattleUI();
           setTimeout(function () { afterPlayerAction() }, 700);
@@ -1943,7 +1983,7 @@
         if (BT.freezeTurns <= 0 && BT.freezeATK > 0) { p.atk += BT.freezeATK; BT.freezeATK = 0; btLogAppend('<span class="buff">빙결 해제!</span>') }
       }
       // 버프/디버프 틱
-      BT.buffs = BT.buffs.filter(function (b) { b.turns--; return b.turns > 0 });
+      BT.buffs = BT.buffs.filter(function (b) { b.turns--; if (b.turns <= 0 && b.stat === 'armorPen') { BT.perkArmorPen = Math.max(0, BT.perkArmorPen - b.val) } return b.turns > 0 });
       BT.debuffs = BT.debuffs.filter(function (d) { d.turns--; return d.turns > 0 });
       Object.keys(BT.supportCDs).forEach(function (k) { if (BT.supportCDs[k] > 0) BT.supportCDs[k]-- });
       if (BT.focusCD > 0) BT.focusCD--;
