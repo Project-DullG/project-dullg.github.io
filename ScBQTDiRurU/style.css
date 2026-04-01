@@ -1,0 +1,2954 @@
+    @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Do+Hyeon&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none
+    }
+
+    body {
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100dvh;
+      min-height: 100vh;
+      font-family: 'Gowun Dodum', sans-serif;
+      overflow: hidden;
+      word-break: keep-all
+    }
+
+    #game {
+      width: 420px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #0a0a0a;
+      transform-origin: center center
+    }
+
+    .screen {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      flex-direction: column
+    }
+
+    .screen.active {
+      display: flex
+    }
+
+    /* TITLE */
+    #title-screen {
+      background: linear-gradient(180deg, #87CEEB 0%, #FFB347 25%, #2c2c54 55%, #1a1a2e 100%);
+      align-items: center;
+      justify-content: center;
+      text-align: center
+    }
+
+    .t-top {
+      font-size: 13px;
+      color: #ffd700;
+      letter-spacing: 8px;
+      z-index: 1;
+      font-family: 'Do Hyeon', sans-serif
+    }
+
+    .t-main {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 36px;
+      color: #e53935;
+      text-shadow: 3px 3px 0 #ffd600, 6px 6px 0 rgba(0, 0, 0, 0.3), 0 0 24px rgba(229, 57, 53, 0.5);
+      letter-spacing: 5px;
+      z-index: 1;
+      margin-top: 4px;
+      transform: skewX(-4deg);
+      -webkit-text-stroke: 1px #b71c1c;
+      paint-order: stroke fill
+    }
+
+    .t-sub {
+      font-size: 14px;
+      color: #ccc;
+      letter-spacing: 3px;
+      z-index: 1;
+      margin-top: 8px;
+      font-family: 'Noto Serif KR', serif
+    }
+
+    .t-rangers {
+      display: flex;
+      gap: 8px;
+      margin-top: 40px;
+      z-index: 1
+    }
+
+    .t-start {
+      z-index: 1;
+      cursor: pointer;
+      font-size: 16px;
+      color: #fff;
+      letter-spacing: 4px;
+      background: none;
+      border: none;
+      font-family: 'Do Hyeon', sans-serif;
+      padding: 10px 32px;
+      border-radius: 8px;
+      transition: all 0.2s
+    }
+
+    .city-sil {
+      position: absolute;
+      bottom: 100px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 3px;
+      opacity: 0.6
+    }
+
+    .city-sil div {
+      background: #1a1a2e;
+      border-radius: 2px 2px 0 0
+    }
+
+    /* SCENE */
+    #scene-screen {
+      flex-direction: column
+    }
+
+    .scene-bg {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      transition: background 1.5s ease
+    }
+
+    .bg-sky {
+      background: linear-gradient(180deg, #87CEEB 0%, #B0C4DE 60%, #8899aa 100%)
+    }
+
+    .bg-sunset {
+      background: linear-gradient(180deg, #ff6b35 0%, #f7931e 20%, #2c2c54 60%, #1a1a2e 100%)
+    }
+
+    .bg-lab {
+      background: linear-gradient(180deg, #e8e0d0 0%, #c8c0b0 50%, #b0a898 100%)
+    }
+
+    .bg-lab-ev {
+      background: linear-gradient(180deg, #3a3040 0%, #252030 50%, #1a1520 100%)
+    }
+
+    .bg-night {
+      background: linear-gradient(180deg, #0a0a20 0%, #050510 50%, #020208 100%)
+    }
+
+    .bg-city {
+      background: linear-gradient(180deg, #6ca6cd 0%, #9bb8cd 40%, #7a8a96 100%)
+    }
+
+    .bg-battle {
+      background: linear-gradient(180deg, #d4590e 0%, #993300 30%, #1a1020 70%, #0a0a12 100%)
+    }
+
+    .s-city {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 4px;
+      padding: 0 10px;
+      transition: opacity 1s
+    }
+
+    .s-city::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(180deg, #445, #334);
+      z-index: 1
+    }
+
+    .s-city div {
+      border-radius: 2px 2px 0 0;
+      background: #556;
+      transition: background 1s;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(255, 220, 80, 0.12) 7px, rgba(255, 220, 80, 0.12) 9px), repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(255, 220, 80, 0.12) 5px, rgba(255, 220, 80, 0.12) 7px)
+    }
+
+    .bg-sunset .s-city div,
+    .bg-battle .s-city div {
+      background: #111;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(255, 200, 50, 0.04) 7px, rgba(255, 200, 50, 0.04) 9px), repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(255, 200, 50, 0.04) 5px, rgba(255, 200, 50, 0.04) 7px)
+    }
+
+    .bg-night .s-city div {
+      background: #0a0a12;
+      background-image: repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(255, 200, 50, 0.06) 7px, rgba(255, 200, 50, 0.06) 9px), repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(255, 200, 50, 0.06) 5px, rgba(255, 200, 50, 0.06) 7px)
+    }
+
+    .bg-night .s-city::after {
+      background: linear-gradient(180deg, #111, #0a0a12)
+    }
+
+    .bg-city .s-city::after {
+      background: linear-gradient(180deg, #667, #556)
+    }
+
+    .bg-lab .s-city,
+    .bg-lab-ev .s-city {
+      display: none
+    }
+
+    .scene-bg.bg-night::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 55%;
+      z-index: 0;
+      background-image: radial-gradient(1.5px 1.5px at 25px 35px, rgba(255, 255, 255, 0.7), transparent), radial-gradient(1px 1px at 85px 55px, rgba(255, 255, 255, 0.5), transparent), radial-gradient(1.5px 1.5px at 145px 25px, rgba(255, 255, 255, 0.6), transparent), radial-gradient(1px 1px at 205px 70px, rgba(255, 255, 255, 0.4), transparent), radial-gradient(1px 1px at 265px 40px, rgba(255, 255, 255, 0.5), transparent), radial-gradient(1.5px 1.5px at 325px 60px, rgba(255, 255, 255, 0.6), transparent), radial-gradient(1px 1px at 55px 75px, rgba(255, 255, 255, 0.3), transparent), radial-gradient(1px 1px at 175px 85px, rgba(255, 255, 255, 0.4), transparent), radial-gradient(1.5px 1.5px at 365px 30px, rgba(255, 255, 255, 0.5), transparent), radial-gradient(1px 1px at 115px 50px, rgba(255, 255, 255, 0.3), transparent);
+      animation: twinkle 4s ease-in-out infinite alternate
+    }
+
+    .scene-bg.bg-sky::before,
+    .scene-bg.bg-city::before {
+      content: '';
+      position: absolute;
+      top: 12%;
+      left: 8%;
+      width: 50px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      box-shadow: 70px -8px 0 8px rgba(255, 255, 255, 0.18), 180px 5px 0 4px rgba(255, 255, 255, 0.12);
+      z-index: 0
+    }
+
+    @keyframes twinkle {
+      0% {
+        opacity: 0.5
+      }
+
+      100% {
+        opacity: 1
+      }
+    }
+
+    .lab-bg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      display: none
+    }
+
+    .bg-lab .lab-bg,
+    .bg-lab-ev .lab-bg {
+      display: block
+    }
+
+    .lab-wall {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70%;
+      border-top: 2px solid rgba(255, 255, 255, 0.05)
+    }
+
+    .bg-lab .lab-wall {
+      background: linear-gradient(180deg, #d5cfc5, #c0b8a8);
+      background-image: repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(0, 0, 0, 0.03) 50px, rgba(0, 0, 0, 0.03) 51px)
+    }
+
+    .bg-lab-ev .lab-wall {
+      background: linear-gradient(180deg, #2a2530, #201c28);
+      background-image: repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 255, 255, 0.02) 50px, rgba(255, 255, 255, 0.02) 51px)
+    }
+
+    .lab-light {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      border-radius: 2px;
+      opacity: 0.3
+    }
+
+    .bg-lab .lab-light {
+      background: #fff;
+      opacity: 0.5;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2)
+    }
+
+    .bg-lab-ev .lab-light {
+      background: #ffd700;
+      opacity: 0.15;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.1)
+    }
+
+    .lab-bg::after {
+      content: '';
+      position: absolute;
+      bottom: 25%;
+      right: 15px;
+      width: 30px;
+      height: 45px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 2px
+    }
+
+    .bg-lab-ev .lab-bg::after {
+      border-color: rgba(255, 255, 255, 0.05)
+    }
+
+    .lab-bg::before {
+      content: '';
+      position: absolute;
+      bottom: 30%;
+      left: 12px;
+      width: 20px;
+      height: 60px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 2px
+    }
+
+    .bg-lab-ev .lab-bg::before {
+      border-color: rgba(255, 255, 255, 0.04)
+    }
+
+    .s-chars {
+      position: absolute;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 12px;
+      padding: 0 20px;
+      transition: all 0.5s
+    }
+
+    .s-chars.ch-left {
+      justify-content: flex-start;
+      padding-left: 30px
+    }
+
+    .s-chars.ch-right {
+      justify-content: flex-end;
+      padding-right: 30px
+    }
+
+    .s-chars.ch-spread {
+      justify-content: space-around
+    }
+
+    .s-chars.ch-sides {
+      justify-content: space-between;
+      padding: 0 30px
+    }
+
+    .rw {
+      transition: all 0.4s;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))
+    }
+
+    .rw.dim {
+      opacity: 0.3;
+      filter: grayscale(0.6) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3))
+    }
+
+    .rw.talk {
+      transform: scale(1.12);
+      filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.2)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.15))
+    }
+
+    .rw.enter {
+      animation: enterUp 0.5s ease
+    }
+
+    .scene-cg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      animation: cgFadeIn 0.8s ease
+    }
+
+    .scene-cg img {
+      max-width: 92%;
+      max-height: 55%;
+      border-radius: 8px;
+      box-shadow: 0 6px 32px rgba(0, 0, 0, 0.5);
+      object-fit: contain;
+      animation: cgZoom 0.8s ease
+    }
+
+    .scene-cg .cg-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 16px;
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 2px;
+      animation: blink 1.5s ease-in-out infinite
+    }
+
+    @keyframes cgFadeIn {
+      0% {
+        opacity: 0
+      }
+
+      100% {
+        opacity: 1
+      }
+    }
+
+    @keyframes cgZoom {
+      0% {
+        transform: scale(0.92);
+        opacity: 0
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1
+      }
+    }
+
+    .sfx-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      pointer-events: none
+    }
+
+    .sfx-t {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 78px;
+      color: #e53935;
+      text-shadow: 5px 5px 0 #ffd600, 10px 10px 0 #ff9800, 15px 15px 0 rgba(0, 0, 0, 0.1);
+      transform: skewX(-7deg) rotate(-2deg);
+      animation: sfxPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      -webkit-text-stroke: 1px #b71c1c;
+      paint-order: stroke fill;
+      filter: drop-shadow(0 0 10px rgba(229, 57, 53, 0.3))
+    }
+
+    .sfx-t.dark {
+      color: #c62828;
+      text-shadow: 3px 3px 0 #000, 0 0 40px rgba(198, 40, 40, 0.5);
+      font-size: 56px;
+      transform: skewX(-5deg) rotate(0deg);
+      -webkit-text-stroke: 0;
+      filter: none
+    }
+
+    .drama-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      text-align: center;
+      padding: 20px
+    }
+
+    .drama-line {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 20px;
+      color: #ddd;
+      line-height: 2.2;
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      animation: dramaFadeIn 0.8s ease
+    }
+
+    .drama-line.red {
+      color: #e53935;
+      text-shadow: 0 0 30px rgba(229, 57, 53, 0.5), 0 0 60px rgba(229, 57, 53, 0.2)
+    }
+
+    .drama-line.large {
+      font-size: 30px;
+      font-family: 'Do Hyeon', sans-serif;
+      letter-spacing: 8px
+    }
+
+    @keyframes dramaFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .drama-line.gold {
+      color: #ffd700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3), 3px 3px 0 rgba(0, 0, 0, 0.3)
+    }
+
+    .drama-line.dim {
+      color: #666
+    }
+
+    /* DIALOG */
+    .dlg {
+      background: linear-gradient(180deg, rgba(255, 252, 242, 0.97), rgba(255, 248, 230, 0.97));
+      border: 3px solid rgba(255, 215, 0, 0.35);
+      border-bottom: none;
+      border-radius: 18px 18px 0 0;
+      padding: 16px 22px 22px;
+      min-height: 185px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.5s;
+      box-shadow: 0 -6px 24px rgba(255, 215, 0, 0.12), inset 0 2px 0 rgba(255, 255, 255, 0.8)
+    }
+
+    .dlg.dark {
+      background: linear-gradient(180deg, rgba(10, 5, 30, 0.96), rgba(0, 0, 20, 0.96));
+      border: none;
+      border-top: 2px solid rgba(198, 40, 40, 0.5);
+      border-bottom: 1px solid rgba(198, 40, 40, 0.1);
+      border-radius: 0;
+      box-shadow: inset 0 1px 0 rgba(198, 40, 40, 0.08), 0 -4px 16px rgba(0, 0, 0, 0.3)
+    }
+
+    .dlg.red-border {
+      border-color: #e53935
+    }
+
+    .d-spk {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-shadow: none;
+      display: inline-block;
+      padding: 2px 14px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.02))
+    }
+
+    .d-spk:empty {
+      display: none
+    }
+
+    .dlg.dark .d-spk {
+      background: none;
+      text-shadow: 0 0 8px currentColor;
+      padding: 0;
+      display: block
+    }
+
+    .d-txt {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.8;
+      min-height: 60px;
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .d-txt.serif {
+      font-family: 'Noto Serif KR', serif;
+      color: #555;
+      font-size: 13px
+    }
+
+    .d-txt.center {
+      text-align: center
+    }
+
+    .dlg.dark .d-txt {
+      color: #eee
+    }
+
+    .dlg.dark .d-txt.serif {
+      color: #ccc
+    }
+
+    .d-next {
+      position: absolute;
+      bottom: 8px;
+      right: 16px;
+      font-size: 14px;
+      color: #ffd700;
+      animation: nextBounce 1s ease-in-out infinite
+    }
+
+    .dlg.dark .d-next {
+      color: #555;
+      font-size: 12px;
+      animation: blink 1.2s ease-in-out infinite
+    }
+
+    @keyframes nextBounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-4px)
+      }
+    }
+
+    .ch-area {
+      display: none;
+      flex-direction: column;
+      gap: 7px;
+      margin-top: 8px
+    }
+
+    .ch-btn {
+      display: block;
+      width: 100%;
+      padding: 11px 16px;
+      background: rgba(255, 215, 0, 0.06);
+      border: 2px solid rgba(255, 215, 0, 0.25);
+      border-radius: 12px;
+      color: #333;
+      font-size: 14px;
+      font-family: 'Gowun Dodum', sans-serif;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .ch-btn:hover {
+      background: rgba(255, 215, 0, 0.15);
+      transform: translateX(6px) scale(1.02);
+      border-color: #ffd700;
+      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2)
+    }
+
+    .ch-btn.picked {
+      background: rgba(229, 57, 53, 0.1);
+      border-color: #e53935;
+      color: #c62828
+    }
+
+    .dlg.dark .ch-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #eee
+    }
+
+    .dlg.dark .ch-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(6px);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: none
+    }
+
+    .dlg.dark .ch-btn.picked {
+      background: rgba(229, 57, 53, 0.15);
+      border-color: #e53935;
+      color: #fff
+    }
+
+    /* CHAPTER CARD */
+    .ch-card {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s
+    }
+
+    .ch-card.on {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .ch-num {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px;
+      color: #ffd700;
+      letter-spacing: 8px;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.3)
+    }
+
+    .ch-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 28px;
+      color: #fff;
+      margin-top: 12px;
+      letter-spacing: 5px;
+      text-shadow: 0 0 24px rgba(255, 255, 255, 0.2)
+    }
+
+    .ch-title.red {
+      color: #e53935;
+      text-shadow: 0 0 24px rgba(229, 57, 53, 0.4)
+    }
+
+    /* ENDING */
+    #ending-screen {
+      background: #050505;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px
+    }
+
+    #ending-screen>* {
+      opacity: 0
+    }
+
+    #ending-screen.end-show>#endQ {
+      animation: endFadeIn 1.5s ease 0.8s forwards
+    }
+
+    #ending-screen.end-show>.end-title {
+      animation: endFadeIn 1.5s ease 2s forwards
+    }
+
+    #ending-screen.end-show>.end-coming {
+      animation: endFadeIn 1.5s ease 3s forwards
+    }
+
+    #ending-screen.end-show>.end-btn {
+      animation: endFadeIn 1.5s ease 3.8s forwards
+    }
+
+    @keyframes endFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0
+      }
+
+      100% {
+        opacity: 1
+      }
+    }
+
+    .end-line {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 15px;
+      color: #888;
+      line-height: 2.4;
+      letter-spacing: 1px
+    }
+
+    .end-line.bright {
+      color: #ccc
+    }
+
+    .end-line.red {
+      color: #e53935;
+      font-weight: bold;
+      font-size: 17px
+    }
+
+    .end-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 24px;
+      color: #e53935;
+      margin-top: 36px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3)
+    }
+
+    .end-coming {
+      font-size: 12px;
+      color: #444;
+      margin-top: 20px;
+      letter-spacing: 3px
+    }
+
+    .end-btn {
+      margin-top: 20px;
+      padding: 9px 24px;
+      border: 1px solid #333;
+      background: none;
+      color: #666;
+      font-size: 13px;
+      font-family: 'Gowun Dodum', sans-serif;
+      border-radius: 6px;
+      cursor: pointer
+    }
+
+    .end-btn:hover {
+      border-color: #666;
+      color: #aaa
+    }
+
+    /* FX */
+    .fl {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0
+    }
+
+    .fl.white {
+      background: #fff;
+      animation: flAnim 0.3s ease
+    }
+
+    .fl.red {
+      background: #e53935;
+      animation: flAnim 0.5s ease
+    }
+
+    .fl.black {
+      background: #000;
+      animation: flSlow 1.8s ease
+    }
+
+    .shake-fx {
+      animation: shake 0.4s ease;
+      animation-fill-mode: none !important
+    }
+
+    .aff-pop {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 15;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 15px;
+      padding: 12px 28px;
+      border-radius: 24px;
+      pointer-events: none;
+      animation: affAnim 1.8s ease forwards;
+      opacity: 0
+    }
+
+    .aff-pop.up {
+      color: #e53935;
+      background: linear-gradient(135deg, rgba(255, 182, 193, 0.25), rgba(229, 57, 53, 0.12));
+      border: 2px solid rgba(229, 57, 53, 0.3);
+      box-shadow: 0 2px 16px rgba(229, 57, 53, 0.15)
+    }
+
+    .aff-pop.down {
+      color: #42a5f5;
+      background: linear-gradient(135deg, rgba(144, 202, 249, 0.25), rgba(21, 101, 192, 0.12));
+      border: 2px solid rgba(21, 101, 192, 0.3);
+      box-shadow: 0 2px 16px rgba(21, 101, 192, 0.15)
+    }
+
+    @keyframes affAnim {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(10px)
+      }
+
+      15% {
+        opacity: 1;
+        transform: translate(-50%, -50%) translateY(0)
+      }
+
+      75% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) translateY(-10px)
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 0.3
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      15% {
+        transform: translateX(-8px) translateY(-2px)
+      }
+
+      30% {
+        transform: translateX(8px) translateY(2px)
+      }
+
+      45% {
+        transform: translateX(-6px)
+      }
+
+      60% {
+        transform: translateX(6px)
+      }
+
+      75% {
+        transform: translateX(-3px)
+      }
+
+      90% {
+        transform: translateX(3px)
+      }
+    }
+
+    @keyframes sfxPop {
+      0% {
+        transform: skewX(-10deg) scale(0.2) rotate(-8deg);
+        opacity: 0
+      }
+
+      35% {
+        transform: skewX(-7deg) scale(1.4) rotate(3deg);
+        opacity: 1
+      }
+
+      60% {
+        transform: skewX(-7deg) scale(0.9) rotate(-2deg)
+      }
+
+      80% {
+        transform: skewX(-7deg) scale(1.05) rotate(1deg)
+      }
+
+      100% {
+        transform: skewX(-7deg) scale(1) rotate(-2deg);
+        opacity: 1
+      }
+    }
+
+    @keyframes flAnim {
+      0% {
+        opacity: 0.8
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    @keyframes flSlow {
+      0% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    @keyframes enterUp {
+      0% {
+        transform: translateY(30px) scale(0.8);
+        opacity: 0
+      }
+
+      50% {
+        transform: translateY(-5px) scale(1.05);
+        opacity: 1
+      }
+
+      75% {
+        transform: translateY(3px) scale(0.98)
+      }
+
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1
+      }
+    }
+
+    /* BATTLE HUD */
+    .b-hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 14px 16px 10px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 70%, transparent);
+      z-index: 4;
+      display: none;
+      transition: opacity 0.5s
+    }
+
+    .b-hud.on {
+      display: block
+    }
+
+    .b-en {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px;
+      color: #ce93d8;
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: 2px
+    }
+
+    .b-bar {
+      height: 10px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 0 30px;
+      border: 1px solid #444
+    }
+
+    .b-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.8s ease
+    }
+
+    .b-fill.enemy {
+      background: linear-gradient(90deg, #b71c1c, #e53935)
+    }
+
+    .b-fill.team {
+      background: linear-gradient(90deg, #1b5e20, #4ecca3)
+    }
+
+    .b-lbl {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      margin-top: 2px;
+      letter-spacing: 1px
+    }
+
+    .b-turn {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      color: #ffd700;
+      text-align: center;
+      margin-top: 6px;
+      letter-spacing: 3px
+    }
+
+    .b-team-bot {
+      display: none;
+      padding: 8px 16px;
+      background: rgba(0, 10, 20, 0.95);
+      border-top: 2px solid #4ecca3;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05)
+    }
+
+    .b-team-bot.on {
+      display: block
+    }
+
+    .b-team-bot.boost {
+      border-top-color: #ffd700;
+      background: rgba(20, 15, 0, 0.95)
+    }
+
+    .b-fill.team.boost {
+      background: linear-gradient(90deg, #f57c00, #ffd700);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+      animation: boostPulse 1.5s ease infinite
+    }
+
+    @keyframes boostPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 8px rgba(255, 215, 0, 0.4)
+      }
+
+      50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8)
+      }
+    }
+
+    .fl.gold {
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      animation: flAnim 0.5s ease
+    }
+
+    /* TITLE BUTTONS */
+    .t-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 50px;
+      z-index: 1;
+      align-items: center
+    }
+
+    .t-start.t-story {
+      background: rgba(229, 57, 53, 0.2);
+      border: 2px solid rgba(229, 57, 53, 0.6);
+      color: #ff6b6b;
+      font-size: 17px;
+      letter-spacing: 5px
+    }
+
+    .t-start.t-story:hover {
+      background: rgba(229, 57, 53, 0.35);
+      border-color: #e53935;
+      transform: scale(1.05);
+      box-shadow: 0 0 16px rgba(229, 57, 53, 0.3)
+    }
+
+    .t-battle {
+      background: rgba(255, 215, 0, 0.12) !important;
+      border: 2px solid rgba(255, 215, 0, 0.4) !important;
+      color: #ffd700 !important;
+      font-size: 15px !important;
+      letter-spacing: 3px
+    }
+
+    .t-battle:hover {
+      background: rgba(255, 215, 0, 0.25) !important;
+      border-color: #ffd700 !important;
+      transform: scale(1.05);
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.3)
+    }
+
+    .t-best {
+      font-size: 11px;
+      color: #666;
+      margin-top: 14px;
+      z-index: 1;
+      font-family: 'Do Hyeon', sans-serif;
+      letter-spacing: 1px
+    }
+
+    /* SELECT SCREEN */
+    #select-screen {
+      background: linear-gradient(180deg, #1a1a2e 0%, #0a0a14 100%);
+      align-items: center;
+      justify-content: flex-start;
+      padding: 30px 16px;
+      overflow-y: auto
+    }
+
+    .sel-bg {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .sel-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 18px;
+      color: #ffd700;
+      letter-spacing: 3px;
+      margin-bottom: 20px
+    }
+
+    .sel-cards {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center
+    }
+
+    .sel-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px solid #333;
+      border-radius: 10px;
+      padding: 10px 8px;
+      width: 72px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s
+    }
+
+    .sel-card:hover {
+      border-color: #888;
+      background: rgba(255, 255, 255, 0.08)
+    }
+
+    .sel-card.picked {
+      border-color: var(--rc);
+      box-shadow: 0 0 16px var(--rc-glow)
+    }
+
+    .sel-card svg {
+      width: 46px;
+      height: 60px
+    }
+
+    .sel-cname {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      margin-top: 4px;
+      letter-spacing: 1px
+    }
+
+    .sel-info {
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 14px 18px;
+      width: 100%;
+      max-width: 340px;
+      min-height: 120px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .sel-info-name {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin-bottom: 8px
+    }
+
+    .sel-stat {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      color: #aaa;
+      line-height: 1.8
+    }
+
+    .sel-stat b {
+      color: #4ecca3
+    }
+
+    .sel-skill {
+      margin-top: 8px;
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      color: #ffd700;
+      line-height: 1.6
+    }
+
+    .sel-go {
+      margin-top: 16px;
+      padding: 10px 36px;
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #e53935, #c62828);
+      border: 2px solid #ff6b6b;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      transition: all 0.2s
+    }
+
+    .sel-go:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(229, 57, 53, 0.4)
+    }
+
+    .sel-back {
+      margin-top: 10px;
+      background: none;
+      border: 1px solid #333;
+      color: #666;
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      padding: 6px 20px;
+      border-radius: 6px;
+      cursor: pointer
+    }
+
+    .sel-step {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #9575cd;
+      text-align: center;
+      margin-top: 10px;
+      padding: 8px 14px;
+      background: rgba(149, 117, 205, 0.1);
+      border: 1px solid rgba(149, 117, 205, 0.3);
+      border-radius: 8px;
+      letter-spacing: 1px
+    }
+
+    .sel-card.passive-picked {
+      border-color: #9575cd !important;
+      box-shadow: 0 0 16px rgba(149, 117, 205, 0.4) !important
+    }
+
+    .sel-card.disabled {
+      opacity: 0.3;
+      pointer-events: none
+    }
+
+    /* BATTLE SCREEN */
+    #battle-screen {
+      background: #0a0a14
+    }
+
+    .bt-bg {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: linear-gradient(180deg, #1a0a20 0%, #0d0618 40%, #0a0a12 100%)
+    }
+
+    .bt-wave {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #ffd700;
+      text-align: center;
+      padding: 10px 0 4px;
+      letter-spacing: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .bt-cycle {
+      font-size: 10px;
+      color: #666;
+      letter-spacing: 1px;
+      margin-left: 4px
+    }
+
+    .bt-ehud {
+      padding: 4px 24px 8px
+    }
+
+    .bt-ename {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px;
+      color: #ce93d8;
+      text-align: center;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .bt-ebar-wrap {
+      height: 10px;
+      background: #1a1a2e;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #444
+    }
+
+    .bt-ebar {
+      height: 100%;
+      background: linear-gradient(90deg, #b71c1c, #e53935);
+      border-radius: 4px;
+      transition: width 0.5s ease
+    }
+
+    .bt-ehp {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      color: #888;
+      text-align: center;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .bt-field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      position: relative;
+      min-height: 200px
+    }
+
+    .bt-enemy-svg {
+      transition: all 0.3s;
+      animation: enemyEnter 0.6s ease
+    }
+
+    .bt-enemy-svg.boss {
+      animation: bossEnter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 0 20px var(--boss-glow, #7b1fa2)) drop-shadow(0 0 40px var(--boss-glow, #7b1fa2))
+    }
+
+    .bt-player-svg {
+      transition: all 0.3s;
+      animation: playerEnter 0.5s ease
+    }
+
+    .bt-enemy-svg.dead {
+      opacity: 0;
+      transform: scale(0.3);
+      transition: all 0.6s ease
+    }
+
+    .bt-player-svg.dead {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease
+    }
+
+    .bt-edesc {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 10px;
+      color: #666;
+      text-align: center;
+      margin-top: -2px;
+      margin-bottom: 2px
+    }
+
+    .bt-phud {
+      padding: 6px 20px
+    }
+
+    .bt-pbar-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px
+    }
+
+    .bt-plbl {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      width: 22px;
+      letter-spacing: 1px;
+      color: #888
+    }
+
+    .bt-pbar-row:first-child .bt-plbl {
+      color: #ff6b6b
+    }
+
+    .bt-pbar-row:nth-child(2) .bt-plbl {
+      color: #64b5f6
+    }
+
+    .bt-pbar-wrap {
+      flex: 1;
+      height: 10px;
+      background: #1a1a2e;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #333
+    }
+
+    .bt-pbar {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease
+    }
+
+    .bt-pbar.hp {
+      background: linear-gradient(90deg, #1b5e20, #4ecca3);
+      box-shadow: 0 0 6px rgba(78, 204, 163, 0.4)
+    }
+
+    .bt-pbar.shield {
+      background: linear-gradient(90deg, #e0a500, #ffd740);
+      position: absolute;
+      top: 0;
+      right: 0;
+      opacity: 0.85
+    }
+
+    .bt-pbar-wrap {
+      position: relative
+    }
+
+    .bt-pbar.sp {
+      background: linear-gradient(90deg, #1565c0, #42a5f5)
+    }
+
+    .bt-pval {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      color: #888;
+      min-width: 60px;
+      text-align: right;
+      white-space: nowrap
+    }
+
+    .bt-acts {
+      padding: 6px 12px 4px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 6px
+    }
+
+    .bt-act {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #fff;
+      padding: 7px 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px solid #444;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      letter-spacing: 0.5px;
+      overflow-wrap: break-word;
+      word-break: keep-all;
+      line-height: 1.4
+    }
+
+    .bt-act:hover {
+      transform: translateY(-2px)
+    }
+
+    .bt-act:active {
+      transform: translateY(0);
+      opacity: 0.8
+    }
+
+    .bt-act.atk {
+      border-color: rgba(229, 57, 53, 0.6);
+      color: #ff6b6b;
+      background: linear-gradient(135deg, rgba(229, 57, 53, 0.15), rgba(229, 57, 53, 0.05))
+    }
+
+    .bt-act.atk:hover {
+      background: linear-gradient(135deg, rgba(229, 57, 53, 0.3), rgba(229, 57, 53, 0.1));
+      border-color: #e53935;
+      box-shadow: 0 0 12px rgba(229, 57, 53, 0.3), inset 0 0 8px rgba(229, 57, 53, 0.1)
+    }
+
+    .bt-act.def {
+      border-color: rgba(100, 181, 246, 0.6);
+      color: #64b5f6;
+      background: linear-gradient(135deg, rgba(100, 181, 246, 0.12), rgba(100, 181, 246, 0.04))
+    }
+
+    .bt-act.def:hover {
+      background: linear-gradient(135deg, rgba(100, 181, 246, 0.25), rgba(100, 181, 246, 0.08));
+      border-color: #64b5f6;
+      box-shadow: 0 0 12px rgba(100, 181, 246, 0.3), inset 0 0 8px rgba(100, 181, 246, 0.1)
+    }
+
+    .bt-act.skill {
+      border-color: rgba(255, 215, 0, 0.6);
+      color: #ffd700;
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.04))
+    }
+
+    .bt-act.skill:hover {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 215, 0, 0.08));
+      border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.3), inset 0 0 8px rgba(255, 215, 0, 0.1)
+    }
+
+    .bt-act.support {
+      border-color: rgba(78, 204, 163, 0.6);
+      color: #4ecca3;
+      background: linear-gradient(135deg, rgba(78, 204, 163, 0.12), rgba(78, 204, 163, 0.04))
+    }
+
+    .bt-act.support:hover {
+      background: linear-gradient(135deg, rgba(78, 204, 163, 0.25), rgba(78, 204, 163, 0.08));
+      border-color: #4ecca3;
+      box-shadow: 0 0 12px rgba(78, 204, 163, 0.3), inset 0 0 8px rgba(78, 204, 163, 0.1)
+    }
+
+    .bt-act.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+      box-shadow: none
+    }
+
+    .bt-log {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 11px;
+      color: #888;
+      text-align: left;
+      padding: 4px 12px 8px;
+      min-height: 56px;
+      max-height: 80px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      line-height: 1.6;
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .bt-log::-webkit-scrollbar {
+      width: 3px
+    }
+
+    .bt-log::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 2px
+    }
+
+    .bt-log .bt-log-entry {
+      padding: 1px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03)
+    }
+
+    .bt-log .bt-log-entry:last-child {
+      border-bottom: none
+    }
+
+    .bt-log .bt-turn-num {
+      color: #555;
+      font-family: 'Do Hyeon', sans-serif;
+      margin-right: 4px
+    }
+
+    .bt-log .dmg {
+      color: #ff6b6b;
+      font-weight: bold
+    }
+
+    .bt-log .heal {
+      color: #4ecca3;
+      font-weight: bold
+    }
+
+    .bt-log .sp-use {
+      color: #64b5f6
+    }
+
+    .bt-log .buff {
+      color: #ffd700
+    }
+
+    .bt-log .gold-drop {
+      color: #ffd700;
+      font-weight: bold
+    }
+
+    .bt-log .detail {
+      color: #666;
+      font-size: 10px
+    }
+
+    .bt-fx {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0
+    }
+
+    .bt-drama {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 15;
+      background: rgba(0, 0, 0, 0.7)
+    }
+
+    .bt-drama.on {
+      display: flex
+    }
+
+    .bt-drama-line {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 32px;
+      color: #ffd700;
+      letter-spacing: 6px;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3), 3px 3px 0 #c62828, -3px -3px 0 #000;
+      animation: dramaPop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)
+    }
+
+    .bt-drama-line.boss {
+      font-size: 38px;
+      text-shadow: 0 0 30px rgba(255, 0, 0, 0.7), 0 0 60px rgba(255, 0, 0, 0.3), 4px 4px 0 #000;
+      animation: dramaPop 1s cubic-bezier(0.34, 1.56, 0.64, 1)
+    }
+
+    .bt-drama-line.victory {
+      font-size: 42px;
+      color: #ffd700;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4), 3px 3px 0 #e53935;
+      animation: victoryPop 1s cubic-bezier(0.34, 1.56, 0.64, 1)
+    }
+
+    @keyframes dramaPop {
+      0% {
+        transform: scale(0.3) rotate(-10deg);
+        opacity: 0
+      }
+
+      50% {
+        transform: scale(1.3) rotate(3deg);
+        opacity: 1
+      }
+
+      75% {
+        transform: scale(0.9) rotate(-1deg)
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1
+      }
+    }
+
+    @keyframes victoryPop {
+      0% {
+        transform: scale(0) rotate(-20deg);
+        opacity: 0
+      }
+
+      40% {
+        transform: scale(1.5) rotate(5deg);
+        opacity: 1
+      }
+
+      60% {
+        transform: scale(0.85) rotate(-2deg)
+      }
+
+      80% {
+        transform: scale(1.1) rotate(1deg)
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1
+      }
+    }
+
+    .bt-dmg-num {
+      position: absolute;
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 30px;
+      color: #ff6b6b;
+      text-shadow: 2px 2px 0 #000, -1px -1px 0 #000;
+      z-index: 16;
+      animation: dmgFloat 1.2s ease forwards;
+      pointer-events: none
+    }
+
+    .bt-dmg-num.heal {
+      color: #4ecca3;
+      text-shadow: 2px 2px 0 #000, 0 0 8px rgba(78, 204, 163, 0.5)
+    }
+
+    .bt-dmg-num.crit {
+      font-size: 42px;
+      color: #ffd700;
+      text-shadow: 3px 3px 0 #c62828, 0 0 16px rgba(255, 215, 0, 0.6);
+      animation: critFloat 1.2s ease forwards
+    }
+
+    @keyframes dmgFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1)
+      }
+
+      30% {
+        transform: translateY(-15px) scale(1.1)
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.8)
+      }
+    }
+
+    @keyframes critFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(0.5) rotate(-10deg)
+      }
+
+      20% {
+        transform: translateY(-10px) scale(1.4) rotate(5deg);
+        opacity: 1
+      }
+
+      50% {
+        transform: translateY(-25px) scale(1) rotate(0deg)
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(0.7)
+      }
+    }
+
+    @keyframes enemyEnter {
+      0% {
+        transform: scale(0.3);
+        opacity: 0
+      }
+
+      50% {
+        transform: scale(1.15);
+        opacity: 1
+      }
+
+      75% {
+        transform: scale(0.95)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    @keyframes bossEnter {
+      0% {
+        transform: scale(0) rotate(-10deg);
+        opacity: 0
+      }
+
+      30% {
+        transform: scale(1.8) rotate(5deg);
+        opacity: 1
+      }
+
+      55% {
+        transform: scale(0.8) rotate(-3deg)
+      }
+
+      75% {
+        transform: scale(1.1) rotate(1deg)
+      }
+
+      100% {
+        transform: scale(1) rotate(0deg)
+      }
+    }
+
+    @keyframes playerEnter {
+      0% {
+        transform: translateX(-50px) scale(0.8);
+        opacity: 0
+      }
+
+      60% {
+        transform: translateX(5px) scale(1.05);
+        opacity: 1
+      }
+
+      100% {
+        transform: translateX(0) scale(1)
+      }
+    }
+
+    @keyframes goFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes btShake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      12% {
+        transform: translateX(-8px) translateY(-2px)
+      }
+
+      25% {
+        transform: translateX(8px) translateY(2px)
+      }
+
+      37% {
+        transform: translateX(-6px)
+      }
+
+      50% {
+        transform: translateX(6px)
+      }
+
+      62% {
+        transform: translateX(-4px)
+      }
+
+      75% {
+        transform: translateX(4px)
+      }
+
+      87% {
+        transform: translateX(-2px)
+      }
+    }
+
+    @keyframes btFlash {
+      0% {
+        opacity: 0.7
+      }
+
+      30% {
+        opacity: 0.3
+      }
+
+      50% {
+        opacity: 0.6
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(0) rotate(0);
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(300px) rotate(720deg);
+        opacity: 0
+      }
+    }
+
+    .bt-preview {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 10px;
+      color: #aaa;
+      text-align: center;
+      padding: 2px 12px 6px;
+      min-height: 16px;
+      line-height: 1.5;
+      transition: all 0.2s
+    }
+
+    .bt-preview span {
+      margin: 0 4px
+    }
+
+    .bt-preview .pv-dmg {
+      color: #ff6b6b;
+      font-weight: bold
+    }
+
+    .bt-preview .pv-heal {
+      color: #4ecca3;
+      font-weight: bold
+    }
+
+    .bt-preview .pv-sp {
+      color: #64b5f6
+    }
+
+    .bt-preview .pv-buff {
+      color: #ffd700
+    }
+
+    .bt-preview .pv-shield {
+      color: #e0a500
+    }
+
+    .tut-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.85);
+      cursor: pointer;
+      animation: rewardFadeIn 0.3s ease
+    }
+
+    .tut-box {
+      background: linear-gradient(180deg, rgba(20, 10, 40, 0.98), rgba(10, 5, 20, 0.98));
+      border: 2px solid #ffd700;
+      border-radius: 14px;
+      padding: 24px 20px;
+      max-width: 340px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.15)
+    }
+
+    .tut-step {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #ffd700;
+      letter-spacing: 3px;
+      margin-bottom: 8px
+    }
+
+    .tut-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 20px;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.3)
+    }
+
+    .tut-desc {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 13px;
+      color: #ccc;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      word-break: keep-all
+    }
+
+    .tut-hint {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 1px;
+      animation: blink 1.5s ease-in-out infinite
+    }
+
+    .bt-status {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      margin-top: 2px
+    }
+
+    .bt-status-icon {
+      font-size: 12px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: 'Do Hyeon', sans-serif;
+      background: rgba(255, 255, 255, 0.08)
+    }
+
+    /* REWARD SCREEN */
+    #reward-screen {
+      background: linear-gradient(180deg, #1a1020 0%, #0a0a14 100%);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px
+    }
+
+    .rw-bg {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: rewardFadeIn 0.6s ease
+    }
+
+    .rw-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 26px;
+      color: #ffd700;
+      letter-spacing: 6px;
+      margin-bottom: 6px;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.2), 2px 2px 0 #c62828
+    }
+
+    .rw-sub {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px
+    }
+
+    .rw-retreat {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      color: #aaa;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+      margin-top: 24px
+    }
+
+    .rw-retreat:hover {
+      color: #4ecca3;
+      border-color: #4ecca3;
+      background: rgba(78, 204, 163, 0.1)
+    }
+
+    .rw-cards {
+      display: flex;
+      gap: 14px
+    }
+
+    .rw-card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 215, 0, 0.03));
+      border: 2px solid #555;
+      border-radius: 14px;
+      padding: 22px 14px 18px;
+      width: 112px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s
+    }
+
+    .rw-card:hover {
+      border-color: #ffd700;
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(255, 215, 0, 0.2), 0 0 16px rgba(255, 215, 0, 0.1)
+    }
+
+    .rw-icon {
+      font-size: 32px;
+      margin-bottom: 8px
+    }
+
+    .rw-rname {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #fff;
+      letter-spacing: 1px;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .rw-rdesc {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 11px;
+      color: #888;
+      margin-top: 6px;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .rw-card.rare {
+      border-color: #ffd700;
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.10), rgba(255, 215, 0, 0.03));
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.15)
+    }
+
+    .rw-card.rare .rw-rname {
+      color: #ffd700
+    }
+
+    .rw-tier {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-bottom: 4px
+    }
+
+    .rw-tier.normal {
+      color: #888
+    }
+
+    .rw-tier.rare {
+      color: #ffd700
+    }
+
+    .mini-rw-card.rare {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.06)
+    }
+
+    .mini-rw-card.rare .mini-rw-name {
+      color: #ffd700
+    }
+
+    @keyframes rewardFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .mini-rw {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 22;
+      background: rgba(0, 0, 0, 0.7);
+      animation: rewardFadeIn 0.4s ease
+    }
+
+    .mini-rw-box {
+      display: flex;
+      gap: 10px
+    }
+
+    .mini-rw-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px solid #555;
+      border-radius: 10px;
+      padding: 16px 14px;
+      width: 140px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s
+    }
+
+    .mini-rw-card:hover {
+      border-color: #ffd700;
+      background: rgba(255, 215, 0, 0.08);
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15)
+    }
+
+    .mini-rw-icon {
+      font-size: 24px;
+      margin-bottom: 6px
+    }
+
+    .mini-rw-name {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #fff;
+      letter-spacing: 1px;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    .mini-rw-desc {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 10px;
+      color: #888;
+      margin-top: 4px;
+      overflow-wrap: break-word;
+      word-break: keep-all
+    }
+
+    /* GAMEOVER SCREEN */
+    #gameover-screen {
+      background: radial-gradient(ellipse at center, #150808 0%, #050505 70%);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px
+    }
+
+    .go-bg {
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .go-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 30px;
+      color: #e53935;
+      letter-spacing: 8px;
+      text-shadow: 0 0 30px rgba(229, 57, 53, 0.4), 0 0 60px rgba(229, 57, 53, 0.15);
+      margin-bottom: 32px
+    }
+
+    .go-wave,
+    .go-kills {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 16px;
+      color: #888;
+      margin-bottom: 8px;
+      letter-spacing: 2px
+    }
+
+    .go-gold {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px;
+      color: #ffd700;
+      margin-top: 18px;
+      letter-spacing: 1px
+    }
+
+    .go-rp {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px;
+      color: #4ecca3;
+      margin-top: 6px;
+      letter-spacing: 1px;
+      background: rgba(78, 204, 163, 0.08);
+      padding: 4px 14px;
+      border-radius: 12px
+    }
+
+    .go-best {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px;
+      color: #ffd700;
+      margin-top: 14px;
+      margin-bottom: 28px
+    }
+
+    .go-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px
+    }
+
+    .go-btn {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px;
+      color: #888;
+      padding: 10px 32px;
+      border: 1px solid #333;
+      background: none;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.2s
+    }
+
+    .go-btn.retry {
+      color: #fff;
+      border: 2px solid #e53935;
+      background: rgba(229, 57, 53, 0.15);
+      font-size: 16px;
+      letter-spacing: 3px
+    }
+
+    .go-btn.retry:hover {
+      background: rgba(229, 57, 53, 0.3);
+      box-shadow: 0 0 16px rgba(229, 57, 53, 0.3);
+      transform: scale(1.03)
+    }
+
+    .go-btn:hover {
+      border-color: #888;
+      color: #fff
+    }
+
+    .go-bg>* {
+      opacity: 0
+    }
+
+    #gameover-screen.go-show .go-title {
+      animation: goFadeIn 1s ease 0.3s forwards
+    }
+
+    #gameover-screen.go-show .go-wave {
+      animation: goFadeIn 0.8s ease 1s forwards
+    }
+
+    #gameover-screen.go-show .go-kills {
+      animation: goFadeIn 0.8s ease 1.3s forwards
+    }
+
+    #gameover-screen.go-show .go-gold {
+      animation: goFadeIn 0.8s ease 1.6s forwards
+    }
+
+    #gameover-screen.go-show .go-rp {
+      animation: goFadeIn 0.8s ease 1.9s forwards
+    }
+
+    #gameover-screen.go-show .go-best {
+      animation: goFadeIn 0.8s ease 2.2s forwards
+    }
+
+    #gameover-screen.go-show .go-btns {
+      animation: goFadeIn 0.8s ease 2.8s forwards
+    }
+
+    .bt-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s
+    }
+
+    .bt-overlay.on {
+      opacity: 1
+    }
+
+    .bt-status-row {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+      padding: 2px 8px;
+      min-height: 18px;
+      flex-wrap: wrap;
+      overflow-y: auto;
+      max-height: 60px;
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent
+    }
+
+    .bt-sicon {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'Do Hyeon', sans-serif;
+      letter-spacing: 1px
+    }
+
+    .bt-sicon.poison {
+      background: rgba(76, 175, 80, 0.2);
+      color: #66bb6a
+    }
+
+    .bt-sicon.freeze {
+      background: rgba(129, 212, 250, 0.2);
+      color: #81d4fa
+    }
+
+    .bt-sicon.stun {
+      background: rgba(255, 235, 59, 0.2);
+      color: #ffd54f
+    }
+
+    .bt-sicon.buff {
+      background: rgba(255, 215, 0, 0.15);
+      color: #ffd700
+    }
+
+    .bt-sicon.charge {
+      background: rgba(255, 107, 53, 0.2);
+      color: #ff6b35
+    }
+
+    .bt-sicon.combo {
+      background: rgba(229, 57, 53, 0.2);
+      color: #ff6b6b
+    }
+
+    .bt-sicon.tg {
+      background: rgba(102, 126, 234, 0.2);
+      color: #667eea
+    }
+
+    .bt-sicon.heal {
+      background: rgba(236, 64, 122, 0.2);
+      color: #ec407a
+    }
+
+    .bt-sicon.guard {
+      background: rgba(100, 181, 246, 0.2);
+      color: #64b5f6
+    }
+
+    .bt-pending {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #ffd700;
+      position: absolute;
+      top: 14px;
+      right: 52px;
+      z-index: 5;
+      letter-spacing: 1px
+    }
+
+    .bt-retreat {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      color: #aaa;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 3px 10px;
+      position: absolute;
+      top: 10px;
+      left: 16px;
+      z-index: 5;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s
+    }
+
+    .bt-retreat:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.1)
+    }
+
+    /* 연구소 SCREEN */
+    #lab-screen {
+      background: linear-gradient(180deg, #1a1520 0%, #0d0a14 100%);
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 16px;
+      overflow-y: auto
+    }
+
+    .lab-container {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .lab-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 22px;
+      color: #9575cd;
+      letter-spacing: 4px;
+      margin-bottom: 4px;
+      text-shadow: 0 0 12px rgba(149, 117, 205, 0.3)
+    }
+
+    .lab-sub {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px
+    }
+
+    .lab-rp {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px;
+      color: #ffd700;
+      margin-bottom: 14px;
+      letter-spacing: 1px;
+      background: rgba(255, 215, 0, 0.08);
+      padding: 6px 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 215, 0, 0.2)
+    }
+
+    .lab-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%
+    }
+
+    .lab-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #2a2a3e;
+      border-radius: 8px;
+      padding: 10px 14px;
+      transition: border-color 0.2s
+    }
+
+    .lab-row:hover {
+      border-color: #444
+    }
+
+    .lab-icon {
+      font-size: 20px;
+      width: 30px;
+      text-align: center
+    }
+
+    .lab-info {
+      flex: 1
+    }
+
+    .lab-stat-name {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #ccc;
+      letter-spacing: 1px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .lab-stat-val {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #4ecca3;
+      margin-top: 2px
+    }
+
+    .lab-cost {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #ffd700;
+      margin-top: 1px
+    }
+
+    .lab-btn {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(149, 117, 205, 0.3);
+      border: 1px solid #9575cd;
+      border-radius: 6px;
+      padding: 6px 14px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s
+    }
+
+    .lab-btn:hover {
+      background: rgba(149, 117, 205, 0.5);
+      transform: scale(1.05)
+    }
+
+    .lab-btn.maxed {
+      opacity: 0.4;
+      pointer-events: none;
+      border-color: #444;
+      color: #666
+    }
+
+    .lab-nav {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px
+    }
+
+    .lab-nav-btn {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px;
+      color: #888;
+      background: none;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 9px 24px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.2s
+    }
+
+    .lab-nav-btn:hover {
+      border-color: #888;
+      color: #ccc
+    }
+
+    .lab-nav-btn.primary {
+      color: #fff;
+      border-color: #9575cd;
+      background: rgba(149, 117, 205, 0.2);
+      font-size: 15px;
+      letter-spacing: 3px
+    }
+
+    .lab-nav-btn.primary:hover {
+      background: rgba(149, 117, 205, 0.35);
+      box-shadow: 0 0 12px rgba(149, 117, 205, 0.3)
+    }
+
+    .lab-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+      width: 100%
+    }
+
+    .lab-tab {
+      flex: 1;
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #666;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #2a2a3e;
+      border-radius: 6px;
+      padding: 8px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 1px
+    }
+
+    .lab-tab.active {
+      color: #fff;
+      border-color: #9575cd;
+      background: rgba(149, 117, 205, 0.2)
+    }
+
+    .lab-tab:hover {
+      border-color: #666
+    }
+
+    .lab-currency {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px;
+      color: #ffd700;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 16px;
+      justify-content: center
+    }
+
+    .lab-currency span {
+      padding: 4px 14px;
+      border-radius: 16px;
+      letter-spacing: 1px
+    }
+
+    .lab-cur-mp {
+      background: rgba(255, 215, 0, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      color: #ffd700
+    }
+
+    .lab-cur-ce {
+      background: rgba(149, 117, 205, 0.08);
+      border: 1px solid rgba(149, 117, 205, 0.2);
+      color: #ce93d8
+    }
+
+    .pause-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 30;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 16px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px)
+    }
+
+    .pause-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4)
+    }
+
+    .pause-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 50;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      backdrop-filter: blur(6px)
+    }
+
+    .pause-overlay.on {
+      display: flex
+    }
+
+    .pause-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 28px;
+      color: #ffd700;
+      letter-spacing: 4px
+    }
+
+    .pause-vol {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0
+    }
+
+    .pause-vol-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px
+    }
+
+    .pause-vol-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 160px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer
+    }
+
+    .pause-vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #ffd700;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none
+    }
+
+    .pause-vol-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: #ffd700;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none
+    }
+
+    .pause-vol-label {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px;
+      color: #888;
+      min-width: 36px;
+      text-align: center
+    }
+
+    .pause-menu-btn {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 12px 40px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.2s;
+      min-width: 200px;
+      text-align: center
+    }
+
+    .pause-menu-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-1px)
+    }
+
+    .pause-menu-btn.resume {
+      border-color: rgba(78, 204, 163, 0.5);
+      color: #4ecca3
+    }
+
+    .pause-menu-btn.resume:hover {
+      background: rgba(78, 204, 163, 0.15);
+      border-color: #4ecca3
+    }
+
+    .pause-menu-btn.danger {
+      border-color: rgba(229, 57, 53, 0.4);
+      color: #ff6b6b
+    }
+
+    .pause-menu-btn.danger:hover {
+      background: rgba(229, 57, 53, 0.15);
+      border-color: #e53935
+    }
+
+    .lab-reset {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 11px;
+      color: #c62828;
+      background: none;
+      border: 1px solid rgba(198, 40, 40, 0.3);
+      border-radius: 6px;
+      padding: 5px 12px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+      margin-top: 8px
+    }
+
+    .lab-reset:hover {
+      background: rgba(198, 40, 40, 0.15);
+      border-color: #c62828
+    }
