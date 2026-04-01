@@ -759,16 +759,20 @@
       animation: endFadeIn 1.5s ease 0.8s forwards
     }
 
-    #ending-screen.end-show>.end-title {
+    #ending-screen.end-show>.end-img {
       animation: endFadeIn 1.5s ease 2s forwards
     }
 
-    #ending-screen.end-show>.end-coming {
+    #ending-screen.end-show>.end-title {
       animation: endFadeIn 1.5s ease 3s forwards
     }
 
+    #ending-screen.end-show>.end-coming {
+      animation: endFadeIn 1.5s ease 4s forwards
+    }
+
     #ending-screen.end-show>.end-btn {
-      animation: endFadeIn 1.5s ease 3.8s forwards
+      animation: endFadeIn 1.5s ease 5s forwards
     }
 
     @keyframes endFadeIn {
@@ -811,11 +815,31 @@
       font-size: 17px
     }
 
+    .end-img {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px
+    }
+
+    .end-cg {
+      max-width: 65%;
+      border-radius: 6px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6)
+    }
+
+    .end-symbol {
+      width: 60px;
+      height: 60px;
+      opacity: 0.5
+    }
+
     .end-title {
       font-family: 'Do Hyeon', sans-serif;
       font-size: 24px;
       color: #e53935;
-      margin-top: 36px;
+      margin-top: 12px;
       letter-spacing: 4px;
       text-shadow: 0 0 30px rgba(229, 57, 53, 0.3)
     }

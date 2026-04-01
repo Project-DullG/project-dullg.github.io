@@ -390,9 +390,7 @@ var S = [
   { t: 'pause', ms: 2000 },
   { t: 'drama', lines: ['그럴 거라고 믿었다.'], cls: '' },
   { t: 'pause', ms: 3000 },
-  { t: 'img', src: 'explosion.png' },
   { t: 'drama', lines: ['하지만 그날,', '레드는 죽어있었다.'], cls: 'red' },
   { t: 'pause', ms: 3000 },
-  { t: 'img', src: 'atom-symbol.png' },
   { t: 'end' }
 ];
