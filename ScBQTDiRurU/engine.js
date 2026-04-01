@@ -402,32 +402,32 @@
     var RANGERS = {
       red: {
         name: '\uB808\uB4DC', color: '#e53935', weapon: '\uB300\uAC80',
-        hp: 35, atk: 15, def: 10, crit: 15, dodge: 8, sp: 100,
-        skill: { name: '\uBBF8\uB77C\uD074 \uC2AC\uB798\uC2DC', cost: 50, multi: 2.8, desc: '\uACF5\uACA9\uB825 280% \uB300\uAC80 \uC77C\uACA9', ignoreDef: 0 },
+        hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
+        skill: { name: '\uBBF8\uB77C\uD074 \uC2AC\uB798\uC2DC', cost: 50, multi: 3.0, desc: '\uACF5\uACA9\uB825 300% \uB300\uAC80 \uC77C\uACA9', ignoreDef: 0 },
         support: { name: '\uB9AC\uB354\uC758 \uACA9\uB824', desc: '\uACF5\uACA9\uB825 +35% (3\uD134)', type: 'buff', stat: 'atk', val: 0.35, turns: 3 }
       },
       black: {
         name: '\uBE14\uB799', color: '#555', weapon: '\uCD1D',
-        hp: 28, atk: 13, def: 7, crit: 22, dodge: 10, sp: 100,
-        skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uBC29\uC5B4\uBB34\uC2DC', ignoreDef: 1 },
+        hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
+        skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 50, multi: 2.0, desc: '\uACF5\uACA9\uB825 200% + \uBC29\uC5B4\uBB34\uC2DC 50%', ignoreDef: 0.5 },
         support: { name: '\uC5C4\uD638 \uC0AC\uACA9', desc: '\uC801\uC5D0\uAC8C \uACF5\uACA9\uB825 140% \uB370\uBBF8\uC9C0', type: 'damage', multi: 1.4 }
       },
       blue: {
         name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
-        hp: 24, atk: 15, def: 5, crit: 25, dodge: 15, sp: 100,
-        skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% \uACE0\uC18D\uCC38\uACA9', ignoreDef: 0 },
+        hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
+        skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uCE58\uBA85\uD0C0 \uD655\uB960 +20%', critBonus: 0.20, ignoreDef: 0 },
         support: { name: '\uC804\uC220 \uBD84\uC11D', desc: '\uC801 \uBC29\uC5B4\uB825 -35% (3\uD134)', type: 'debuff', stat: 'def', val: 0.35, turns: 3 }
       },
       yellow: {
         name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
-        hp: 32, atk: 11, def: 8, crit: 12, dodge: 8, sp: 100,
-        skill: { name: '\uC36C\uB354 \uD06C\uB7EC\uC26C', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uC2A4\uD134 1\uD134', stun: 1, ignoreDef: 0 },
+        hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
+        skill: { name: '\uC36C\uB354 \uD06C\uB7EC\uC26C', cost: 50, multi: 0.8, desc: '\uACF5\uACA9\uB825 80% + \uC2A4\uD134 1\uD134', stun: 1, ignoreDef: 0 },
         support: { name: '\uBC88\uAC1C \uCDA9\uC804', desc: 'SP 75% \uD68C\uBCF5', type: 'sp_pct', val: 0.75 }
       },
       pink: {
         name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
-        hp: 42, atk: 10, def: 16, crit: 8, dodge: 8, sp: 100,
-        skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uC270\uB4DC 5% \uBD80\uC5EC', heal: 0.05, ignoreDef: 0 },
+        hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
+        skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 50, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uC274\uB4DC 20% \uBD80\uC5EC', heal: 0.20, ignoreDef: 0 },
         support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '\uCCB4\uB825 30% \uD68C\uBCF5', type: 'heal', val: 0.3 }
       }
     };
@@ -544,9 +544,9 @@
         skillDesc: '스킬 크리티컬 +8%'
       },
       yellow: {
-        name: '번개의 에너지', desc: '매턴 SP+2, 스킬비용 -5', icon: '⚡',
-        apply: function (p) { p.spRegen = 2; p.skillCostReduction = 5 },
-        skillDesc: '스킬 비용 추가 -5 (총 -10)'
+        name: '번개의 에너지', desc: '매턴 SP 10% 회복', icon: '⚡',
+        apply: function (p) { p.spRegen = Math.round(p.maxSp * 0.10) },
+        skillDesc: '스킬 사용 시 감전 마크 +1 추가'
       },
       pink: {
         name: '수호의 유대', desc: '쉴드력 +8%, 피해 감소 3%, 웨이브 클리어 시 HP 7% 회복', icon: '💗',
@@ -809,8 +809,8 @@
               + '<div class="sel-stat"><b>SP</b> ' + r.sp + '</div>'
               + '<div class="sel-skill">\u2728 ' + r.skill.name + ' \u2014 ' + r.skill.desc + ' (SP ' + r.skill.cost + ')</div>'
               + '<div class="sel-skill" style="color:#4ecca3;margin-top:4px">\uD83C\uDF1F <b>[\uC9C0\uC6D0\uC2A4\uD0AC]</b> ' + r.support.name + ' \u2014 ' + r.support.desc + '</div>'
-              + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' \uD30C\uD2B8\uB108 \uD328\uC2DC\uBE0C: <b>' + pb.name + '</b> \u2014 ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">\uC2A4\uD0AC \uBCF4\uB108\uC2A4: ' + pb.skillDesc + '</span></div>';
-            $('sel-go').style.display = 'block'; $('sel-go').textContent = '▶ 다음: 파트너 선택';
+              + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' \uCD9C\uB3D9 \uD328\uC2DC\uBE0C: <b>' + pb.name + '</b> \u2014 ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">\uC2A4\uD0AC \uBCF4\uB108\uC2A4: ' + pb.skillDesc + '</span></div>';
+            $('sel-go').style.display = 'block'; $('sel-go').textContent = '\u25B6 \uB2E4\uC74C: \uD30C\uD2B8\uB108 \uC120\uD0DD';
           } else if (step === 2) {
             if (key === BT.selectedRanger) return;
             cards.querySelectorAll('.sel-card').forEach(function (c) { c.classList.remove('passive-picked') });
@@ -826,8 +826,8 @@
       $('sel-go').onclick = function () {
         if (step === 1 && BT.selectedRanger) {
           step = 2;
-          $('sel-title').textContent = '▼ 파트너 선택 ▼';
-          info.innerHTML = '<div style="color:#9575cd;text-align:center;padding:20px">패시브 효과를 부여할 파트너를 선택하세요<br><span style="color:#4ecca3;font-size:12px">💡 선택하지 않은 나머지 레인저는 전투 중 지원 스킬로 함께합니다!</span></div>';
+          $('sel-title').textContent = '\u25BC \uD30C\uD2B8\uB108 \uC120\uD0DD \u25BC';
+          info.innerHTML = '<div style="color:#9575cd;text-align:center;padding:20px">\uCD94\uAC00 \uCD9C\uB3D9 \uD328\uC2DC\uBE0C\uB97C \uBD80\uC5EC\uD560 \uD30C\uD2B8\uB108\uB97C \uC120\uD0DD\uD558\uC138\uC694<br><span style="color:#4ecca3;font-size:12px">\uD83D\uDCA1 \uBA54\uC778 + \uD30C\uD2B8\uB108 \uCD9C\uB3D9 \uD328\uC2DC\uBE0C \uBAA8\uB450 \uC801\uC6A9\uB429\uB2C8\uB2E4!</span></div>';
           cards.querySelectorAll('.sel-card').forEach(function (c) {
             c.classList.remove('picked');
             if (c.dataset.key === BT.selectedRanger) c.classList.add('disabled');
@@ -973,8 +973,11 @@
         skill: r.skill, skillBonus: getLabBonus('skill'),
         guarding: false, critBonus: 0, spRegen: 0, skillCostReduction: 0, hpRegen: 0
       };
-      // Apply passive buff
-      if (passiveKey && PASSIVE_BUFFS[passiveKey]) {
+      // 출동 패시브: 메인 + 파트너 둘 다 적용
+      if (PASSIVE_BUFFS[rangerKey]) {
+        PASSIVE_BUFFS[rangerKey].apply(BT.player);
+      }
+      if (passiveKey && PASSIVE_BUFFS[passiveKey] && passiveKey !== rangerKey) {
         PASSIVE_BUFFS[passiveKey].apply(BT.player);
       }
       // Support pool: exclude active AND passive
@@ -992,7 +995,7 @@
     function showBattleTutorial(cb) {
       var steps = [
         { title: '❤️ 체력 / 💎 SP', desc: '체력이 0이 되면 패배!\nSP는 필살기에 사용합니다.\n방어하면 SP가 회복됩니다.' },
-        { title: '\u2694\uFE0F \uD589\uB3D9 \uC120\uD0DD', desc: '\uACF5\uACA9: \uAE30\uBCF8 \uB370\uBBF8\uC9C0\n\uBC29\uC5B4: \uC270\uB4DC \uC0DD\uC131 + SP+5 (\uCFE8\uD0C0\uC784 2\uD134)\n\uD83E\uDDD8 \uC9D1\uC911: \uCCB4\uB825 / SP \uD68C\uBCF5 (\uCFE8\uD0C0\uC784 3\uD134)\n\uD544\uC0B4\uAE30: SP \uC18C\uBAA8, \uAC15\uB825\uD55C \uC77C\uACA9!\n\uD83D\uDCA5 \uC624\uBC84\uCC28\uC9C0: SP 2\uBC30\uB85C \uB370\uBBF8\uC9C0 1.5\uBC30!\n\uD83C\uDF1F \uC9C0\uC6D0\uC2A4\uD0AC: 3\uBA85 \uC911 \uC6D0\uD558\uB294 \uD30C\uD2B8\uB108 \uC120\uD0DD' },
+        { title: '\u2694\uFE0F \uD589\uB3D9 \uC120\uD0DD', desc: '\uACF5\uACA9: \uAE30\uBCF8 \uB370\uBBF8\uC9C0\n\uBC29\uC5B4: \uC274\uB4DC \uC0DD\uC131 + SP+5 (\uCFE8\uD0C0\uC784 2\uD134)\n\uD83E\uDDD8 \uC9D1\uC911: \uCCB4\uB825 / SP \uD68C\uBCF5 (\uCFE8\uD0C0\uC784 3\uD134)\n\uD544\uC0B4\uAE30: SP \uC18C\uBAA8, \uAC15\uB825\uD55C \uC77C\uACA9!\n\uD83D\uDCA5 \uC624\uBC84\uCC28\uC9C0: SP 2\uBC30\uB85C \uB370\uBBF8\uC9C0 1.5\uBC30!\n\uD83C\uDF1F \uC9C0\uC6D0\uC2A4\uD0AC: 3\uBA85 \uC911 \uC6D0\uD558\uB294 \uD30C\uD2B8\uB108 \uC120\uD0DD' },
         { title: '🛡️ 쉴드 & 피해 감소', desc: '쉴드력이 높을수록 강한 쉴드 생성!\n쉴드는 적 공격을 먼저 흡수합니다.\n⚠️ 쉴드는 매 턴 50% 감소합니다.\n\n보상으로 \'피해 감소\'를 얻으면\n받는 데미지가 영구적으로 줄어듭니다!' },
         { title: '🎯 전술 게이지', desc: '같은 행동을 연속으로 하면 전술 게이지가 1씩 증가!\n(최대 3단계: +10% → +20% → +30%)\n다른 행동으로 전환하면 쌓인 보너스가 데미지에 적용!\n행동을 섞어서 보너스를 극대화하세요.' },
         { title: '⚠️ 적 의도 & 보상', desc: '적의 다음 행동이 상단에 예고됩니다.\n예고를 읽고 공격/방어를 판단하세요!\n\n웨이브 클리어 시 보상을 획득합니다.\n치명타, 피해량, 쉴드, 관통 등 다양한\n강화를 조합해 나만의 빌드를 만드세요!' },
@@ -1184,7 +1187,6 @@
       focusBtn.addEventListener('click', function () { doPlayerAction('focus') }); primaryRow.appendChild(focusBtn);
       // 필살기
       var effectiveCost = p.skill.cost - (p.skillCostReduction || 0);
-      if (BT.passiveKey === 'yellow') effectiveCost -= 5;
       effectiveCost = Math.max(0, effectiveCost);
       var skillMulti = p.skill.multi + (p.skillBonus || 0);
       var estSkill = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), skillMulti, p.skill.ignoreDef || 0) * 0.9);
@@ -1254,7 +1256,7 @@
       // 방어 프리뷰
       var defSpTotal = Math.min(p.maxSp, p.sp + 5) - p.sp;
       if (BT.defendCD > 0) { previews.def = '<span style="color:#f44">\uCFE8\uD0C0\uC784 ' + BT.defendCD + '\uD134 \uB0A8\uC74C</span>' }
-      var defPvParts = ['<span class="pv-shield">\uC270\uB4DC ' + shieldPreview + ' \uC0DD\uC131 (\uB9E4\uD134 50%\u2193)</span>', '<span class="pv-sp">SP +' + defSpTotal + ' \uD68C\uBCF5</span>'];
+      var defPvParts = ['<span class="pv-shield">\uC274\uB4DC ' + shieldPreview + ' \uC0DD\uC131 (\uB9E4\uD134 50%\u2193)</span>', '<span class="pv-sp">SP +' + defSpTotal + ' \uD68C\uBCF5</span>'];
       if (BT.perkGuardHeal) defPvParts.push('<span class="pv-heal">체력 +' + Math.round(p.maxHp * 0.02) + ' 치유</span>');
       previews.def = defPvParts.join(' · ');
       // 집중 프리뷰
@@ -1514,7 +1516,7 @@
         if (p.key === 'pink') { shieldAmt = Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) }
         else { shieldAmt = Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp)) }
         BT.shield = Math.max(BT.shield, shieldAmt);
-        var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="sp-use">SP+5</span> <span class="buff">\uD83D\uDEE1\uFE0F \uC270\uB4DC ' + BT.shield + '</span>';
+        var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="sp-use">SP+5</span> <span class="buff">\uD83D\uDEE1\uFE0F \uC274\uB4DC ' + BT.shield + '</span>';
         // 핑크 고유: 방어 시 유대 게이지 +15
         if (p.key === 'pink') { BT.pinkBond = Math.min(100, BT.pinkBond + 15); defLog += ' <span class="buff">💗 유대 +15</span>' }
         // 수호의 오라
@@ -1545,7 +1547,6 @@
       } else if (action === 'skill') {
         if (BT.skillCD > 0) { BT.acting = false; showActions(); return }
         var skillCost = p.skill.cost - (p.skillCostReduction || 0);
-        if (BT.passiveKey === 'yellow') skillCost -= 5;
         skillCost = Math.max(0, skillCost);
         if (p.sp < skillCost) { BT.acting = false; showActions(); return }
         BT.skillCD = 3;
@@ -1567,7 +1568,7 @@
         // 레드 고유: 투지 5 소비
         if (p.key === 'red' && BT.redMomentum >= 5) { multi *= 1.5; BT.redMomentum = 0 }
         var baseCrit = p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance;
-        var skillCritBonus = (BT.passiveKey === 'blue') ? 0.08 : 0;
+        var skillCritBonus = (p.skill.critBonus || 0) + ((BT.passiveKey === 'blue') ? 0.08 : 0);
         var skillCrit = BT.guaranteedCrit || Math.random() < (baseCrit + skillCritBonus);
         BT.guaranteedCrit = false;
         skillIgnore = Math.min(1, skillIgnore + BT.perkArmorPen);
