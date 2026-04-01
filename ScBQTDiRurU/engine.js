@@ -1115,20 +1115,25 @@
       var atkLabel = '⚔️ 공격 (~' + estAtk + ')';
       if (BT.guaranteedCrit) atkLabel = '🔥 확정 크리 공격! (~' + Math.round(estAtk * 1.5) + ')';
       else if (BT.tacticalGauge > 0) atkLabel = '⚔️ 공격 TG' + BT.tacticalGauge + ' (~' + Math.round(estAtk * (1 + BT.tacticalGauge * 0.1)) + ')';
+      // === 그룹화된 버튼 레이아웃 ===
+      var primaryRow = document.createElement('div'); primaryRow.className = 'bt-acts-primary';
+      var secondaryRow = document.createElement('div'); secondaryRow.className = 'bt-acts-secondary';
+      var supportRow = document.createElement('div'); supportRow.className = 'bt-acts-supports';
+      // 공격
       var a1 = document.createElement('button'); a1.className = 'bt-act atk'; a1.textContent = atkLabel;
-      a1.addEventListener('click', function () { doPlayerAction('attack') }); acts.appendChild(a1);
+      a1.addEventListener('click', function () { doPlayerAction('attack') }); primaryRow.appendChild(a1);
       // 방어
       var shieldPreview = p.key === 'pink' ? Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) : Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp));
       var a2 = document.createElement('button'); a2.className = 'bt-act def';
       if (BT.defendCD > 0) { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 [' + BT.defendCD + '\uD134]'; a2.classList.add('disabled') }
       else { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 \uD83D\uDEE1+' + shieldPreview + ' SP+5' }
-      a2.addEventListener('click', function () { doPlayerAction('defend') }); acts.appendChild(a2);
-      // 집중 (회복기, 쿨타임 3턴)
+      a2.addEventListener('click', function () { doPlayerAction('defend') }); primaryRow.appendChild(a2);
+      // 집중
       var focusHp = 1 + Math.round(p.maxHp * 0.10); var focusSp = 5 + Math.round(p.maxSp * 0.30);
       var focusBtn = document.createElement('button'); focusBtn.className = 'bt-act def';
-      if (BT.focusCD > 0) { focusBtn.textContent = '🧘 집중 [' + BT.focusCD + '턴]'; focusBtn.classList.add('disabled') }
-      else { focusBtn.textContent = '🧘 집중 체력+' + focusHp + ' SP+' + focusSp }
-      focusBtn.addEventListener('click', function () { doPlayerAction('focus') }); acts.appendChild(focusBtn);
+      if (BT.focusCD > 0) { focusBtn.textContent = '\uD83E\uDDD8 \uC9D1\uC911 [' + BT.focusCD + '\uD134]'; focusBtn.classList.add('disabled') }
+      else { focusBtn.textContent = '\uD83E\uDDD8 \uC9D1\uC911 HP+' + focusHp + ' SP+' + focusSp }
+      focusBtn.addEventListener('click', function () { doPlayerAction('focus') }); primaryRow.appendChild(focusBtn);
       // 필살기
       var effectiveCost = p.skill.cost - (p.skillCostReduction || 0);
       if (BT.passiveKey === 'yellow') effectiveCost -= 5;
@@ -1136,18 +1141,25 @@
       var skillMulti = p.skill.multi + (p.skillBonus || 0);
       var estSkill = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), skillMulti, p.skill.ignoreDef || 0) * 0.9);
       var a3 = document.createElement('button'); a3.className = 'bt-act skill';
-      a3.textContent = '✨ ' + p.skill.name + ' SP' + effectiveCost + ' (~' + estSkill + ')';
+      a3.textContent = '\u2728 ' + p.skill.name + ' SP' + effectiveCost + ' (~' + estSkill + ')';
       if (p.sp < effectiveCost) a3.classList.add('disabled');
-      a3.addEventListener('click', function () { doPlayerAction('skill') }); acts.appendChild(a3);
-      // 오버차지 필살기 (SP 2배, 데미지 1.5배)
+      a3.addEventListener('click', function () { doPlayerAction('skill') }); secondaryRow.appendChild(a3);
+      // 오버차지
       var ocCost = effectiveCost * 2;
       var estOC = Math.round(estSkill * 1.5);
       var a3b = document.createElement('button'); a3b.className = 'bt-act skill';
       a3b.style.cssText = 'border-color:rgba(255,180,0,0.5);color:#ffb300;background:rgba(255,180,0,0.08)';
-      a3b.textContent = '💥 오버차지 SP' + ocCost + ' (~' + estOC + ')';
+      a3b.textContent = '\uD83D\uDCA5 \uC624\uBC84\uCC28\uC9C0 SP' + ocCost + ' (~' + estOC + ')';
       if (p.sp < ocCost) a3b.classList.add('disabled');
-      a3b.addEventListener('click', function () { doPlayerAction('overcharge') }); acts.appendChild(a3b);
-      // 지원 (3명 중 택 1, 각각 독립 쿨타임)
+      a3b.addEventListener('click', function () { doPlayerAction('overcharge') }); secondaryRow.appendChild(a3b);
+      // 합체기
+      if (BT.comboAttackCharged) {
+        var a5 = document.createElement('button'); a5.className = 'bt-act';
+        a5.style.cssText = 'border-color:rgba(149,117,205,0.5);color:#ce93d8;background:rgba(149,117,205,0.1)';
+        a5.textContent = '\uD83D\uDCAB \uD569\uCCB4\uAE30!';
+        a5.addEventListener('click', function () { doPlayerAction('comboAttack') }); secondaryRow.appendChild(a5);
+      }
+      // 지원스킬
       BT.supportPool.forEach(function (sp, idx) {
         var sup = sp.data.support; var cd = BT.supportCDs[sp.key] || 0;
         var lb = '\uD83C\uDF1F ' + sp.data.name + ' ';
@@ -1157,26 +1169,23 @@
         else if (sup.type === 'debuff') lb += '\uC801' + statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'damage') lb += '\uACF5\uACA9x' + sup.multi;
         if (cd > 0) lb += ' [' + cd + '\uD134]';
-        lb += ' [\uC9C0\uC6D0\uC2A4\uD0AC]';
         var btn = document.createElement('button'); btn.className = 'bt-act support';
         btn.textContent = lb;
         if (cd > 0) btn.classList.add('disabled');
         btn.addEventListener('click', function () { doPlayerAction('support_' + idx) });
-        acts.appendChild(btn);
+        supportRow.appendChild(btn);
       });
-      // 합체기
-      if (BT.comboAttackCharged) {
-        var a5 = document.createElement('button'); a5.className = 'bt-act';
-        a5.style.cssText = 'border-color:rgba(149,117,205,0.5);color:#ce93d8;background:rgba(149,117,205,0.1)';
-        a5.textContent = '💫 합체기!';
-        a5.addEventListener('click', function () { doPlayerAction('comboAttack') }); acts.appendChild(a5);
-      }
-      // ── 적 의도 표시 ──
+      acts.appendChild(primaryRow); acts.appendChild(secondaryRow); acts.appendChild(supportRow);
+      // ── 적 의도 표시 (배너 스타일) ──
       var oldIntent = document.getElementById('bt-intent'); if (oldIntent) oldIntent.remove();
       if (BT.enemyIntent) {
         var intentEl = document.createElement('div'); intentEl.id = 'bt-intent';
-        intentEl.style.cssText = 'text-align:center;font-size:11px;padding:3px 8px;color:#f44;font-family:"Do Hyeon",sans-serif;animation:blink 0.8s infinite';
-        intentEl.textContent = BT.enemyIntent;
+        var isUrgent = BT.enemyIntent.indexOf('\u26A0') > -1 || BT.enemyIntent.indexOf('\uAC15\uD0C0') > -1 || BT.enemyIntent.indexOf('\uD83D\uDCA3') > -1;
+        var isCaution = BT.enemyIntent.indexOf('\uD83D\uDD36') > -1 || BT.enemyIntent.indexOf('\uBAA8\uC73C\uB294') > -1;
+        intentEl.className = 'bt-intent-bar' + (isUrgent ? ' urgent' : isCaution ? ' caution' : '');
+        var lbl = document.createElement('span'); lbl.className = 'bt-intent-label'; lbl.textContent = '\uC801 \uC758\uB3C4';
+        var txt = document.createElement('span'); txt.className = 'bt-intent-text'; txt.textContent = BT.enemyIntent;
+        intentEl.appendChild(lbl); intentEl.appendChild(txt);
         acts.parentNode.insertBefore(intentEl, acts);
       }
       // ── 예상행동 프리뷰 ──
