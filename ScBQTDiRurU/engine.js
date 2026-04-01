@@ -2297,7 +2297,7 @@
     }
 
     $('go-retry').addEventListener('click', function () { playBgm('daily'); initSelect(); showScr('select') });
-    $('go-title').addEventListener('click', function () { stopAllBgm(); showScr('title') });
+    $('go-title').addEventListener('click', function () { stopAllBgm(); playBgm('daily'); initSelect(); showScr('select') });
     $('bt-retreat').addEventListener('click', function () {
       if (BT.acting) return;
       gamePaused = true; $('pause-overlay').classList.add('on');
