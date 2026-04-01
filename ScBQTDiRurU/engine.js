@@ -1065,39 +1065,44 @@
       $('bt-pshield').style.width = shieldPct + '%';
       $('bt-psp').style.width = Math.max(0, Math.min(100, Math.round((p.maxSp > 0 ? p.sp / p.maxSp : 0) * 100))) + '%';
       $('bt-phpv').textContent = Math.max(0, p.hp) + (BT.shield > 0 ? '+' + BT.shield : '') + ' / ' + p.maxHp;
-      $('bt-pspv').textContent = p.sp + ' / ' + p.maxSp + ' (공격력 ' + p.atk + ' 쉴드력 ' + p.def + ')';
-      // HP바 색상 (위험 시 빨강)
-      if (p.hp < p.maxHp * 0.3) $('bt-php').style.background = 'linear-gradient(90deg,#b71c1c,#e53935)';
-      else $('bt-php').style.background = '';
+      $('bt-pspv').textContent = p.sp + ' / ' + p.maxSp;
+      var statsEl = $('bt-pstats');
+      if (statsEl) statsEl.textContent = '⚔️' + p.atk + ' 🛡️' + p.def;
+      // HP바 단계별 경고
+      var hpRatio = p.hp / p.maxHp;
+      var hpBar = $('bt-php');
+      if (hpRatio <= 0.3) { hpBar.style.background = 'linear-gradient(90deg,#b71c1c,#e53935)'; hpBar.classList.add('hp-critical'); hpBar.classList.remove('hp-warning') }
+      else if (hpRatio <= 0.5) { hpBar.style.background = 'linear-gradient(90deg,#e65100,#ff9800)'; hpBar.classList.add('hp-warning'); hpBar.classList.remove('hp-critical') }
+      else { hpBar.style.background = ''; hpBar.classList.remove('hp-warning', 'hp-critical') }
     }
 
     // ── 상태이상 아이콘 갱신 ──
     function updateStatusIcons() {
       var row = $('bt-status'); clr(row); var p = BT.player;
-      // TG 표시
-      if (BT.tacticalGauge === 1) { var s = document.createElement('span'); s.className = 'bt-sicon tg'; s.innerHTML = '🎯 전술1 +10%'; row.appendChild(s) }
-      else if (BT.tacticalGauge === 2) { var s = document.createElement('span'); s.className = 'bt-sicon tg'; s.innerHTML = '🎯🎯 전술2 +20%'; row.appendChild(s) }
-      else if (BT.tacticalGauge >= 3) { var s = document.createElement('span'); s.className = 'bt-sicon tg buff'; s.innerHTML = '🎯🎯🎯 최대 +30%!'; row.appendChild(s) }
-      if (BT.guaranteedCrit) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥 다음 공격 확정 크리!'; row.appendChild(s) }
-      if (BT.shield > 0) { var s = document.createElement('span'); s.className = 'bt-sicon guard'; s.textContent = '🛡️ 쉴드 ' + BT.shield + ' (매턴 50% 감소)'; row.appendChild(s) }
-      if (BT.perkDmgReduce > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🔰 피해 감소 ' + Math.round(BT.perkDmgReduce * 100) + '%'; row.appendChild(s) }
-      if (BT.perkCritChance > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯 치명타 확률 +' + Math.round(BT.perkCritChance * 100) + '%'; row.appendChild(s) }
-      if (BT.perkCritDmg > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '💥 크리 데미지 x' + (1.5 + BT.perkCritDmg).toFixed(2) + ' (+' + (BT.perkCritDmg * 100).toFixed(0) + '%)'; row.appendChild(s) }
-      if (BT.perkShieldUp > 0) { var s = document.createElement('span'); s.className = 'bt-sicon guard'; s.textContent = '🛡️ 쉴드량 +' + Math.round(BT.perkShieldUp * 100) + '%'; row.appendChild(s) }
-      if (BT.perkDmgUp > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '⚔️ 피해량 +' + Math.round(BT.perkDmgUp * 100) + '%'; row.appendChild(s) }
-      if (BT.perkArmorPen > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯 관통 +' + Math.round(BT.perkArmorPen * 100) + '%'; row.appendChild(s) }
-      if (BT.poisonTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon poison'; s.textContent = '☠️ 독 ' + BT.poisonDmg + '/턴 ' + BT.poisonTurns + '턴'; row.appendChild(s) }
-      if (BT.burnTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥 화상 ' + BT.burnDmg + '/턴 ' + BT.burnTurns + '턴'; row.appendChild(s) }
-      if (BT.freezeTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon freeze'; s.textContent = '❄️ 공격력 감소 ' + BT.freezeTurns + '턴'; row.appendChild(s) }
-      if (BT.stunTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡ 적 기절! (행동불가)'; row.appendChild(s) }
-      BT.buffs.forEach(function (b) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '↑' + statKR(b.stat) + '+' + Math.round(b.val * 100) + '% ' + b.turns + '턴'; row.appendChild(s) });
-      BT.debuffs.forEach(function (d) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '↓적' + statKR(d.stat) + '-' + Math.round(d.val * 100) + '% ' + d.turns + '턴'; row.appendChild(s) });
-      // 레인저 고유 게이지
-      if (p.key === 'red' && BT.redMomentum > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥 투지 ' + BT.redMomentum + '/5' + (BT.redMomentum >= 5 ? ' 스킬x1.5!' : ''); row.appendChild(s) }
-      if (p.key === 'black') { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🔫 관통 ' + Math.round(BT.blackAim * 10) + '%' + (BT.blackAim >= 5 ? ' MAX' : ''); row.appendChild(s) }
-      if (p.key === 'blue' && BT.blueCritChain > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯 집중 크리+' + BT.blueCritChain * 8 + '%'; row.appendChild(s) }
-      if (p.key === 'yellow' && BT.yellowMarks > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡ 감전 ' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? ' 스킬 시 스턴!' : ''); row.appendChild(s) }
-      if (p.key === 'pink') { var s = document.createElement('span'); s.className = 'bt-sicon heal'; s.textContent = '💗 유대 ' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? ' 곧 발동!' : ''); row.appendChild(s) }
+      // TG 표시 (축약)
+      if (BT.tacticalGauge === 1) { var s = document.createElement('span'); s.className = 'bt-sicon tg'; s.innerHTML = '🎯TG1'; s.title = '전술 게이지 1단계: 공격력 +10%'; row.appendChild(s) }
+      else if (BT.tacticalGauge === 2) { var s = document.createElement('span'); s.className = 'bt-sicon tg'; s.innerHTML = '🎯TG2'; s.title = '전술 게이지 2단계: 공격력 +20%'; row.appendChild(s) }
+      else if (BT.tacticalGauge >= 3) { var s = document.createElement('span'); s.className = 'bt-sicon tg buff'; s.innerHTML = '🎯TG3!'; s.title = '전술 게이지 최대: 공격력 +30%'; row.appendChild(s) }
+      if (BT.guaranteedCrit) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥확정크리!'; s.title = '다음 공격 확정 크리티컬'; row.appendChild(s) }
+      if (BT.shield > 0) { var s = document.createElement('span'); s.className = 'bt-sicon guard'; s.textContent = '🛡️' + BT.shield; s.title = '쉴드 ' + BT.shield + ' (매턴 50% 감소)'; row.appendChild(s) }
+      if (BT.perkDmgReduce > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🔰감소' + Math.round(BT.perkDmgReduce * 100) + '%'; s.title = '피해 감소 ' + Math.round(BT.perkDmgReduce * 100) + '%'; row.appendChild(s) }
+      if (BT.perkCritChance > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯크리+' + Math.round(BT.perkCritChance * 100) + '%'; s.title = '치명타 확률 +' + Math.round(BT.perkCritChance * 100) + '%'; row.appendChild(s) }
+      if (BT.perkCritDmg > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '💥크뎀+' + (BT.perkCritDmg * 100).toFixed(0) + '%'; s.title = '크리 데미지 x' + (1.5 + BT.perkCritDmg).toFixed(2); row.appendChild(s) }
+      if (BT.perkShieldUp > 0) { var s = document.createElement('span'); s.className = 'bt-sicon guard'; s.textContent = '🛡️+' + Math.round(BT.perkShieldUp * 100) + '%'; s.title = '쉴드량 +' + Math.round(BT.perkShieldUp * 100) + '%'; row.appendChild(s) }
+      if (BT.perkDmgUp > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '⚔️+' + Math.round(BT.perkDmgUp * 100) + '%'; s.title = '피해량 +' + Math.round(BT.perkDmgUp * 100) + '%'; row.appendChild(s) }
+      if (BT.perkArmorPen > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯관통' + Math.round(BT.perkArmorPen * 100) + '%'; s.title = '방어 관통 +' + Math.round(BT.perkArmorPen * 100) + '%'; row.appendChild(s) }
+      if (BT.poisonTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon poison'; s.textContent = '☠️' + BT.poisonDmg + '×' + BT.poisonTurns; s.title = '독: ' + BT.poisonDmg + ' 데미지/턴, ' + BT.poisonTurns + '턴 남음'; row.appendChild(s) }
+      if (BT.burnTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥' + BT.burnDmg + '×' + BT.burnTurns; s.title = '화상: ' + BT.burnDmg + ' 데미지/턴, ' + BT.burnTurns + '턴 남음'; row.appendChild(s) }
+      if (BT.freezeTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon freeze'; s.textContent = '❄️' + BT.freezeTurns + '턴'; s.title = '빙결: 공격력 감소 ' + BT.freezeTurns + '턴'; row.appendChild(s) }
+      if (BT.stunTurns > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡기절!'; s.title = '적 기절 (행동불가)'; row.appendChild(s) }
+      BT.buffs.forEach(function (b) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '↑' + statKR(b.stat) + '+' + Math.round(b.val * 100) + '%'; s.title = statKR(b.stat) + ' +' + Math.round(b.val * 100) + '%, ' + b.turns + '턴 남음'; row.appendChild(s) });
+      BT.debuffs.forEach(function (d) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '↓' + statKR(d.stat) + '-' + Math.round(d.val * 100) + '%'; s.title = '적 ' + statKR(d.stat) + ' -' + Math.round(d.val * 100) + '%, ' + d.turns + '턴 남음'; row.appendChild(s) });
+      // 레인저 고유 게이지 (축약)
+      if (p.key === 'red' && BT.redMomentum > 0) { var s = document.createElement('span'); s.className = 'bt-sicon charge'; s.textContent = '🔥투지' + BT.redMomentum + '/5' + (BT.redMomentum >= 5 ? '!' : ''); s.title = '투지 ' + BT.redMomentum + '/5' + (BT.redMomentum >= 5 ? ' - 스킬 데미지 x1.5!' : ''); row.appendChild(s) }
+      if (p.key === 'black') { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🔫' + Math.round(BT.blackAim * 10) + '%' + (BT.blackAim >= 5 ? '!' : ''); s.title = '관통 ' + Math.round(BT.blackAim * 10) + '%' + (BT.blackAim >= 5 ? ' MAX' : ''); row.appendChild(s) }
+      if (p.key === 'blue' && BT.blueCritChain > 0) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.textContent = '🎯크리+' + BT.blueCritChain * 8 + '%'; s.title = '집중 크리티컬 +' + BT.blueCritChain * 8 + '%'; row.appendChild(s) }
+      if (p.key === 'yellow' && BT.yellowMarks > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? '!' : ''); s.title = '감전 ' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? ' - 스킬 사용 시 스턴!' : ''); row.appendChild(s) }
+      if (p.key === 'pink') { var s = document.createElement('span'); s.className = 'bt-sicon heal'; s.textContent = '💗' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? '!' : ''); s.title = '유대 ' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? ' - 곧 발동!' : ''); row.appendChild(s) }
       // 강타 예고
       if (BT.enemyTelegraph) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.style.cssText = 'animation:blink 0.4s infinite;color:#ff4444;font-weight:bold;border-color:#f44'; s.textContent = '\u26A0\uFE0F\u26A0\uFE0F \uAC15\uD0C0 \uC608\uACE0! \uBC29\uC5B4 \uD544\uC218! \u26A0\uFE0F\u26A0\uFE0F'; row.appendChild(s) }
       // 골드/CE 표시

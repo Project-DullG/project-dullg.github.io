@@ -1521,7 +1521,22 @@
 
     .bt-pbar.hp {
       background: linear-gradient(90deg, #1b5e20, #4ecca3);
-      box-shadow: 0 0 6px rgba(78, 204, 163, 0.4)
+      box-shadow: 0 0 6px rgba(78, 204, 163, 0.4);
+      transition: width 0.5s ease, background 0.3s ease
+    }
+
+    .bt-pbar.hp.hp-warning {
+      box-shadow: 0 0 8px rgba(255, 152, 0, 0.5)
+    }
+
+    .bt-pbar.hp.hp-critical {
+      animation: hpBlink 0.8s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(229, 57, 53, 0.6)
+    }
+
+    @keyframes hpBlink {
+      0%, 100% { opacity: 1 }
+      50% { opacity: 0.6 }
     }
 
     .bt-pbar.shield {
@@ -1544,9 +1559,18 @@
       font-family: 'Do Hyeon', sans-serif;
       font-size: 10px;
       color: #888;
-      min-width: 60px;
+      min-width: 45px;
       text-align: right;
       white-space: nowrap
+    }
+
+    .bt-pstats-row {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      color: #999;
+      text-align: right;
+      padding: 1px 0 0;
+      letter-spacing: 0.5px
     }
 
     .bt-acts {
