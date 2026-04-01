@@ -1363,8 +1363,14 @@
       box-shadow: 0 0 20px rgba(229, 57, 53, 0.4)
     }
 
-    .sel-back {
-      margin-top: 10px;
+    .sel-bottom-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px
+    }
+
+    .sel-back, .sel-tut {
       background: none;
       border: 1px solid #333;
       color: #666;
@@ -1373,6 +1379,11 @@
       padding: 6px 20px;
       border-radius: 6px;
       cursor: pointer
+    }
+
+    .sel-tut {
+      border-color: rgba(78,204,163,0.4);
+      color: #4ecca3
     }
 
     .sel-step {
@@ -2280,7 +2291,8 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 30px
+      padding: 20px;
+      overflow-y: auto
     }
 
     .rw-bg {

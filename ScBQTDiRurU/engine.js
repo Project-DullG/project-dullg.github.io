@@ -889,6 +889,11 @@
     $('lab-to-select').addEventListener('click', function () { initSelect(); showScr('select') });
     $('lab-to-title').addEventListener('click', function () { stopAllBgm(); showScr('title') });
     $('sel-back').addEventListener('click', function () { initLab(); showScr('lab') });
+    $('sel-tut').addEventListener('click', function () {
+      // 캐릭터 선택 화면 위에 튜토리얼 오버레이 표시
+      var container = document.querySelector('#select-screen .sel-bg');
+      showBattleTutorial(function () {}, container);
+    });
     $('lab-tab-stat').addEventListener('click', function () { labTab = 'stat'; initLab() });
     $('lab-tab-research').addEventListener('click', function () { labTab = 'research'; initLab() });
     // 게임 내 확인 팝업
@@ -985,10 +990,10 @@
       }
     }
 
-    function showBattleTutorial(cb) {
+    function showBattleTutorial(cb, container) {
       var steps = [
         { title: '❤️ 체력 / 💎 SP', desc: '체력이 0이 되면 패배!\nSP는 필살기와 미라클 부스터에 사용합니다.\n공격·방어·지원은 SP를 소모하지 않습니다.' },
-        { title: '\u2694\uFE0F \uD589\uB3D9 \uC120\uD0DD', desc: '\u2694\uFE0F \uACF5\uACA9: \uAE30\uBCF8 \uB370\uBBF8\uC9C0\n\uD83D\uDEE1\uFE0F \uBC29\uC5B4: \uC274\uB4DC \uC0DD\uC131 (\uCFE8\uD0C0\uC784 2\uD134)\n\uD83E\uDDD8 \uC9D1\uC911: \uCCB4\uB825 10% + SP 25% \uD68C\uBCF5 (\uCFE8\uD0C0\uC784 3\uD134)\n\u2728 \uD544\uC0B4\uAE30: SP 50 \uC18C\uBAA8, \uAC15\uB825\uD55C \uC77C\uACA9!\n\uD83C\uDF1F \uBBF8\uB77C\uD074 \uBD80\uC2A4\uD130: SP 50 \uC18C\uBAA8, \uC804 \uB2A5\uB825 2\uBC30 (2\uD134)\n\uD83C\uDF1F \uC9C0\uC6D0\uC2A4\uD0AC: \uD30C\uD2B8\uB108\uC758 \uACE0\uC720 \uC2A4\uD0AC (\uCFE8\uD0C0\uC784 4\uD134)' },
+        { title: '\u2694\uFE0F \uD589\uB3D9 \uC120\uD0DD', desc: '\u2694\uFE0F \uACF5\uACA9: \uAE30\uBCF8 \uB370\uBBF8\uC9C0\n\uD83D\uDEE1\uFE0F \uBC29\uC5B4: \uC274\uB4DC \uC0DD\uC131 (\uCFE8\uD0C0\uC784 2\uD134)\n\uD83E\uDDD8 \uC9D1\uC911: \uCCB4\uB825 10% + SP 25% \uD68C\uBCF5 (\uCFE8\uD0C0\uC784 3\uD134)\n\u2728 \uD544\uC0B4\uAE30: SP 50 \uC18C\uBAA8, \uAC15\uB825\uD55C \uC77C\uACA9!\n\uD83C\uDF1F \uBBF8\uB77C\uD074 \uBD80\uC2A4\uD130: SP 100 \uC18C\uBAA8, \uC804 \uB2A5\uB825 2\uBC30 (2\uD134)\n\uD83C\uDF1F \uC9C0\uC6D0\uC2A4\uD0AC: \uD30C\uD2B8\uB108\uC758 \uACE0\uC720 \uC2A4\uD0AC (\uCFE8\uD0C0\uC784 4\uD134)' },
         { title: '\uD83D\uDCA0 \uCD9C\uB3D9 \uD328\uC2DC\uBE0C', desc: '\uBA54\uC778 \uB808\uC778\uC800\uC640 \uD30C\uD2B8\uB108\uC758\n\uCD9C\uB3D9 \uD328\uC2DC\uBE0C\uAC00 \uB3D9\uC2DC\uC5D0 \uC801\uC6A9\uB429\uB2C8\uB2E4!\n\n\uC870\uD569\uC5D0 \uB530\uB77C \uC804\uB7B5\uC774 \uD06C\uAC8C \uB2EC\uB77C\uC9C0\uB2C8\n\uB2E4\uC591\uD55C \uC870\uD569\uC744 \uC2DC\uB3C4\uD574\uBCF4\uC138\uC694!' },
         { title: '\uD83D\uDEE1\uFE0F \uC274\uB4DC & \uD53C\uD574 \uAC10\uC18C', desc: '\uC274\uB4DC\uB825\uC774 \uB192\uC744\uC218\uB85D \uAC15\uD55C \uC274\uB4DC \uC0DD\uC131!\n\uC274\uB4DC\uB294 \uC801 \uACF5\uACA9\uC744 \uBA3C\uC800 \uD761\uC218\uD569\uB2C8\uB2E4.\n\u26A0\uFE0F \uC274\uB4DC\uB294 \uB9E4 \uD134 50% \uAC10\uC18C\uD569\uB2C8\uB2E4.\n\n\uBCF4\uC0C1\uC73C\uB85C \'\uD53C\uD574 \uAC10\uC18C\'\uB97C \uC5BB\uC73C\uBA74\n\uBC1B\uB294 \uB370\uBBF8\uC9C0\uAC00 \uC601\uAD6C\uC801\uC73C\uB85C \uC904\uC5B4\uB4ED\uB2C8\uB2E4!' },
         { title: '\uD83C\uDFAF \uC804\uC220 \uAC8C\uC774\uC9C0', desc: '\uAC19\uC740 \uD589\uB3D9\uC744 \uC5F0\uC18D\uC73C\uB85C \uD558\uBA74 \uC804\uC220 \uAC8C\uC774\uC9C0\uAC00 1\uC529 \uC99D\uAC00!\n(\uCD5C\uB300 3\uB2E8\uACC4: +10% \u2192 +20% \u2192 +30%)\n\uB2E4\uB978 \uD589\uB3D9\uC73C\uB85C \uC804\uD658\uD558\uBA74 \uC30D\uC778 \uBCF4\uB108\uC2A4\uAC00 \uB370\uBBF8\uC9C0\uC5D0 \uC801\uC6A9!\n\uD589\uB3D9\uC744 \uC11E\uC5B4\uC11C \uBCF4\uB108\uC2A4\uB97C \uADF9\uB300\uD654\uD558\uC138\uC694.' },
@@ -1015,7 +1020,7 @@
           ov.remove(); cb();
         } else { render() }
       });
-      $('bt-bg').appendChild(ov);
+      (container || $('bt-bg')).appendChild(ov);
     }
 
     // ── 다음 웨이브 ──
@@ -1221,7 +1226,7 @@
       else { a3.textContent = '\u2728 ' + p.skill.name + ' SP' + effectiveCost + ' (~' + estSkill + ')'; if (p.sp < effectiveCost) a3.classList.add('disabled') }
       a3.addEventListener('click', function () { doPlayerAction('skill') }); secondaryRow.appendChild(a3);
       // 미라클 부스터
-      var boostCost = 50;
+      var boostCost = 100;
       var a3b = document.createElement('button'); a3b.className = 'bt-act skill';
       a3b.style.cssText = 'border-color:rgba(255,180,0,0.5);color:#ffb300;background:rgba(255,180,0,0.08)';
       if (BT.boosterUsed) { a3b.textContent = '🌟 미라클 부스터 [사용됨]'; a3b.classList.add('disabled') }
@@ -1300,9 +1305,9 @@
       if (p.sp < effectiveCost) sklPvParts.push('<span style="color:#f44">SP 부족!</span>');
       previews.skill = sklPvParts.join(' · ');
       // 미라클 부스터 프리뷰
-      var bstPvParts = ['<span class="pv-buff">전 능력치 2배 (2턴)</span>', '<span class="pv-sp">SP 50 소모</span>'];
+      var bstPvParts = ['<span class="pv-buff">전 능력치 2배 (2턴)</span>', '<span class="pv-sp">SP 100 소모</span>'];
       if (BT.boosterUsed) bstPvParts = ['<span style="color:#f44">이미 사용됨</span>'];
-      else if (p.sp < 50) bstPvParts.push('<span style="color:#f44">SP 부족!</span>');
+      else if (p.sp < 100) bstPvParts.push('<span style="color:#f44">SP 부족!</span>');
       previews.booster = bstPvParts.join(' · ');
       // 지원 프리뷰 (각 서포터별)
       BT.supportPool.forEach(function (sp, idx) {
@@ -1633,9 +1638,9 @@
         return;
 
       } else if (action === 'booster') {
-        // 미라클 부스터: SP 50 소모, 모든 능력치 2턴간 2배
+        // 미라클 부스터: SP 100 소모, 모든 능력치 2턴간 2배
         if (BT.boosterUsed) { BT.acting = false; showActions(); return }
-        var boostCost = 50;
+        var boostCost = 100;
         if (p.sp < boostCost) { BT.acting = false; showActions(); return }
         p.sp -= boostCost;
         BT.boosterUsed = true;
@@ -1677,9 +1682,9 @@
             BT.debuffs.push({ stat: sup.stat, val: debuffVal, turns: sup.turns });
             btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="buff">적 ' + statKR(sup.stat) + ' DOWN!</span>' + (doubleSupport ? ' (2배!)' : ''));
           } else if (sup.type === 'sp_pct') {
-            var spVal = Math.round(p.maxSp * sup.val * supMul);
+            var spVal = Math.round(p.maxSp * sup.val);
             p.sp = Math.min(p.maxSp, p.sp + spVal);
-            btLog('🌟 ' + sup.name + '! <span class="sp-use">SP +' + spVal + ' (' + Math.round(sup.val * 100) + '%)</span>' + (doubleSupport ? ' (2배!)' : ''));
+            btLog('🌟 ' + sup.name + '! <span class="sp-use">SP +' + spVal + ' (' + Math.round(sup.val * 100) + '%)</span>');
           } else if (sup.type === 'sp') {
             var spVal = Math.round(sup.val * supMul);
             p.sp = Math.min(p.maxSp, p.sp + spVal);
