@@ -512,7 +512,6 @@
       { name: '회피확률 강화', desc: '회피확률 +2%', icon: '💨', fn: function (p) { p.dodge += 2; return '회피확률 +2%' } },
       { name: '최대 체력 증가', desc: '최대 체력 +5', icon: '💖', fn: function (p) { p.maxHp += 5; p.hp += 5; return '최대 체력 +5' } },
       { name: '최대 SP 증가', desc: '최대 SP +10', icon: '💠', fn: function (p) { p.maxSp += 10; p.sp = Math.min(p.maxSp, p.sp + 10); return '최대 SP +10' } },
-      { name: '필살기 강화', desc: '스킬 배율 +15%', icon: '🌟', fn: function (p) { p.skillBonus = (p.skillBonus || 0) + 0.15; return '필살기 강화!' } },
       // 비례 스탯 강화
       { name: '공격력 연마', desc: '공격력 +10%', icon: '⚔️', fn: function (p) { var add = Math.max(1, Math.round(p.atk * 0.10)); p.atk += add; return '공격력 +' + add + ' (+10%)' } },
       { name: '체력 단련', desc: '최대 체력 +10%', icon: '💖', fn: function (p) { var add = Math.max(2, Math.round(p.maxHp * 0.10)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add + ' (+10%)' } },
@@ -530,28 +529,23 @@
     var PASSIVE_BUFFS = {
       red: {
         name: '\uBD88\uAF43\uC758 \uC758\uC9C0', desc: '\uCE58\uBA85\uD0C0 \uB370\uBBF8\uC9C0 +40%', icon: '\uD83D\uDD25',
-        apply: function (p) { BT.perkCritDmg += 0.40 },
-        skillDesc: '\uC2A4\uD0AC \uC0AC\uC6A9 \uC2DC \uACF5\uACA9\uB825 \uBC84\uD504 1\uD134'
+        apply: function (p) { BT.perkCritDmg += 0.40 }
       },
       black: {
         name: '\uC0AC\uC218\uC758 \uB208', desc: '\uACF5\uACA9\uB825 +15%, \uBC29\uC5B4 \uAD00\uD1B5 +15%', icon: '\uD83C\uDFAF',
-        apply: function (p) { p.atk = Math.round(p.atk * 1.15); BT.perkArmorPen += 0.15 },
-        skillDesc: '\uC2A4\uD0AC\uC774 \uBC29\uC5B4\uB825 30% \uCD94\uAC00 \uBB34\uC2DC'
+        apply: function (p) { p.atk = Math.round(p.atk * 1.15); BT.perkArmorPen += 0.15 }
       },
       blue: {
         name: '\uC804\uC220\uC758 \uB208', desc: '\uCE58\uBA85\uD0C0 \uD655\uB960 +15%, \uCD94\uAC00 \uACF5\uACA9 8%', icon: '\uD83C\uDFAF',
-        apply: function (p) { p.crit += 15; BT.perkExtraAtk = (BT.perkExtraAtk || 0) + 0.08 },
-        skillDesc: '\uC2A4\uD0AC \uD06C\uB9AC\uD2F0\uCEEC +8%'
+        apply: function (p) { p.crit += 15; BT.perkExtraAtk = (BT.perkExtraAtk || 0) + 0.08 }
       },
       yellow: {
         name: '\uBC88\uAC1C\uC758 \uC5D0\uB108\uC9C0', desc: '\uB9E4\uD134 SP 10% \uD68C\uBCF5, \uD68C\uD53C\uC728 +15%', icon: '\u26A1',
-        apply: function (p) { p.spRegen += Math.round(p.maxSp * 0.10); p.dodge += 15 },
-        skillDesc: '\uC2A4\uD0AC \uC0AC\uC6A9 \uC2DC \uAC10\uC804 \uB9C8\uD06C +1 \uCD94\uAC00'
+        apply: function (p) { p.spRegen += Math.round(p.maxSp * 0.10); p.dodge += 15 }
       },
       pink: {
         name: '\uC218\uD638\uC758 \uC720\uB300', desc: '\uD53C\uD574 \uAC10\uC18C 5%, \uC274\uB4DC\uB7C9 +10%, \uC6E8\uC774\uBE0C \uD074\uB9AC\uC5B4 HP 5% \uD68C\uBCF5', icon: '\uD83D\uDC97',
-        apply: function (p) { BT.perkDmgReduce += 0.05; BT.perkShieldUp += 0.10 },
-        skillDesc: '\uC2A4\uD0AC \uC0AC\uC6A9 \uC2DC \uC274\uB4DC 5% \uBD80\uC5EC'
+        apply: function (p) { BT.perkDmgReduce += 0.05; BT.perkShieldUp += 0.10 }
       }
     };
 
@@ -605,7 +599,6 @@
     // ── 연구소 업그레이드 (CE 통화) ──
     var LAB_UPGRADES = [
       { id: 'heal', name: '회복 강화', icon: '💖', desc: '웨이브 간 회복 +2% (최대 20%)', per: 0.02, max: 10, cost: function (lv) { return 5 + lv * 3 } },
-      { id: 'skill', name: '필살기 연구', icon: '🌟', desc: '필살기 배율 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 8 + lv * 3 } },
       { id: 'reward', name: '보상 부스트', icon: '✨', desc: 'MP·CE 획득 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } },
       { id: 'dmgReduce', name: '피해 감소', icon: '🔰', desc: '받는 피해 -3% (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'shieldUp', name: '쉴드 강화', icon: '🛡️', desc: '쉴드 생성량 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 6 + lv * 3 } },
@@ -806,7 +799,7 @@
             info.innerHTML = '<div class="sel-info-name" style="color:' + r.color + '">' + r.name + ' (' + r.weapon + ')</div>'
               + '<div class="sel-skill">\u2728 ' + r.skill.name + ' \u2014 ' + r.skill.desc + ' (SP ' + r.skill.cost + ')</div>'
               + '<div class="sel-skill" style="color:#4ecca3;margin-top:4px">\uD83C\uDF1F <b>[\uC9C0\uC6D0\uC2A4\uD0AC]</b> ' + r.support.name + ' \u2014 ' + r.support.desc + '<br><span style="color:#888;font-size:10px">\uCFE8\uD0C0\uC784 4\uD134 | \uC804\uD22C \uBBF8\uCC38\uC5EC \uC2DC \uC0AC\uC6A9 \uAC00\uB2A5</span></div>'
-              + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' \uCD9C\uB3D9 \uD328\uC2DC\uBE0C: <b>' + pb.name + '</b> \u2014 ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">\uC2A4\uD0AC \uBCF4\uB108\uC2A4: ' + pb.skillDesc + '</span></div>';
+              + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' \uCD9C\uB3D9 \uD328\uC2DC\uBE0C: <b>' + pb.name + '</b> \u2014 ' + pb.desc + '</div>';
             $('sel-go').style.display = 'block'; $('sel-go').textContent = '\u25B6 \uB2E4\uC74C: \uD30C\uD2B8\uB108 \uC120\uD0DD';
           } else if (step === 2) {
             if (key === BT.selectedRanger) return;
@@ -814,7 +807,7 @@
             card.classList.add('passive-picked'); BT.passiveRanger = key;
             var pb = PASSIVE_BUFFS[key];
             var stepEl = $('sel-step'); stepEl.style.display = 'block';
-            stepEl.innerHTML = pb.icon + ' <b>' + pb.name + '</b>: ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">스킬 보너스: ' + pb.skillDesc + '</span>';
+            stepEl.innerHTML = pb.icon + ' <b>' + pb.name + '</b>: ' + pb.desc;
             $('sel-go').style.display = 'block'; $('sel-go').textContent = '▶ 출격!';
           }
         });
@@ -967,7 +960,7 @@
         key: rangerKey, name: r.name, color: r.color,
         hp: mhp, maxHp: mhp, atk: Math.round(r.atk * (1 + getStatBonus('atk'))), def: Math.round(r.def * (1 + getStatBonus('def'))),
         crit: Math.round(r.crit * (1 + getStatBonus('crit'))), dodge: Math.round(r.dodge * (1 + getStatBonus('dodge'))), sp: msp, maxSp: msp,
-        skill: r.skill, skillBonus: getLabBonus('skill'),
+        skill: r.skill,
         guarding: false, critBonus: 0, spRegen: 0, skillCostReduction: 0, hpRegen: 0
       };
       // 출동 패시브: 메인 + 파트너 둘 다 적용
@@ -1216,7 +1209,7 @@
       // 필살기
       var effectiveCost = p.skill.cost - (p.skillCostReduction || 0);
       effectiveCost = Math.max(0, effectiveCost);
-      var skillMulti = p.skill.multi + (p.skillBonus || 0);
+      var skillMulti = p.skill.multi;
       var estSkill = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), skillMulti, p.skill.ignoreDef || 0) * 0.9);
       var a3 = document.createElement('button'); a3.className = 'bt-act skill';
       if (BT.skillCD > 0) { a3.textContent = '✨ ' + p.skill.name + ' [' + BT.skillCD + '턴]'; a3.classList.add('disabled') }
@@ -1580,10 +1573,9 @@
         if (p.sp < skillCost) { BT.acting = false; showActions(); return }
         BT.skillCD = 3;
         p.sp -= skillCost;
-        var multi = p.skill.multi + (p.skillBonus || 0);
+        var multi = p.skill.multi;
         multi *= (1 + tgBonus);
         var skillIgnore = p.skill.ignoreDef || 0;
-        if (BT.passiveKey === 'black') skillIgnore = Math.min(1, skillIgnore + 0.3);
         // 블랙 고유: 스킬 사용 시 관통 스택 소비 → 스킬 추가 배율
         if (p.key === 'black' && BT.blackAim > 0) { multi *= (1 + BT.blackAim * 0.05); BT.blackAim = 0 }
         // 옐로 고유: 감전 마크 소비
@@ -1597,7 +1589,7 @@
         // 레드 고유: 투지 5 소비
         if (p.key === 'red' && BT.redMomentum >= 5) { multi *= 1.5; BT.redMomentum = 0 }
         var baseCrit = p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance;
-        var skillCritBonus = (p.skill.critBonus || 0) + ((BT.passiveKey === 'blue') ? 0.08 : 0);
+        var skillCritBonus = (p.skill.critBonus || 0);
         var skillCrit = BT.guaranteedCrit || Math.random() < (baseCrit + skillCritBonus);
         BT.guaranteedCrit = false;
         skillIgnore = Math.min(1, skillIgnore + BT.perkArmorPen);
@@ -1628,8 +1620,6 @@
             btLogAppend(' <span class="buff">🛡️ 쉴드 +' + sh + '</span>');
           }
           // Passive bonuses
-          if (BT.passiveKey === 'red') { BT.buffs.push({ stat: 'atk', val: 0.15, turns: 1 }); btLogAppend(' <span class="buff">공격력 증가!</span>') }
-          if (BT.passiveKey === 'pink') { var psh = Math.round((p.def * 0.5 + p.maxHp * 0.05) * (1 + BT.perkShieldUp)); BT.shield += psh; btLogAppend(' <span class="buff">🛡️ 쉴드 +' + psh + '</span>') }
           // 연쇄 번개
           if (BT.perkChainLightning && dmg > 0) { var clDmg = Math.round(p.atk * 0.3); e.hp -= clDmg; showDmgNum(clDmg, 'bt-esvg', ''); btLogAppend('<span class="dmg">연쇄 번개! ' + clDmg + '</span>') }
           updateBattleUI();
