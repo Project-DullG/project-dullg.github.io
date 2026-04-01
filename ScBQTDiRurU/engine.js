@@ -355,11 +355,10 @@
       var ep = document.createElement('div'); ep.style.cssText = 'color:#9575cd;font-size:12px;text-align:center;margin-top:20px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 2.5s forwards'; ep.textContent = '— 프리퀄 에피소드 —';
       var ep2 = document.createElement('div'); ep2.style.cssText = 'color:#666;font-size:11px;text-align:center;margin-top:6px;opacity:0;animation:fadeIn 2s 3.5s forwards'; ep2.textContent = '본편에서 이어집니다.';
       el.appendChild(ep); el.appendChild(ep2);
-      // 이미지 영역 (타이틀 바로 위)
+      // 이미지 영역 (타이틀 바로 위 - 폭발만)
       var imgArea = $('end-img'); clr(imgArea);
       var img1 = document.createElement('img'); img1.src = 'explosion.png'; img1.className = 'end-cg';
-      var img2 = document.createElement('img'); img2.src = 'atom-symbol.png'; img2.className = 'end-symbol';
-      imgArea.appendChild(img1); imgArea.appendChild(img2);
+      imgArea.appendChild(img1);
     }
 
     function setChars(s) {
@@ -430,7 +429,7 @@
         name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uC36C\uB354 \uD06C\uB7EC\uC26C', cost: 50, multi: 0.8, desc: '\uACF5\uACA9\uB825 80% + \uC2A4\uD134 1\uD134', stun: 1, ignoreDef: 0 },
-        support: { name: '\uBC88\uAC1C \uCDA9\uC804', desc: 'SP 75% \uD68C\uBCF5', type: 'sp_pct', val: 0.75 }
+        support: { name: '\uBC88\uAC1C \uCDA9\uC804', desc: 'SP 75% + 25%(3\uD134)', type: 'sp_regen', val: 0.75, regenVal: 0.25, turns: 3 }
       },
       pink: {
         name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
@@ -511,26 +510,31 @@
     // ── 보상 풀 ──
     var REWARDS = [
       // 1회성 회복
-      { name: '체력 회복', desc: '체력 50% 회복', icon: '❤️', fn: function (p) { var h = Math.round(p.maxHp * 0.5); p.hp = Math.min(p.maxHp, p.hp + h); return '체력 +' + h } },
+      { name: '체력 회복', desc: '체력 80% 회복', icon: '❤️', fn: function (p) { var h = Math.round(p.maxHp * 0.8); p.hp = Math.min(p.maxHp, p.hp + h); return '체력 +' + h } },
       { name: 'SP 회복', desc: 'SP 전체 회복', icon: '💎', fn: function (p) { p.sp = p.maxSp; return 'SP 최대!' } },
       // 기본 스탯 강화
-      { name: '공격력 강화', desc: '공격력 +2', icon: '⚔️', fn: function (p) { p.atk += 2; return '공격력 +2' } },
-      { name: '쉴드력 강화', desc: '쉴드력 +2', icon: '🛡️', fn: function (p) { p.def += 2; return '쉴드력 +2' } },
-      { name: '크리확률 강화', desc: '크리확률 +2%', icon: '💥', fn: function (p) { p.crit += 2; return '크리확률 +2%' } },
-      { name: '회피확률 강화', desc: '회피확률 +2%', icon: '💨', fn: function (p) { p.dodge += 2; return '회피확률 +2%' } },
-      { name: '최대 체력 증가', desc: '최대 체력 +5', icon: '💖', fn: function (p) { p.maxHp += 5; p.hp += 5; return '최대 체력 +5' } },
-      { name: '최대 SP 증가', desc: '최대 SP +10', icon: '💠', fn: function (p) { p.maxSp += 10; p.sp = Math.min(p.maxSp, p.sp + 10); return '최대 SP +10' } },
+      { name: '공격력 강화', desc: '공격력 +3', icon: '⚔️', fn: function (p) { p.atk += 3; return '공격력 +3' } },
+      { name: '쉴드력 강화', desc: '쉴드력 +3', icon: '🛡️', fn: function (p) { p.def += 3; return '쉴드력 +3' } },
+      { name: '크리확률 강화', desc: '크리확률 +4%', icon: '💥', fn: function (p) { p.crit += 4; return '크리확률 +4%' } },
+      { name: '회피확률 강화', desc: '회피확률 +4%', icon: '💨', fn: function (p) { p.dodge += 4; return '회피확률 +4%' } },
+      { name: '최대 체력 증가', desc: '최대 체력 +8', icon: '💖', fn: function (p) { p.maxHp += 8; p.hp += 8; return '최대 체력 +8' } },
+      { name: '최대 SP 증가', desc: '최대 SP +20', icon: '💠', fn: function (p) { p.maxSp += 20; p.sp = Math.min(p.maxSp, p.sp + 20); return '최대 SP +20' } },
       // 비례 스탯 강화
-      { name: '공격력 연마', desc: '공격력 +10%', icon: '⚔️', fn: function (p) { var add = Math.max(1, Math.round(p.atk * 0.10)); p.atk += add; return '공격력 +' + add + ' (+10%)' } },
-      { name: '체력 단련', desc: '최대 체력 +10%', icon: '💖', fn: function (p) { var add = Math.max(2, Math.round(p.maxHp * 0.10)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add + ' (+10%)' } },
-      { name: '쉴드 연마', desc: '쉴드력 +10%', icon: '🛡️', fn: function (p) { var add = Math.max(1, Math.round(p.def * 0.10)); p.def += add; return '쉴드력 +' + add + ' (+10%)' } },
+      { name: '공격력 연마', desc: '공격력 +15%', icon: '⚔️', fn: function (p) { var add = Math.max(2, Math.round(p.atk * 0.15)); p.atk += add; return '공격력 +' + add + ' (+15%)' } },
+      { name: '체력 단련', desc: '최대 체력 +15%', icon: '💖', fn: function (p) { var add = Math.max(3, Math.round(p.maxHp * 0.15)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add + ' (+15%)' } },
+      { name: '쉴드 연마', desc: '쉴드력 +15%', icon: '🛡️', fn: function (p) { var add = Math.max(2, Math.round(p.def * 0.15)); p.def += add; return '쉴드력 +' + add + ' (+15%)' } },
       // 희귀 — 세부 스탯
-      { name: '전체 강화', desc: '공격+1 쉴드력+1 크리+2%', icon: '⚡', fn: function (p) { p.atk += 1; p.def += 1; p.crit += 2; return '전체 강화!' }, rare: 1 },
-      { name: '강화 장갑', desc: '받는 피해 -5%', icon: '🔰', fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.05); return '피해 감소 +5%! (총 ' + Math.round(BT.perkDmgReduce * 100) + '%)' }, rare: 1 },
-      { name: '치명타 증폭', desc: '치명타 데미지 +15% (수확체감)', icon: '💥', fn: function (p) { var add = 0.15 * Math.max(0.3, 1 - BT.perkCritDmg); BT.perkCritDmg += add; return '크리 데미지 +' + Math.round(add * 100) + '%! (x' + (1.5 + BT.perkCritDmg).toFixed(2) + ')' }, rare: 1 },
-      { name: '쉴드 강화', desc: '쉴드 생성량 +15%', icon: '🛡️', fn: function (p) { BT.perkShieldUp += 0.15; return '쉴드량 +15%! (총 +' + Math.round(BT.perkShieldUp * 100) + '%)' }, rare: 1 },
-      { name: '파괴자', desc: '주는 피해 +5%', icon: '⚔️', fn: function (p) { BT.perkDmgUp += 0.05; return '피해량 +5%! (총 +' + Math.round(BT.perkDmgUp * 100) + '%)' }, rare: 1 },
-      { name: '관통탄', desc: '방어력 무시 +10% (최대 70%)', icon: '🎯', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.10); return '관통 +10%! (총 ' + Math.round(BT.perkArmorPen * 100) + '%)' }, rare: 1 }
+      { name: '전체 강화', desc: '공격+2 쉴드력+2 크리+3%', icon: '⚡', fn: function (p) { p.atk += 2; p.def += 2; p.crit += 3; return '전체 강화!' }, rare: 1 },
+      { name: '강화 장갑', desc: '받는 피해 -8%', icon: '🔰', fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.08); return '피해 감소 +8%! (총 ' + Math.round(BT.perkDmgReduce * 100) + '%)' }, rare: 1 },
+      { name: '치명타 증폭', desc: '치명타 데미지 +25% (수확체감)', icon: '💥', fn: function (p) { var add = 0.25 * Math.max(0.3, 1 - BT.perkCritDmg); BT.perkCritDmg += add; return '크리 데미지 +' + Math.round(add * 100) + '%! (x' + (1.5 + BT.perkCritDmg).toFixed(2) + ')' }, rare: 1 },
+      { name: '쉴드 강화', desc: '쉴드 생성량 +25%', icon: '🛡️', fn: function (p) { BT.perkShieldUp += 0.25; return '쉴드량 +25%! (총 +' + Math.round(BT.perkShieldUp * 100) + '%)' }, rare: 1 },
+      { name: '파괴자', desc: '주는 피해 +8%', icon: '⚔️', fn: function (p) { BT.perkDmgUp += 0.08; return '피해량 +8%! (총 +' + Math.round(BT.perkDmgUp * 100) + '%)' }, rare: 1 },
+      { name: '관통탄', desc: '방어력 무시 +15% (최대 70%)', icon: '🎯', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.15); return '관통 +15%! (총 ' + Math.round(BT.perkArmorPen * 100) + '%)' }, rare: 1 },
+      // 희귀 — 전투 특수 효과
+      { name: '재생의 기운', desc: '웨이브 종료 시 HP 5% 회복', icon: '💚', fn: function (p) { BT.perkEndHpRegen += 0.05; return '웨이브 종료 HP 회복 +5%! (총 ' + Math.round(BT.perkEndHpRegen * 100) + '%)' }, rare: 1 },
+      { name: '에너지 충전', desc: '웨이브 종료 시 SP 10% 회복', icon: '🔋', fn: function (p) { BT.perkEndSpRegen += 0.10; return '웨이브 종료 SP 회복 +10%! (총 ' + Math.round(BT.perkEndSpRegen * 100) + '%)' }, rare: 1 },
+      { name: '흡혈의 손길', desc: '공격 시 HP 10% 흡수', icon: '🧛', fn: function (p) { BT.perkVamp += 0.10; return 'HP 흡수 +10%! (총 ' + Math.round(BT.perkVamp * 100) + '%)' }, rare: 1 },
+      { name: '기선제압', desc: '매 웨이브 첫 공격 데미지 +20%', icon: '⚡', fn: function (p) { BT.perkFirstStrike += 0.20; return '첫 공격 +20%! (총 +' + Math.round(BT.perkFirstStrike * 100) + '%)' }, rare: 1 }
     ];
 
     // ── 패시브 버프 (기본 수치 + 매턴 성장) ──
@@ -568,24 +572,37 @@
     // ── 미니 보상 풀 ──
     var MINI_REWARDS = [
       // 1회성 회복
-      { name: '체력 회복', icon: '❤️', desc: '체력 30% 회복', fn: function (p) { var h = Math.round(p.maxHp * 0.30); p.hp = Math.min(p.maxHp, p.hp + h); return '체력 +' + h } },
-      { name: 'SP 회복', icon: '💎', desc: 'SP 30% 회복', fn: function (p) { var s = Math.round(p.maxSp * 0.3); p.sp = Math.min(p.maxSp, p.sp + s); return 'SP +' + s } },
-      // 스탯 +1
-      { name: '공격력 +1', icon: '⚔️', desc: '공격력 +1', fn: function (p) { p.atk += 1; return '공격력 +1' } },
-      { name: '쉴드력 +1', icon: '🛡️', desc: '쉴드력 +1', fn: function (p) { p.def += 1; return '쉴드력 +1' } },
-      { name: '크리확률 +1%', icon: '💥', desc: '크리확률 +1%', fn: function (p) { p.crit += 1; return '크리확률 +1%' } },
-      { name: '회피확률 +1%', icon: '💨', desc: '회피확률 +1%', fn: function (p) { p.dodge += 1; return '회피확률 +1%' } },
-      { name: '최대 체력 +2', icon: '💖', desc: '최대 체력 +2', fn: function (p) { p.maxHp += 2; p.hp += 2; return '최대 체력 +2' } },
+      { name: '체력 회복', icon: '❤️', desc: '체력 50% 회복', fn: function (p) { var h = Math.round(p.maxHp * 0.50); p.hp = Math.min(p.maxHp, p.hp + h); return '체력 +' + h } },
+      { name: 'SP 회복', icon: '💎', desc: 'SP 50% 회복', fn: function (p) { var s = Math.round(p.maxSp * 0.5); p.sp = Math.min(p.maxSp, p.sp + s); return 'SP +' + s } },
+      // 스탯 +2
+      { name: '공격력 +2', icon: '⚔️', desc: '공격력 +2', fn: function (p) { p.atk += 2; return '공격력 +2' } },
+      { name: '쉴드력 +2', icon: '🛡️', desc: '쉴드력 +2', fn: function (p) { p.def += 2; return '쉴드력 +2' } },
+      { name: '크리확률 +2%', icon: '💥', desc: '크리확률 +2%', fn: function (p) { p.crit += 2; return '크리확률 +2%' } },
+      { name: '회피확률 +2%', icon: '💨', desc: '회피확률 +2%', fn: function (p) { p.dodge += 2; return '회피확률 +2%' } },
+      { name: '최대 체력 +4', icon: '💖', desc: '최대 체력 +4', fn: function (p) { p.maxHp += 4; p.hp += 4; return '최대 체력 +4' } },
       // 비례 강화
-      { name: '공격력 +5%', icon: '⚔️', desc: '공격력 +5%', fn: function (p) { var add = Math.max(1, Math.round(p.atk * 0.05)); p.atk += add; return '공격력 +' + add } },
-      { name: '체력 +5%', icon: '💖', desc: '최대 체력 +5%', fn: function (p) { var add = Math.max(1, Math.round(p.maxHp * 0.05)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add } },
+      { name: '공격력 +8%', icon: '⚔️', desc: '공격력 +8%', fn: function (p) { var add = Math.max(1, Math.round(p.atk * 0.08)); p.atk += add; return '공격력 +' + add } },
+      { name: '체력 +8%', icon: '💖', desc: '최대 체력 +8%', fn: function (p) { var add = Math.max(2, Math.round(p.maxHp * 0.08)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add } },
       // 세부 스탯
-      { name: '피해 감소', icon: '🔰', desc: '받는 피해 -3%', fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.03); return '피해 감소 +3%!' } },
-      { name: '치명타 확률', icon: '🎯', desc: '치명타 확률 +3%', fn: function (p) { BT.perkCritChance += 0.03; return '크리 확률 +3%!' } },
-      { name: '쉴드 보강', icon: '🛡️', desc: '쉴드 생성량 +8%', fn: function (p) { BT.perkShieldUp += 0.08; return '쉴드량 +8%!' } },
-      { name: '관통력', icon: '🎯', desc: '방어력 무시 +5% (최대 70%)', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.05); return '관통 +5%!' } },
-      { name: '크리 데미지', icon: '💥', desc: '치명타 데미지 +8% (수확체감)', fn: function (p) { var add = 0.08 * Math.max(0.3, 1 - BT.perkCritDmg); BT.perkCritDmg += add; return '크리 데미지 +' + Math.round(add * 100) + '%!' } }
+      { name: '피해 감소', icon: '🔰', desc: '받는 피해 -5%', fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.05); return '피해 감소 +5%!' } },
+      { name: '치명타 확률', icon: '🎯', desc: '치명타 확률 +5%', fn: function (p) { BT.perkCritChance += 0.05; return '크리 확률 +5%!' } },
+      { name: '쉴드 보강', icon: '🛡️', desc: '쉴드 생성량 +12%', fn: function (p) { BT.perkShieldUp += 0.12; return '쉴드량 +12%!' } },
+      { name: '관통력', icon: '🎯', desc: '방어력 무시 +8% (최대 70%)', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.08); return '관통 +8%!' } },
+      { name: '크리 데미지', icon: '💥', desc: '치명타 데미지 +12% (수확체감)', fn: function (p) { var add = 0.12 * Math.max(0.3, 1 - BT.perkCritDmg); BT.perkCritDmg += add; return '크리 데미지 +' + Math.round(add * 100) + '%!' } }
     ];
+
+    // ── 난이도 시스템 ──
+    var DIFF = {
+      easy:   { label: '이지', hpM: 0.80, atkM: 0.80, color: '#4ecca3' },
+      normal: { label: '노말', hpM: 1.00, atkM: 1.00, color: '#ffd700' },
+      hard:   { label: '하드', hpM: 1.25, atkM: 1.25, color: '#e53935' }
+    };
+    var currentDiff = 'easy';
+    function getDiffUnlock() {
+      var d = localStorage.getItem('mr_diff_unlock');
+      return d ? JSON.parse(d) : { easy: true, normal: false, hard: false };
+    }
+    function saveDiffUnlock(obj) { localStorage.setItem('mr_diff_unlock', JSON.stringify(obj)) }
 
     // ── 전투 상태 ──
     var BT = {
@@ -599,7 +616,7 @@
       burnDmg: 0, burnTurns: 0, enemyTelegraph: false, enemyIntent: null,
       passiveGrowth: { critDmg: 0, atk: 0, critChance: 0, extraAtk: 0, dodge: 0 },
       supportCDs: {},
-      perkVamp: 0, perkCounterUp: false, perkDodge: 0, perkSpOverflow: 0, perkThorns: 0, perkFirstStrike: 0, perkChainLightning: false, perkGuardHeal: false, perkRage: false, perkDoubleSupport: false, perkDoubleSupportUsed: false, perkDmgReduce: 0, perkCritChance: 0, perkCritDmg: 0, perkShieldUp: 0, perkDmgUp: 0, perkArmorPen: 0
+      perkVamp: 0, perkCounterUp: false, perkDodge: 0, perkSpOverflow: 0, perkThorns: 0, perkFirstStrike: 0, perkChainLightning: false, perkGuardHeal: false, perkRage: false, perkDoubleSupport: false, perkDoubleSupportUsed: false, perkDmgReduce: 0, perkCritChance: 0, perkCritDmg: 0, perkShieldUp: 0, perkDmgUp: 0, perkArmorPen: 0, perkEndHpRegen: 0, perkEndSpRegen: 0
     };
 
     // ── 스탯 강화 (MP 통화) ──
@@ -620,7 +637,8 @@
       { id: 'shieldUp', name: '쉴드 강화', icon: '🛡️', desc: '쉴드 생성량 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'armorPen', name: '방어 관통', icon: '🎯', desc: '방어 관통 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
       { id: 'extraAtk', name: '추가 공격', icon: '⚔️', desc: '추가 공격 확률 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
-      { id: 'sp', name: 'SP 증가', icon: '💎', desc: 'SP 최대치 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } }
+      { id: 'sp', name: 'SP 증가', icon: '💎', desc: 'SP 최대치 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } },
+      { id: 'spRegen', name: 'SP 회복', icon: '🔋', desc: '매턴 SP +3% 회복 (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } }
     ];
 
     // ── 이중 통화 시스템 ──
@@ -779,10 +797,12 @@
       // 지수 스케일링 (사이클 3 이후)
       // 완만한 스케일링: 사이클 4부터 3%씩, DEF는 2%씩 (최대 +30%)
       if (cycle > 3) { var m = 1 + Math.min((cycle - 3) * 0.03, 0.30); baseHp = Math.round(baseHp * m); baseAtk = Math.round(baseAtk * m); baseDef = Math.round(baseDef * (1 + Math.min((cycle - 3) * 0.02, 0.30))) }
+      // 난이도 보정
+      var diff = DIFF[currentDiff] || DIFF.easy;
       var en = {
         name: template.name, id: template.id, color: template.color, bodyColor: template.bodyColor,
-        hp: Math.round(baseHp * template.hpM), maxHp: Math.round(baseHp * template.hpM),
-        atk: Math.round(baseAtk * template.atkM), def: Math.round(baseDef * template.defM),
+        hp: Math.round(baseHp * template.hpM * diff.hpM), maxHp: Math.round(baseHp * template.hpM * diff.hpM),
+        atk: Math.round(baseAtk * template.atkM * diff.atkM), def: Math.round(baseDef * template.defM),
         special: template.special, isBoss: isBoss, desc: template.desc, turnCount: 0,
         stealthActive: false, shield: 0, executeMode: false
       };
@@ -800,6 +820,29 @@
       $('sel-title').textContent = '▼ 메인 레인저 선택 ▼';
       $('sel-step').style.display = 'none';
       BT.selectedRanger = null; BT.passiveRanger = null;
+      // 난이도 선택 UI
+      var diffArea = document.getElementById('sel-diff');
+      if (!diffArea) {
+        diffArea = document.createElement('div'); diffArea.id = 'sel-diff'; diffArea.className = 'sel-diff';
+        var selBg = document.querySelector('#select-screen .sel-bg');
+        selBg.insertBefore(diffArea, $('sel-cards'));
+      }
+      clr(diffArea);
+      var unlock = getDiffUnlock();
+      ['easy', 'normal', 'hard'].forEach(function (key) {
+        var d = DIFF[key]; var btn = document.createElement('button'); btn.className = 'diff-btn';
+        btn.textContent = d.label;
+        btn.style.borderColor = d.color; btn.style.color = d.color;
+        if (key === currentDiff) btn.classList.add('active');
+        if (!unlock[key]) { btn.classList.add('locked'); btn.textContent = d.label + ' 🔒' }
+        btn.addEventListener('click', function () {
+          if (!unlock[key]) return;
+          currentDiff = key;
+          diffArea.querySelectorAll('.diff-btn').forEach(function (b) { b.classList.remove('active') });
+          btn.classList.add('active');
+        });
+        diffArea.appendChild(btn);
+      });
       var step = 1;
       Object.keys(RANGERS).forEach(function (key) {
         var r = RANGERS[key];
@@ -976,14 +1019,14 @@
       BT.shield = 0; BT.focusCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false; BT.enemyIntent = null;
       BT.passiveGrowth = { critDmg: 0, atk: 0, critChance: 0, extraAtk: 0, dodge: 0 };
       BT.supportCDs = {};
-      BT.perkVamp = 0; BT.perkCounterUp = false; BT.perkDodge = 0; BT.perkSpOverflow = 0; BT.perkThorns = 0; BT.perkFirstStrike = 0; BT.perkChainLightning = false; BT.perkGuardHeal = false; BT.perkRage = false; BT.perkDoubleSupport = false; BT.perkDoubleSupportUsed = false; BT.perkDmgReduce = getLabBonus('dmgReduce'); BT.perkCritChance = 0; BT.perkCritDmg = getStatBonus('critDmg'); BT.perkShieldUp = getLabBonus('shieldUp'); BT.perkDmgUp = 0; BT.perkArmorPen = getLabBonus('armorPen'); BT.perkExtraAtk = getLabBonus('extraAtk');
+      BT.perkVamp = 0; BT.perkCounterUp = false; BT.perkDodge = 0; BT.perkSpOverflow = 0; BT.perkThorns = 0; BT.perkFirstStrike = 0; BT.perkChainLightning = false; BT.perkGuardHeal = false; BT.perkRage = false; BT.perkDoubleSupport = false; BT.perkDoubleSupportUsed = false; BT.perkDmgReduce = getLabBonus('dmgReduce'); BT.perkCritChance = 0; BT.perkCritDmg = getStatBonus('critDmg'); BT.perkShieldUp = getLabBonus('shieldUp'); BT.perkDmgUp = 0; BT.perkArmorPen = getLabBonus('armorPen'); BT.perkExtraAtk = getLabBonus('extraAtk'); BT.perkEndHpRegen = 0; BT.perkEndSpRegen = 0;
       var mhp = Math.round(r.hp * (1 + getStatBonus('hp'))), msp = Math.round(r.sp * (1 + getLabBonus('sp')));
       BT.player = {
         key: rangerKey, name: r.name, color: r.color,
         hp: mhp, maxHp: mhp, atk: Math.round(r.atk * (1 + getStatBonus('atk'))), def: Math.round(r.def * (1 + getStatBonus('def'))),
         crit: Math.round(r.crit * (1 + getStatBonus('crit'))), dodge: Math.round(r.dodge * (1 + getStatBonus('dodge'))), sp: msp, maxSp: msp,
         skill: r.skill,
-        guarding: false, critBonus: 0, spRegen: 0, skillCostReduction: 0, hpRegen: 0
+        guarding: false, critBonus: 0, spRegen: Math.round(msp * getLabBonus('spRegen')), skillCostReduction: 0, hpRegen: 0
       };
       // 출동 패시브: 메인 + 파트너 둘 다 적용
       if (PASSIVE_BUFFS[rangerKey]) {
@@ -1059,11 +1102,12 @@
     function nextWave() {
       BT.wave++; BT.turn = 0; BT.acting = false;
       BT.player.guarding = false;
-      // 웨이브 클리어 시 회복 (연구 개발 회복 강화만 적용)
+      // 웨이브 클리어 시 회복 (연구 개발 회복 강화 + 보상 퍽)
       if (BT.wave > 1) {
-        var healPct = getLabBonus('heal');
+        var healPct = getLabBonus('heal') + BT.perkEndHpRegen;
         if (BT.passiveKey === 'pink' || BT.player.key === 'pink') healPct += 0.05;
         if (healPct > 0) BT.player.hp = Math.min(BT.player.maxHp, BT.player.hp + Math.round(BT.player.maxHp * healPct));
+        if (BT.perkEndSpRegen > 0) BT.player.sp = Math.min(BT.player.maxSp, BT.player.sp + Math.round(BT.player.maxSp * BT.perkEndSpRegen));
       }
       BT.enemy = generateEnemy(BT.wave);
       BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
@@ -1076,7 +1120,8 @@
       setTimeout(function () {
         // UI 세팅
         var cycle = Math.ceil(BT.wave / 3); var waveInCycle = ((BT.wave - 1) % 3) + 1;
-        $('bt-wave').innerHTML = '웨이브 ' + BT.wave + (BT.enemy.isBoss ? ' ★ 보스' : '') + ' <span class="bt-cycle">사이클 ' + cycle + ' (' + waveInCycle + '/3)</span>';
+        var diffLabel = DIFF[currentDiff] ? ' [' + DIFF[currentDiff].label + ']' : '';
+        $('bt-wave').innerHTML = '웨이브 ' + BT.wave + (BT.enemy.isBoss ? ' ★ 보스' : '') + diffLabel + ' <span class="bt-cycle">사이클 ' + cycle + ' (' + waveInCycle + '/3)</span>';
         $('bt-wave').style.color = BT.enemy.isBoss ? '#ff6b6b' : '#ffd700';
         $('bt-ename').textContent = BT.enemy.name; $('bt-ename').style.color = BT.enemy.color;
         // 적 설명
@@ -1215,6 +1260,9 @@
       if (BT.perkArmorPen > 0) perks.push('\uD83C\uDFAF\uAD00\uD1B5 ' + Math.round(BT.perkArmorPen * 100) + '%');
       if (BT.perkExtraAtk > 0) perks.push('\u26A1\uCD94\uAC00\uACF5\uACA9 ' + Math.round(BT.perkExtraAtk * 100) + '%');
       if (BT.perkVamp > 0) perks.push('\uD83E\uDDDB\uD761\uD608 ' + Math.round(BT.perkVamp * 100) + '%');
+      if (BT.perkFirstStrike > 0) perks.push('\u26A1\uCCAB\uACF5\uACA9 +' + Math.round(BT.perkFirstStrike * 100) + '%');
+      if (BT.perkEndHpRegen > 0) perks.push('\uD83D\uDC9A\uC6E8\uC774\uBE0CHP +' + Math.round(BT.perkEndHpRegen * 100) + '%');
+      if (BT.perkEndSpRegen > 0) perks.push('\uD83D\uDD0B\uC6E8\uC774\uBE0CSP +' + Math.round(BT.perkEndSpRegen * 100) + '%');
       if (perks.length) { lines.push('<b>\uD83D\uDCCA \uC2A4\uD0EF \uBCF4\uB108\uC2A4</b>'); lines.push(perks.join(' \u00B7 ')) }
       panel.innerHTML = lines.join('<br>');
       panel.addEventListener('click', function () { panel.remove() });
@@ -1229,7 +1277,7 @@
       // 예상 데미지 계산 (평균)
       var estAtk = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), 1, 0) * 0.9);
       var atkLabel = '⚔️ 공격 (~' + estAtk + ')';
-      // === 그룹화된 버튼 레이아웃 ===
+      // === 최적화된 버튼 레이아웃 ===
       var primaryRow = document.createElement('div'); primaryRow.className = 'bt-acts-primary';
       var secondaryRow = document.createElement('div'); secondaryRow.className = 'bt-acts-secondary';
       var supportRow = document.createElement('div'); supportRow.className = 'bt-acts-supports';
@@ -1247,7 +1295,7 @@
       var focusBtn = document.createElement('button'); focusBtn.className = 'bt-act def';
       if (BT.focusCD > 0) { focusBtn.textContent = '\uD83E\uDDD8 \uC9D1\uC911 [' + BT.focusCD + '\uD134]'; focusBtn.classList.add('disabled') }
       else { focusBtn.textContent = '\uD83E\uDDD8 \uC9D1\uC911 HP+' + focusHp + ' SP+' + focusSp }
-      focusBtn.addEventListener('click', function () { doPlayerAction('focus') }); primaryRow.appendChild(focusBtn);
+      focusBtn.addEventListener('click', function () { doPlayerAction('focus') }); secondaryRow.appendChild(focusBtn);
       // 필살기
       var effectiveCost = p.skill.cost - (p.skillCostReduction || 0);
       effectiveCost = Math.max(0, effectiveCost);
@@ -1261,38 +1309,37 @@
       var boostCost = 100;
       var a3b = document.createElement('button'); a3b.className = 'bt-act skill';
       a3b.style.cssText = 'border-color:rgba(255,180,0,0.5);color:#ffb300;background:rgba(255,180,0,0.08)';
-      if (BT.boosterUsed) { a3b.textContent = '🌟 미라클 부스터 [사용됨]'; a3b.classList.add('disabled') }
-      else { a3b.textContent = '🌟 미라클 부스터 SP' + boostCost + ' (전능력 2배 2턴)'; if (p.sp < boostCost) a3b.classList.add('disabled') }
+      if (BT.boosterUsed) { a3b.textContent = '🌟 부스터 [사용됨]'; a3b.classList.add('disabled') }
+      else { a3b.textContent = '🌟 부스터 SP' + boostCost; if (p.sp < boostCost) a3b.classList.add('disabled') }
       a3b.addEventListener('click', function () { doPlayerAction('booster') }); secondaryRow.appendChild(a3b);
       // 합체기
       if (BT.comboAttackCharged) {
-        var a5 = document.createElement('button'); a5.className = 'bt-act';
-        a5.style.cssText = 'border-color:rgba(149,117,205,0.5);color:#ce93d8;background:rgba(149,117,205,0.1)';
+        var a5 = document.createElement('button'); a5.className = 'bt-act combo';
         a5.textContent = '\uD83D\uDCAB \uD569\uCCB4\uAE30!';
         a5.addEventListener('click', function () { doPlayerAction('comboAttack') }); secondaryRow.appendChild(a5);
       }
       // 박사의 지원 (공용)
-      var docBtn = document.createElement('button'); docBtn.className = 'bt-act support';
-      docBtn.style.cssText = 'border-color:rgba(78,204,163,0.5);color:#4ecca3;background:rgba(78,204,163,0.08)';
-      if (BT.doctorCD > 0) { docBtn.textContent = '🔬 박사의 지원 [' + BT.doctorCD + '턴]'; docBtn.classList.add('disabled') }
-      else { docBtn.textContent = '🔬 박사의 지원 (적 1턴 기절)' }
+      var docBtn = document.createElement('button'); docBtn.className = 'bt-act support doc';
+      if (BT.doctorCD > 0) { docBtn.textContent = '🔬 박사 [' + BT.doctorCD + '턴]'; docBtn.classList.add('disabled') }
+      else { docBtn.textContent = '🔬 박사 (기절1턴)' }
       docBtn.addEventListener('click', function () { doPlayerAction('doctorSupport') });
       supportRow.appendChild(docBtn);
       // 지원스킬 (전투 미참여 캐릭터)
       BT.supportPool.forEach(function (sp, idx) {
         var sup = sp.data.support; var cd = BT.supportCDs[sp.key] || 0;
-        var lb = '🌟 ' + sp.data.name + ' ';
+        var lb = sp.data.name + ' ';
         if (sup.type === 'buff') lb += statKR(sup.stat) + '+' + Math.round(sup.val * 100) + '%';
-        else if (sup.type === 'dmgUp') lb += '피해+' + Math.round(sup.val * 100) + '%(' + sup.turns + 't)';
-        else if (sup.type === 'extraAtkBuff') lb += '추가공격+' + Math.round(sup.val * 100) + '%(' + sup.turns + 't)';
-        else if (sup.type === 'regenShield') lb += sup.turns + '턴 HP+쉴드';
+        else if (sup.type === 'dmgUp') lb += '피해+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'extraAtkBuff') lb += '추가공격+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'regenShield') lb += 'HP+쉴드' + sup.turns + 't';
         else if (sup.type === 'armorPen') lb += '관통+' + Math.round(sup.val * 100) + '%';
-        else if (sup.type === 'heal') lb += '체력+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'heal') lb += 'HP+' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'sp_pct') lb += 'SP' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'sp_regen') lb += 'SP' + Math.round(sup.val * 100) + '%+' + Math.round(sup.regenVal * 100) + '%';
         else if (sup.type === 'sp') lb += 'SP+' + sup.val;
-        else if (sup.type === 'debuff') lb += '적' + statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'debuff') lb += statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'damage') lb += '공격x' + sup.multi;
-        if (cd > 0) lb += ' [' + cd + '턴]';
+        if (cd > 0) lb += ' [' + cd + 't]';
         var btn = document.createElement('button'); btn.className = 'bt-act support';
         btn.textContent = lb;
         if (cd > 0) btn.classList.add('disabled');
@@ -1314,7 +1361,7 @@
       }
       // ── 예상행동 프리뷰 ──
       var pvEl = $('bt-preview'); pvEl.innerHTML = '';
-      var critChance = Math.round((p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance) * 100);
+      var critChance = Math.round((0.20 + p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance) * 100);
       var spRegen = (p.spRegen || 0);
       function setPv(html) { pvEl.innerHTML = html }
       function clearPv() { pvEl.innerHTML = '' }
@@ -1351,7 +1398,7 @@
       previews.booster = bstPvParts.join(' · ');
       // 박사의 지원 프리뷰
       if (BT.doctorCD > 0) previews.doctor = '<span style="color:#f44">쿨타임 ' + BT.doctorCD + '턴 남음</span>';
-      else previews.doctor = '<span class="pv-buff">적 1턴 기절</span> · <span class="pv-sp">SP 소모 없음</span> · <span class="pv-buff">쿨타임 3턴</span>';
+      else previews.doctor = '<span class="pv-buff">적 1턴 기절</span> · <span class="pv-sp">SP +' + Math.round(p.maxSp * 0.25) + ' (25%)</span> · <span class="pv-buff">쿨타임 3턴</span>';
       // 지원 프리뷰 (각 서포터별)
       BT.supportPool.forEach(function (sp, idx) {
         var sup = sp.data.support; var cd = BT.supportCDs[sp.key] || 0;
@@ -1366,6 +1413,7 @@
           else if (sup.type === 'armorPen') pv.push('<span class="pv-buff">방어 관통 +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'heal') { var ha = Math.round(p.maxHp * sup.val); pv.push('<span class="pv-heal">체력 +' + ha + ' 회복</span>') }
           else if (sup.type === 'sp_pct') { var spAmt = Math.round(p.maxSp * sup.val); pv.push('<span class="pv-sp">SP +' + spAmt + ' (' + Math.round(sup.val * 100) + '%) 충전</span>') }
+          else if (sup.type === 'sp_regen') { var spAmt = Math.round(p.maxSp * sup.val); var spRg = Math.round(p.maxSp * sup.regenVal); pv.push('<span class="pv-sp">SP +' + spAmt + ' 즉시</span> · <span class="pv-buff">매턴 SP +' + spRg + ' (' + sup.turns + '턴)</span>') }
           else if (sup.type === 'sp') pv.push('<span class="pv-sp">SP +' + sup.val + ' 충전</span>');
           else if (sup.type === 'debuff') pv.push('<span class="pv-buff">적 ' + statKR(sup.stat) + ' -' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'damage') { var es = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), sup.multi, 0) * 0.9); pv.push('<span class="pv-dmg">예상 ~' + es + '</span>') }
@@ -1543,7 +1591,7 @@
         var dmg = calcDmg(p.atk + getBuffVal('atk') + redBonus, eDef, atkMultiplier, blackPierce);
         if (BT.perkDmgUp > 0) dmg = Math.round(dmg * (1 + BT.perkDmgUp));
         // 크리티컬 체크
-        var crit = Math.random() < (p.crit * 0.01 + (p.critBonus || 0) + (BT.blueCritChain * 0.08) + BT.perkCritChance);
+        var crit = Math.random() < (0.20 + p.crit * 0.01 + (p.critBonus || 0) + (BT.blueCritChain * 0.08) + BT.perkCritChance);
         if (crit) { dmg = Math.round(dmg * (1.5 + BT.perkCritDmg)) }
         // 기선제압
         if (BT.perkFirstStrike > 0 && BT.turn === 1) { dmg = Math.round(dmg * (1 + BT.perkFirstStrike)) }
@@ -1645,7 +1693,7 @@
         multi *= (1 + yellowBonus);
         // 레드 고유: 투지 5 소비
         if (p.key === 'red' && BT.redMomentum >= 5) { multi *= 1.5; BT.redMomentum = 0 }
-        var baseCrit = p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance;
+        var baseCrit = 0.20 + p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance;
         var skillCritBonus = (p.skill.critBonus || 0);
         var skillCrit = Math.random() < (baseCrit + skillCritBonus);
         skillIgnore = Math.min(1, skillIgnore + BT.perkArmorPen);
@@ -1703,8 +1751,9 @@
         if (BT.doctorCD > 0) { BT.acting = false; showActions(); return }
         BT.doctorCD = 3;
         BT.stunTurns += 1;
+        var spRecover = Math.round(p.maxSp * 0.25); p.sp = Math.min(p.maxSp, p.sp + spRecover);
         btDrama('🔬 박사의 지원!', '#4ecca3', function () {
-          btLog('🔬 <span class="buff">박사의 지원! 적 1턴 기절!</span>');
+          btLog('🔬 <span class="buff">박사의 지원! 적 1턴 기절!</span> <span class="heal">SP+' + spRecover + '</span>');
           updateBattleUI(); updateStatusIcons();
           setTimeout(function () { afterPlayerAction() }, 500);
         });
@@ -1758,6 +1807,11 @@
             var spVal = Math.round(p.maxSp * sup.val);
             p.sp = Math.min(p.maxSp, p.sp + spVal);
             btLog('🌟 ' + sup.name + '! <span class="sp-use">SP +' + spVal + ' (' + Math.round(sup.val * 100) + '%)</span>');
+          } else if (sup.type === 'sp_regen') {
+            var spVal = Math.round(p.maxSp * sup.val);
+            p.sp = Math.min(p.maxSp, p.sp + spVal);
+            BT.buffs.push({ stat: 'spRegen', val: sup.regenVal, turns: sup.turns });
+            btLog('🌟 ' + sup.name + '! <span class="sp-use">SP +' + spVal + ' (' + Math.round(sup.val * 100) + '%)</span> + <span class="buff">매턴 SP ' + Math.round(sup.regenVal * 100) + '% (' + sup.turns + '턴)</span>');
           } else if (sup.type === 'sp') {
             var spVal = Math.round(sup.val * supMul);
             p.sp = Math.min(p.maxSp, p.sp + spVal);
@@ -1943,11 +1997,12 @@
 
       var dmg = calcDmg(e.atk, 0, atkMulti, 0);
       if (BT.perkDmgReduce > 0) dmg = Math.max(1, Math.round(dmg * (1 - BT.perkDmgReduce)));
-      // 회피 (SPD 기반 + perkDodge)
-      if (Math.random() < p.dodge * 0.01 + BT.perkDodge) {
-        btLog(p.name + '이(가) 회피했다!');
-        setTimeout(endTurn, 500);
-        return;
+      // 회피 (SPD 기반 + perkDodge) — 성공 시 60% 경감
+      var dodged = Math.random() < p.dodge * 0.01 + BT.perkDodge;
+      if (dodged) {
+        var reducedAmt = Math.round(dmg * 0.6);
+        dmg = Math.max(1, dmg - reducedAmt);
+        btLog(p.name + '이(가) 회피! <span class="buff">데미지 60% 경감 (-' + reducedAmt + ')</span>');
       }
       // 쉴드 흡수
       var shieldAbsorb = 0;
@@ -2049,13 +2104,17 @@
         BT.freezeTurns--;
         if (BT.freezeTurns <= 0 && BT.freezeATK > 0) { p.atk += BT.freezeATK; BT.freezeATK = 0; btLogAppend('<span class="buff">빙결 해제!</span>') }
       }
-      // regenShield 효과 (틱 전 적용)
+      // regenShield / spRegen 효과 (틱 전 적용)
       BT.buffs.forEach(function (b) {
         if (b.stat === 'regenShield' && b.turns > 0 && p.hp > 0) {
           var rh = Math.round(p.maxHp * b.healPct); p.hp = Math.min(p.maxHp, p.hp + rh);
           var rs = Math.round(p.maxHp * b.shieldPct * (1 + BT.perkShieldUp)); BT.shield += rs;
           showDmgNum(rh, 'bt-psvg', 'heal');
           btLogAppend(' <span class="heal">💗+' + rh + '</span> <span class="buff">🛡️+' + rs + '</span>');
+        }
+        if (b.stat === 'spRegen' && b.turns > 0 && p.hp > 0) {
+          var spRg = Math.round(p.maxSp * b.val); p.sp = Math.min(p.maxSp, p.sp + spRg);
+          btLogAppend(' <span class="sp-use">⚡SP+' + spRg + '</span>');
         }
       });
       // 버프/디버프 틱
@@ -2213,6 +2272,14 @@
       if (BT.wave > best) { best = BT.wave; localStorage.setItem('mr_best_wave', String(best)); $('go-best').textContent = '🏆 신기록! 웨이브 ' + best }
       else { $('go-best').textContent = '최고 기록: 웨이브 ' + best }
       $('t-best').textContent = '최고 기록: 웨이브 ' + best;
+      // 난이도 해금: 웨이브 3 이상 도달 시 다음 단계 개방
+      if (BT.wave >= 3) {
+        var unlock = getDiffUnlock();
+        var unlocked = '';
+        if (currentDiff === 'easy' && !unlock.normal) { unlock.normal = true; unlocked = '노말' }
+        if (currentDiff === 'normal' && !unlock.hard) { unlock.hard = true; unlocked = '하드' }
+        if (unlocked) { saveDiffUnlock(unlock); $('go-best').textContent += '\n🔓 ' + unlocked + ' 모드 해금!' }
+      }
       if (isRetreat) {
         document.querySelector('.go-title').textContent = '훈련 종료';
         document.querySelector('.go-title').style.color = '#4ecca3';
@@ -2229,7 +2296,7 @@
       endBattle(true);
     }
 
-    $('go-retry').addEventListener('click', function () { playBgm('daily'); initLab(); showScr('lab') });
+    $('go-retry').addEventListener('click', function () { playBgm('daily'); initSelect(); showScr('select') });
     $('go-title').addEventListener('click', function () { stopAllBgm(); showScr('title') });
     $('bt-retreat').addEventListener('click', function () {
       if (BT.acting) return;

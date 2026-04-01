@@ -763,7 +763,7 @@
       animation: endFadeIn 1.5s ease 2s forwards
     }
 
-    #ending-screen.end-show>.end-title {
+    #ending-screen.end-show>.end-title-wrap {
       animation: endFadeIn 1.5s ease 3s forwards
     }
 
@@ -835,13 +835,30 @@
       opacity: 0.5
     }
 
+    .end-title-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px
+    }
+
+    .end-logo {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      opacity: 0.12;
+      z-index: 0
+    }
+
     .end-title {
       font-family: 'Do Hyeon', sans-serif;
       font-size: 24px;
       color: #e53935;
-      margin-top: 12px;
       letter-spacing: 4px;
-      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3)
+      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3);
+      position: relative;
+      z-index: 1
     }
 
     .end-coming {
@@ -1263,6 +1280,38 @@
       letter-spacing: 1px
     }
 
+    .sel-diff {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px
+    }
+
+    .diff-btn {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 12px;
+      padding: 6px 16px;
+      background: none;
+      border: 2px solid #444;
+      border-radius: 6px;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 1px
+    }
+
+    .diff-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1)
+    }
+
+    .diff-btn.locked {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-style: dashed
+    }
+
     /* SELECT SCREEN */
     #select-screen {
       background: linear-gradient(180deg, #1a1a2e 0%, #0a0a14 100%);
@@ -1666,19 +1715,19 @@
 
     .bt-acts-primary {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 6px
     }
 
     .bt-acts-secondary {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 5px
     }
 
     .bt-acts-supports {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
       gap: 5px
     }
 
@@ -1705,14 +1754,20 @@
     }
 
     .bt-acts-primary .bt-act {
-      min-height: 46px;
-      font-size: 13px
+      min-height: 50px;
+      font-size: 14px;
+      font-weight: bold
+    }
+
+    .bt-acts-secondary .bt-act {
+      min-height: 42px;
+      font-size: 11px
     }
 
     .bt-acts-supports .bt-act {
-      min-height: 40px;
-      font-size: 11px;
-      padding: 6px 4px
+      min-height: 38px;
+      font-size: 10px;
+      padding: 5px 4px
     }
 
     .bt-act:hover, .bt-act.selected {
@@ -1770,6 +1825,24 @@
       background: linear-gradient(135deg, rgba(78, 204, 163, 0.25), rgba(78, 204, 163, 0.08));
       border-color: #4ecca3;
       box-shadow: 0 0 12px rgba(78, 204, 163, 0.3), inset 0 0 8px rgba(78, 204, 163, 0.1)
+    }
+
+    .bt-act.support.doc {
+      border-color: rgba(78, 204, 163, 0.5);
+      color: #4ecca3;
+      background: rgba(78, 204, 163, 0.08)
+    }
+
+    .bt-act.combo {
+      border-color: rgba(149, 117, 205, 0.5);
+      color: #ce93d8;
+      background: rgba(149, 117, 205, 0.1)
+    }
+
+    .bt-act.combo:hover, .bt-act.combo.selected {
+      background: rgba(149, 117, 205, 0.2);
+      border-color: #ce93d8;
+      box-shadow: 0 0 12px rgba(149, 117, 205, 0.3)
     }
 
     .bt-act.disabled {
@@ -2379,22 +2452,32 @@
 
     .rw-retreat {
       font-family: 'Do Hyeon', sans-serif;
-      font-size: 12px;
-      color: #aaa;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 10px 20px;
+      font-size: 14px;
+      color: #4ecca3;
+      background: rgba(78, 204, 163, 0.08);
+      border: 2px solid rgba(78, 204, 163, 0.4);
+      border-radius: 10px;
+      padding: 14px 24px;
       cursor: pointer;
       letter-spacing: 1px;
       transition: all 0.2s;
-      margin-top: 24px
+      margin-top: 20px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      animation: retreatPulse 2s ease-in-out infinite
+    }
+
+    @keyframes retreatPulse {
+      0%, 100% { border-color: rgba(78, 204, 163, 0.4); box-shadow: none }
+      50% { border-color: rgba(78, 204, 163, 0.8); box-shadow: 0 0 12px rgba(78, 204, 163, 0.2) }
     }
 
     .rw-retreat:hover {
-      color: #4ecca3;
+      color: #fff;
       border-color: #4ecca3;
-      background: rgba(78, 204, 163, 0.1)
+      background: rgba(78, 204, 163, 0.2);
+      box-shadow: 0 0 16px rgba(78, 204, 163, 0.3)
     }
 
     .rw-cards {
@@ -2542,7 +2625,9 @@
 
     .mini-rw-box .rw-retreat {
       flex: 0 0 100%;
-      max-width: none
+      max-width: none;
+      margin-top: 12px;
+      font-size: 13px
     }
 
     .mini-rw-icon {
