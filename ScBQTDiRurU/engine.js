@@ -431,7 +431,7 @@
         name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 50, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uC274\uB4DC 20% \uBD80\uC5EC', heal: 0.20, ignoreDef: 0 },
-        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '3\uD134\uAC04 \uCCB4\uB825 10% \uD68C\uBCF5 + \uC274\uB4DC 10%', type: 'regenShield', healPct: 0.10, shieldPct: 0.10, turns: 3 }
+        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '3\uD134\uAC04 \uCCB4\uB825 5% \uD68C\uBCF5 + \uC274\uB4DC 20%', type: 'regenShield', healPct: 0.05, shieldPct: 0.20, turns: 3 }
       }
     };
 
@@ -893,10 +893,11 @@
         });
       }
     }
-    $('btn-defend').addEventListener('click', function () { stopAllBgm(); playBgm('daily'); initLab(); showScr('lab') });
+    $('btn-defend').addEventListener('click', function () { stopAllBgm(); playBgm('daily'); initSelect(); showScr('select') });
     $('lab-to-select').addEventListener('click', function () { initSelect(); showScr('select') });
     $('lab-to-title').addEventListener('click', function () { stopAllBgm(); showScr('title') });
-    $('sel-back').addEventListener('click', function () { initLab(); showScr('lab') });
+    $('sel-back').addEventListener('click', function () { stopAllBgm(); showScr('title') });
+    $('sel-lab').addEventListener('click', function () { initLab(); showScr('lab') });
     $('sel-tut').addEventListener('click', function () {
       // 캐릭터 선택 화면 위에 튜토리얼 오버레이 표시
       var container = document.querySelector('#select-screen .sel-bg');
@@ -1852,10 +1853,12 @@
       var atkMulti = 1;
       if (e.special) {
         var sp = e.special;
-        // 타이탄 강타 예고
+        // 타이탄 강타 예고 (힘 모으는 턴은 공격 안함)
         if (sp.type === 'smash' && (e.turnCount + 1) % sp.every === 0) {
           btLog('⚠️ <span class="buff">' + e.name + '이(가) 힘을 모으고 있다!</span>');
           BT.enemyTelegraph = true;
+          updateBattleUI(); setTimeout(endTurn, 600);
+          return;
         }
         if (sp.type === 'smash' && e.turnCount % sp.every === 0) { BT.enemyTelegraph = false; atkMulti = sp.multi; btChainFlash('#f44', 2); btShake(true); btLog('<span class="dmg">\u26A0\uFE0F\u26A0\uFE0F ' + e.name + '\uC758 \uAC15\uD0C0! \u26A0\uFE0F\u26A0\uFE0F</span> <span class="buff">x' + sp.multi.toFixed(1) + '</span>') }
         if (sp.type === 'double' && Math.random() < sp.chance) {
