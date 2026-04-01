@@ -36,26 +36,26 @@
     var gamePaused = false;
     (function () {
       var slider = $('vol-slider'); var btn = $('vol-btn'); var label = $('vol-label');
+      var tSlider = $('t-vol-slider'); var tBtn = $('t-vol-btn'); var tLabel = $('t-vol-label');
       var overlay = $('pause-overlay'); var pauseBtn = $('pause-btn');
       function updateVolUI() {
-        slider.value = Math.round(masterVol * 100);
-        label.textContent = Math.round(masterVol * 100) + '%';
+        var pct = Math.round(masterVol * 100);
+        slider.value = pct; label.textContent = pct + '%';
         btn.textContent = masterVol <= 0 ? '🔇' : masterVol < 0.3 ? '🔈' : '🔊';
+        if (tSlider) { tSlider.value = pct; tLabel.textContent = pct + '%'; tBtn.textContent = btn.textContent }
       }
       updateVolUI();
       function applyAllVol() {
         [bgmDaily, bgmBattle, bgmBattle2].forEach(function (a) { if (!a.paused) { var base = a === bgmDaily ? bgmBaseVol.daily : a === bgmBattle ? bgmBaseVol.battle : bgmBaseVol.battle2; applyVol(a, base) } });
       }
-      slider.addEventListener('input', function () {
-        masterVol = parseInt(this.value) / 100;
-        localStorage.setItem('mr_vol', String(masterVol));
+      function handleVolChange(val) {
+        masterVol = val; localStorage.setItem('mr_vol', String(masterVol));
         updateVolUI(); applyAllVol();
-      });
-      btn.addEventListener('click', function () {
-        if (masterVol > 0) { masterVol = 0 } else { masterVol = 0.5 }
-        localStorage.setItem('mr_vol', String(masterVol));
-        updateVolUI(); applyAllVol();
-      });
+      }
+      slider.addEventListener('input', function () { handleVolChange(parseInt(this.value) / 100) });
+      btn.addEventListener('click', function () { handleVolChange(masterVol > 0 ? 0 : 0.5) });
+      if (tSlider) { tSlider.addEventListener('input', function () { handleVolChange(parseInt(this.value) / 100) }) }
+      if (tBtn) { tBtn.addEventListener('click', function () { handleVolChange(masterVol > 0 ? 0 : 0.5) }) }
       function openPause() {
         gamePaused = true; overlay.classList.add('on');
         // 전투 중이면 훈련 종료 보이기
@@ -402,32 +402,32 @@
     var RANGERS = {
       red: {
         name: '\uB808\uB4DC', color: '#e53935', weapon: '\uB300\uAC80',
-        hp: 35, atk: 15, def: 10, crit: 15, dodge: 8, sp: 50,
-        skill: { name: '\uBBF8\uB77C\uD074 \uC2AC\uB798\uC2DC', cost: 30, multi: 1.8, desc: '\uACF5\uACA9\uB825 180% \uB300\uAC80 \uC77C\uACA9', ignoreDef: 0 },
+        hp: 35, atk: 15, def: 10, crit: 15, dodge: 8, sp: 100,
+        skill: { name: '\uBBF8\uB77C\uD074 \uC2AC\uB798\uC2DC', cost: 50, multi: 2.8, desc: '\uACF5\uACA9\uB825 280% \uB300\uAC80 \uC77C\uACA9', ignoreDef: 0 },
         support: { name: '\uB9AC\uB354\uC758 \uACA9\uB824', desc: '\uACF5\uACA9\uB825 +35% (3\uD134)', type: 'buff', stat: 'atk', val: 0.35, turns: 3 }
       },
       black: {
         name: '\uBE14\uB799', color: '#555', weapon: '\uCD1D',
-        hp: 28, atk: 13, def: 7, crit: 22, dodge: 10, sp: 55,
-        skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 25, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uBC29\uC5B4\uBB34\uC2DC', ignoreDef: 1 },
+        hp: 28, atk: 13, def: 7, crit: 22, dodge: 10, sp: 100,
+        skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uBC29\uC5B4\uBB34\uC2DC', ignoreDef: 1 },
         support: { name: '\uC5C4\uD638 \uC0AC\uACA9', desc: '\uC801\uC5D0\uAC8C \uACF5\uACA9\uB825 140% \uB370\uBBF8\uC9C0', type: 'damage', multi: 1.4 }
       },
       blue: {
         name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
-        hp: 24, atk: 15, def: 5, crit: 25, dodge: 15, sp: 45,
-        skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 40, multi: 2.0, desc: '\uACF5\uACA9\uB825 200% \uACE0\uC18D\uCC38\uACA9', ignoreDef: 0 },
+        hp: 24, atk: 15, def: 5, crit: 25, dodge: 15, sp: 100,
+        skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% \uACE0\uC18D\uCC38\uACA9', ignoreDef: 0 },
         support: { name: '\uC804\uC220 \uBD84\uC11D', desc: '\uC801 \uBC29\uC5B4\uB825 -35% (3\uD134)', type: 'debuff', stat: 'def', val: 0.35, turns: 3 }
       },
       yellow: {
         name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
-        hp: 32, atk: 11, def: 8, crit: 12, dodge: 8, sp: 60,
-        skill: { name: '\uC36C\uB354 \uD06C\uB7EC\uC26C', cost: 25, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uC2A4\uD134 1\uD134', stun: 1, ignoreDef: 0 },
-        support: { name: '\uBC88\uAC1C \uCDA9\uC804', desc: 'SP +30 \uD68C\uBCF5', type: 'sp', val: 30 }
+        hp: 32, atk: 11, def: 8, crit: 12, dodge: 8, sp: 100,
+        skill: { name: '\uC36C\uB354 \uD06C\uB7EC\uC26C', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uC2A4\uD134 1\uD134', stun: 1, ignoreDef: 0 },
+        support: { name: '\uBC88\uAC1C \uCDA9\uC804', desc: 'SP 75% \uD68C\uBCF5', type: 'sp_pct', val: 0.75 }
       },
       pink: {
         name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
-        hp: 42, atk: 10, def: 16, crit: 8, dodge: 8, sp: 50,
-        skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 28, multi: 1.6, desc: '\uACF5\uACA9\uB825 160% + \uC270\uB4DC 5% \uBD80\uC5EC', heal: 0.05, ignoreDef: 0 },
+        hp: 42, atk: 10, def: 16, crit: 8, dodge: 8, sp: 100,
+        skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uC270\uB4DC 5% \uBD80\uC5EC', heal: 0.05, ignoreDef: 0 },
         support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '\uCCB4\uB825 30% \uD68C\uBCF5', type: 'heal', val: 0.3 }
       }
     };
@@ -583,10 +583,10 @@
       buffs: [], debuffs: [], poisonTurns: 0, poisonDmg: 0, stunTurns: 0, freezeATK: 0, freezeTurns: 0,
       selectedRanger: null, passiveRanger: null, passiveKey: null,
       supportIndex: 0, gold: 0, ce: 0,
-      nextAtkBonus: 0, comboAttackCharged: false,
+      nextAtkBonus: 0, comboAttackCharged: false, boosterUsed: false,
       lastAction: null, tacticalGauge: 0, guaranteedCrit: false,
       redMomentum: 0, blackAim: 0, blueCritChain: 0, yellowMarks: 0, pinkBond: 0,
-      shield: 0, focusCD: 0, defendCD: 0,
+      shield: 0, focusCD: 0, defendCD: 0, skillCD: 0,
       burnDmg: 0, burnTurns: 0, enemyTelegraph: false, enemyIntent: null, currentTgBonus: 0,
       supportCDs: {},
       perkVamp: 0, perkCounterUp: false, perkTgBoost: 0, perkDodge: 0, perkSpOverflow: 0, perkThorns: 0, perkFirstStrike: 0, perkChainLightning: false, perkGuardHeal: false, perkTgMin: false, perkRage: false, perkDoubleSupport: false, perkDoubleSupportUsed: false, perkDmgReduce: 0, perkCritChance: 0, perkCritDmg: 0, perkShieldUp: 0, perkDmgUp: 0, perkArmorPen: 0
@@ -594,23 +594,24 @@
 
     // ── 스탯 강화 (MP 통화) ──
     var STAT_UPGRADES = [
-      { id: 'hp', name: '체력', icon: '❤️', per: 2, max: 20, unit: '', cap: '최대 +40', cost: function (lv) { return 2 + lv } },
-      { id: 'atk', name: '공격력', icon: '⚔️', per: 1, max: 15, unit: '', cap: '최대 +15', cost: function (lv) { return 3 + lv } },
-      { id: 'def', name: '쉴드력', icon: '🛡️', per: 1, max: 10, unit: '', cap: '최대 +10', cost: function (lv) { return 3 + lv } },
-      { id: 'crit', name: '크리확률', icon: '💥', per: 1, max: 10, unit: '%', cap: '최대 +10%', cost: function (lv) { return 3 + lv * 2 } },
-      { id: 'critDmg', name: '크리데미지', icon: '🔥', per: 0.05, max: 8, unit: '', cap: '최대 +40% (x1.90)', cost: function (lv) { return 4 + lv * 2 }, fmt: function (v) { return 'x' + (1.5 + v).toFixed(2) } },
-      { id: 'dodge', name: '회피확률', icon: '💨', per: 1, max: 10, unit: '%', cap: '최대 +10%', cost: function (lv) { return 3 + lv * 2 } },
-      { id: 'dmgReduce', name: '피해감소', icon: '🔰', per: 0.02, max: 10, unit: '', cap: '최대 20% (전투 중 50%까지)', cost: function (lv) { return 4 + lv * 2 }, fmt: function (v) { return Math.round(v * 100) + '%' } },
-      { id: 'sp', name: 'SP', icon: '💎', per: 3, max: 10, unit: '', cap: '최대 +30', cost: function (lv) { return 3 + lv } }
+      { id: 'hp', name: '체력', icon: '❤️', total: 1.0, max: 30, unit: '%', cap: '최대 +100%', cost: function (lv) { return 1 + Math.floor(lv / 3) }, pct: true },
+      { id: 'atk', name: '공격력', icon: '⚔️', total: 1.0, max: 30, unit: '%', cap: '최대 +100%', cost: function (lv) { return 2 + Math.floor(lv / 2) }, pct: true },
+      { id: 'def', name: '쉴드력', icon: '🛡️', total: 1.0, max: 30, unit: '%', cap: '최대 +100%', cost: function (lv) { return 2 + Math.floor(lv / 2) }, pct: true },
+      { id: 'crit', name: '크리확률', icon: '💥', total: 0.5, max: 30, unit: '%', cap: '최대 +50%', cost: function (lv) { return 2 + Math.floor(lv / 2) }, pct: true },
+      { id: 'critDmg', name: '크리데미지', icon: '🔥', total: 0.50, max: 30, unit: '', cap: '최대 +50% (x2.00)', cost: function (lv) { return 3 + Math.floor(lv / 2) }, fmt: function (v) { return 'x' + (1.5 + v).toFixed(2) } },
+      { id: 'dodge', name: '회피확률', icon: '💨', total: 0.5, max: 30, unit: '%', cap: '최대 +50%', cost: function (lv) { return 2 + Math.floor(lv / 2) }, pct: true }
     ];
 
     // ── 연구소 업그레이드 (CE 통화) ──
     var LAB_UPGRADES = [
-      { id: 'heal', name: '회복 강화', icon: '💖', desc: '웨이브 간 회복 +2%', per: 0.02, max: 10, cost: function (lv) { return 5 + lv * 3 } },
-      { id: 'skill', name: '필살기 연구', icon: '🌟', desc: '필살기 배율 +5%', per: 0.05, max: 10, cost: function (lv) { return 8 + lv * 3 } },
-      { id: 'energy', name: '에너지 추출', icon: '🔮', desc: 'CE 획득 +10%', per: 0.10, max: 10, cost: function (lv) { return 6 + lv * 3 } },
-      { id: 'support', name: '지원 강화', icon: '📡', desc: '지원 쿨다운 -1턴 (최대 2회)', per: 1, max: 2, cost: function (lv) { return 15 + lv * 10 } },
-      { id: 'gold', name: 'MP 부스트', icon: '✨', desc: 'MP 획득 +10%', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } }
+      { id: 'heal', name: '회복 강화', icon: '💖', desc: '웨이브 간 회복 +2% (최대 20%)', per: 0.02, max: 10, cost: function (lv) { return 5 + lv * 3 } },
+      { id: 'skill', name: '필살기 연구', icon: '🌟', desc: '필살기 배율 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 8 + lv * 3 } },
+      { id: 'reward', name: '보상 부스트', icon: '✨', desc: 'MP·CE 획득 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } },
+      { id: 'dmgReduce', name: '피해 감소', icon: '🔰', desc: '받는 피해 -3% (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } },
+      { id: 'shieldUp', name: '쉴드 강화', icon: '🛡️', desc: '쉴드 생성량 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 6 + lv * 3 } },
+      { id: 'armorPen', name: '방어 관통', icon: '🎯', desc: '방어 관통 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
+      { id: 'extraAtk', name: '추가 공격', icon: '⚔️', desc: '추가 공격 확률 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
+      { id: 'sp', name: 'SP 증가', icon: '💎', desc: 'SP 최대치 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } }
     ];
 
     // ── 이중 통화 시스템 ──
@@ -633,7 +634,8 @@
     }
     function getStatBonus(id) {
       var u = STAT_UPGRADES.filter(function (x) { return x.id === id })[0];
-      return u ? (u.level * u.per) : 0;
+      if (!u || u.level === 0) return 0;
+      return u.total * (u.level / u.max);
     }
     function getLabBonus(id) {
       var u = LAB_UPGRADES.filter(function (x) { return x.id === id })[0];
@@ -849,9 +851,10 @@
         STAT_UPGRADES.forEach(function (u) {
           var row = document.createElement('div'); row.className = 'lab-row';
           var cost = u.cost(u.level); var isMax = u.level >= u.max;
-          var totalBonus = u.level * u.per;
-          var bonusStr = u.fmt ? u.fmt(totalBonus) : '+' + totalBonus + (u.unit || '');
-          var perStr = u.fmt ? '+' + Math.round(u.per * 100) + '%' : '+' + u.per + (u.unit || '');
+          var totalBonus = u.total * (u.level / u.max);
+          var perVal = u.total / u.max;
+          var bonusStr = u.fmt ? u.fmt(totalBonus) : (u.pct ? '+' + Math.round(totalBonus * 100) + '%' : '+' + Math.round(totalBonus * 100) / 100 + (u.unit || ''));
+          var perStr = u.fmt ? '+' + (perVal * 100).toFixed(1) + '%' : (u.pct ? '+' + (perVal * 100).toFixed(1) + '%' : '+' + (Math.round(perVal * 100) / 100) + (u.unit || ''));
           var capDiv = document.createElement('div'); capDiv.style.cssText = 'font-size:10px;color:#666'; capDiv.textContent = '상한: ' + u.cap;
           var infoDiv = document.createElement('div'); infoDiv.className = 'lab-info';
           var nameDiv = document.createElement('div'); nameDiv.className = 'lab-stat-name'; nameDiv.textContent = u.name + ' Lv.' + u.level + '/' + u.max;
@@ -895,17 +898,58 @@
     $('sel-back').addEventListener('click', function () { initLab(); showScr('lab') });
     $('lab-tab-stat').addEventListener('click', function () { labTab = 'stat'; initLab() });
     $('lab-tab-research').addEventListener('click', function () { labTab = 'research'; initLab() });
+    // 게임 내 확인 팝업
+    function showGameConfirm(title, msg, onConfirm) {
+      var existing = $('game-confirm-popup');
+      if (existing) existing.remove();
+      var popup = document.createElement('div');
+      popup.id = 'game-confirm-popup';
+      popup.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:9999';
+      var box = document.createElement('div');
+      box.style.cssText = 'background:#1a1a2e;border:2px solid #444;border-radius:12px;padding:24px;max-width:320px;text-align:center;color:#fff;font-family:"Gowun Dodum",sans-serif';
+      box.innerHTML = '<div style="font-family:Do Hyeon;font-size:16px;color:#ffd700;margin-bottom:12px">' + title + '</div><div style="font-size:13px;line-height:1.6;margin-bottom:20px;white-space:pre-line">' + msg + '</div>';
+      var btnWrap = document.createElement('div');
+      btnWrap.style.cssText = 'display:flex;gap:10px;justify-content:center';
+      var yesBtn = document.createElement('button');
+      yesBtn.style.cssText = 'padding:8px 24px;border:2px solid #4ecca3;background:rgba(78,204,163,0.15);color:#4ecca3;border-radius:8px;font-family:Do Hyeon;font-size:14px;cursor:pointer';
+      yesBtn.textContent = '확인';
+      yesBtn.addEventListener('click', function () { popup.remove(); onConfirm() });
+      var noBtn = document.createElement('button');
+      noBtn.style.cssText = 'padding:8px 24px;border:2px solid #666;background:rgba(255,255,255,0.05);color:#999;border-radius:8px;font-family:Do Hyeon;font-size:14px;cursor:pointer';
+      noBtn.textContent = '취소';
+      noBtn.addEventListener('click', function () { popup.remove() });
+      btnWrap.appendChild(yesBtn); btnWrap.appendChild(noBtn);
+      box.appendChild(btnWrap); popup.appendChild(box);
+      document.getElementById('game').appendChild(popup);
+    }
+    function showGameAlert(title, msg) {
+      var existing = $('game-confirm-popup');
+      if (existing) existing.remove();
+      var popup = document.createElement('div');
+      popup.id = 'game-confirm-popup';
+      popup.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:9999';
+      var box = document.createElement('div');
+      box.style.cssText = 'background:#1a1a2e;border:2px solid #444;border-radius:12px;padding:24px;max-width:320px;text-align:center;color:#fff;font-family:"Gowun Dodum",sans-serif';
+      box.innerHTML = '<div style="font-family:Do Hyeon;font-size:16px;color:#ffd700;margin-bottom:12px">' + title + '</div><div style="font-size:13px;line-height:1.6;margin-bottom:20px">' + msg + '</div>';
+      var okBtn = document.createElement('button');
+      okBtn.style.cssText = 'padding:8px 24px;border:2px solid #4ecca3;background:rgba(78,204,163,0.15);color:#4ecca3;border-radius:8px;font-family:Do Hyeon;font-size:14px;cursor:pointer';
+      okBtn.textContent = '확인';
+      okBtn.addEventListener('click', function () { popup.remove() });
+      box.appendChild(okBtn); popup.appendChild(box);
+      document.getElementById('game').appendChild(popup);
+    }
     $('lab-reset').addEventListener('click', function () {
       var mpRefund = 0, ceRefund = 0;
-      STAT_UPGRADES.forEach(function (u) { for (var i = 0; i < u.level; i++)mpRefund += u.cost(i) });
-      LAB_UPGRADES.forEach(function (u) { for (var i = 0; i < u.level; i++)ceRefund += u.cost(i) });
-      if (mpRefund === 0 && ceRefund === 0) { alert('초기화할 강화가 없습니다.'); return }
-      var msg = '강화를 모두 초기화하시겠습니까?\n환불: ✨MP +' + mpRefund;
+      STAT_UPGRADES.forEach(function (u) { for (var i = 0; i < u.level; i++) mpRefund += u.cost(i) });
+      LAB_UPGRADES.forEach(function (u) { for (var i = 0; i < u.level; i++) ceRefund += u.cost(i) });
+      if (mpRefund === 0 && ceRefund === 0) { showGameAlert('초기화', '초기화할 강화가 없습니다.'); return }
+      var msg = '강화를 모두 초기화하시겠습니까?\n\n환불: ✨MP +' + mpRefund;
       if (ceRefund > 0) msg += ' / 🔮CE +' + ceRefund;
-      if (!confirm(msg)) return;
-      STAT_UPGRADES.forEach(function (u) { u.level = 0 });
-      LAB_UPGRADES.forEach(function (u) { u.level = 0 });
-      progData.mp += mpRefund; progData.ce += ceRefund; saveProg(); initLab();
+      showGameConfirm('강화 초기화', msg, function () {
+        STAT_UPGRADES.forEach(function (u) { u.level = 0 });
+        LAB_UPGRADES.forEach(function (u) { u.level = 0 });
+        progData.mp += mpRefund; progData.ce += ceRefund; saveProg(); initLab();
+      });
     });
 
     // ── 전투 시작 ──
@@ -915,17 +959,17 @@
       BT.wave = 0; BT.kills = 0; BT.turn = 0; BT.supportCD = 0; BT.acting = false;
       BT.buffs = []; BT.debuffs = []; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.stunTurns = 0; BT.freezeATK = 0; BT.freezeTurns = 0;
       BT.gold = 0; BT.ce = 0;
-      BT.passiveKey = passiveKey; BT.supportIndex = 0; BT.nextAtkBonus = 0; BT.comboAttackCharged = false;
+      BT.passiveKey = passiveKey; BT.supportIndex = 0; BT.nextAtkBonus = 0; BT.comboAttackCharged = false; BT.boosterUsed = false;
       BT.lastAction = null; BT.tacticalGauge = 0; BT.guaranteedCrit = false;
       BT.redMomentum = 0; BT.blackAim = 0; BT.blueCritChain = 0; BT.yellowMarks = 0; BT.pinkBond = 0;
-      BT.shield = 0; BT.focusCD = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false; BT.enemyIntent = null; BT.currentTgBonus = 0;
+      BT.shield = 0; BT.focusCD = 0; BT.skillCD = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false; BT.enemyIntent = null; BT.currentTgBonus = 0;
       BT.supportCDs = {};
-      BT.perkVamp = 0; BT.perkCounterUp = false; BT.perkTgBoost = 0; BT.perkDodge = 0; BT.perkSpOverflow = 0; BT.perkThorns = 0; BT.perkFirstStrike = 0; BT.perkChainLightning = false; BT.perkGuardHeal = false; BT.perkTgMin = false; BT.perkRage = false; BT.perkDoubleSupport = false; BT.perkDoubleSupportUsed = false; BT.perkDmgReduce = getStatBonus('dmgReduce'); BT.perkCritChance = 0; BT.perkCritDmg = getStatBonus('critDmg'); BT.perkShieldUp = 0; BT.perkDmgUp = 0; BT.perkArmorPen = 0;
-      var mhp = r.hp + getStatBonus('hp'), msp = r.sp + getStatBonus('sp');
+      BT.perkVamp = 0; BT.perkCounterUp = false; BT.perkTgBoost = 0; BT.perkDodge = 0; BT.perkSpOverflow = 0; BT.perkThorns = 0; BT.perkFirstStrike = 0; BT.perkChainLightning = false; BT.perkGuardHeal = false; BT.perkTgMin = false; BT.perkRage = false; BT.perkDoubleSupport = false; BT.perkDoubleSupportUsed = false; BT.perkDmgReduce = getLabBonus('dmgReduce'); BT.perkCritChance = 0; BT.perkCritDmg = getStatBonus('critDmg'); BT.perkShieldUp = getLabBonus('shieldUp'); BT.perkDmgUp = 0; BT.perkArmorPen = getLabBonus('armorPen'); BT.perkExtraAtk = getLabBonus('extraAtk');
+      var mhp = Math.round(r.hp * (1 + getStatBonus('hp'))), msp = Math.round(r.sp * (1 + getLabBonus('sp')));
       BT.player = {
         key: rangerKey, name: r.name, color: r.color,
-        hp: mhp, maxHp: mhp, atk: r.atk + getStatBonus('atk'), def: r.def + getStatBonus('def'),
-        crit: r.crit + getStatBonus('crit'), dodge: r.dodge + getStatBonus('dodge'), sp: msp, maxSp: msp,
+        hp: mhp, maxHp: mhp, atk: Math.round(r.atk * (1 + getStatBonus('atk'))), def: Math.round(r.def * (1 + getStatBonus('def'))),
+        crit: Math.round(r.crit * (1 + getStatBonus('crit'))), dodge: Math.round(r.dodge * (1 + getStatBonus('dodge'))), sp: msp, maxSp: msp,
         skill: r.skill, skillBonus: getLabBonus('skill'),
         guarding: false, critBonus: 0, spRegen: 0, skillCostReduction: 0, hpRegen: 0
       };
@@ -980,17 +1024,16 @@
     function nextWave() {
       BT.wave++; BT.turn = 0; BT.acting = false;
       BT.player.guarding = false;
-      // 웨이브 클리어 회복 (연구소 회복 강화 반영)
+      // 웨이브 클리어 시 회복 (연구 개발 회복 강화만 적용)
       if (BT.wave > 1) {
-        var healPct = 0.15 + getLabBonus('heal');
-        // 핑크 패시브: 웨이브 클리어 시 추가 7% 회복
-        if (BT.passiveKey === 'pink') healPct += 0.07;
-        BT.player.hp = Math.min(BT.player.maxHp, BT.player.hp + Math.round(BT.player.maxHp * healPct));
+        var healPct = getLabBonus('heal');
+        if (BT.passiveKey === 'pink') healPct += 0.05;
+        if (healPct > 0) BT.player.hp = Math.min(BT.player.maxHp, BT.player.hp + Math.round(BT.player.maxHp * healPct));
       }
       BT.enemy = generateEnemy(BT.wave);
-      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
+      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
       if (BT.freezeATK > 0) { BT.player.atk += BT.freezeATK; BT.freezeATK = 0; BT.freezeTurns = 0 }
-      BT.buffs = []; BT.debuffs = [];
+      BT.buffs = []; BT.debuffs = []; BT.boosterUsed = false;
       // 웨이브 전환 오버레이
       var ov = $('bt-overlay'); ov.classList.add('on');
       setTimeout(function () {
@@ -1146,17 +1189,16 @@
       var skillMulti = p.skill.multi + (p.skillBonus || 0);
       var estSkill = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), skillMulti, p.skill.ignoreDef || 0) * 0.9);
       var a3 = document.createElement('button'); a3.className = 'bt-act skill';
-      a3.textContent = '\u2728 ' + p.skill.name + ' SP' + effectiveCost + ' (~' + estSkill + ')';
-      if (p.sp < effectiveCost) a3.classList.add('disabled');
+      if (BT.skillCD > 0) { a3.textContent = '✨ ' + p.skill.name + ' [' + BT.skillCD + '턴]'; a3.classList.add('disabled') }
+      else { a3.textContent = '\u2728 ' + p.skill.name + ' SP' + effectiveCost + ' (~' + estSkill + ')'; if (p.sp < effectiveCost) a3.classList.add('disabled') }
       a3.addEventListener('click', function () { doPlayerAction('skill') }); secondaryRow.appendChild(a3);
-      // 오버차지
-      var ocCost = effectiveCost * 2;
-      var estOC = Math.round(estSkill * 1.5);
+      // 미라클 부스터
+      var boostCost = 50;
       var a3b = document.createElement('button'); a3b.className = 'bt-act skill';
       a3b.style.cssText = 'border-color:rgba(255,180,0,0.5);color:#ffb300;background:rgba(255,180,0,0.08)';
-      a3b.textContent = '\uD83D\uDCA5 \uC624\uBC84\uCC28\uC9C0 SP' + ocCost + ' (~' + estOC + ')';
-      if (p.sp < ocCost) a3b.classList.add('disabled');
-      a3b.addEventListener('click', function () { doPlayerAction('overcharge') }); secondaryRow.appendChild(a3b);
+      if (BT.boosterUsed) { a3b.textContent = '🌟 미라클 부스터 [사용됨]'; a3b.classList.add('disabled') }
+      else { a3b.textContent = '🌟 미라클 부스터 SP' + boostCost + ' (전능력 2배 2턴)'; if (p.sp < boostCost) a3b.classList.add('disabled') }
+      a3b.addEventListener('click', function () { doPlayerAction('booster') }); secondaryRow.appendChild(a3b);
       // 합체기
       if (BT.comboAttackCharged) {
         var a5 = document.createElement('button'); a5.className = 'bt-act';
@@ -1170,6 +1212,7 @@
         var lb = '\uD83C\uDF1F ' + sp.data.name + ' ';
         if (sup.type === 'buff') lb += statKR(sup.stat) + '+' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'heal') lb += '\uCCB4\uB825+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'sp_pct') lb += 'SP' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'sp') lb += 'SP+' + sup.val;
         else if (sup.type === 'debuff') lb += '\uC801' + statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'damage') lb += '\uACF5\uACA9x' + sup.multi;
@@ -1228,10 +1271,11 @@
       if (p.key === 'black' && BT.blackAim > 0) sklPvParts.push('<span class="pv-buff">관통 ' + BT.blackAim + '스택 소모 +' + BT.blackAim * 5 + '%</span>');
       if (p.sp < effectiveCost) sklPvParts.push('<span style="color:#f44">SP 부족!</span>');
       previews.skill = sklPvParts.join(' · ');
-      // 오버차지 프리뷰
-      var ocPvParts = ['<span class="pv-dmg">예상 ~' + estOC + ' (1.5배)</span>', '<span class="pv-sp">SP ' + ocCost + ' 소모</span>'];
-      if (p.sp < ocCost) ocPvParts.push('<span style="color:#f44">SP 부족!</span>');
-      previews.overcharge = ocPvParts.join(' · ');
+      // 미라클 부스터 프리뷰
+      var bstPvParts = ['<span class="pv-buff">전 능력치 2배 (2턴)</span>', '<span class="pv-sp">SP 50 소모</span>'];
+      if (BT.boosterUsed) bstPvParts = ['<span style="color:#f44">이미 사용됨</span>'];
+      else if (p.sp < 50) bstPvParts.push('<span style="color:#f44">SP 부족!</span>');
+      previews.booster = bstPvParts.join(' · ');
       // 지원 프리뷰 (각 서포터별)
       BT.supportPool.forEach(function (sp, idx) {
         var sup = sp.data.support; var cd = BT.supportCDs[sp.key] || 0;
@@ -1241,6 +1285,7 @@
           pv.push('<span class="pv-buff">' + sp.data.name + '</span>');
           if (sup.type === 'buff') pv.push('<span class="pv-buff">아군 ' + statKR(sup.stat) + ' +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'heal') { var ha = Math.round(p.maxHp * sup.val); pv.push('<span class="pv-heal">체력 +' + ha + ' 회복</span>') }
+          else if (sup.type === 'sp_pct') { var spAmt = Math.round(p.maxSp * sup.val); pv.push('<span class="pv-sp">SP +' + spAmt + ' (' + Math.round(sup.val * 100) + '%) 충전</span>') }
           else if (sup.type === 'sp') pv.push('<span class="pv-sp">SP +' + sup.val + ' 충전</span>');
           else if (sup.type === 'debuff') pv.push('<span class="pv-buff">적 ' + statKR(sup.stat) + ' -' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'damage') { var es = Math.round(calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), sup.multi, 0) * 0.9); pv.push('<span class="pv-dmg">예상 ~' + es + '</span>') }
@@ -1259,7 +1304,7 @@
         btn.addEventListener('mouseleave', clearPv);
         btn.addEventListener('touchstart', function () { setPv(previews[key]) }, { passive: true });
       }
-      bindPv(a1, 'atk'); bindPv(a2, 'def'); bindPv(focusBtn, 'focus'); bindPv(a3, 'skill'); bindPv(a3b, 'overcharge');
+      bindPv(a1, 'atk'); bindPv(a2, 'def'); bindPv(focusBtn, 'focus'); bindPv(a3, 'skill'); bindPv(a3b, 'booster');
       var supBtns = acts.querySelectorAll('.bt-act.support');
       supBtns.forEach(function (btn, idx) { bindPv(btn, 'sup_' + idx) });
       if (BT.comboAttackCharged) { var cBtn = acts.querySelector('.bt-act:last-child'); bindPv(cBtn, 'combo') }
@@ -1445,7 +1490,19 @@
           showDmgNum(counterDmg, 'bt-psvg', ''); btLogAppend('반격! <span class="dmg">' + counterDmg + ' 데미지</span>');
         }
         updateBattleUI();
-        setTimeout(function () { afterPlayerAction() }, 700);
+        // 추가 공격 확률 체크
+        if (BT.perkExtraAtk > 0 && e.hp > 0 && Math.random() < BT.perkExtraAtk) {
+          setTimeout(function () {
+            var extraDmg = calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), 0.5, 0);
+            if (BT.perkDmgUp > 0) extraDmg = Math.round(extraDmg * (1 + BT.perkDmgUp));
+            e.hp -= extraDmg; showDmgNum(extraDmg, 'bt-esvg', '');
+            btLog('⚡ 추가 공격! <span class="dmg">' + extraDmg + '</span>');
+            updateBattleUI();
+            setTimeout(function () { afterPlayerAction() }, 500);
+          }, 400);
+        } else {
+          setTimeout(function () { afterPlayerAction() }, 700);
+        }
 
       } else if (action === 'defend') {
         if (BT.defendCD > 0) { BT.acting = false; showActions(); return }
@@ -1486,10 +1543,12 @@
         setTimeout(function () { afterPlayerAction() }, 500);
 
       } else if (action === 'skill') {
+        if (BT.skillCD > 0) { BT.acting = false; showActions(); return }
         var skillCost = p.skill.cost - (p.skillCostReduction || 0);
         if (BT.passiveKey === 'yellow') skillCost -= 5;
         skillCost = Math.max(0, skillCost);
         if (p.sp < skillCost) { BT.acting = false; showActions(); return }
+        BT.skillCD = 3;
         p.sp -= skillCost;
         var multi = p.skill.multi + (p.skillBonus || 0);
         multi *= (1 + tgBonus);
@@ -1548,43 +1607,19 @@
         });
         return;
 
-      } else if (action === 'overcharge') {
-        // 오버차지: SP 2배 소모, 데미지 1.5배
-        var skillCost = p.skill.cost - (p.skillCostReduction || 0);
-        if (BT.passiveKey === 'yellow') skillCost -= 5;
-        skillCost = Math.max(0, skillCost);
-        var ocCost = skillCost * 2;
-        if (p.sp < ocCost) { BT.acting = false; showActions(); return }
-        p.sp -= ocCost;
-        var multi = (p.skill.multi + (p.skillBonus || 0)) * 1.5;
-        multi *= (1 + tgBonus);
-        var skillIgnore = p.skill.ignoreDef || 0;
-        if (BT.passiveKey === 'black') skillIgnore = Math.min(1, skillIgnore + 0.3);
-        if (p.key === 'black' && BT.blackAim > 0) { multi *= (1 + BT.blackAim * 0.05); BT.blackAim = 0 }
-        var yellowBonus = 0; var yellowStunBonus = 0;
-        if (p.key === 'yellow' && BT.yellowMarks > 0) {
-          if (BT.yellowMarks >= 3) { yellowStunBonus = 1; yellowBonus = 0.30 }
-          else if (BT.yellowMarks >= 2) { yellowBonus = 0.20 }
-          BT.yellowMarks = 0;
-        }
-        multi *= (1 + yellowBonus);
-        if (p.key === 'red' && BT.redMomentum >= 5) { multi *= 1.5; BT.redMomentum = 0 }
-        var skillCrit = BT.guaranteedCrit || Math.random() < (p.crit * 0.01 + (p.critBonus || 0) + BT.perkCritChance);
-        BT.guaranteedCrit = false;
-        skillIgnore = Math.min(1, skillIgnore + BT.perkArmorPen);
-        var dmg = calcDmg(p.atk + getBuffVal('atk'), e.def + getDebuffVal('def'), multi, skillIgnore);
-        if (BT.perkDmgUp > 0) dmg = Math.round(dmg * (1 + BT.perkDmgUp));
-        if (skillCrit) { dmg = Math.round(dmg * (1.5 + BT.perkCritDmg)) }
-        if (BT.perkRage && p.hp < p.maxHp * 0.3) { dmg = Math.round(dmg * 1.3) }
-        e.hp -= dmg;
-        btChainFlash('#ffb300', 2); btShake(true); showDmgNum(dmg, 'bt-esvg', skillCrit ? 'crit' : '');
-        var ocLog = '💥 오버차지 ' + p.skill.name + '! <span class="dmg">' + dmg + '</span>';
-        if (skillCrit) { var critMulti = (1.5 + BT.perkCritDmg).toFixed(2); ocLog += ' <span class="buff">크리티컬! x' + critMulti + '</span>' }
-        btLog(ocLog);
-        if (p.skill.heal) { var sh = Math.round((p.def * 0.5 + p.maxHp * 0.05) * (1 + BT.perkShieldUp)); BT.shield += sh; btLogAppend('<span class="buff">🛡️ 쉴드 +' + sh + '</span>') }
-        if (yellowStunBonus > 0) { BT.stunTurns += yellowStunBonus; btLogAppend('<span class="buff">감전 폭발! 스턴 ' + yellowStunBonus + '턴</span>') }
-        if (BT.perkChainLightning) { var cl = calcDmg(p.atk, e.def, 0.3, 0); e.hp -= cl; showDmgNum(cl, 'bt-esvg', ''); btLogAppend('⚡ 연쇄 번개 <span class="dmg">' + cl + '</span>') }
-        if (BT.passiveKey === 'pink') { var ph = Math.round((p.def * 0.5 + p.maxHp * 0.05) * (1 + BT.perkShieldUp)); BT.shield += ph; btLogAppend('<span class="buff">🛡️ +' + ph + '</span>') }
+      } else if (action === 'booster') {
+        // 미라클 부스터: SP 50 소모, 모든 능력치 2턴간 2배
+        if (BT.boosterUsed) { BT.acting = false; showActions(); return }
+        var boostCost = 50;
+        if (p.sp < boostCost) { BT.acting = false; showActions(); return }
+        p.sp -= boostCost;
+        BT.boosterUsed = true;
+        BT.buffs.push({ stat: 'atk', val: 1.0, turns: 2 });
+        BT.buffs.push({ stat: 'def', val: 1.0, turns: 2 });
+        BT.buffs.push({ stat: 'crit', val: 1.0, turns: 2 });
+        BT.buffs.push({ stat: 'dodge', val: 1.0, turns: 2 });
+        btChainFlash('#ffb300', 3); btShake(false);
+        btLog('🌟 <span class="buff">미라클 부스터 발동! 전 능력치 2배! (2턴)</span>');
         updateBattleUI(); updateStatusIcons();
         setTimeout(function () { afterPlayerAction() }, 700);
         return;
@@ -1595,7 +1630,7 @@
         var cd = BT.supportCDs[supporter.key] || 0;
         if (cd > 0) { BT.acting = false; showActions(); return }
         var sup = supporter.data.support;
-        var baseCooldown = Math.max(2, 4 - Math.floor(getLabBonus('support')));
+        var baseCooldown = 4;
         BT.supportCDs[supporter.key] = baseCooldown;
         var doubleSupport = (BT.perkDoubleSupport && !BT.perkDoubleSupportUsed);
         if (doubleSupport) BT.perkDoubleSupportUsed = true;
@@ -1616,6 +1651,10 @@
             var debuffVal = sup.val * supMul;
             BT.debuffs.push({ stat: sup.stat, val: debuffVal, turns: sup.turns });
             btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="buff">적 ' + statKR(sup.stat) + ' DOWN!</span>' + (doubleSupport ? ' (2배!)' : ''));
+          } else if (sup.type === 'sp_pct') {
+            var spVal = Math.round(p.maxSp * sup.val * supMul);
+            p.sp = Math.min(p.maxSp, p.sp + spVal);
+            btLog('🌟 ' + sup.name + '! <span class="sp-use">SP +' + spVal + ' (' + Math.round(sup.val * 100) + '%)</span>' + (doubleSupport ? ' (2배!)' : ''));
           } else if (sup.type === 'sp') {
             var spVal = Math.round(sup.val * supMul);
             p.sp = Math.min(p.maxSp, p.sp + spVal);
@@ -1668,14 +1707,13 @@
         e.hp = 0; updateBattleUI();
         BT.kills++;
         // 골드 드롭 (골드 부스트 적용)
-        var goldBonus = 1 + getLabBonus('gold');
+        var rewardBonus = 1 + getLabBonus('reward');
         var goldDrop = e.isBoss ? (5 + Math.floor(Math.random() * 4) + Math.ceil(BT.wave / 3)) : (2 + Math.floor(Math.random() * 2));
-        goldDrop = Math.round(goldDrop * goldBonus);
+        goldDrop = Math.round(goldDrop * rewardBonus);
         BT.gold += goldDrop;
         // CE 드롭
         var ceDrop = e.isBoss ? (5 + Math.floor(Math.random() * 4)) : (1 + Math.floor(Math.random() * 2));
-        var ceBonus = 1 + getLabBonus('energy');
-        ceDrop = Math.round(ceDrop * ceBonus);
+        ceDrop = Math.round(ceDrop * rewardBonus);
         BT.ce += ceDrop;
         progData.ce += ceDrop; saveProg();
         btLog(e.name + '을(를) 쓰러뜨렸다! <span class="gold-drop">✨MP+' + goldDrop + ' 🔮CE+' + ceDrop + '</span>' + (e.isBoss ? ' <span class="buff">★ 보스 격파!</span>' : ''));
@@ -1909,6 +1947,7 @@
       Object.keys(BT.supportCDs).forEach(function (k) { if (BT.supportCDs[k] > 0) BT.supportCDs[k]-- });
       if (BT.focusCD > 0) BT.focusCD--;
       if (BT.defendCD > 0) BT.defendCD--;
+      if (BT.skillCD > 0) BT.skillCD--;
 
       // 화상 데미지
       if (BT.burnTurns > 0 && p.hp > 0) {
