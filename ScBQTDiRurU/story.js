@@ -163,7 +163,7 @@ var S = [
   { t: 'd', sp: '카오스', cl: '#ce93d8', tx: '"바..박사?..!!"', ch: ['chaos'], lo: 'right', tk: 'chaos' },
   { t: 'd', sp: '박사', cl: '#9575cd', tx: '"미라클 부스터...\n아직 테스트도 못 했지만..."', ch: ['doc'], lo: 'right', tk: 'doc' },
   { t: 'n', tx: '손이 떨렸다.\n그래도 저 아이들 앞에서\n가만히 있을 수는 없었다.' },
-  { t: 'd', sp: '박사', cl: '#9575cd', tx: '"지금은 이것밖에 없어요.\n여러분을 믿을게요!"', ch: ['doc'], lo: 'right', tk: 'doc' },
+  { t: 'd', sp: '박사', cl: '#9575cd', tx: '"지금은 이것밖에 없어용.\n여러분을 믿을게용!"', ch: ['doc'], lo: 'right', tk: 'doc' },
   { t: 'n', tx: '장치를 하늘로 던졌다.' },
   { t: 'pause', ms: 500 },
   { t: 'fx', v: 'flash-white' },
@@ -190,8 +190,8 @@ var S = [
   { t: 'pause', ms: 500 },
   { t: 'bh', eHp: 90, tHp: 100 },
   { t: 'd', sp: '레드', cl: '#e53935', tx: '"이 힘은...!"', ch: ['red', 'black', 'blue', 'yellow', 'pink'], lo: 'spread', tk: 'red' },
-  { t: 'd', sp: '박사', cl: '#9575cd', tx: '"새로운 발명품이에요!\n그것보다 저 녀석부터!"', ch: ['doc'], lo: 'right', tk: 'doc' },
-  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...박사님. 고마워.\n다시 간다!"', ch: ['red', 'black', 'blue', 'yellow', 'pink'], lo: 'spread', tk: 'red' },
+  { t: 'd', sp: '박사', cl: '#9575cd', tx: '"새로운 발명품이에용!\n그것보다 저 녀석부터!"', ch: ['doc'], lo: 'right', tk: 'doc' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...박사님. 고마워요.\n다시 간다!"', ch: ['red', 'black', 'blue', 'yellow', 'pink'], lo: 'spread', tk: 'red' },
   { t: 'd', sp: '카오스', cl: '#ce93d8', tx: '"그까짓 장난감 하나로\n뭐가 달라지겠—"', ch: ['chaos'], lo: 'right', tk: 'chaos' },
 
   // ─── ACT 5: 역전 ───
@@ -256,7 +256,7 @@ var S = [
   { t: 'd', sp: '카오스', cl: '#ce93d8', tx: '"미라클 레인저...인정하마.\n오늘은 졌다."', ch: ['chaos'], lo: 'right', tk: 'chaos' },
   { t: 'd', sp: '블루', cl: '#42a5f5', tx: '"아, 또 도망가네?"', ch: ['blue'], lo: 'left', tk: 'blue' },
   { t: 'd', sp: '카오스', cl: '#ce93d8', tx: '"네놈! 전략적 후퇴라고 했을 텐데."', ch: ['chaos'], lo: 'right', tk: 'chaos' },
-  { t: 'd', sp: '옐로', cl: '#ffd54f', tx: '"이번에는 놓치지 않겠다!"', ch: ['yellow'], lo: 'left', tk: 'yellow' },
+  { t: 'd', sp: '옐로', cl: '#ffd54f', tx: '"이번에는 놓치지 않겠다~!"', ch: ['yellow'], lo: 'left', tk: 'yellow' },
   { t: 'd', sp: '카오스', cl: '#ce93d8', tx: '"...다음에는 없을 거다.\n두고 보자, 미라클 레인저."', ch: ['chaos'], lo: 'right', tk: 'chaos' },
   { t: 'n', tx: '모두가 카오스를 잡으려고 달려들었지만\n카오스는 희미해지며 연기 속으로 사라졌다.' },
   { t: 'pause', ms: 800 },
@@ -278,7 +278,7 @@ var S = [
   { t: 'fx', v: 'flash-red' },
   { t: 'n', tx: '\'위기감지 알림.\n연구소 내에 문제가 감지되었습니다.\'' },
   { t: 'd', sp: '박사', cl: '#9575cd', tx: '"아.. 부스터 출력이 너무 강했나보네용.\n출력 조정하면 괜찮을 거예용."', ch: ['doc'], lo: 'right', tk: 'doc' },
-  { t: 'd', sp: '레드', cl: '#e53935', tx: '"박사님 덕분이야.\n...고마워."', ch: ['red_sil'], lo: 'left', tk: 'red_sil' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"박사님 덕분이에요.\n...고마워요."', ch: ['red_sil'], lo: 'left', tk: 'red_sil' },
   { t: 'n', tx: '레드가 짧게 고개를 숙였다.' },
   { t: 'd', sp: '박사', cl: '#9575cd', tx: '"아니에용.\n다들 포기하지 않았으니까용."', ch: ['doc'], lo: 'right', tk: 'doc' },
   { t: 'n', tx: '사실 겁이 났다.\n장치가 안 되면 어쩌나.\n내가 가서 뭘 할 수 있나.\n\n...그런 말은 하지 않았다.' },
@@ -305,9 +305,9 @@ var S = [
 
   // ── 레드 ──
   { t: 'n', tx: '옥상으로 올라갔다.\n레드가 혼자 야경을 바라보고 있었다.', ch: ['red_sil'], lo: 'right' },
-  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...오늘은 위험했어.\n새로운 방식이 필요해.."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...오늘은 위험했어요.\n새로운 방식이 필요해요.."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
   { t: 'n', tx: '레드가 난간에 기대며 말했다.' },
-  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...리더인데.\n모두를 위험에..."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...내가 리더인데...\n모두를 위험에..."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
   {
     t: 'q', tx: '', fl: 'red_r', opts: [
       { tx: '▶ "레드가 리더라서 다행이에용."', v: 'courage' },
@@ -327,7 +327,7 @@ var S = [
   {
     t: 'q', tx: '', fl: 'blu_r', opts: [
       { tx: '▶ "다음엔 더 올려볼게용. 기대하셔도 돼용."', v: 'dunno' },
-      { tx: '▶ "블루가 강하니까 가능한 거에용."', v: 'praise' }
+      { tx: '▶ "블루가 강하니까 가능한 거예용."', v: 'praise' }
     ]
   },
   { t: 'd', sp: '블루', cl: '#42a5f5', tx: '"...고마워.\n다음엔 보여줄게."', ch: ['blue_sil'], lo: 'right', tk: 'blue_sil' },
@@ -368,7 +368,8 @@ var S = [
   { t: 'd', sp: '박사', cl: '#9575cd', tx: '"다들 수고했어용~\n푹 쉬세용."', ch: ['doc'], lo: 'right', tk: 'doc' },
   { t: 'n', tx: '하나둘 자기 방으로 들어갔다.' },
   { t: 'n', tx: '레드가 마지막으로 남았다.\n잠시 서서 기지개를 켰다.' },
-  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...박사님도 푹 쉬어요. 아 그리고... 아냐 다음에 얘기할게."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"...박사님도 푹 쉬어요. 아 그리고... 아뇨 다음에 얘기할게요."', ch: ['red_sil'], lo: 'right', tk: 'red_sil' },
+  { t: 'd', sp: '박사', cl: '#9575cd', tx: '"그래용. 언제든지 편하게 말해줘용."', ch: ['doc'], lo: 'right', tk: 'doc' },
   { t: 'n', tx: '짧게 손 흔들고 방으로 들어갔다.' },
   { t: 'pause', ms: 1200 },
   { t: 'n', tx: '나도 내 방으로 돌아왔다.\n카드키를 찍고 안으로 들어섰다.\n문이 닫히고, 크게 한숨을 내쉬었다.', ch: ['doc'] },
