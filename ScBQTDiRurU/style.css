@@ -2167,15 +2167,21 @@
 
     .rw-cards {
       display: flex;
-      gap: 14px
+      gap: 10px;
+      justify-content: center;
+      max-width: 100%;
+      padding: 0 8px;
+      box-sizing: border-box
     }
 
     .rw-card {
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 215, 0, 0.03));
       border: 2px solid #555;
       border-radius: 14px;
-      padding: 22px 14px 18px;
-      width: 112px;
+      padding: 18px 10px 14px;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 120px;
       text-align: center;
       cursor: pointer;
       transition: all 0.25s
@@ -2273,13 +2279,21 @@
 
     .mini-rw-box {
       display: flex;
-      gap: 10px
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 380px;
+      padding: 0 8px;
+      box-sizing: border-box
     }
 
     .mini-rw-card {
       background: rgba(255, 255, 255, 0.06);
       border: 2px solid #555;
       border-radius: 10px;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 110px;
       padding: 16px 14px;
       width: 140px;
       text-align: center;
@@ -2292,6 +2306,11 @@
       background: rgba(255, 215, 0, 0.08);
       transform: translateY(-4px);
       box-shadow: 0 4px 12px rgba(255, 215, 0, 0.15)
+    }
+
+    .mini-rw-box .rw-retreat {
+      flex: 0 0 100%;
+      max-width: none
     }
 
     .mini-rw-icon {

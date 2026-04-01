@@ -401,34 +401,34 @@
     // ── 캐릭터 데이터 ──
     var RANGERS = {
       red: {
-        name: '레드', color: '#e53935', weapon: '대검',
-        hp: 33, atk: 15, def: 9, crit: 15, dodge: 8, sp: 50,
-        skill: { name: '미라클 슬래시', cost: 30, multi: 1.8, desc: '공격력 180% 대검 일격', ignoreDef: 0 },
-        support: { name: '리더의 격려', desc: '공격력 +30% (3턴)', type: 'buff', stat: 'atk', val: 0.3, turns: 3 }
+        name: '\uB808\uB4DC', color: '#e53935', weapon: '\uB300\uAC80',
+        hp: 35, atk: 15, def: 10, crit: 15, dodge: 8, sp: 50,
+        skill: { name: '\uBBF8\uB77C\uD074 \uC2AC\uB798\uC2DC', cost: 30, multi: 1.8, desc: '\uACF5\uACA9\uB825 180% \uB300\uAC80 \uC77C\uACA9', ignoreDef: 0 },
+        support: { name: '\uB9AC\uB354\uC758 \uACA9\uB824', desc: '\uACF5\uACA9\uB825 +35% (3\uD134)', type: 'buff', stat: 'atk', val: 0.35, turns: 3 }
       },
       black: {
-        name: '블랙', color: '#555', weapon: '총',
-        hp: 30, atk: 14, def: 9, crit: 15, dodge: 8, sp: 50,
-        skill: { name: '풀버스트 샷', cost: 30, multi: 1.6, desc: '공격력 160% + 방어무시', ignoreDef: 1 },
-        support: { name: '엄호 사격', desc: '적에게 공격력 120% 데미지', type: 'damage', multi: 1.2 }
+        name: '\uBE14\uB799', color: '#555', weapon: '\uCD1D',
+        hp: 28, atk: 13, def: 7, crit: 22, dodge: 10, sp: 55,
+        skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 25, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uBC29\uC5B4\uBB34\uC2DC', ignoreDef: 1 },
+        support: { name: '\uC5C4\uD638 \uC0AC\uACA9', desc: '\uC801\uC5D0\uAC8C \uACF5\uACA9\uB825 140% \uB370\uBBF8\uC9C0', type: 'damage', multi: 1.4 }
       },
       blue: {
-        name: '블루', color: '#1565c0', weapon: '검',
-        hp: 27, atk: 16, def: 7, crit: 20, dodge: 10, sp: 50,
-        skill: { name: '소닉 블레이드', cost: 35, multi: 1.9, desc: '공격력 190% 고속참격', ignoreDef: 0 },
-        support: { name: '전술 분석', desc: '적 방어력 -30% (3턴)', type: 'debuff', stat: 'def', val: 0.3, turns: 3 }
+        name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
+        hp: 24, atk: 15, def: 5, crit: 25, dodge: 15, sp: 45,
+        skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 40, multi: 2.0, desc: '\uACF5\uACA9\uB825 200% \uACE0\uC18D\uCC38\uACA9', ignoreDef: 0 },
+        support: { name: '\uC804\uC220 \uBD84\uC11D', desc: '\uC801 \uBC29\uC5B4\uB825 -35% (3\uD134)', type: 'debuff', stat: 'def', val: 0.35, turns: 3 }
       },
       yellow: {
-        name: '옐로', color: '#f9a825', weapon: '클로',
-        hp: 30, atk: 13, def: 8, crit: 17, dodge: 9, sp: 50,
-        skill: { name: '썬더 크러쉬', cost: 35, multi: 1.6, desc: '공격력 160% + 스턴 1턴', stun: 1, ignoreDef: 0 },
-        support: { name: '번개 충전', desc: 'SP +20 회복', type: 'sp', val: 20 }
+        name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
+        hp: 32, atk: 11, def: 8, crit: 12, dodge: 8, sp: 60,
+        skill: { name: '\uC36C\uB354 \uD06C\uB7EC\uC26C', cost: 25, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uC2A4\uD134 1\uD134', stun: 1, ignoreDef: 0 },
+        support: { name: '\uBC88\uAC1C \uCDA9\uC804', desc: 'SP +30 \uD68C\uBCF5', type: 'sp', val: 30 }
       },
       pink: {
-        name: '핑크', color: '#ec407a', weapon: '채찍',
-        hp: 36, atk: 12, def: 12, crit: 12, dodge: 10, sp: 50,
-        skill: { name: '바인드 위프', cost: 30, multi: 1.5, desc: '공격력 150% + 쉴드 5% 부여', heal: 0.05, ignoreDef: 0 },
-        support: { name: '힐링 위프', desc: '체력 20% 회복', type: 'heal', val: 0.2 }
+        name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
+        hp: 42, atk: 10, def: 16, crit: 8, dodge: 8, sp: 50,
+        skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 28, multi: 1.6, desc: '\uACF5\uACA9\uB825 160% + \uC270\uB4DC 5% \uBD80\uC5EC', heal: 0.05, ignoreDef: 0 },
+        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '\uCCB4\uB825 30% \uD68C\uBCF5', type: 'heal', val: 0.3 }
       }
     };
 
@@ -586,7 +586,7 @@
       nextAtkBonus: 0, comboAttackCharged: false,
       lastAction: null, tacticalGauge: 0, guaranteedCrit: false,
       redMomentum: 0, blackAim: 0, blueCritChain: 0, yellowMarks: 0, pinkBond: 0,
-      shield: 0, focusCD: 0,
+      shield: 0, focusCD: 0, defendCD: 0,
       burnDmg: 0, burnTurns: 0, enemyTelegraph: false, enemyIntent: null, currentTgBonus: 0,
       supportCDs: {},
       perkVamp: 0, perkCounterUp: false, perkTgBoost: 0, perkDodge: 0, perkSpOverflow: 0, perkThorns: 0, perkFirstStrike: 0, perkChainLightning: false, perkGuardHeal: false, perkTgMin: false, perkRage: false, perkDoubleSupport: false, perkDoubleSupportUsed: false, perkDmgReduce: 0, perkCritChance: 0, perkCritDmg: 0, perkShieldUp: 0, perkDmgUp: 0, perkArmorPen: 0
@@ -805,8 +805,9 @@
               + '<div class="sel-stat"><b>체력</b> ' + r.hp + ' <b>공격력</b> ' + r.atk + ' <b>쉴드력</b> ' + r.def + '</div>'
               + '<div class="sel-stat"><b>크리확률</b> ' + r.crit + '% <b>크리데미지</b> x1.50 <b>회피</b> ' + r.dodge + '%</div>'
               + '<div class="sel-stat"><b>SP</b> ' + r.sp + '</div>'
-              + '<div class="sel-skill">✨ ' + r.skill.name + ' — ' + r.skill.desc + ' (SP ' + r.skill.cost + ')</div>'
-              + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' 파트너 패시브: <b>' + pb.name + '</b> — ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">스킬 보너스: ' + pb.skillDesc + '</span></div>';
+              + '<div class="sel-skill">\u2728 ' + r.skill.name + ' \u2014 ' + r.skill.desc + ' (SP ' + r.skill.cost + ')</div>'
+              + '<div class="sel-skill" style="color:#4ecca3;margin-top:4px">\uD83C\uDF1F <b>[\uC9C0\uC6D0\uC2A4\uD0AC]</b> ' + r.support.name + ' \u2014 ' + r.support.desc + '</div>'
+              + '<div class="sel-skill" style="color:#9575cd;margin-top:4px">' + pb.icon + ' \uD30C\uD2B8\uB108 \uD328\uC2DC\uBE0C: <b>' + pb.name + '</b> \u2014 ' + pb.desc + '<br><span style="color:#ffd700;font-size:11px">\uC2A4\uD0AC \uBCF4\uB108\uC2A4: ' + pb.skillDesc + '</span></div>';
             $('sel-go').style.display = 'block'; $('sel-go').textContent = '▶ 다음: 파트너 선택';
           } else if (step === 2) {
             if (key === BT.selectedRanger) return;
@@ -947,7 +948,7 @@
     function showBattleTutorial(cb) {
       var steps = [
         { title: '❤️ 체력 / 💎 SP', desc: '체력이 0이 되면 패배!\nSP는 필살기에 사용합니다.\n방어하면 SP가 회복됩니다.' },
-        { title: '⚔️ 행동 선택', desc: '공격: 기본 데미지\n방어: 쉴드 생성 + SP 회복\n🧘 집중: 체력 / SP 회복 (쿨타임 3턴)\n필살기: SP 소모, 강력한 일격!\n💥 오버차지: SP 2배로 데미지 1.5배!\n🌟 지원: 3명 중 원하는 파트너 선택' },
+        { title: '\u2694\uFE0F \uD589\uB3D9 \uC120\uD0DD', desc: '\uACF5\uACA9: \uAE30\uBCF8 \uB370\uBBF8\uC9C0\n\uBC29\uC5B4: \uC270\uB4DC \uC0DD\uC131 + SP+5 (\uCFE8\uD0C0\uC784 2\uD134)\n\uD83E\uDDD8 \uC9D1\uC911: \uCCB4\uB825 / SP \uD68C\uBCF5 (\uCFE8\uD0C0\uC784 3\uD134)\n\uD544\uC0B4\uAE30: SP \uC18C\uBAA8, \uAC15\uB825\uD55C \uC77C\uACA9!\n\uD83D\uDCA5 \uC624\uBC84\uCC28\uC9C0: SP 2\uBC30\uB85C \uB370\uBBF8\uC9C0 1.5\uBC30!\n\uD83C\uDF1F \uC9C0\uC6D0\uC2A4\uD0AC: 3\uBA85 \uC911 \uC6D0\uD558\uB294 \uD30C\uD2B8\uB108 \uC120\uD0DD' },
         { title: '🛡️ 쉴드 & 피해 감소', desc: '쉴드력이 높을수록 강한 쉴드 생성!\n쉴드는 적 공격을 먼저 흡수합니다.\n⚠️ 쉴드는 매 턴 50% 감소합니다.\n\n보상으로 \'피해 감소\'를 얻으면\n받는 데미지가 영구적으로 줄어듭니다!' },
         { title: '🎯 전술 게이지', desc: '같은 행동을 연속으로 하면 전술 게이지가 1씩 증가!\n(최대 3단계: +10% → +20% → +30%)\n다른 행동으로 전환하면 쌓인 보너스가 데미지에 적용!\n행동을 섞어서 보너스를 극대화하세요.' },
         { title: '⚠️ 적 의도 & 보상', desc: '적의 다음 행동이 상단에 예고됩니다.\n예고를 읽고 공격/방어를 판단하세요!\n\n웨이브 클리어 시 보상을 획득합니다.\n치명타, 피해량, 쉴드, 관통 등 다양한\n강화를 조합해 나만의 빌드를 만드세요!' },
@@ -987,7 +988,7 @@
         BT.player.hp = Math.min(BT.player.maxHp, BT.player.hp + Math.round(BT.player.maxHp * healPct));
       }
       BT.enemy = generateEnemy(BT.wave);
-      BT.shield = 0; BT.focusCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
+      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
       if (BT.freezeATK > 0) { BT.player.atk += BT.freezeATK; BT.freezeATK = 0; BT.freezeTurns = 0 }
       BT.buffs = []; BT.debuffs = [];
       // 웨이브 전환 오버레이
@@ -1098,7 +1099,7 @@
       if (p.key === 'yellow' && BT.yellowMarks > 0) { var s = document.createElement('span'); s.className = 'bt-sicon stun'; s.textContent = '⚡ 감전 ' + BT.yellowMarks + '/3' + (BT.yellowMarks >= 3 ? ' 스킬 시 스턴!' : ''); row.appendChild(s) }
       if (p.key === 'pink') { var s = document.createElement('span'); s.className = 'bt-sicon heal'; s.textContent = '💗 유대 ' + BT.pinkBond + '%' + (BT.pinkBond >= 80 ? ' 곧 발동!' : ''); row.appendChild(s) }
       // 강타 예고
-      if (BT.enemyTelegraph) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.style.animation = 'blink 0.5s infinite'; s.textContent = '⚠️ 강타 예고!'; row.appendChild(s) }
+      if (BT.enemyTelegraph) { var s = document.createElement('span'); s.className = 'bt-sicon buff'; s.style.cssText = 'animation:blink 0.4s infinite;color:#ff4444;font-weight:bold;border-color:#f44'; s.textContent = '\u26A0\uFE0F\u26A0\uFE0F \uAC15\uD0C0 \uC608\uACE0! \uBC29\uC5B4 \uD544\uC218! \u26A0\uFE0F\u26A0\uFE0F'; row.appendChild(s) }
       // 골드/CE 표시
       $('bt-pending').textContent = '✨MP ' + BT.gold + ' | 🔮CE ' + BT.ce;
     }
@@ -1118,7 +1119,9 @@
       a1.addEventListener('click', function () { doPlayerAction('attack') }); acts.appendChild(a1);
       // 방어
       var shieldPreview = p.key === 'pink' ? Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) : Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp));
-      var a2 = document.createElement('button'); a2.className = 'bt-act def'; a2.textContent = '🛡️ 방어 🛡+' + shieldPreview + ' SP+10';
+      var a2 = document.createElement('button'); a2.className = 'bt-act def';
+      if (BT.defendCD > 0) { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 [' + BT.defendCD + '\uD134]'; a2.classList.add('disabled') }
+      else { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 \uD83D\uDEE1+' + shieldPreview + ' SP+5' }
       a2.addEventListener('click', function () { doPlayerAction('defend') }); acts.appendChild(a2);
       // 집중 (회복기, 쿨타임 3턴)
       var focusHp = 1 + Math.round(p.maxHp * 0.10); var focusSp = 5 + Math.round(p.maxSp * 0.30);
@@ -1147,13 +1150,14 @@
       // 지원 (3명 중 택 1, 각각 독립 쿨타임)
       BT.supportPool.forEach(function (sp, idx) {
         var sup = sp.data.support; var cd = BT.supportCDs[sp.key] || 0;
-        var lb = '🌟 ' + sp.data.name + ' ';
+        var lb = '\uD83C\uDF1F ' + sp.data.name + ' ';
         if (sup.type === 'buff') lb += statKR(sup.stat) + '+' + Math.round(sup.val * 100) + '%';
-        else if (sup.type === 'heal') lb += '체력+' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'heal') lb += '\uCCB4\uB825+' + Math.round(sup.val * 100) + '%';
         else if (sup.type === 'sp') lb += 'SP+' + sup.val;
-        else if (sup.type === 'debuff') lb += '적' + statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
-        else if (sup.type === 'damage') lb += '공격x' + sup.multi;
-        if (cd > 0) lb += ' [' + cd + '턴]';
+        else if (sup.type === 'debuff') lb += '\uC801' + statKR(sup.stat) + '-' + Math.round(sup.val * 100) + '%';
+        else if (sup.type === 'damage') lb += '\uACF5\uACA9x' + sup.multi;
+        if (cd > 0) lb += ' [' + cd + '\uD134]';
+        lb += ' [\uC9C0\uC6D0\uC2A4\uD0AC]';
         var btn = document.createElement('button'); btn.className = 'bt-act support';
         btn.textContent = lb;
         if (cd > 0) btn.classList.add('disabled');
@@ -1191,8 +1195,9 @@
       if (spRegen > 0) atkPvParts.push('<span class="pv-sp">SP+' + spRegen + ' 회복</span>');
       previews.atk = atkPvParts.join(' · ');
       // 방어 프리뷰
-      var defSpTotal = Math.min(p.maxSp, p.sp + 10) - p.sp;
-      var defPvParts = ['<span class="pv-shield">쉴드 ' + shieldPreview + ' 생성 (매턴 50%↓)</span>', '<span class="pv-sp">SP +' + defSpTotal + ' 회복</span>'];
+      var defSpTotal = Math.min(p.maxSp, p.sp + 5) - p.sp;
+      if (BT.defendCD > 0) { previews.def = '<span style="color:#f44">\uCFE8\uD0C0\uC784 ' + BT.defendCD + '\uD134 \uB0A8\uC74C</span>' }
+      var defPvParts = ['<span class="pv-shield">\uC270\uB4DC ' + shieldPreview + ' \uC0DD\uC131 (\uB9E4\uD134 50%\u2193)</span>', '<span class="pv-sp">SP +' + defSpTotal + ' \uD68C\uBCF5</span>'];
       if (BT.perkGuardHeal) defPvParts.push('<span class="pv-heal">체력 +' + Math.round(p.maxHp * 0.02) + ' 치유</span>');
       previews.def = defPvParts.join(' · ');
       // 집중 프리뷰
@@ -1429,14 +1434,16 @@
         setTimeout(function () { afterPlayerAction() }, 700);
 
       } else if (action === 'defend') {
+        if (BT.defendCD > 0) { BT.acting = false; showActions(); return }
         p.guarding = true;
-        p.sp = Math.min(p.maxSp, p.sp + 10);
+        p.sp = Math.min(p.maxSp, p.sp + 5);
+        BT.defendCD = 2;
         // 쉴드 부여: DEF × 3 + MaxHP × 10% (핑크: DEF × 3.5 + MaxHP × 12%)
         var shieldAmt;
         if (p.key === 'pink') { shieldAmt = Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) }
         else { shieldAmt = Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp)) }
         BT.shield = Math.max(BT.shield, shieldAmt);
-        var defLog = p.name + '이(가) 방어! <span class="sp-use">SP+10</span> <span class="buff">🛡️ 쉴드 ' + BT.shield + '</span>';
+        var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="sp-use">SP+5</span> <span class="buff">\uD83D\uDEE1\uFE0F \uC270\uB4DC ' + BT.shield + '</span>';
         // 핑크 고유: 방어 시 유대 게이지 +15
         if (p.key === 'pink') { BT.pinkBond = Math.min(100, BT.pinkBond + 15); defLog += ' <span class="buff">💗 유대 +15</span>' }
         // 수호의 오라
@@ -1698,7 +1705,7 @@
           btLog('⚠️ <span class="buff">' + e.name + '이(가) 힘을 모으고 있다!</span>');
           BT.enemyTelegraph = true;
         }
-        if (sp.type === 'smash' && e.turnCount % sp.every === 0) { BT.enemyTelegraph = false; atkMulti = sp.multi; btLog('<span class="buff">' + e.name + '의 강타!</span>') }
+        if (sp.type === 'smash' && e.turnCount % sp.every === 0) { BT.enemyTelegraph = false; atkMulti = sp.multi; btChainFlash('#f44', 2); btShake(true); btLog('<span class="dmg">\u26A0\uFE0F\u26A0\uFE0F ' + e.name + '\uC758 \uAC15\uD0C0! \u26A0\uFE0F\u26A0\uFE0F</span> <span class="buff">x' + sp.multi.toFixed(1) + '</span>') }
         if (sp.type === 'double' && Math.random() < sp.chance) {
           // 2연타: 공격 2번 (쉴드 흡수 적용)
           var dmg1 = calcDmg(e.atk, 0, 1, 0);
@@ -1837,7 +1844,7 @@
       var sp = e.special; var nextTurn = e.turnCount + 1;
       // 보스 특수 패턴 예고
       if (sp) {
-        if (sp.type === 'smash' && nextTurn % sp.every === 0) { BT.enemyIntent = '⚠️ 강타 준비! (방어 추천)'; return }
+        if (sp.type === 'smash' && nextTurn % sp.every === 0) { BT.enemyIntent = '\u26A0\uFE0F\u26A0\uFE0F \uAC15\uD0C0 \uBC1C\uB3D9! \uBC29\uC5B4 \uD544\uC218!! \u26A0\uFE0F\u26A0\uFE0F'; return }
         if (sp.type === 'smash' && (nextTurn + 1) % sp.every === 0) { BT.enemyIntent = '🔶 힘을 모으는 중...'; return }
         if (sp.type === 'armor' && nextTurn % sp.every === 0) { BT.enemyIntent = '💥 방어 해제 후 반격! (공격 찬스)'; return }
         if (sp.type === 'armor' && nextTurn % sp.every !== 0) { BT.enemyIntent = '🛡️ 방어 강화 중 (쉴드 축적)'; return }
@@ -1887,6 +1894,7 @@
       BT.debuffs = BT.debuffs.filter(function (d) { d.turns--; return d.turns > 0 });
       Object.keys(BT.supportCDs).forEach(function (k) { if (BT.supportCDs[k] > 0) BT.supportCDs[k]-- });
       if (BT.focusCD > 0) BT.focusCD--;
+      if (BT.defendCD > 0) BT.defendCD--;
 
       // 화상 데미지
       if (BT.burnTurns > 0 && p.hp > 0) {
@@ -2012,12 +2020,13 @@
       var rate = isRetreat ? 1 : 0.5;
       var earnedMP = Math.floor(baseMP * rate);
       var earnedCE = Math.floor(baseCE * rate);
-      if (earnedMP > 0) { progData.mp += earnedMP; saveProg() }
+      if (earnedMP > 0) { progData.mp += earnedMP }
       if (!isRetreat) {
         // 패배 시 이미 적립된 CE 중 절반만 인정 (전투 중 적립분 절반 회수)
         var ceLoss = Math.floor(baseCE * 0.5);
-        progData.ce -= ceLoss; saveProg();
+        progData.ce -= ceLoss;
       }
+      saveProg();
       var rateLabel = isRetreat ? '(전액)' : '(패배 50%)';
       $('go-gold').textContent = rateLabel + ' ✨MP +' + earnedMP + '  |  🔮CE +' + earnedCE;
       $('go-rp').textContent = '보유: ✨MP ' + progData.mp + '  🔮CE ' + progData.ce;
