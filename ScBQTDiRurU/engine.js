@@ -351,10 +351,18 @@
       el.appendChild(txEl('div', 'end-line bright', '내일도 지킬 것이다.'));
       el.appendChild(document.createElement('br'));
       el.appendChild(txEl('div', 'end-line', '그게 우리의 일상이니까.'));
-      el.appendChild(document.createElement('br'));
-      var ep = document.createElement('div'); ep.style.cssText = 'color:#9575cd;font-size:12px;text-align:center;margin-top:16px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 3s forwards'; ep.textContent = '— 프리퀄 에피소드 —';
-      var ep2 = document.createElement('div'); ep2.style.cssText = 'color:#666;font-size:11px;text-align:center;margin-top:6px;opacity:0;animation:fadeIn 2s 4s forwards'; ep2.textContent = '본편에서 이어집니다.';
+      // 폭발 이미지
+      var imgWrap = document.createElement('div'); imgWrap.style.cssText = 'text-align:center;margin:20px 0 10px;opacity:0;animation:fadeIn 2s 2s forwards';
+      var img1 = document.createElement('img'); img1.src = 'explosion.png'; img1.style.cssText = 'max-width:80%;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.5)';
+      imgWrap.appendChild(img1); el.appendChild(imgWrap);
+      // 프리퀄 에피소드
+      var ep = document.createElement('div'); ep.style.cssText = 'color:#9575cd;font-size:12px;text-align:center;margin-top:16px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 3.5s forwards'; ep.textContent = '— 프리퀄 에피소드 —';
+      var ep2 = document.createElement('div'); ep2.style.cssText = 'color:#666;font-size:11px;text-align:center;margin-top:6px;opacity:0;animation:fadeIn 2s 4.5s forwards'; ep2.textContent = '본편에서 이어집니다.';
       el.appendChild(ep); el.appendChild(ep2);
+      // 원자 심볼 이미지
+      var imgWrap2 = document.createElement('div'); imgWrap2.style.cssText = 'text-align:center;margin:16px 0 0;opacity:0;animation:fadeIn 2s 5s forwards';
+      var img2 = document.createElement('img'); img2.src = 'atom-symbol.png'; img2.style.cssText = 'width:80px;height:80px;opacity:0.6';
+      imgWrap2.appendChild(img2); el.appendChild(imgWrap2);
     }
 
     function setChars(s) {
