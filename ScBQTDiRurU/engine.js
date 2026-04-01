@@ -435,7 +435,7 @@
         name: '\uD551\uD06C', color: '#ec407a', weapon: '\uCC44\uCC0D',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uBC14\uC778\uB4DC \uC704\uD504', cost: 50, multi: 1.5, desc: '\uACF5\uACA9\uB825 150% + \uC274\uB4DC 20% \uBD80\uC5EC', heal: 0.20, ignoreDef: 0 },
-        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '3\uD134\uAC04 \uCCB4\uB825 5% \uD68C\uBCF5 + \uC274\uB4DC 20%', type: 'regenShield', healPct: 0.05, shieldPct: 0.20, turns: 3 }
+        support: { name: '\uD790\uB9C1 \uC704\uD504', desc: '3\uD134\uAC04 \uCCB4\uB825 5% \uD68C\uBCF5 + \uBC29\uC5B4\uC274\uB4DC 50%', type: 'regenShield', healPct: 0.05, shieldRatio: 0.50, turns: 3 }
       }
     };
 
@@ -1285,7 +1285,7 @@
       var a1 = document.createElement('button'); a1.className = 'bt-act atk'; a1.textContent = atkLabel;
       a1.addEventListener('click', function () { doPlayerAction('attack') }); primaryRow.appendChild(a1);
       // 방어
-      var shieldPreview = p.key === 'pink' ? Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) : Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp));
+      var shieldPreview = getBaseShield(p);
       var a2 = document.createElement('button'); a2.className = 'bt-act def';
       if (BT.defendCD > 0) { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 [' + BT.defendCD + '\uD134]'; a2.classList.add('disabled') }
       else { a2.textContent = '\uD83D\uDEE1\uFE0F \uBC29\uC5B4 \uD83D\uDEE1+' + shieldPreview }
@@ -1409,7 +1409,7 @@
           if (sup.type === 'buff') pv.push('<span class="pv-buff">' + statKR(sup.stat) + ' +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'dmgUp') pv.push('<span class="pv-buff">피해 +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'extraAtkBuff') pv.push('<span class="pv-buff">추가 공격 +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
-          else if (sup.type === 'regenShield') { var rh = Math.round(p.maxHp * sup.healPct); var rs = Math.round(p.maxHp * sup.shieldPct); pv.push('<span class="pv-heal">' + sup.turns + '턴간 매턴 체력+' + rh + ' 쉴드+' + rs + '</span>') }
+          else if (sup.type === 'regenShield') { var rh = Math.round(p.maxHp * sup.healPct); var rs = Math.round(getBaseShield(p) * sup.shieldRatio); pv.push('<span class="pv-heal">' + sup.turns + '턴간 매턴 체력+' + rh + ' 쉴드+' + rs + '</span>') }
           else if (sup.type === 'armorPen') pv.push('<span class="pv-buff">방어 관통 +' + Math.round(sup.val * 100) + '% (' + sup.turns + '턴)</span>');
           else if (sup.type === 'heal') { var ha = Math.round(p.maxHp * sup.val); pv.push('<span class="pv-heal">체력 +' + ha + ' 회복</span>') }
           else if (sup.type === 'sp_pct') { var spAmt = Math.round(p.maxSp * sup.val); pv.push('<span class="pv-sp">SP +' + spAmt + ' (' + Math.round(sup.val * 100) + '%) 충전</span>') }
@@ -1543,6 +1543,11 @@
       dramaTimer = setTimeout(function () { dramaTimer = null; d.classList.remove('on'); d.innerHTML = ''; if (cb) cb() }, dur);
     }
 
+    // ── 쉴드 기본량 (방어 효과 기준) ──
+    function getBaseShield(p) {
+      return Math.round((p.maxHp * 0.10 + 1.5 * p.def) * (1 + BT.perkShieldUp));
+    }
+
     // ── 피해 계산 ──
     function statKR(s) { return { atk: '공격력', def: '쉴드력', crit: '치명타확률', dodge: '회피확률', hp: '체력', sp: 'SP', dmg: '피해', dmgUp: '피해', extraAtk: '추가공격', armorPen: '관통', regenShield: '회복+쉴드' }[s] || s.toUpperCase() }
     function calcDmg(atk, def, multi, ignoreDef) {
@@ -1643,10 +1648,8 @@
         if (BT.defendCD > 0) { BT.acting = false; showActions(); return }
         p.guarding = true;
         BT.defendCD = 2;
-        // 쉴드 부여: DEF × 3 + MaxHP × 10% (핑크: DEF × 3.5 + MaxHP × 12%)
-        var shieldAmt;
-        if (p.key === 'pink') { shieldAmt = Math.round((p.def * 3.5 + p.maxHp * 0.12) * (1 + BT.perkShieldUp)) }
-        else { shieldAmt = Math.round((p.def * 3 + p.maxHp * 0.10) * (1 + BT.perkShieldUp)) }
+        // 쉴드 부여: (최대체력×10% + 1.5×def) × (1+쉴드보너스)
+        var shieldAmt = getBaseShield(p);
         BT.shield = Math.max(BT.shield, shieldAmt);
         var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="buff">\uD83D\uDEE1\uFE0F \uC274\uB4DC ' + BT.shield + '</span>';
         // 수호의 오라
@@ -1719,7 +1722,7 @@
           var stunVal = (p.skill.stun || 0) + yellowStunBonus;
           if (stunVal > 0) BT.stunTurns += stunVal;
           if (p.skill.heal) {
-            var sh = Math.round((p.def * 0.5 + p.maxHp * 0.05) * (1 + BT.perkShieldUp)); BT.shield += sh;
+            var sh = Math.round(getBaseShield(p) * 0.20); BT.shield += sh;
             btLogAppend(' <span class="buff">🛡️ 쉴드 +' + sh + '</span>');
           }
           // Passive bonuses
@@ -1786,10 +1789,10 @@
             BT.buffs.push({ stat: 'extraAtk', val: extraVal, turns: sup.turns });
             btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="buff">추가 공격 +' + Math.round(extraVal * 100) + '%!</span>' + (doubleSupport ? ' (2배!)' : ''));
           } else if (sup.type === 'regenShield') {
-            BT.buffs.push({ stat: 'regenShield', healPct: sup.healPct, shieldPct: sup.shieldPct, turns: sup.turns });
+            BT.buffs.push({ stat: 'regenShield', healPct: sup.healPct, shieldRatio: sup.shieldRatio, turns: sup.turns });
             // 즉시 첫 틱 발동
             var immHeal = Math.round(p.maxHp * sup.healPct); p.hp = Math.min(p.maxHp, p.hp + immHeal);
-            var immShield = Math.round(p.maxHp * sup.shieldPct * (1 + BT.perkShieldUp)); BT.shield += immShield;
+            var immShield = Math.round(getBaseShield(p) * sup.shieldRatio); BT.shield += immShield;
             showDmgNum(immHeal, 'bt-psvg', 'heal');
             btLog('🌟 ' + supporter.data.name + '의 ' + sup.name + '! <span class="heal">체력+' + immHeal + ' 🛡️+' + immShield + ' (' + sup.turns + '턴 지속)</span>');
           } else if (sup.type === 'damage') {
@@ -2108,7 +2111,7 @@
       BT.buffs.forEach(function (b) {
         if (b.stat === 'regenShield' && b.turns > 0 && p.hp > 0) {
           var rh = Math.round(p.maxHp * b.healPct); p.hp = Math.min(p.maxHp, p.hp + rh);
-          var rs = Math.round(p.maxHp * b.shieldPct * (1 + BT.perkShieldUp)); BT.shield += rs;
+          var rs = Math.round(getBaseShield(p) * b.shieldRatio); BT.shield += rs;
           showDmgNum(rh, 'bt-psvg', 'heal');
           btLogAppend(' <span class="heal">💗+' + rh + '</span> <span class="buff">🛡️+' + rs + '</span>');
         }
