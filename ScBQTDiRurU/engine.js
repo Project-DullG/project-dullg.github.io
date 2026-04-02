@@ -632,13 +632,13 @@
     // ── 연구소 업그레이드 (CE 통화) ──
     var LAB_UPGRADES = [
       { id: 'heal', name: '회복 강화', icon: '💖', desc: '웨이브 간 회복 +2% (최대 20%)', per: 0.02, max: 10, cost: function (lv) { return 5 + lv * 3 } },
+      { id: 'spRegen', name: 'SP 회복', icon: '🔋', desc: '웨이브 간 SP +3% 회복 (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'reward', name: '보상 부스트', icon: '✨', desc: 'MP·CE 획득 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } },
       { id: 'dmgReduce', name: '피해 감소', icon: '🔰', desc: '받는 피해 -3% (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'shieldUp', name: '쉴드 강화', icon: '🛡️', desc: '쉴드 생성량 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'armorPen', name: '방어 관통', icon: '🎯', desc: '방어 관통 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
       { id: 'extraAtk', name: '추가 행동', icon: '⚔️', desc: '추가 행동 확률 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
-      { id: 'sp', name: 'SP 증가', icon: '💎', desc: 'SP 최대치 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } },
-      { id: 'spRegen', name: 'SP 회복', icon: '🔋', desc: '매턴 SP +3% 회복 (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } }
+      { id: 'sp', name: 'SP 증가', icon: '💎', desc: 'SP 최대치 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } }
     ];
 
     // ── 이중 통화 시스템 ──
@@ -1017,8 +1017,8 @@
       BT.gold = 0; BT.ce = 0;
       BT.passiveKey = passiveKey; BT.supportIndex = 0; BT.nextAtkBonus = 0; BT.comboAttackCharged = false; BT.boosterUsed = false;
       BT.redMomentum = 0; BT.blackAim = 0; BT.blueCritChain = 0; BT.yellowMarks = 0;
-      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false; BT.enemyIntent = null;
-      BT.passiveGrowth = { critDmg: 0, atk: 0, critChance: 0, extraAtk: 0, dodge: 0 };
+      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false; BT.enemyIntent = null; BT.enemyIntentValue = null;
+      BT.passiveGrowth = { critDmg: 0, atk: 0, critChance: 0, extraAtk: 0, dodge: 0 }; BT.growthBase = null;
       BT.supportCDs = {};
       BT.perkVamp = 0; BT.perkCounterUp = false; BT.perkDodge = 0; BT.perkSpOverflow = 0; BT.perkThorns = 0; BT.perkFirstStrike = 0; BT.perkChainLightning = false; BT.perkGuardHeal = false; BT.perkRage = false; BT.perkDoubleSupport = false; BT.perkDoubleSupportUsed = false; BT.perkDmgReduce = getLabBonus('dmgReduce'); BT.perkCritChance = 0; BT.perkCritDmg = getStatBonus('critDmg'); BT.perkShieldUp = getLabBonus('shieldUp'); BT.perkDmgUp = 0; BT.perkArmorPen = getLabBonus('armorPen'); BT.perkExtraAtk = getLabBonus('extraAtk'); BT.perkEndHpRegen = 0; BT.perkEndSpRegen = 0;
       var mhp = Math.round(r.hp * (1 + getStatBonus('hp'))), msp = Math.round(r.sp * (1 + getLabBonus('sp')));
@@ -1027,7 +1027,7 @@
         hp: mhp, maxHp: mhp, atk: Math.round(r.atk * (1 + getStatBonus('atk'))), def: Math.round(r.def * (1 + getStatBonus('def'))),
         crit: Math.round(r.crit * (1 + getStatBonus('crit'))), dodge: Math.round(r.dodge * (1 + getStatBonus('dodge'))), sp: msp, maxSp: msp,
         skill: r.skill,
-        guarding: false, critBonus: 0, spRegen: Math.round(msp * getLabBonus('spRegen')), skillCostReduction: 0, hpRegen: 0
+        guarding: false, critBonus: 0, spRegen: 0, skillCostReduction: 0, hpRegen: 0
       };
       // 출동 패시브: 메인 + 파트너 둘 다 적용
       if (PASSIVE_BUFFS[rangerKey]) {
@@ -1036,6 +1036,8 @@
       if (passiveKey && PASSIVE_BUFFS[passiveKey] && passiveKey !== rangerKey) {
         PASSIVE_BUFFS[passiveKey].apply(BT.player);
       }
+      // 성장 기준값 저장 (패시브 apply 후, grow 전)
+      saveGrowthBase();
       // Support pool: exclude active AND passive
       BT.supportPool = [];
       Object.keys(RANGERS).forEach(function (k) { if (k !== rangerKey && k !== passiveKey) BT.supportPool.push({ key: k, data: RANGERS[k] }) });
@@ -1088,14 +1090,34 @@
       if (BT.passiveKey && BT.passiveKey !== p.key) keys.push(BT.passiveKey);
       keys.forEach(function (k) { var pb = PASSIVE_BUFFS[k]; if (pb && pb.grow) pb.grow(p) });
     }
+    // 성장 기준값 저장 (grow 전 상태)
+    function saveGrowthBase() {
+      var p = BT.player; if (!p) return;
+      BT.growthBase = {
+        perkCritDmg: BT.perkCritDmg,
+        perkCritChance: BT.perkCritChance,
+        perkExtraAtk: BT.perkExtraAtk,
+        atk: p.atk,
+        dodge: p.dodge
+      };
+    }
     function resetPassiveGrowth() {
       var p = BT.player; if (!p) return;
-      var g = BT.passiveGrowth;
-      BT.perkCritDmg -= g.critDmg;
-      p.atk -= g.atk;
-      BT.perkCritChance -= g.critChance;
-      BT.perkExtraAtk -= g.extraAtk;
-      p.dodge -= g.dodge;
+      if (BT.growthBase) {
+        // 보상으로 증가한 양 = 현재값 - 기준값 - 성장량
+        var g = BT.passiveGrowth;
+        var rewardAtk = p.atk - BT.growthBase.atk - g.atk;
+        var rewardDodge = p.dodge - BT.growthBase.dodge - g.dodge;
+        var rewardCritDmg = BT.perkCritDmg - BT.growthBase.perkCritDmg - g.critDmg;
+        var rewardCritChance = BT.perkCritChance - BT.growthBase.perkCritChance - g.critChance;
+        var rewardExtraAtk = BT.perkExtraAtk - BT.growthBase.perkExtraAtk - g.extraAtk;
+        // 기준값 + 보상분만 남기기 (성장분 완전 제거)
+        p.atk = BT.growthBase.atk + rewardAtk;
+        p.dodge = BT.growthBase.dodge + rewardDodge;
+        BT.perkCritDmg = BT.growthBase.perkCritDmg + rewardCritDmg;
+        BT.perkCritChance = BT.growthBase.perkCritChance + rewardCritChance;
+        BT.perkExtraAtk = BT.growthBase.perkExtraAtk + rewardExtraAtk;
+      }
       BT.passiveGrowth = { critDmg: 0, atk: 0, critChance: 0, extraAtk: 0, dodge: 0 };
     }
 
@@ -1108,13 +1130,15 @@
         var healPct = getLabBonus('heal') + BT.perkEndHpRegen;
         if (BT.passiveKey === 'pink' || BT.player.key === 'pink') healPct += 0.05;
         if (healPct > 0) BT.player.hp = Math.min(BT.player.maxHp, BT.player.hp + Math.round(BT.player.maxHp * healPct));
-        if (BT.perkEndSpRegen > 0) BT.player.sp = Math.min(BT.player.maxSp, BT.player.sp + Math.round(BT.player.maxSp * BT.perkEndSpRegen));
+        var spHealPct = getLabBonus('spRegen') + BT.perkEndSpRegen;
+        if (spHealPct > 0) BT.player.sp = Math.min(BT.player.maxSp, BT.player.sp + Math.round(BT.player.maxSp * spHealPct));
       }
       BT.enemy = generateEnemy(BT.wave);
       BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
       if (BT.freezeATK > 0) { BT.player.atk += BT.freezeATK; BT.freezeATK = 0; BT.freezeTurns = 0 }
       // 패시브 성장 리셋 (웨이브 끝 초기화)
       resetPassiveGrowth();
+      saveGrowthBase(); // 새 웨이브 기준값 저장
       BT.buffs = []; BT.debuffs = []; BT.boosterUsed = false;
       // 웨이브 전환 오버레이
       var ov = $('bt-overlay'); ov.classList.add('on');
@@ -1362,6 +1386,20 @@
         var txt = document.createElement('span'); txt.className = 'bt-intent-text'; txt.textContent = BT.enemyIntent;
         intentEl.appendChild(lbl); intentEl.appendChild(txt);
         acts.parentNode.insertBefore(intentEl, acts);
+      }
+      // ── 적 캐릭터 옆 예상 수치 표시 ──
+      var oldEiv = document.getElementById('bt-eiv'); if (oldEiv) oldEiv.remove();
+      if (BT.enemyIntentValue) {
+        var eiv = document.createElement('div'); eiv.id = 'bt-eiv';
+        if (BT.enemyIntentValue.type === 'dmg') {
+          eiv.className = 'bt-enemy-intent-val dmg';
+          eiv.textContent = '⚔️ ~' + BT.enemyIntentValue.val;
+        } else if (BT.enemyIntentValue.type === 'shield') {
+          eiv.className = 'bt-enemy-intent-val shield';
+          eiv.textContent = '🛡️ +' + BT.enemyIntentValue.val;
+        }
+        var eSvgEl = $('bt-esvg');
+        if (eSvgEl) eSvgEl.appendChild(eiv);
       }
       // ── 예상행동 프리뷰 ──
       var pvEl = $('bt-preview'); pvEl.innerHTML = '';
@@ -2100,12 +2138,14 @@
 
     // ── 적 의도 결정 (다음 턴 예고) ──
     function decideEnemyIntent() {
-      var e = BT.enemy, p = BT.player; if (!e || e.hp <= 0) { BT.enemyIntent = null; return }
+      var e = BT.enemy, p = BT.player; if (!e || e.hp <= 0) { BT.enemyIntent = null; BT.enemyIntentValue = null; return }
       var sp = e.special; var nextTurn = e.turnCount + 1;
+      BT.enemyIntentValue = null;
       // 예상 피해 계산 헬퍼
       function estDmgTag(multi) {
         var est = calcDmg(e.atk, 0, multi || 1, 0);
         if (BT.perkDmgReduce > 0) est = Math.max(1, Math.round(est * (1 - BT.perkDmgReduce)));
+        BT.enemyIntentValue = { type: 'dmg', val: est };
         return ' (~' + est + ')';
       }
       // 보스 특수 패턴 예고
@@ -2124,6 +2164,7 @@
       if (e.shield <= 0 && BT.wave >= 3 && Math.random() < 0.20) {
         BT.enemyNextShield = true;
         var estShield = Math.round(e.def * 1.5 + e.maxHp * 0.05);
+        BT.enemyIntentValue = { type: 'shield', val: estShield };
         BT.enemyIntent = '🛡️ 방어 태세 (쉴드 +' + estShield + ')';
         return;
       }

@@ -1589,6 +1589,43 @@
       animation: playerEnter 0.5s ease
     }
 
+    .bt-enemy-svg {
+      position: relative
+    }
+
+    .bt-enemy-intent-val {
+      position: absolute;
+      right: -8px;
+      top: -4px;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 2px 7px;
+      border-radius: 8px;
+      white-space: nowrap;
+      pointer-events: none;
+      animation: eivPop 0.4s ease;
+      z-index: 5
+    }
+
+    .bt-enemy-intent-val.dmg {
+      background: rgba(229,57,53,0.85);
+      color: #fff;
+      border: 1px solid #ff6b6b;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5)
+    }
+
+    .bt-enemy-intent-val.shield {
+      background: rgba(30,136,229,0.85);
+      color: #fff;
+      border: 1px solid #64b5f6;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5)
+    }
+
+    @keyframes eivPop {
+      from { opacity: 0; transform: scale(0.7) translateY(4px) }
+      to { opacity: 1; transform: scale(1) translateY(0) }
+    }
+
     .bt-enemy-svg.dead {
       opacity: 0;
       transform: scale(0.3);
