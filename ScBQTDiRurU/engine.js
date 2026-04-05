@@ -2477,12 +2477,12 @@
           card.addEventListener('click', function () {
             if (this.dataset.used) return; cards.querySelectorAll('.rw-card').forEach(function (c) { c.dataset.used = '1' });
             var result = rw.fn(BT.player);
-            updateBattleUI(); updateStatusIcons();
             btLog('<span class="buff">' + result + '</span> 획득!');
             // 보스 클리어 후 → 스킬 강화 선택
             showSkillAugment(function () {
               restoreBgm();
               showScr('battle');
+              updateBattleUI(); updateStatusIcons();
               setTimeout(nextWave, 600);
             });
           });
@@ -2525,7 +2525,7 @@
       });
       box.appendChild(catWrap);
       overlay.appendChild(box);
-      $('bt-bg').appendChild(overlay);
+      document.getElementById('game').appendChild(overlay);
     }
 
     function showAugOptions(catKey, overlay, box, callback) {
