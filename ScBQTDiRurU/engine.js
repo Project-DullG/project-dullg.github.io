@@ -345,20 +345,40 @@
     function doEnd() {
       stopAllBgm();
       var es = $('ending-screen'); es.classList.remove('end-show'); void es.offsetWidth;
+      // 기존 파티클 제거
+      var oldP = es.querySelectorAll('.end-particle'); for (var i = 0; i < oldP.length; i++) oldP[i].remove();
       showScr('ending'); es.classList.add('end-show');
+      // 파티클 생성
+      for (var p = 0; p < 12; p++) {
+        var dot = document.createElement('div'); dot.className = 'end-particle';
+        dot.style.left = (10 + Math.random() * 80) + '%';
+        dot.style.bottom = (-5 + Math.random() * 10) + '%';
+        dot.style.animationDelay = (Math.random() * 4) + 's';
+        dot.style.animationDuration = (4 + Math.random() * 4) + 's';
+        dot.style.width = dot.style.height = (1 + Math.random() * 2) + 'px';
+        es.appendChild(dot);
+      }
       // 상단 텍스트
       var el = $('endQ'); clr(el);
+      el.appendChild(txEl('div', 'end-line dim', '어둠 속에서 빛을 지킨 하루.'));
+      el.appendChild(document.createElement('br'));
       el.appendChild(txEl('div', 'end-line', '오늘도 도시를 지켰다.'));
       el.appendChild(txEl('div', 'end-line bright', '내일도 지킬 것이다.'));
-      el.appendChild(document.createElement('br'));
+      var dv = document.createElement('div'); dv.className = 'end-divider'; el.appendChild(dv);
       el.appendChild(txEl('div', 'end-line', '그게 우리의 일상이니까.'));
-      var ep = document.createElement('div'); ep.style.cssText = 'color:#9575cd;font-size:12px;text-align:center;margin-top:20px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 2.5s forwards'; ep.textContent = '— 프리퀄 에피소드 —';
-      var ep2 = document.createElement('div'); ep2.style.cssText = 'color:#666;font-size:11px;text-align:center;margin-top:6px;opacity:0;animation:fadeIn 2s 3.5s forwards'; ep2.textContent = '본편에서 이어집니다.';
+      var ep = document.createElement('div'); ep.style.cssText = 'color:#9575cd;font-size:12px;text-align:center;margin-top:24px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 4s forwards'; ep.textContent = '— 프리퀄 에피소드 —';
+      var ep2 = document.createElement('div'); ep2.style.cssText = 'color:#555;font-size:11px;text-align:center;margin-top:8px;opacity:0;animation:fadeIn 2s 5s forwards'; ep2.textContent = '본편에서 이어집니다.';
       el.appendChild(ep); el.appendChild(ep2);
-      // 이미지 영역 (타이틀 바로 위 - 폭발만)
+      // 이미지 영역
       var imgArea = $('end-img'); clr(imgArea);
       var img1 = document.createElement('img'); img1.src = 'explosion.png'; img1.className = 'end-cg';
       imgArea.appendChild(img1);
+      // 서브타이틀 추가
+      var tw = document.querySelector('.end-title-wrap');
+      if (tw && !tw.querySelector('.end-subtitle')) {
+        var st = document.createElement('div'); st.className = 'end-subtitle'; st.textContent = "DOCTOR'S DAY";
+        tw.appendChild(st);
+      }
     }
 
     function setChars(s) {

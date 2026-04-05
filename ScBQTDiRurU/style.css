@@ -748,71 +748,138 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 40px
+      padding: 40px;
+      overflow: hidden;
+      position: relative
+    }
+
+    #ending-screen::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 80%, rgba(229,57,53,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0
     }
 
     #ending-screen>* {
-      opacity: 0
+      opacity: 0;
+      position: relative;
+      z-index: 1
+    }
+
+    .end-particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(229,57,53,0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: endParticleFloat 6s ease-in-out infinite
+    }
+
+    @keyframes endParticleFloat {
+      0% { transform: translateY(0) scale(1); opacity: 0 }
+      20% { opacity: 1 }
+      80% { opacity: 0.6 }
+      100% { transform: translateY(-120px) scale(0); opacity: 0 }
     }
 
     #ending-screen.end-show>#endQ {
-      animation: endFadeIn 1.5s ease 0.8s forwards
+      animation: endFadeIn 2s ease 1s forwards
     }
 
     #ending-screen.end-show>.end-img {
-      animation: endFadeIn 1.5s ease 2s forwards
+      animation: endFadeIn 2s ease 3s forwards
     }
 
     #ending-screen.end-show>.end-title-wrap {
-      animation: endFadeIn 1.5s ease 3s forwards
+      animation: endTitleIn 2.5s ease 5s forwards
     }
 
     #ending-screen.end-show>.end-coming {
-      animation: endFadeIn 1.5s ease 4s forwards
+      animation: endFadeIn 1.5s ease 7s forwards
     }
 
     #ending-screen.end-show>.end-btn {
-      animation: endFadeIn 1.5s ease 5s forwards
+      animation: endBtnIn 1.5s ease 8.5s forwards
     }
 
     @keyframes endFadeIn {
       0% {
         opacity: 0;
-        transform: translateY(8px)
+        transform: translateY(12px)
       }
-
       100% {
         opacity: 1;
         transform: translateY(0)
       }
     }
 
-    @keyframes fadeIn {
+    @keyframes endTitleIn {
       0% {
-        opacity: 0
+        opacity: 0;
+        transform: translateY(12px) scale(0.9);
+        filter: blur(4px)
       }
-
+      60% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0)
+      }
+      75% {
+        text-shadow: 0 0 40px rgba(229,57,53,0.6)
+      }
       100% {
-        opacity: 1
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0)
       }
+    }
+
+    @keyframes endBtnIn {
+      0% { opacity: 0 }
+      100% { opacity: 1 }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0 }
+      100% { opacity: 1 }
     }
 
     .end-line {
       font-family: 'Noto Serif KR', serif;
       font-size: 15px;
       color: #888;
-      line-height: 2.4;
-      letter-spacing: 1px
+      line-height: 2.6;
+      letter-spacing: 1.5px
     }
 
     .end-line.bright {
-      color: #ccc
+      color: #ddd;
+      font-size: 16px
     }
 
     .end-line.red {
       color: #e53935;
       font-weight: bold;
       font-size: 17px
+    }
+
+    .end-line.dim {
+      color: #555;
+      font-size: 13px;
+      line-height: 2
+    }
+
+    .end-divider {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e53935, transparent);
+      margin: 16px auto;
+      opacity: 0;
+      animation: fadeIn 2s 2.5s forwards
     }
 
     .end-img {
@@ -826,7 +893,12 @@
     .end-cg {
       max-width: 65%;
       border-radius: 6px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6)
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+      transition: box-shadow 0.5s
+    }
+
+    .end-show .end-cg {
+      box-shadow: 0 4px 32px rgba(229,57,53,0.15), 0 4px 24px rgba(0,0,0,0.6)
     }
 
     .end-symbol {
@@ -840,49 +912,69 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 12px
+      margin-top: 16px
     }
 
     .end-logo {
       position: absolute;
-      width: 120px;
-      height: 120px;
-      opacity: 0.12;
-      z-index: 0
+      width: 140px;
+      height: 140px;
+      opacity: 0;
+      z-index: 0;
+      animation: endLogoPulse 4s ease-in-out infinite
+    }
+
+    .end-show .end-logo {
+      opacity: 0.1
+    }
+
+    @keyframes endLogoPulse {
+      0%, 100% { opacity: 0.08; transform: scale(1) rotate(0deg) }
+      50% { opacity: 0.15; transform: scale(1.05) rotate(3deg) }
     }
 
     .end-title {
       font-family: 'Do Hyeon', sans-serif;
-      font-size: 24px;
+      font-size: 26px;
       color: #e53935;
-      letter-spacing: 4px;
-      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3);
+      letter-spacing: 5px;
+      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3), 0 0 60px rgba(229, 57, 53, 0.1);
       position: relative;
       z-index: 1
+    }
+
+    .end-subtitle {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 3px;
+      margin-top: 6px
     }
 
     .end-coming {
       font-size: 12px;
       color: #444;
-      margin-top: 20px;
-      letter-spacing: 3px
+      margin-top: 24px;
+      letter-spacing: 4px
     }
 
     .end-btn {
-      margin-top: 20px;
-      padding: 9px 24px;
+      margin-top: 24px;
+      padding: 10px 28px;
       border: 1px solid #333;
       background: none;
-      color: #666;
+      color: #555;
       font-size: 13px;
       font-family: 'Gowun Dodum', sans-serif;
       border-radius: 6px;
-      cursor: pointer
+      cursor: pointer;
+      transition: all 0.3s ease
     }
 
     .end-btn:hover {
-      border-color: #666;
-      color: #aaa
+      border-color: #e53935;
+      color: #e53935;
+      box-shadow: 0 0 16px rgba(229,57,53,0.2)
     }
 
     /* FX */
