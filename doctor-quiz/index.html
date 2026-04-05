@@ -4,19 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>캐릭터 성향 테스트 — 의사가 너무 많아! | Project DullG</title>
+
+  <!-- Open Graph / Kakao Share Metadata -->
+  <meta property="og:title" content="삼신의 진단: 의사가 너무 많아!">
+  <meta property="og:description" content="너무 많은 의사 중, 당신은 어떤 의사를 닮았을까요? 당신의 운명을 확인해 보세요.">
+  <meta property="og:image" content="https://project-dullg.github.io/사용 이미지/타이틀 우리가 이김.jpeg">
+  <meta property="og:url" content="https://project-dullg.github.io/doctor-quiz/index.html">
+  <meta property="og:type" content="website">
+
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
     :root {
-      --bg: #07060f;
-      --panel: rgba(14, 11, 22, 0.95);
-      --ink: #e0d8cc;
-      --dim: #6a6460;
-      --accent: #c41e3a;
-      --accent-glow: rgba(196, 30, 58, 0.25);
-      --gold: #d4a855;
-      --gold-glow: rgba(212, 168, 85, 0.2);
-      --line: rgba(255,255,255,0.06);
+      --bg: #fdfaf5; /* Oriental Paper Off-white */
+      --panel: rgba(255, 255, 255, 0.92);
+      --ink: #000000; /* Deep Ink Black */
+      --dim: #555555;
+      --accent: #b22222; /* Traditional Red */
+      --accent-glow: rgba(178, 34, 34, 0.1);
+      --gold: #c5a059; /* Traditional Gold */
+      --gold-glow: rgba(197, 160, 89, 0.2);
+      --clinical-blue: #3fb4a5; /* Jade Blue */
+      --line: rgba(0, 0, 0, 0.08);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,8 +34,8 @@
     body {
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse at 50% 0%, rgba(80, 20, 30, 0.4) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 100%, rgba(20, 10, 40, 0.6) 0%, transparent 60%);
+        radial-gradient(ellipse at 50% 0%, rgba(63, 180, 165, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(178, 34, 34, 0.05) 0%, transparent 60%);
       color: var(--ink);
       font-family: 'Pretendard', -apple-system, sans-serif;
       min-height: 100vh;
@@ -34,6 +44,42 @@
       align-items: center;
       padding: 48px 24px 80px;
       line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    /* 토스트 메시지 스타일 */
+    #toast {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    #toast.show {
+      opacity: 1;
+      visibility: visible;
+      bottom: 50px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+      opacity: 0.15; /* Brighter paper texture */
+      pointer-events: none;
+      z-index: 10;
     }
 
     .wrap {
@@ -82,7 +128,7 @@
     .hd-title {
       font-size: 1.8rem;
       font-weight: 900;
-      color: #fff;
+      color: var(--ink);
       letter-spacing: -0.5px;
       margin-bottom: 8px;
     }
@@ -135,6 +181,8 @@
       border: 1px solid var(--line);
       border-radius: 20px;
       padding: 40px 36px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
     }
 
     .part-label {
@@ -148,7 +196,7 @@
     .q-text {
       font-size: 1.05rem;
       font-weight: 600;
-      color: #e8e4dc;
+      color: var(--ink);
       line-height: 1.7;
       margin-bottom: 28px;
     }
@@ -162,10 +210,10 @@
 
     .opt-btn {
       padding: 14px 18px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 10px;
-      color: #a0988c;
+      color: #444444;
       font-size: 0.88rem;
       text-align: left;
       cursor: pointer;
@@ -175,15 +223,16 @@
     }
 
     .opt-btn:hover {
-      background: rgba(255,255,255,0.07);
-      border-color: rgba(255,255,255,0.14);
-      color: #d4ccc4;
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.1);
+      color: var(--ink);
     }
 
     .opt-btn.sel {
-      background: rgba(196, 30, 58, 0.12);
-      border-color: rgba(196, 30, 58, 0.45);
-      color: #f0e8e0;
+      background: rgba(63, 180, 165, 0.08);
+      border-color: rgba(63, 180, 165, 0.3);
+      color: #2c6b63;
+      font-weight: 600;
     }
 
     /* 이전 버튼 */
@@ -236,6 +285,47 @@
       padding: 52px 36px;
       text-align: center;
       animation: fadeUp 0.6s ease;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    /* 인트로 */
+    .intro-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      animation: fadeUp 0.6s ease;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .intro-text {
+      font-size: 1.1rem;
+      color: var(--ink);
+      line-height: 2;
+      margin-bottom: 40px;
+      word-break: keep-all;
+    }
+
+    .btn-start {
+      padding: 16px 40px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      background: var(--gold);
+      color: #fff;
     }
 
     @keyframes fadeUp {
@@ -284,7 +374,7 @@
 
     .char-desc {
       font-size: 0.92rem;
-      color: #a0988c;
+      color: var(--ink);
       line-height: 1.9;
       margin-bottom: 28px;
       text-align: left;
@@ -327,17 +417,30 @@
     }
     .btn-restart:hover { border-color: rgba(255,255,255,0.2); color: var(--ink); }
 
-    .btn-home {
+    .btn-home:hover { background: rgba(212,168,85,0.18); }
+
+    .btn-share {
       padding: 11px 22px;
-      background: rgba(212,168,85,0.1);
-      border: 1px solid rgba(212,168,85,0.25);
-      color: var(--gold);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--ink);
       border-radius: 8px;
       font-size: 0.85rem;
-      text-decoration: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       transition: all 0.2s;
     }
-    .btn-home:hover { background: rgba(212,168,85,0.18); }
+    .btn-share:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+    .btn-kakao {
+      background: #FEE500;
+      border: none;
+      color: #3C1E1E;
+      font-weight: 700;
+    }
+    .btn-kakao:hover { background: #FADA0A; }
 
     .result-notice {
       margin-top: 28px;
@@ -363,20 +466,31 @@
     </nav>
 
     <header class="hd">
-      <div class="hd-eyebrow">CHARACTER TEST</div>
-      <div class="hd-title">의사가 너무 많아!</div>
-      <div class="hd-sub">나에게 어울리는 캐릭터는?</div>
+      <div class="hd-eyebrow">DIAGNOSTIC ORACLE</div>
+      <div class="hd-title">삼신의 진단: 의사가 너무 많아!</div>
+      <div class="hd-sub">너무 많은 의사 중, 당신은 어떤 의사를 닮았을까요?</div>
       <div class="hd-divider"></div>
     </header>
 
+    <!-- 인트로 -->
+    <div class="intro-card" id="intro-card">
+      <div class="intro-text">
+        정신을 차리니 당신 앞에 삼신 닥터가 나타납니다.<br><br>
+        이미 이 세상에는 의사가 너무나도 많습니다.<br>
+        하지만 당신을 위한 자리는 아직 정해지지 않았군요.<br><br>
+        삼신의 눈이 당신의 운명을 꿰뚫어 보기 시작합니다.
+      </div>
+      <button class="btn-start" onclick="quizRealStart()">진단 시작하기</button>
+    </div>
+
     <!-- 진행 표시 -->
-    <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-wrap" id="progress-wrap" style="display:none;">
       <div class="progress-dots" id="progress-dots"></div>
       <div class="progress-label" id="progress-label">Q1 / 10</div>
     </div>
 
     <!-- 퀴즈 -->
-    <div class="quiz-card" id="quiz-card">
+    <div class="quiz-card" id="quiz-card" style="display:none;">
       <div class="quiz-inner" id="quiz-inner">
         <button class="back-btn" id="back-btn" onclick="quizBack()">← 이전 문제</button>
         <div class="part-label" id="part-label"></div>
@@ -395,13 +509,23 @@
       <p class="char-desc" id="char-desc"></p>
       <div class="char-keys" id="char-keys"></div>
       <div class="result-btns">
+        <button class="btn-share" onclick="copyLink()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          링크 복사
+        </button>
+        <button class="btn-share btn-kakao" onclick="shareKakao()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 3.185-9 7.115 0 2.558 1.712 4.8 4.346 6.09-.19.648-.684 2.361-.782 2.701-.123.423.14.417.296.315.122-.08.1.954 1.942-1.319l.068-.046c.365.05.74.074 1.12.074 4.97 0 9-3.185 9-7.115S16.97 3 12 3z"/></svg>
+          카카오톡
+        </button>
         <button class="btn-restart" onclick="quizStart()">↺ 다시 하기</button>
-        <a href="/" class="btn-home">메인으로 →</a>
       </div>
       <p class="result-notice">* 의사가 너무 많아! 시나리오는 현재 제작 중입니다</p>
     </div>
 
   </div>
+
+  <!-- 토스트 메시지 -->
+  <div id="toast"></div>
 
   <script>
     var Q = [
@@ -409,11 +533,11 @@
         part: "PART 1 · 기초 기질",
         q: "어지러운 세상을 잠시 뒤로하고 완벽한 휴식을 취한다면,\n어떤 공간에 머물고 싶습니까?",
         opts: [
-          { t: "노을이 한눈에 보이는 높은 누각.", c: ["Y"] },
+          { t: "노을이 한눈에 보이는 높은 정자.", c: ["Y"] },
           { t: "정갈하게 타오르는 촛불이 놓인 빈 방.", c: ["S"] },
           { t: "울창하고 고요한 숲속 오두막.", c: ["R"] },
-          { t: "검은 바다가 일렁이는 밤의 해안가.", c: ["B"] },
-          { t: "묵직한 바위산 아래 오랜 세월을 지켜온 묵직한 정자.", c: ["H"] },
+          { t: "파도소리만 들려오는 밤바다.", c: ["B"] },
+          { t: "묵직한 바위산 아래 오랜 세월을 지켜온 좁은 별장.", c: ["H"] },
           { t: "모든 것이 비치는 맑고 투명한 호수가 보이는 방.", c: ["C"] }
         ]
       },
@@ -421,10 +545,10 @@
         part: "PART 1 · 기초 기질",
         q: "필기구를 선물받는다면,\n어떤 것을 가장 먼저 선택하시겠습니까?",
         opts: [
-          { t: "세련된 곡선과 기품이 느껴지는 깃펜.", c: ["Y"] },
-          { t: "투박하지만 손에 맞게 길들여진 나무 만년필.", c: ["R"] },
+          { t: "손에 맞게 길들여진 나무 만년필.", c: ["R"] },
           { t: "정밀하게 설계되어 항상 날카롭게 쓸 수 있는 샤프펜슬.", c: ["C"] },
           { t: "묵직한 무게감으로 종이를 잡아주는 금속 인장.", c: ["H"] },
+          { t: "세련된 곡선과 기품이 느껴지는 깃펜.", c: ["Y"] },
           { t: "딱 원하는 대로 뻗어나갈 것 같은 검은 잉크.", c: ["B"] },
           { t: "정교하고 세밀하게 새겨진 도장.", c: ["S"] }
         ]
@@ -433,35 +557,35 @@
         part: "PART 1 · 기초 기질",
         q: "모르는 이들과의 첫 만남,\n당신이 가장 중요하게 살피는 것은?",
         opts: [
-          { t: "상대방이 입은 옷과 자연스럽게 배어 나오는 분위기.", c: ["Y"] },
-          { t: "상대방의 목소리 톤과 미세한 표정의 변화.", c: ["C"] },
-          { t: "상대방이 지키고 있는 예의와 태도의 무게감.", c: ["H"] },
           { t: "상대방이 품고 있는 의도나 보이지 않는 기운.", c: ["B", "S"] },
-          { t: "상대방이 가진 잠재력이나 성장 가능성.", c: ["R"] }
+          { t: "상대방의 목소리 톤과 미세한 표정의 변화.", c: ["C"] },
+          { t: "상대방이 가진 잠재력이나 성장 가능성.", c: ["R"] },
+          { t: "상대방이 지키고 있는 예의와 태도의 무게감.", c: ["H"] },
+          { t: "상대방이 입은 옷과 자연스럽게 배어 나오는 분위기.", c: ["Y"] }
         ]
       },
       {
         part: "PART 2 · 심층 가치관",
         q: "당신의 인생에서 가장 가치 있게 여기는\n'보물'은 무엇입니까?",
         opts: [
-          { t: "끝없이 뻗어가는 나의 영향력과 명성.", c: ["Y"] },
           { t: "누구에게도 간섭받지 않는 지식과 자유.", c: ["R"] },
           { t: "시간이 흘러도 변하지 않는 역사와 전통.", c: ["H"] },
-          { t: "세상을 정돈할 수 있는 확고한 진리.", c: ["S"] },
           { t: "나만의 원대하고 이상적인 꿈.", c: ["B"] },
-          { t: "불필요한 것을 깎아내고 얻어낸본질.", c: ["C"] }
+          { t: "끝없이 뻗어가는 나의 영향력과 명성.", c: ["Y"] },
+          { t: "세상을 정돈할 수 있는 확고한 진리.", c: ["S"] },
+          { t: "불필요한 것을 깎아내고 얻어낸 본질.", c: ["C"] }
         ]
       },
       {
         part: "PART 2 · 심층 가치관",
-        q: "피할 곳 없이 탁 트인 들판에서 거센 폭풍우를 만났습니다.\n당신의 행동은?",
+        q: "탁 트인 들판. 반대쪽에서 거센 회오리바람이 보입니다.\n당신의 행동은?",
         opts: [
-          { t: "폭풍 속에서 가장 극적인 순간을 포착하려 한다.", c: ["Y"] },
-          { t: "주변의 풀이라도 엮어 임시 차폐막이라도 만들어 몸을 숨긴다.", c: ["R"] },
-          { t: "바닥에 몸을 밀착하고, 폭풍이 지나가길 묵묵히 견딘다.", c: ["H"] },
-          { t: "쏟아지는 빗물과 하나가 되어, 고요해질 때까지 태연히 기다린다.", c: ["B"] },
-          { t: "비바람 속에서도 꺼지지 않을 온기를 찾아 그것을 지켜낸다.", c: ["S"] },
-          { t: "빗줄기 속에서도 정신을 집중해서, 폭풍이 약한 곳을 찾아 나아간다.", c: ["C"] }
+          { t: "카메라를 꺼내 폭풍 속에서 가장 극적인 순간을 포착하려 한다.", c: ["Y"] },
+          { t: "휩쓸리면 날아가지 않을까? 생각하며 종이비행기를 날려본다.", c: ["R"] },
+          { t: "폭풍이 지나가기를 묵묵히 지켜본다.", c: ["H"] },
+          { t: "폭풍이 어디로 나아갈지 찬찬히 계산해본다", c: ["B"] },
+          { t: "바람 속에서 날아다니는 것들에 안타깝다고 생각한다.", c: ["S"] },
+          { t: "폭풍의 중심을 짚는다.", c: ["C"] }
         ]
       },
       {
@@ -479,48 +603,48 @@
         part: "PART 3 · 상황적 대처",
         q: "길가에 시들어가는 꽃 한 송이를 보았습니다.\n당신의 생각은?",
         opts: [
-          { t: "더 아름다운 꽃으로 교체하여 주변을 가꾸고 싶다.", c: ["Y"] },
+          { t: "이 꽃이 또 다른 생명으로 순환하기를 소망한다.", c: ["S"] },
           { t: "시드는 원인을 파악해 다시 꽃피울 수 있게 돕고 싶다.", c: ["R"] },
+          { t: "더 아름다운 꽃으로 교체하여 주변을 가꾸고 싶다.", c: ["Y"] },
           { t: "자연의 섭리이니 사진만 찍고 그대로 둔다.", c: ["H"] },
           { t: "이 꽃이 지고 나면 어떤 생명이 자라날지 생각해본다.", c: ["B"] },
-          { t: "이 꽃이 또 다른 생명으로 순환하기를 소망한다.", c: ["S"] },
           { t: "꽃은 아쉽지만 깔끔하게 정리한다.", c: ["C"] }
         ]
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "당신은 남들이 모르는 '특별한 능력'을 하나 가지고 있습니다.\n언제 그 능력을 쓸건가요?",
+        q: "당신은 남들이 모르는 '특별한 능력'을 하나 가지고 있습니다.\n언제 그 능력을 쓸 건가요?",
         opts: [
-          { t: "나의 존재감을 증명하고 최고의 자리에 오를 때.", c: ["Y"] },
-          { t: "세상에 없는 새로운 길을 찾아낼 때.", c: ["R"] },
           { t: "혼란을 바로잡고 질서를 세우기 위해 필요할 때.", c: ["H"] },
-          { t: "나만의 숭고한 가치를 지키기 위해 필요할 때.", c: ["S"] },
           { t: "뒤틀린 인연을 바로잡고 잃어버린 것들을 되찾을 때.", c: ["B"] },
+          { t: "나의 존재감을 증명하고 최고의 자리에 오를 때.", c: ["Y"] },
+          { t: "나만의 숭고한 가치를 지키기 위해 필요할 때.", c: ["S"] },
+          { t: "세상에 없는 새로운 길을 찾아낼 때.", c: ["R"] },
           { t: "모든 문제의 본질을 찾아내어 명쾌하게 해결하는 순간에.", c: ["C"] }
         ]
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "어떤 문제가 당신을 막아섰습니다.\n어떻게 이 지나가겠습니까?",
+        q: "어떤 문제가 당신을 막아섰습니다.\n어떻게 지나가겠습니까?",
         opts: [
-          { t: "사람들이 나를 따르게 만들고, 모두의 위세와 함께 나아간다.", c: ["Y"] },
-          { t: "예상치 못한 의외의 해결책를 찾아내어 의외의 길로 지나간다.", c: ["R"] },
+          { t: "남들이 상상하지 못한 해결책를 찾아내어 의외의 길로 지나간다.", c: ["R"] },
           { t: "묵직하게 기다리며 해결책이 보일 때까지 인내심을 가지고 기다린다.", c: ["H"] },
-          { t: "작은 틈이라도 보인다면 망설임 없이 기회를 찾아 운명을 건다.", c: ["B"] },
-          { t: "문제 너머의 진실을 응시하며, 문이 스스로 열리게 만든다.", c: ["S"] },
-          { t: "차가운 이성으로 문제의 본질을 찾아내어, 명쾌하게 해결하려 시도한다.", c: ["C"] }
+          { t: "사람들이 나를 따르게 만들고, 모두의 지지와 함께 나아간다.", c: ["Y"] },
+          { t: "작은 틈이 보인다면 망설임 없이 운명을 걸고 기회를 잡는다.", c: ["B"] },
+          { t: "문제 너머의 진실을 응시하며, 문제가 해결되게 만든다.", c: ["S"] },
+          { t: "문제의 본질을 찾아내어, 명쾌하게 해결하려 시도한다.", c: ["C"] }
         ]
       },
       {
         part: "PART 3 · 상황적 대처",
         q: "만약 당신의 삶이 한 단어로 기억된다면,\n무엇이길 바랍니까?",
         opts: [
-          { t: "시대를 밝게 비추는 눈부신 광휘.", c: ["Y"] },
           { t: "멈추지 않고 끊임없이 나아가는 개혁.", c: ["R"] },
+          { t: "한 치의 오차도 허용하지 않는 완벽.", c: ["C"] },
           { t: "시간이 흘러도 결코 흔들리지 않는 기둥.", c: ["H"] },
           { t: "티 없이 맑고 고결한 정신의 성결.", c: ["S"] },
-          { t: "만물의 흐름을 한눈에 꿰뚫는 통찰.", c: ["B"] },
-          { t: "한 치의 오차도 허용하지 않는 완벽.", c: ["C"] }
+          { t: "시대를 밝게 비추는 눈부신 광휘.", c: ["Y"] },
+          { t: "만물의 흐름을 한눈에 꿰뚫는 통찰.", c: ["B"] }
         ]
       }
     ];
@@ -528,8 +652,8 @@
     var CHARS = {
       Y: {
         name: "양의사",
-        role: "왕국 중앙 의사 의원회 수장",
-        desc: "25년의 경력과 왕국 의원회 수장이라는 자리가 증명하는 인물. 어떤 상황에서도 그 존재감은 흔들리지 않습니다. 당신은 타인에게 영향을 미치는 힘을 지니고 있으며, 언제나 가장 찬란한 방식으로 자신을 증명해온 사람입니다.",
+        role: "왕국 중앙 의원회 수장",
+        desc: "삼신이 당신에게 ‘광휘’의 명운을 내렸습니다. 25년의 무게는 당신의 기도를 통해 증명될 것이니, 찬란한 빛으로 병든 세상을 비추는 수장이 되십시오.",
         keys: ["광휘", "리더십", "명성"],
         color: "#d4a855",
         bg: "rgba(212,168,85,0.08)",
@@ -538,7 +662,7 @@
       S: {
         name: "고위 사제",
         role: "타사칼 본산 파견 고위 사제",
-        desc: "왕국 대중 종교 타사칼의 본산에서 파견된 인물. 신앙은 당신의 힘이자 방패입니다. 당신은 흔들리는 세상에서 변하지 않는 것을 붙잡을 줄 알며, 그 확고함으로 주변을 이끄는 사람입니다.",
+        desc: "삼신이 당신에게 ‘성결’의 명운을 내렸습니다. 흔들리는 세상에서 변하지 않는 진리를 지키는 방패가 되십시오. 당신의 정결함이 곧 구원의 시작입니다.",
         keys: ["신앙", "성결", "권위"],
         color: "#b0a8d8",
         bg: "rgba(176,168,216,0.08)",
@@ -547,7 +671,7 @@
       R: {
         name: "역병의사",
         role: "뒷골목의 기적",
-        desc: "정해진 성공에서 벗어나 스스로의 길을 증명헤 보인 아웃사이더이자, 뒷골목의 기적이라 불리운 인물. 당신은 틀에 얽매이지 않으며, 남들이 포기한 자리에서 새로운 가능성을 집요하게 찾아냅니다.",
+        desc: "삼신이 당신에게 ‘개척’의 명운을 내렸습니다. 남들이 포기한 어둠 속에서 기적을 일궈내십시오. 당신은 틀에 얽매이지 않는 자유로운 치유자입니다.",
         keys: ["개척", "기적", "자유"],
         color: "#4aa880",
         bg: "rgba(74,168,128,0.08)",
@@ -556,7 +680,7 @@
       B: {
         name: "부적술사",
         role: "도술에 통달한 젊은 술사",
-        desc: "젊은 나이에 도술에 통달한 신비로운 인물. 당신은 보이지 않는 흐름을 읽으며, 남들이 미처 보지 못한 것을 꿰뚫는 통찰력을 지니고 있습니다. 세상은 당신에게 아직 탐구되지 않았을 뿐인 거대한 수수께끼입니다.",
+        desc: "삼신이 당신에게 ‘통찰’의 명운을 내렸습니다. 보이지 않는 흐름을 읽고 세상의 수수께끼를 꿰뚫으십시오. 당신의 부적 끝에 생명의 기운이 머물 것입니다.",
         keys: ["통찰", "신비", "이상"],
         color: "#9060c0",
         bg: "rgba(144,96,192,0.08)",
@@ -565,7 +689,7 @@
       H: {
         name: "한의사",
         role: "대대로 이어온 가문의 의사",
-        desc: "아버지부터 아들까지 중앙 의원회에서 모셔갔다는 가문의 의사. 당신은 오랜 전통 속에서 중심을 잡아온 사람입니다. 흔들림 없이 자리를 지키는 것이 때로는 가장 강한 힘이라는 것을 알고 있습니다.",
+        desc: "삼신이 당신에게 ‘수호’의 명운을 내렸습니다. 대대로 이어져 온 묵직한 전통의 기둥이 되십시오. 흔들림 없이 자리를 지키는 것이 당신의 소명입니다.",
         keys: ["전통", "수호", "안정"],
         color: "#c87840",
         bg: "rgba(200,120,64,0.08)",
@@ -574,7 +698,7 @@
       C: {
         name: "침술사",
         role: "명예 주치의",
-        desc: "귀족 사이에서 완전히 새로운 의술 시장을 개척한 인물. 당신은 극도의 집중력과 정밀함으로 어떤 복잡한 문제의 핵심도 찾아내고, 해결할 수 있는 힘이 있습니다. 불필요한 것을 모두 걷어낸 자리에 남는 순수한 완성을 추구합니다.",
+        desc: "삼신이 당신에게 ‘정밀’의 명운을 내렸습니다. 티끌만 한 오차도 허용하지 않는 완벽함으로 문제의 핵심을 찌르십시오. 순수한 완성이 당신의 손끝에서 태어납니다.",
         keys: ["정밀", "완성", "집중"],
         color: "#60a8c8",
         bg: "rgba(96,168,200,0.08)",
@@ -603,10 +727,16 @@
       sel = null;
       answers = [];
 
-      document.getElementById('quiz-card').style.display = 'block';
+      document.getElementById('intro-card').style.display = 'block';
+      document.getElementById('quiz-card').style.display = 'none';
       document.getElementById('result-card').style.display = 'none';
-      document.getElementById('progress-wrap').style.display = 'block';
+      document.getElementById('progress-wrap').style.display = 'none';
+    }
 
+    function quizRealStart() {
+      document.getElementById('intro-card').style.display = 'none';
+      document.getElementById('quiz-card').style.display = 'block';
+      document.getElementById('progress-wrap').style.display = 'block';
       renderQ(false);
     }
 
@@ -684,6 +814,8 @@
       var winner = tops[Math.floor(Math.random() * tops.length)];
       var ch = CHARS[winner];
 
+      window.__winner = ch; // 공유용 저장
+
       document.getElementById('quiz-card').style.display = 'none';
       document.getElementById('progress-wrap').style.display = 'none';
 
@@ -708,6 +840,52 @@
       }).join('');
 
       document.getElementById('result-card').style.display = 'block';
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    function copyLink() {
+      const ch = window.__winner;
+      const url = window.location.href;
+      const text = `이미 의사가 너무 많습니다. 당신의 자리는 어디일까요? 🏥\n나의 정체성 진단: ${ch.name} 🩺\n지금 내 차트 확인하고 참여하기: ${url}`;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('진단 결과와 링크가 복사되었습니다!');
+        }).catch(err => {
+          fallbackCopyText(text);
+        });
+      } else {
+        fallbackCopyText(text);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('진단 결과와 링크가 복사되었습니다!');
+      } catch (err) {
+        showToast('복사에 실패했습니다.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function shareKakao() {
+      const url = encodeURIComponent(window.location.href);
+      const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/link?url=${url}`;
+      window.open(kakaoUrl, '_blank');
+      showToast('카카오톡 공유창으로 연결합니다.');
     }
 
     quizStart();
