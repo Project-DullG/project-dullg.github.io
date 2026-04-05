@@ -34,6 +34,7 @@
     }
     // 일시정지 메뉴 & 볼륨
     var gamePaused = false;
+    var shakeEnabled = true;
     (function () {
       var slider = $('vol-slider'); var btn = $('vol-btn'); var label = $('vol-label');
       var tSlider = $('t-vol-slider'); var tBtn = $('t-vol-btn'); var tLabel = $('t-vol-label');
@@ -84,6 +85,10 @@
       });
       $('pause-tut').addEventListener('click', function () {
         closePause(); showBattleTutorial(function () {});
+      });
+      $('pause-shake').addEventListener('click', function () {
+        shakeEnabled = !shakeEnabled;
+        this.textContent = shakeEnabled ? '\uD83D\uDCF3 화면 흔들림: ON' : '\uD83D\uDCF3 화면 흔들림: OFF';
       });
       // ESC 키로 일시정지 토글
       document.addEventListener('keydown', function (e) {
@@ -593,104 +598,104 @@
       attack: {
         label: '⚔️ 공격', desc: '기본 공격에 부가 효과',
         opts: [
-          { name: '불꽃 주입', desc: '공격 시 20% 확률 화상\n(공격력 15%, 2턴)', icon: '🔥', key: 'burnAtk', tier: 'common' },
-          { name: '맹독의 칼날', desc: '공격 시 25% 확률 출혈\n(공격력 10%, 3턴)', icon: '🩸', key: 'bleedAtk', tier: 'common' },
-          { name: '강타', desc: '공격 시 15% 확률\n적 1턴 기절', icon: '💫', key: 'atkStun', tier: 'common' },
+          { name: '불꽃 주입', desc: '공격 시 8% 확률 화상\n(공격력 5%, 2턴)', icon: '🔥', key: 'burnAtk', tier: 'common' },
+          { name: '맹독의 칼날', desc: '공격 시 8% 확률 출혈\n(공격력 4%, 2턴)', icon: '🩸', key: 'bleedAtk', tier: 'common' },
+          { name: '강타', desc: '공격 시 5% 확률\n적 1턴 기절', icon: '💫', key: 'atkStun', tier: 'common' },
           { name: '선제 타격', desc: '매 웨이브 첫 공격\n치명타 100%', icon: '🎯', key: 'firstCrit', tier: 'rare' },
-          { name: '흡혈 공격', desc: '기본공격 피해의 10%\n체력 회복', icon: '🧛', key: 'atkVamp', tier: 'rare' },
-          { name: '약점 간파', desc: '공격 시 적 방어\n-15% (2턴)', icon: '🔍', key: 'atkWeaken', tier: 'rare' },
-          { name: '쇄도', desc: '공격 시 30% 확률\n추가 타격 (50%)', icon: '⚔️', key: 'doubleStrike', tier: 'unique' },
-          { name: '관통 강타', desc: '공격 시 적 방어력\n50% 무시', icon: '🔱', key: 'atkPierce', tier: 'unique' },
-          { name: '연격', desc: '연속 공격마다 피해\n+10% 누적 (최대 50%)', icon: '🌀', key: 'atkCombo', tier: 'unique' },
-          { name: '처형자', desc: '적 HP 25% 이하 시\n피해 2배', icon: '💀', key: 'atkExecute', tier: 'legendary' }
+          { name: '흡혈 공격', desc: '기본공격 피해의 12%\n체력 회복', icon: '🧛', key: 'atkVamp', tier: 'rare' },
+          { name: '약점 간파', desc: '공격 시 적 방어\n-20% (2턴)', icon: '🔍', key: 'atkWeaken', tier: 'rare' },
+          { name: '쇄도', desc: '공격 시 35% 확률\n추가 타격 (60%)', icon: '⚔️', key: 'doubleStrike', tier: 'unique' },
+          { name: '관통 강타', desc: '공격 시 적 방어력\n60% 무시', icon: '🔱', key: 'atkPierce', tier: 'unique' },
+          { name: '연격', desc: '연속 공격마다 피해\n+12% 누적 (최대 60%)', icon: '🌀', key: 'atkCombo', tier: 'unique' },
+          { name: '처형자', desc: '적 HP 30% 이하 시\n피해 2.5배', icon: '💀', key: 'atkExecute', tier: 'legendary' }
         ]
       },
       defend: {
         label: '🛡️ 방어', desc: '방어 행동에 부가 효과',
         opts: [
-          { name: '수호의 오라', desc: '방어 시 최대체력 3% 회복', icon: '💚', key: 'guardHeal', tier: 'common' },
-          { name: '강화 방패', desc: '쉴드 생성량 +50%', icon: '🔰', key: 'guardShieldUp', tier: 'common' },
-          { name: '쉴드 유지', desc: '쉴드 감소량 50%→30%', icon: '🛡️', key: 'guardRetain', tier: 'common' },
-          { name: '반격 태세', desc: '방어 시 적에게 반격\n(공격력 30%)', icon: '⚡', key: 'guardCounter', tier: 'rare' },
+          { name: '수호의 오라', desc: '방어 시 최대체력 1% 회복', icon: '💚', key: 'guardHeal', tier: 'common' },
+          { name: '강화 방패', desc: '쉴드 생성량 +12%', icon: '🔰', key: 'guardShieldUp', tier: 'common' },
+          { name: '쉴드 유지', desc: '쉴드 감소량 50%→45%', icon: '🛡️', key: 'guardRetain', tier: 'common' },
+          { name: '반격 태세', desc: '방어 시 적에게 반격\n(공격력 35%)', icon: '⚡', key: 'guardCounter', tier: 'rare' },
           { name: '전열 정비', desc: '방어 시 모든 쿨타임\n1턴 감소', icon: '🔧', key: 'guardCdDown', tier: 'rare' },
-          { name: 'SP 충전', desc: '방어 시 SP 10% 회복', icon: '💎', key: 'guardSp', tier: 'rare' },
-          { name: '가시 갑옷', desc: '피격 시 공격력 20% 반사', icon: '🌵', key: 'thorns', tier: 'unique' },
-          { name: '역습 준비', desc: '방어 시 다음 공격\n피해 +40%', icon: '⚔️', key: 'guardNextAtk', tier: 'unique' },
+          { name: 'SP 충전', desc: '방어 시 SP 12% 회복', icon: '💎', key: 'guardSp', tier: 'rare' },
+          { name: '가시 갑옷', desc: '피격 시 공격력 25% 반사', icon: '🌵', key: 'thorns', tier: 'unique' },
+          { name: '역습 준비', desc: '방어 시 다음 공격\n피해 +50%', icon: '⚔️', key: 'guardNextAtk', tier: 'unique' },
           { name: '불굴의 의지', desc: 'HP 30% 이하 시\n쉴드 2배 생성', icon: '🔥', key: 'guardLastStand', tier: 'unique' },
-          { name: '도발', desc: '방어 시 적 1턴 기절', icon: '😤', key: 'guardStun', tier: 'legendary' }
+          { name: '도발', desc: '방어 시 적 1턴 기절\n단, 쉴드 생성량 -30%', icon: '😤', key: 'guardStun', tier: 'legendary' }
         ]
       },
       focus: {
         label: '🧘 집중', desc: '집중 행동에 부가 효과',
         opts: [
-          { name: '깊은 명상', desc: '집중 회복량 +50%\n(체력/SP 모두)', icon: '🌿', key: 'focusHealUp', tier: 'common' },
-          { name: '기 충전', desc: '집중 시 추가 SP\n+25% 회복', icon: '💠', key: 'focusSpUp', tier: 'common' },
+          { name: '깊은 명상', desc: '집중 회복량 +12%\n(체력/SP 모두)', icon: '🌿', key: 'focusHealUp', tier: 'common' },
+          { name: '기 충전', desc: '집중 시 추가 SP\n+8% 회복', icon: '💠', key: 'focusSpUp', tier: 'common' },
           { name: '평온', desc: '집중 시 독/화상\n1턴 감소', icon: '🍃', key: 'focusCleanse', tier: 'common' },
           { name: '살기 집중', desc: '집중 후 다음 공격\n치명타 100%', icon: '🎯', key: 'focusCrit', tier: 'rare' },
-          { name: '집중 방어', desc: '집중 시 쉴드 부여\n(최대체력 8%)', icon: '🛡️', key: 'focusShield', tier: 'rare' },
-          { name: '전의 고양', desc: '집중 시 2턴간\n치명타 +15%', icon: '🔥', key: 'focusCritBuff', tier: 'rare' },
-          { name: '전투 명상', desc: '집중 시 2턴간\n피해 +20%', icon: '⚡', key: 'focusDmgBuff', tier: 'unique' },
+          { name: '집중 방어', desc: '집중 시 쉴드 부여\n(최대체력 10%)', icon: '🛡️', key: 'focusShield', tier: 'rare' },
+          { name: '전의 고양', desc: '집중 시 2턴간\n치명타 +20%', icon: '🔥', key: 'focusCritBuff', tier: 'rare' },
+          { name: '전투 명상', desc: '집중 시 2턴간\n피해 +25%', icon: '⚡', key: 'focusDmgBuff', tier: 'unique' },
           { name: '속성 순환', desc: '집중 시 모든 쿨타임\n1턴 감소', icon: '🔄', key: 'focusCdDown', tier: 'unique' },
           { name: '위기 집중', desc: 'HP 50% 이하 시\n집중 회복량 2배', icon: '❤️‍🔥', key: 'focusCrisis', tier: 'unique' },
-          { name: '기공파', desc: '집중 시 적에게\n공격력 40% 피해', icon: '💨', key: 'focusBlast', tier: 'legendary' }
+          { name: '기공파', desc: '집중 시 적에게\n공격력 50% 피해\n단, 회복량 -30%', icon: '💨', key: 'focusBlast', tier: 'legendary' }
         ]
       },
       skill: {
         label: '✨ 필살기', desc: '필살기에 부가 효과',
         opts: [
-          { name: 'SP 환류', desc: '스킬 시 소모 SP\n30% 환급', icon: '💠', key: 'skillSpRefund', tier: 'common' },
-          { name: '기합', desc: '스킬 시 2턴간\n피해 감소 15%', icon: '🛡️', key: 'skillGuard', tier: 'common' },
-          { name: '스킬 연소', desc: '스킬 시 적에게 강화 화상\n(공격력 20%, 3턴)', icon: '🌋', key: 'skillBurn', tier: 'rare' },
-          { name: '연쇄 번개', desc: '스킬 시 추가 피해\n(공격력 30%)', icon: '⚡', key: 'chainLightning', tier: 'rare' },
+          { name: 'SP 환류', desc: '스킬 시 소모 SP\n10% 환급', icon: '💠', key: 'skillSpRefund', tier: 'common' },
+          { name: '기합', desc: '스킬 시 2턴간\n피해 감소 5%', icon: '🛡️', key: 'skillGuard', tier: 'common' },
+          { name: '스킬 연소', desc: '스킬 시 적에게 화상\n(공격력 15%, 2턴)', icon: '🌋', key: 'skillBurn', tier: 'rare' },
+          { name: '연쇄 번개', desc: '스킬 시 추가 피해\n(공격력 35%)', icon: '⚡', key: 'chainLightning', tier: 'rare' },
           { name: '기절 강화', desc: '스킬 시 33% 확률\n적 1턴 추가 기절', icon: '💫', key: 'skillStun', tier: 'rare' },
-          { name: '스킬 쇄도', desc: '스킬 후 다음 공격\n피해 +30%', icon: '🎯', key: 'skillNextAtk', tier: 'rare' },
-          { name: '파괴의 일격', desc: '스킬 시 적 방어\n-30% (3턴)', icon: '💥', key: 'skillArmorBreak', tier: 'unique' },
-          { name: '흡수', desc: '스킬 피해의 15%\n체력으로 회복', icon: '🧛', key: 'skillVamp', tier: 'unique' },
-          { name: '잔류 에너지', desc: '스킬 후 2턴간 매턴\n공격력 15% 추가 피해', icon: '✨', key: 'skillDot', tier: 'unique' },
-          { name: '과부하', desc: 'SP 소모 +50%\n피해 +80%', icon: '⚠️', key: 'skillOverload', tier: 'legendary' }
+          { name: '스킬 쇄도', desc: '스킬 후 다음 공격\n피해 +35%', icon: '🎯', key: 'skillNextAtk', tier: 'rare' },
+          { name: '파괴의 일격', desc: '스킬 시 적 방어\n-35% (3턴)', icon: '💥', key: 'skillArmorBreak', tier: 'unique' },
+          { name: '흡수', desc: '스킬 피해의 20%\n체력으로 회복', icon: '🧛', key: 'skillVamp', tier: 'unique' },
+          { name: '잔류 에너지', desc: '스킬 후 3턴간 매턴\n공격력 20% 추가 피해', icon: '✨', key: 'skillDot', tier: 'unique' },
+          { name: '과부하', desc: 'SP 소모 +50%\n피해 +100%', icon: '⚠️', key: 'skillOverload', tier: 'legendary' }
         ]
       },
       booster: {
         label: '🌟 부스터', desc: '미라클 부스터에 부가 효과',
         opts: [
-          { name: '에너지 절약', desc: '부스터 SP 소모 -30', icon: '💎', key: 'boostSpDown', tier: 'common' },
-          { name: '기동 가속', desc: '부스터 발동 시\n회피 +15% (지속)', icon: '💨', key: 'boostDodge', tier: 'common' },
+          { name: '에너지 절약', desc: '부스터 SP 소모 -10', icon: '💎', key: 'boostSpDown', tier: 'common' },
+          { name: '기동 가속', desc: '부스터 발동 시\n회피 +5% (지속)', icon: '💨', key: 'boostDodge', tier: 'common' },
           { name: '회복 광선', desc: '부스터 발동 시\n체력 20% 회복', icon: '💗', key: 'boostHeal', tier: 'rare' },
           { name: '부스터 쉴드', desc: '부스터 발동 시\n최대체력 25% 쉴드', icon: '🛡️', key: 'boostShield', tier: 'rare' },
           { name: '전투 가속', desc: '부스터 중 쿨타임\n2배 감소', icon: '⏩', key: 'boostCdDown', tier: 'rare' },
           { name: '지속 강화', desc: '부스터 지속시간 +1턴', icon: '⏱️', key: 'boostExtend', tier: 'unique' },
           { name: '과충전', desc: '부스터 중 치명타\n확률 +30%', icon: '⚡', key: 'boostCrit', tier: 'unique' },
-          { name: '충격파', desc: '부스터 발동 시\n공격력 50% 즉시 피해', icon: '💥', key: 'boostBlast', tier: 'unique' },
-          { name: '에너지 방출', desc: '부스터 종료 시\n공격력 100% 폭발 피해', icon: '💫', key: 'boostEndBlast', tier: 'legendary' },
-          { name: '재가동', desc: '부스터 1회 더\n사용 가능', icon: '🔁', key: 'boostReuse', tier: 'legendary' }
+          { name: '충격파', desc: '부스터 발동 시\n공격력 60% 즉시 피해', icon: '💥', key: 'boostBlast', tier: 'unique' },
+          { name: '에너지 방출', desc: '부스터 종료 시\n공격력 120% 폭발 피해', icon: '💫', key: 'boostEndBlast', tier: 'legendary' },
+          { name: '재가동', desc: '부스터 1회 더 사용 가능\n단, 2회째 SP 소모 +50%', icon: '🔁', key: 'boostReuse', tier: 'legendary' }
         ]
       },
       doctor: {
         label: '🔬 박사', desc: '박사 지원에 부가 효과',
         opts: [
-          { name: '에너지 주입', desc: '박사 SP 회복량 +50%\n(25%→38%)', icon: '🔋', key: 'docSpUp', tier: 'common' },
+          { name: '에너지 주입', desc: '박사 SP 회복량 +15%\n(25%→29%)', icon: '🔋', key: 'docSpUp', tier: 'common' },
           { name: '응급 처치', desc: '박사 지원 시\n독/화상 1턴 감소', icon: '🩹', key: 'docMinorCleanse', tier: 'common' },
           { name: '긴급 치료', desc: '박사 지원 시\n체력 15% 회복', icon: '💊', key: 'docHeal', tier: 'rare' },
-          { name: '전술 보강', desc: '박사 지원 시\n공격력 +25% (2턴)', icon: '📊', key: 'docAtkBuff', tier: 'rare' },
-          { name: '방어 프로토콜', desc: '박사 지원 시\n쉴드 +최대체력 10%', icon: '🛡️', key: 'docShield', tier: 'rare' },
-          { name: '정밀 분석', desc: '박사 지원 시\n적 방어 -30% (3턴)', icon: '🔍', key: 'docAnalyze', tier: 'unique' },
+          { name: '전술 보강', desc: '박사 지원 시\n공격력 +30% (2턴)', icon: '📊', key: 'docAtkBuff', tier: 'rare' },
+          { name: '방어 프로토콜', desc: '박사 지원 시\n쉴드 +최대체력 12%', icon: '🛡️', key: 'docShield', tier: 'rare' },
+          { name: '정밀 분석', desc: '박사 지원 시\n적 방어 -35% (3턴)', icon: '🔍', key: 'docAnalyze', tier: 'unique' },
           { name: '시스템 리셋', desc: '박사 지원 시\n필살기 쿨타임 초기화', icon: '🔄', key: 'docCdReset', tier: 'unique' },
           { name: '해독 주사', desc: '박사 지원 시 모든\n디버프/독/화상 해제', icon: '💉', key: 'docCleanse', tier: 'unique' },
-          { name: '나노 수복', desc: '박사 지원 후 3턴간\n매턴 HP 3% 회복', icon: '🔬', key: 'docRegen', tier: 'unique' },
+          { name: '나노 수복', desc: '박사 지원 후 3턴간\n매턴 HP 4% 회복', icon: '🔬', key: 'docRegen', tier: 'unique' },
           { name: '응급 프로토콜', desc: '최초 사망 시\nHP 30%로 부활 (1회)', icon: '🚨', key: 'docRevive', tier: 'legendary' }
         ]
       },
       support: {
         label: '📡 지원', desc: '레인저 지원스킬에 부가 효과',
         opts: [
-          { name: '지원 치유', desc: '지원 사용 시\n체력 5% 회복', icon: '💗', key: 'supportHeal', tier: 'common' },
-          { name: '박사의 격려', desc: '지원 사용 시\nSP 15% 회복', icon: '🔋', key: 'supportSpRegen', tier: 'common' },
-          { name: '사기 고양', desc: '지원 사용 시\n2턴간 피해 +10%', icon: '📢', key: 'supportMorale', tier: 'common' },
-          { name: '지원 강화탄', desc: '지원 피해 스킬\n위력 +50%', icon: '🎯', key: 'supportDmgUp', tier: 'rare' },
-          { name: '전술 지휘', desc: '지원 사용 시\n다음 공격 +25%', icon: '📡', key: 'supportNextAtk', tier: 'rare' },
-          { name: '보급 지원', desc: '지원 사용 시\n쉴드 +최대체력 5%', icon: '🛡️', key: 'supportShieldOnly', tier: 'rare' },
-          { name: '신속 지원', desc: '지원 쿨타임 1턴 감소', icon: '⏩', key: 'supportFast', tier: 'unique' },
-          { name: '연대 치유', desc: '지원 사용 시 체력 8%\n+ 쉴드 부여', icon: '🌟', key: 'supportShieldHeal', tier: 'unique' },
+          { name: '지원 치유', desc: '지원 사용 시\n체력 2% 회복', icon: '💗', key: 'supportHeal', tier: 'common' },
+          { name: '박사의 격려', desc: '지원 사용 시\nSP 5% 회복', icon: '🔋', key: 'supportSpRegen', tier: 'common' },
+          { name: '사기 고양', desc: '지원 사용 시\n2턴간 피해 +4%', icon: '📢', key: 'supportMorale', tier: 'common' },
+          { name: '지원 강화탄', desc: '지원 피해 스킬\n위력 +60%', icon: '🎯', key: 'supportDmgUp', tier: 'rare' },
+          { name: '전술 지휘', desc: '지원 사용 시\n다음 공격 +30%', icon: '📡', key: 'supportNextAtk', tier: 'rare' },
+          { name: '보급 지원', desc: '지원 사용 시\n쉴드 +최대체력 6%', icon: '🛡️', key: 'supportShieldOnly', tier: 'rare' },
+          { name: '신속 지원', desc: '지원 쿨타임 1턴 추가 감소', icon: '⏩', key: 'supportFast', tier: 'unique' },
+          { name: '연대 치유', desc: '지원 사용 시 체력 10%\n+ 쉴드 5% 부여', icon: '🌟', key: 'supportShieldHeal', tier: 'unique' },
           { name: '지원 연계', desc: '지원 피해 시 적에게\n출혈 부여 (3턴)', icon: '🩸', key: 'supportBleed', tier: 'unique' },
           { name: '이중 지원', desc: '같은 턴에 지원\n2회 사용 가능', icon: '👥', key: 'supportDouble', tier: 'legendary' }
         ]
@@ -978,6 +983,13 @@
       };
       if (en.special && en.special.type === 'shield') en.shield = (en.special.hp || 0) + cycle * 2;
       if (en.special && en.special.type === 'armor') en.shield = (en.special.shield || 0) + cycle * 1;
+      if (wave > 30) {
+        var lateScale = 1 + (wave - 30) * 0.08;
+        en.hp = Math.round(en.hp * lateScale);
+        en.maxHp = en.hp;
+        en.atk = Math.round(en.atk * lateScale);
+        en.def = Math.round(en.def * lateScale);
+      }
       return en;
     }
 
@@ -1186,7 +1198,7 @@
       var r = RANGERS[rangerKey];
       loadProg();
       BT.wave = 0; BT.kills = 0; BT.turn = 0; BT.supportCD = 0; BT.acting = false;
-      BT.buffs = []; BT.debuffs = []; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.stunTurns = 0; BT.freezeATK = 0; BT.freezeTurns = 0; BT.supportUsedThisTurn = false; BT.inExtraAction = false;
+      BT.buffs = []; BT.debuffs = []; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.stunTurns = 0; BT.stunResist = false; BT.freezeATK = 0; BT.freezeTurns = 0; BT.supportUsedThisTurn = false; BT.inExtraAction = false;
       BT.gold = 0; BT.ce = 0;
       BT.passiveKey = passiveKey; BT.supportIndex = 0; BT.nextAtkBonus = 0; BT.comboAttackCharged = false; BT.boosterUsed = false;
       BT.redMomentum = 0; BT.blackAim = 0; BT.blueCritChain = 0; BT.yellowMarks = 0;
@@ -1313,7 +1325,7 @@
         if (spHealPct > 0) BT.player.sp = Math.min(BT.player.maxSp, BT.player.sp + Math.round(BT.player.maxSp * spHealPct));
       }
       BT.enemy = generateEnemy(BT.wave);
-      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
+      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.stunTurns = 0; BT.stunResist = false; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
       if (BT.freezeATK > 0) { BT.player.atk += BT.freezeATK; BT.freezeATK = 0; BT.freezeTurns = 0 }
       // 패시브 성장 리셋 (웨이브 끝 초기화)
       resetPassiveGrowth();
@@ -1566,7 +1578,7 @@
       else { a3.textContent = '\u2728 ' + p.skill.name + ' SP' + effectiveCost + ' (~' + estSkill + ')'; if (p.sp < effectiveCost) a3.classList.add('disabled') }
       a3.addEventListener('click', function () { doPlayerAction('skill') }); secondaryRow.appendChild(a3);
       // 미라클 부스터
-      var boostCost = (BT.augment.booster === 'boostSpDown') ? 70 : 100;
+      var boostCost = (BT.augment.booster === 'boostSpDown') ? 90 : 100;
       var a3b = document.createElement('button'); a3b.className = 'bt-act skill';
       a3b.style.cssText = 'border-color:rgba(255,180,0,0.5);color:#ffb300;background:rgba(255,180,0,0.08)';
       if (BT.boosterUsed) { a3b.textContent = '🌟 부스터 [사용됨]'; a3b.classList.add('disabled') }
@@ -1660,7 +1672,7 @@
       // 방어 프리뷰
       if (BT.defendCD > 0) { previews.def = '<span style="color:#f44">\uCFE8\uD0C0\uC784 ' + BT.defendCD + '\uD134 \uB0A8\uC74C</span>' }
       var defPvParts = ['<span class="pv-shield">\uC274\uB4DC ' + shieldPreview + ' \uC0DD\uC131 (\uB9E4\uD134 50%\u2193)</span>'];
-      if (BT.augment.defend === 'guardHeal') defPvParts.push('<span class="pv-heal">🛡️체력 +' + Math.round(p.maxHp * 0.03) + ' 치유</span>');
+      if (BT.augment.defend === 'guardHeal') defPvParts.push('<span class="pv-heal">🛡️체력 +' + Math.round(p.maxHp * 0.01) + ' 치유</span>');
       previews.def = defPvParts.join(' · ') + augPv('defend');
       // 집중 프리뷰
       if (BT.focusCD > 0) previews.focus = '<span style="color:#f44">쿨타임 ' + BT.focusCD + '턴 남음</span>';
@@ -1677,7 +1689,7 @@
       if (p.sp < effectiveCost) sklPvParts.push('<span style="color:#f44">SP 부족!</span>');
       previews.skill = sklPvParts.join(' · ') + augPv('skill');
       // 미라클 부스터 프리뷰
-      var boostPreviewCost = (BT.augment.booster === 'boostSpDown') ? 70 : 100;
+      var boostPreviewCost = (BT.augment.booster === 'boostSpDown') ? 90 : 100;
       var bstPvParts = ['<span class="pv-buff">전 능력치 2배 (2턴)</span>', '<span class="pv-sp">SP ' + boostPreviewCost + ' 소모</span>'];
       if (BT.boosterUsed) bstPvParts = ['<span style="color:#f44">이미 사용됨</span>'];
       else if (p.sp < boostPreviewCost) bstPvParts.push('<span style="color:#f44">SP 부족!</span>');
@@ -1810,6 +1822,7 @@
       setTimeout(function () { el.style.opacity = '0' }, 300);
     }
     function btShake(strong) {
+      if (!shakeEnabled) return;
       var bg = $('bt-bg'); bg.style.animation = 'none'; void bg.offsetWidth;
       var dur = strong ? '0.6s' : '0.4s';
       bg.style.animation = 'btShake ' + dur + ' ease';
@@ -1863,17 +1876,24 @@
         if (BT.doctorCD > 0) { BT.supportUsedThisTurn = false; BT.acting = false; showActions(); return }
         BT.doctorCD = 4;
         var isStunImmune = e.special && e.special.type === 'stunImmune';
-        if (!isStunImmune) BT.stunTurns += 1;
-        var spPct = (BT.augment.doctor === 'docSpUp') ? 0.38 : 0.25;
+        var docStunResisted = false;
+        if (!isStunImmune) {
+          if (BT.stunResist && Math.random() < 0.5) { BT.stunResist = false; docStunResisted = true; }
+          else if (Math.random() < 0.80) { BT.stunResist = false; BT.stunTurns += 1; }
+          else { docStunResisted = true; }
+        }
+        var spPct = (BT.augment.doctor === 'docSpUp') ? 0.29 : 0.25;
         var spRecover = Math.round(p.maxSp * spPct); p.sp = Math.min(p.maxSp, p.sp + spRecover);
         btDrama('🔬 박사의 지원!', '#4ecca3', function () {
           var docLog = isStunImmune
             ? '🔬 <span class="buff">박사의 지원!</span> <span style="color:#f44">기절 면역!</span> <span class="heal">SP+' + spRecover + '</span>'
+            : docStunResisted
+            ? '🔬 <span class="buff">박사의 지원!</span> <span style="color:#f44">기절 내성!</span> <span class="heal">SP+' + spRecover + '</span>'
             : '🔬 <span class="buff">박사의 지원! 적 1턴 기절!</span> <span class="heal">SP+' + spRecover + '</span>';
           // ── 박사 강화 부가효과 ──
           if (BT.augment.doctor === 'docAnalyze' && e.hp > 0) {
-            BT.debuffs.push({ stat: 'def', val: 0.30, turns: 3 });
-            docLog += ' <span class="buff">🔍정밀 분석! 적 방어 -30%</span>';
+            BT.debuffs.push({ stat: 'def', val: 0.35, turns: 3 });
+            docLog += ' <span class="buff">🔍정밀 분석! 적 방어 -35%</span>';
           }
           if (BT.augment.doctor === 'docHeal') {
             var dh = Math.round(p.maxHp * 0.15); p.hp = Math.min(p.maxHp, p.hp + dh);
@@ -1885,8 +1905,8 @@
             docLog += ' <span class="buff">🔄필살기 쿨타임 초기화!</span>';
           }
           if (BT.augment.doctor === 'docAtkBuff') {
-            BT.buffs.push({ stat: 'atk', val: 0.25, turns: 2 });
-            docLog += ' <span class="buff">📊공격력 +25% (2턴)</span>';
+            BT.buffs.push({ stat: 'atk', val: 0.30, turns: 2 });
+            docLog += ' <span class="buff">📊공격력 +30% (2턴)</span>';
           }
           if (BT.augment.doctor === 'docCleanse') {
             BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnTurns = 0; BT.burnDmg = 0;
@@ -1906,7 +1926,7 @@
             if (BT.burnTurns > 0) { BT.burnTurns = Math.max(0, BT.burnTurns - 1); docLog += ' <span class="buff">🩹화상 -1턴</span>' }
           }
           if (BT.augment.doctor === 'docShield') {
-            var dsShield = Math.round(p.maxHp * 0.10); BT.shield += dsShield;
+            var dsShield = Math.round(p.maxHp * 0.12); BT.shield += dsShield;
             docLog += ' <span class="buff">🛡️방어 프로토콜 +' + dsShield + '</span>';
           }
           btLog(docLog);
@@ -1960,7 +1980,7 @@
           if (BT.perkRage && p.hp < p.maxHp * 0.3) { dmg = Math.round(dmg * 1.3) }
           // 지원 강화탄 (지원 강화 부가효과 — 캐릭터별)
           var _supAug = getSupportAug(supporter.key);
-          if (_supAug === 'supportDmgUp') { dmg = Math.round(dmg * 1.5) }
+          if (_supAug === 'supportDmgUp') { dmg = Math.round(dmg * 1.6) }
           e.hp -= dmg;
           showDmgNum(dmg, 'bt-esvg', ''); btFlash(supporter.data.color);
           var supLogExtra = (doubleSupport ? ' (2배!)' : '') + (_supAug === 'supportDmgUp' ? ' <span class="buff">강화탄!</span>' : '');
@@ -2000,32 +2020,32 @@
         // 지원 강화 부가효과 (캐릭터별)
         var _sa = getSupportAug(supporter.key);
         if (_sa === 'supportHeal' && p.hp > 0) {
-          var supHeal = Math.round(p.maxHp * 0.05);
+          var supHeal = Math.round(p.maxHp * 0.02);
           p.hp = Math.min(p.maxHp, p.hp + supHeal);
           showDmgNum(supHeal, 'bt-psvg', 'heal');
           btLogAppend('<span class="heal">💗지원 치유 +' + supHeal + '</span>');
         }
         if (_sa === 'supportSpRegen' && p.hp > 0) {
-          var spRg = Math.round(p.maxSp * 0.15);
+          var spRg = Math.round(p.maxSp * 0.05);
           p.sp = Math.min(p.maxSp, p.sp + spRg);
           btLogAppend('<span class="sp-use">🔋SP +' + spRg + '</span>');
         }
         if (_sa === 'supportNextAtk') {
-          BT.nextAtkBonus = 0.25;
-          btLogAppend('<span class="buff">📡다음 공격 +25%!</span>');
+          BT.nextAtkBonus = 0.30;
+          btLogAppend('<span class="buff">📡다음 공격 +30%!</span>');
         }
         if (_sa === 'supportShieldHeal') {
-          var ssh = Math.round(p.maxHp * 0.08); p.hp = Math.min(p.maxHp, p.hp + ssh);
+          var ssh = Math.round(p.maxHp * 0.10); p.hp = Math.min(p.maxHp, p.hp + ssh);
           var ssShield = Math.round(getBaseShield(p) * 0.3); BT.shield += ssShield;
           showDmgNum(ssh, 'bt-psvg', 'heal');
           btLogAppend('<span class="heal">🌟연대 치유 +' + ssh + ' 🛡️+' + ssShield + '</span>');
         }
         if (_sa === 'supportMorale') {
-          BT.buffs.push({ stat: 'dmgUp', val: 0.10, turns: 2 }); BT.perkDmgUp += 0.10;
-          btLogAppend('<span class="buff">📢사기 고양! 피해 +10% (2턴)</span>');
+          BT.buffs.push({ stat: 'dmgUp', val: 0.04, turns: 2 }); BT.perkDmgUp += 0.04;
+          btLogAppend('<span class="buff">📢사기 고양! 피해 +4% (2턴)</span>');
         }
         if (_sa === 'supportShieldOnly') {
-          var soShield = Math.round(p.maxHp * 0.05); BT.shield += soShield;
+          var soShield = Math.round(p.maxHp * 0.06); BT.shield += soShield;
           btLogAppend('<span class="buff">🛡️보급 쉴드 +' + soShield + '</span>');
         }
         // 지원스킬로 적이 쓰러지면 바로 처리
@@ -2145,12 +2165,12 @@
         // 흡혈 강타
         if (BT.perkVamp > 0 && dmg > 0) { var vampHeal = Math.round(dmg * BT.perkVamp); p.hp = Math.min(p.maxHp, p.hp + vampHeal); showDmgNum(vampHeal, 'bt-psvg', 'heal') }
         // 공격 강화 부가효과
-        if (BT.augment.attack === 'burnAtk' && dmg > 0 && Math.random() < 0.20) {
-          BT.enemyBurnDmg = Math.round(p.atk * 0.15); BT.enemyBurnTurns = 2;
+        if (BT.augment.attack === 'burnAtk' && dmg > 0 && Math.random() < 0.08) {
+          BT.enemyBurnDmg = Math.round(p.atk * 0.05); BT.enemyBurnTurns = 2;
           btLogAppend('<span class="dmg">🔥화상 부여! ' + BT.enemyBurnDmg + '/턴</span>');
         }
-        if (BT.augment.attack === 'bleedAtk' && dmg > 0 && Math.random() < 0.25) {
-          BT.enemyBleedDmg = Math.round(p.atk * 0.10); BT.enemyBleedTurns = 3;
+        if (BT.augment.attack === 'bleedAtk' && dmg > 0 && Math.random() < 0.08) {
+          BT.enemyBleedDmg = Math.round(p.atk * 0.04); BT.enemyBleedTurns = 2;
           btLogAppend('<span class="dmg">🩸출혈 부여! ' + BT.enemyBleedDmg + '/턴</span>');
         }
         // 쇄도: 30% 확률 추가 타격
@@ -2160,16 +2180,17 @@
           showDmgNum(dsDmg, 'bt-esvg', '');
           btLogAppend('<span class="dmg">⚔️쇄도! +' + dsDmg + '</span>');
         }
-        // 흡혈 공격: 피해의 10% 회복
+        // 흡혈 공격: 피해의 12% 회복
         if (BT.augment.attack === 'atkVamp' && dmg > 0) {
-          var avHeal = Math.round(dmg * 0.10); p.hp = Math.min(p.maxHp, p.hp + avHeal);
+          var avHeal = Math.round(dmg * 0.12); p.hp = Math.min(p.maxHp, p.hp + avHeal);
           showDmgNum(avHeal, 'bt-psvg', 'heal');
           btLogAppend('<span class="heal">🧛흡혈 +' + avHeal + '</span>');
         }
-        // 강타: 15% 확률 기절
-        if (BT.augment.attack === 'atkStun' && dmg > 0 && Math.random() < 0.15) {
+        // 강타: 10% 확률 기절
+        if (BT.augment.attack === 'atkStun' && dmg > 0 && Math.random() < 0.05) {
           if (e.special && e.special.type === 'stunImmune') { btLogAppend('<span style="color:#f44">기절 면역!</span>') }
-          else { BT.stunTurns = Math.max(BT.stunTurns, 1); btLogAppend('<span class="buff">💫기절!</span>') }
+          else if (BT.stunResist && Math.random() < 0.5) { BT.stunResist = false; btLogAppend('<span style="color:#f44">기절 내성!</span>') }
+          else { BT.stunResist = false; BT.stunTurns = Math.max(BT.stunTurns, 1); btLogAppend('<span class="buff">💫기절!</span>') }
         }
         // 약점 간파: 적 방어 -15% (2턴)
         if (BT.augment.attack === 'atkWeaken' && dmg > 0) {
@@ -2193,15 +2214,15 @@
         var defLog = p.name + '\uC774(\uAC00) \uBC29\uC5B4! <span class="buff">\uD83D\uDEE1\uFE0F \uC274\uB4DC ' + BT.shield + '</span>';
         // ── 방어 강화 부가효과 ──
         if (BT.augment.defend === 'guardHeal') {
-          var gh = Math.round(p.maxHp * 0.03); p.hp = Math.min(p.maxHp, p.hp + gh);
+          var gh = Math.round(p.maxHp * 0.01); p.hp = Math.min(p.maxHp, p.hp + gh);
           showDmgNum(gh, 'bt-psvg', 'heal'); defLog += ' <span class="heal">💚치유 +' + gh + '</span>';
         }
         if (BT.augment.defend === 'guardCounter' && e.hp > 0) {
-          var gcDmg = Math.round(p.atk * 0.3); e.hp = Math.max(0, e.hp - gcDmg);
+          var gcDmg = Math.round(p.atk * 0.35); e.hp = Math.max(0, e.hp - gcDmg);
           showDmgNum(gcDmg, 'bt-esvg', ''); defLog += ' <span class="dmg">⚡반격 ' + gcDmg + '</span>';
         }
         if (BT.augment.defend === 'guardShieldUp') {
-          var extraShield = Math.round(shieldAmt * 0.5); BT.shield += extraShield;
+          var extraShield = Math.round(shieldAmt * 0.12); BT.shield += extraShield;
           defLog += ' <span class="buff">🔰강화 방패 +' + extraShield + '</span>';
         }
         if (BT.augment.defend === 'guardCdDown') {
@@ -2212,11 +2233,13 @@
         }
         if (BT.augment.defend === 'guardStun') {
           if (e.special && e.special.type === 'stunImmune') { defLog += ' <span style="color:#f44">기절 면역!</span>' }
-          else { BT.stunTurns += 1; defLog += ' <span class="buff">😤도발! 적 1턴 기절!</span>' }
+          else if (BT.stunResist && Math.random() < 0.5) { BT.stunResist = false; defLog += ' <span style="color:#f44">기절 내성!</span>' }
+          else if (Math.random() < 0.80) { BT.stunResist = false; BT.stunTurns += 1; defLog += ' <span class="buff">😤도발! 적 1턴 기절!</span>' }
+          else { defLog += ' <span style="color:#f44">기절 저항!</span>' }
         }
         if (BT.augment.defend === 'guardNextAtk') {
-          BT.nextAtkBonus = 0.40;
-          defLog += ' <span class="buff">⚔️역습 준비! 다음 공격 +40%</span>';
+          BT.nextAtkBonus = 0.50;
+          defLog += ' <span class="buff">⚔️역습 준비! 다음 공격 +50%</span>';
         }
         if (BT.augment.defend === 'guardSp') {
           var gsp = Math.round(p.maxSp * 0.10); p.sp = Math.min(p.maxSp, p.sp + gsp);
@@ -2230,13 +2253,13 @@
       } else if (action === 'focus') {
         // 집중: 체력/SP 회복 (쿨타임 3턴)
         if (BT.focusCD > 0) { BT.acting = false; showActions(); return }
-        var focusMul = (BT.augment.focus === 'focusHealUp') ? 1.5 : 1;
+        var focusMul = (BT.augment.focus === 'focusHealUp') ? 1.12 : 1;
         // 위기 집중: HP 50% 이하 시 회복 2배
         if (BT.augment.focus === 'focusCrisis' && p.hp < p.maxHp * 0.5) focusMul *= 2;
         var hpRecover = Math.round((1 + Math.round(p.maxHp * 0.10)) * focusMul);
         var spRecover = Math.round(Math.round(p.maxSp * 0.25) * focusMul);
-        // 기 충전: 추가 SP +25%
-        if (BT.augment.focus === 'focusSpUp') { spRecover += Math.round(p.maxSp * 0.25) }
+        // 기 충전: 추가 SP +15%
+        if (BT.augment.focus === 'focusSpUp') { spRecover += Math.round(p.maxSp * 0.08) }
         p.hp = Math.min(p.maxHp, p.hp + hpRecover);
         p.sp = Math.min(p.maxSp, p.sp + spRecover);
         BT.focusCD = 3;
@@ -2248,8 +2271,8 @@
           focusLog += ' <span class="buff">🎯다음 공격 치명타!</span>';
         }
         if (BT.augment.focus === 'focusDmgBuff') {
-          BT.buffs.push({ stat: 'dmgUp', val: 0.20, turns: 2 }); BT.perkDmgUp += 0.20;
-          focusLog += ' <span class="buff">🔥피해 +20% (2턴)</span>';
+          BT.buffs.push({ stat: 'dmgUp', val: 0.25, turns: 2 }); BT.perkDmgUp += 0.25;
+          focusLog += ' <span class="buff">🔥피해 +25% (2턴)</span>';
         }
         if (BT.augment.focus === 'focusCdDown') {
           if (BT.defendCD > 0) BT.defendCD--;
@@ -2258,12 +2281,12 @@
           focusLog += ' <span class="buff">🔄쿨타임 -1!</span>';
         }
         if (BT.augment.focus === 'focusBlast' && e.hp > 0) {
-          var fbDmg = Math.round(p.atk * 0.4); e.hp = Math.max(0, e.hp - fbDmg);
+          var fbDmg = Math.round(p.atk * 0.5); e.hp = Math.max(0, e.hp - fbDmg);
           showDmgNum(fbDmg, 'bt-esvg', '');
           focusLog += ' <span class="dmg">💨기공파 ' + fbDmg + '</span>';
         }
         if (BT.augment.focus === 'focusShield') {
-          var fsShield = Math.round(p.maxHp * 0.08); BT.shield += fsShield;
+          var fsShield = Math.round(p.maxHp * 0.10); BT.shield += fsShield;
           focusLog += ' <span class="buff">🛡️쉴드 +' + fsShield + '</span>';
         }
         if (BT.augment.focus === 'focusCrisis' && p.hp < p.maxHp * 0.5) {
@@ -2274,8 +2297,8 @@
           if (BT.burnTurns > 0) { BT.burnTurns = Math.max(0, BT.burnTurns - 1); focusLog += ' <span class="buff">🍃화상 -1턴</span>' }
         }
         if (BT.augment.focus === 'focusCritBuff') {
-          BT.buffs.push({ stat: 'critChance', val: 15, turns: 2 }); BT.perkCritChance += 15;
-          focusLog += ' <span class="buff">🔥치명타 +15% (2턴)</span>';
+          BT.buffs.push({ stat: 'critChance', val: 20, turns: 2 }); BT.perkCritChance += 20;
+          focusLog += ' <span class="buff">🔥치명타 +20% (2턴)</span>';
         }
         btLog(focusLog);
         updateBattleUI(); updateStatusIcons();
@@ -2286,13 +2309,13 @@
         if (BT.skillCD > 0) { BT.acting = false; showActions(); return }
         var skillCost = p.skill.cost - (p.skillCostReduction || 0);
         skillCost = Math.max(0, skillCost);
-        // 과부하: SP 소모 +50%, 피해 +80%
+        // 과부하: SP 소모 +50%, 피해 +100%
         if (BT.augment.skill === 'skillOverload') skillCost = Math.round(skillCost * 1.5);
         if (p.sp < skillCost) { BT.acting = false; showActions(); return }
         BT.skillCD = 3;
         p.sp -= skillCost;
         var multi = p.skill.multi;
-        if (BT.augment.skill === 'skillOverload') multi *= 1.8;
+        if (BT.augment.skill === 'skillOverload') multi *= 2.0;
         var skillIgnore = p.skill.ignoreDef || 0;
         // 블랙 고유: 스킬 사용 시 관통 스택 소비 → 스킬 추가 배율
         if (p.key === 'black' && BT.blackAim > 0) { multi *= (1 + BT.blackAim * 0.05); BT.blackAim = 0 }
@@ -2332,7 +2355,9 @@
           var stunVal = (p.skill.stun || 0) + yellowStunBonus;
           if (stunVal > 0) {
             if (e.special && e.special.type === 'stunImmune') { btLogAppend('<span style="color:#f44">기절 면역!</span>') }
-            else { BT.stunTurns += stunVal }
+            else if (BT.stunResist && Math.random() < 0.5) { BT.stunResist = false; btLogAppend('<span style="color:#f44">기절 내성!</span>') }
+            else if (Math.random() < 0.80) { BT.stunResist = false; BT.stunTurns += stunVal }
+            else { btLogAppend('<span style="color:#f44">기절 저항!</span>') }
           }
           if (p.skill.heal) {
             var sh = Math.round(getBaseShield(p) * 0.50); BT.shield += sh;
@@ -2340,26 +2365,27 @@
           }
           // Passive bonuses
           // 스킬 강화 부가효과
-          if (BT.augment.skill === 'chainLightning' && dmg > 0) { var clDmg = Math.round(p.atk * 0.3); e.hp -= clDmg; showDmgNum(clDmg, 'bt-esvg', ''); btLogAppend('<span class="dmg">⚡연쇄 번개! ' + clDmg + '</span>') }
+          if (BT.augment.skill === 'chainLightning' && dmg > 0) { var clDmg = Math.round(p.atk * 0.35); e.hp -= clDmg; showDmgNum(clDmg, 'bt-esvg', ''); btLogAppend('<span class="dmg">⚡연쇄 번개! ' + clDmg + '</span>') }
           if (BT.augment.skill === 'skillBurn' && dmg > 0) {
-            BT.enemyBurnDmg = Math.round(p.atk * 0.20); BT.enemyBurnTurns = 3;
+            BT.enemyBurnDmg = Math.round(p.atk * 0.15); BT.enemyBurnTurns = 2;
             btLogAppend('<span class="dmg">🔥스킬 연소! ' + BT.enemyBurnDmg + '/턴</span>');
           }
           if (BT.augment.skill === 'skillSpRefund') {
-            var refund = Math.round((p.skill.cost || 50) * 0.30);
+            var refund = Math.round((p.skill.cost || 50) * 0.10);
             p.sp = Math.min(p.maxSp, p.sp + refund);
             btLogAppend('<span class="sp-use">💠SP 환류 +' + refund + '</span>');
           }
           if (BT.augment.skill === 'skillStun' && Math.random() < 0.33) {
             if (e.special && e.special.type === 'stunImmune') { btLogAppend('<span style="color:#f44">기절 면역!</span>') }
-            else { BT.stunTurns += 1; btLogAppend('<span class="buff">💫기절 강화! +1턴</span>') }
+            else if (BT.stunResist && Math.random() < 0.5) { BT.stunResist = false; btLogAppend('<span style="color:#f44">기절 내성!</span>') }
+            else { BT.stunResist = false; BT.stunTurns += 1; btLogAppend('<span class="buff">💫기절 강화! +1턴</span>') }
           }
           if (BT.augment.skill === 'skillArmorBreak' && e.hp > 0) {
-            BT.debuffs.push({ stat: 'def', val: 0.30, turns: 3 });
-            btLogAppend('<span class="buff">💥파괴! 적 방어 -30%</span>');
+            BT.debuffs.push({ stat: 'def', val: 0.35, turns: 3 });
+            btLogAppend('<span class="buff">💥파괴! 적 방어 -35%</span>');
           }
           if (BT.augment.skill === 'skillVamp' && dmg > 0) {
-            var svHeal = Math.round(dmg * 0.15); p.hp = Math.min(p.maxHp, p.hp + svHeal);
+            var svHeal = Math.round(dmg * 0.20); p.hp = Math.min(p.maxHp, p.hp + svHeal);
             showDmgNum(svHeal, 'bt-psvg', 'heal');
             btLogAppend('<span class="heal">🧛흡수 +' + svHeal + '</span>');
           }
@@ -2369,16 +2395,16 @@
             btLogAppend('<span class="heal">🔮스킬 흡혈 +' + psvHeal + '</span>');
           }
           if (BT.augment.skill === 'skillDot' && dmg > 0) {
-            BT.skillDotTurns = 2; BT.skillDotDmg = Math.round(p.atk * 0.15);
+            BT.skillDotTurns = 3; BT.skillDotDmg = Math.round(p.atk * 0.20);
             btLogAppend('<span class="dmg">✨잔류 에너지! ' + BT.skillDotDmg + '/턴</span>');
           }
           if (BT.augment.skill === 'skillGuard') {
-            BT.buffs.push({ stat: 'dmgReduce', val: 0.15, turns: 2 }); BT.perkDmgReduce += 0.15;
-            btLogAppend('<span class="buff">🛡️기합! 피해 -15% (2턴)</span>');
+            BT.buffs.push({ stat: 'dmgReduce', val: 0.05, turns: 2 }); BT.perkDmgReduce += 0.05;
+            btLogAppend('<span class="buff">🛡️기합! 피해 -5% (2턴)</span>');
           }
           if (BT.augment.skill === 'skillNextAtk') {
-            BT.nextAtkBonus = 0.30;
-            btLogAppend('<span class="buff">🎯다음 공격 +30%!</span>');
+            BT.nextAtkBonus = 0.35;
+            btLogAppend('<span class="buff">🎯다음 공격 +35%!</span>');
           }
           if (BT.rageActive) btLogAppend('<span class="buff">🔥분노의 일격!</span>');
           updateBattleUI();
@@ -2390,8 +2416,8 @@
         // 미라클 부스터: SP 100 소모, 모든 능력치 2턴간 2배
         if (BT.boosterUsed) { BT.acting = false; showActions(); return }
         var boostCost = 100;
-        // 에너지 절약: SP -30
-        if (BT.augment.booster === 'boostSpDown') boostCost = 70;
+        // 에너지 절약: SP -20
+        if (BT.augment.booster === 'boostSpDown') boostCost = 90;
         if (p.sp < boostCost) { BT.acting = false; showActions(); return }
         p.sp -= boostCost;
         BT.boosterUsed = true;
@@ -2406,7 +2432,7 @@
         var boostLog = '🌟 <span class="buff">미라클 부스터 발동! 전 능력치 2배! (' + boostDur + '턴)</span>';
         // 충격파: 즉시 피해
         if (BT.augment.booster === 'boostBlast' && e.hp > 0) {
-          var blastDmg = Math.round(p.atk * 0.5); e.hp = Math.max(0, e.hp - blastDmg);
+          var blastDmg = Math.round(p.atk * 0.6); e.hp = Math.max(0, e.hp - blastDmg);
           showDmgNum(blastDmg, 'bt-esvg', '');
           boostLog += ' <span class="dmg">💥충격파 ' + blastDmg + '</span>';
         }
@@ -2423,8 +2449,8 @@
         if (BT.augment.booster === 'boostReuse') { BT.boosterUsed = false; boostLog += ' <span class="buff">🔁재가동 대기!</span>' }
         if (BT.augment.booster === 'boostEndBlast') { BT.boostEndBlastReady = true }
         if (BT.augment.booster === 'boostDodge') {
-          p.dodge += 15;
-          boostLog += ' <span class="buff">💨회피 +15%</span>';
+          p.dodge += 5;
+          boostLog += ' <span class="buff">💨회피 +5%</span>';
         }
         if (BT.augment.booster === 'boostCdDown') {
           if (BT.focusCD > 0) BT.focusCD = Math.max(0, BT.focusCD - 2);
@@ -2480,12 +2506,20 @@
         var diffRewardM = (DIFF[currentDiff] || DIFF.normal).rewardM;
         var goldDrop = e.isBoss ? (5 + Math.floor(Math.random() * 4) + Math.ceil(BT.wave / 3)) : (2 + Math.floor(Math.random() * 2));
         goldDrop = Math.round(goldDrop * rewardBonus * diffRewardM);
+        if (BT.wave > 30) {
+          var lateRewardM = 1 + (BT.wave - 30) * 0.05;
+          goldDrop = Math.round(goldDrop * lateRewardM);
+        }
         BT.gold += goldDrop;
         // CE 드롭 (보스만 — 보스 전용이므로 드롭량 상향)
         var ceDrop = 0;
         if (e.isBoss) {
           ceDrop = 8 + Math.floor(Math.random() * 6);
           ceDrop = Math.round(ceDrop * rewardBonus * diffRewardM);
+          if (BT.wave > 30) {
+            var lateCeM = 1 + (BT.wave - 30) * 0.05;
+            ceDrop = Math.round(ceDrop * lateCeM);
+          }
           BT.ce += ceDrop;
           progData.ce += ceDrop; saveProg();
         }
@@ -2543,6 +2577,7 @@
       // 스턴 중이면 스킵
       if (BT.stunTurns > 0) {
         BT.stunTurns--;
+        if (BT.stunTurns === 0) BT.stunResist = true;
         btLog(e.name + '은(는) 기절 상태!');
         setTimeout(endTurn, 500);
         return;
@@ -2706,7 +2741,7 @@
       }
       // 가시 갑옷 (방어 강화 부가효과)
       if (BT.augment.defend === 'thorns') {
-        var thornsDmg = Math.round(p.atk * 0.20);
+        var thornsDmg = Math.round(p.atk * 0.25);
         e.hp -= thornsDmg;
         btLogAppend('🌵가시 반사! <span class="dmg">' + thornsDmg + '</span>');
       }
@@ -2832,7 +2867,7 @@
       // 에너지 방출: 부스터 종료 시 폭발 피해
       if (boostExpired && BT.boostEndBlastReady && BT.enemy && BT.enemy.hp > 0) {
         BT.boostEndBlastReady = false;
-        var ebDmg = Math.round(p.atk); BT.enemy.hp = Math.max(0, BT.enemy.hp - ebDmg);
+        var ebDmg = Math.round(p.atk * 1.2); BT.enemy.hp = Math.max(0, BT.enemy.hp - ebDmg);
         showDmgNum(ebDmg, 'bt-esvg', 'crit');
         btLogAppend('<span class="dmg">💫에너지 방출! ' + ebDmg + '</span>');
         updateBattleUI();
@@ -2877,7 +2912,7 @@
       // 나노 수복 (박사 강화)
       if (BT.docRegenTurns > 0 && p.hp > 0) {
         BT.docRegenTurns--;
-        var drHeal = Math.round(p.maxHp * 0.03); p.hp = Math.min(p.maxHp, p.hp + drHeal);
+        var drHeal = Math.round(p.maxHp * 0.04); p.hp = Math.min(p.maxHp, p.hp + drHeal);
         showDmgNum(drHeal, 'bt-psvg', 'heal');
         btLogAppend('<span class="heal">🔬나노 수복 +' + drHeal + '</span>');
         updateBattleUI();
@@ -2923,10 +2958,10 @@
         afterPlayerAction();
         return;
       }
-      // 쉴드 감쇠: 매 턴 50% 감소 (쉴드 유지 시 30%)
+      // 쉴드 감쇠: 매 턴 50% 감소 (쉴드 유지 시 40%)
       if (BT.shield > 0) {
         var oldShield = BT.shield;
-        var shieldDecay = (BT.augment.defend === 'guardRetain') ? 0.70 : 0.50;
+        var shieldDecay = (BT.augment.defend === 'guardRetain') ? 0.55 : 0.50;
         BT.shield = Math.round(BT.shield * shieldDecay);
         if (BT.shield < oldShield) btLogAppend('<span class="detail">🛡️ 쉴드 감쇠 ' + oldShield + '→' + BT.shield + '</span>');
       }
@@ -3124,7 +3159,7 @@
         desc.textContent = group.map(function (a) { return a.opt.icon + a.opt.name }).join(', ');
         btn.appendChild(lbl); btn.appendChild(desc);
         btn.addEventListener('click', function () {
-          showFuseSelect(overlay, box, callback, group, tierKey);
+          showFuseSelect(overlay, box, callback, group, tierKey, equippedAugs, savedCats);
         });
         wrap.appendChild(btn);
       });
@@ -3136,7 +3171,7 @@
       box.appendChild(backBtn);
     }
 
-    function showFuseSelect(overlay, box, callback, group, tierKey) {
+    function showFuseSelect(overlay, box, callback, group, tierKey, equippedAugs, savedCats) {
       clr(box);
       var nextTier = { common: 'rare', rare: 'unique', unique: 'legendary' };
       var target = nextTier[tierKey];
@@ -3153,7 +3188,10 @@
       group.forEach(function (aug) {
         var ti = AUG_TIER[aug.tier];
         var card = document.createElement('div'); card.className = 'aug-opt-card ' + ti.cls;
-        card.innerHTML = '<div class="aug-fuse-cat">' + SKILL_AUGMENTS[aug.catKey].label + '</div>' +
+        var fuseCatLookup = aug.catKey.indexOf('support_') === 0 ? 'support' : aug.catKey;
+        var fuseCatLabel = SKILL_AUGMENTS[fuseCatLookup] ? SKILL_AUGMENTS[fuseCatLookup].label : aug.catKey;
+        if (aug.catKey.indexOf('support_') === 0) { var fk = aug.catKey.replace('support_', ''); var fr = RANGERS[fk]; if (fr) fuseCatLabel = '📡 ' + fr.name + ' 지원' }
+        card.innerHTML = '<div class="aug-fuse-cat">' + fuseCatLabel + '</div>' +
           '<div class="aug-opt-tier" style="color:' + ti.color + '">' + ti.name + '</div>' +
           '<div class="aug-opt-icon">' + aug.opt.icon + '</div>' +
           '<div class="aug-opt-name">' + aug.opt.name + '</div>';
@@ -3173,6 +3211,10 @@
         selWrap.appendChild(card);
       });
       box.appendChild(selWrap);
+      var fuseBackBtn = document.createElement('button'); fuseBackBtn.className = 'aug-skip-btn';
+      fuseBackBtn.textContent = '← 돌아가기';
+      fuseBackBtn.addEventListener('click', function () { showAugFuse(overlay, box, callback, equippedAugs, savedCats) });
+      box.appendChild(fuseBackBtn);
     }
 
     function doFuse(overlay, box, callback, materials, targetTier) {
