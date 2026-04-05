@@ -657,7 +657,7 @@
       { id: 'dmgReduce', name: '피해 감소', icon: '🔰', desc: '받는 피해 -3% (최대 30%)', per: 0.03, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'shieldUp', name: '쉴드 강화', icon: '🛡️', desc: '쉴드 생성량 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 6 + lv * 3 } },
       { id: 'armorPen', name: '방어 관통', icon: '🎯', desc: '방어 관통 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
-      { id: 'extraAtk', name: '추가 행동', icon: '⚔️', desc: '추가 행동 확률 +5% (최대 50%)', per: 0.05, max: 10, cost: function (lv) { return 7 + lv * 3 } },
+      { id: 'extraAtk', name: '추가 행동', icon: '⚔️', desc: '추가 행동 확률 +2.5% (최대 25%)', per: 0.025, max: 10, cost: function (lv) { return 7 + lv * 3 } },
       { id: 'sp', name: 'SP 증가', icon: '💎', desc: 'SP 최대치 +10% (최대 100%)', per: 0.10, max: 10, cost: function (lv) { return 5 + lv * 3 } }
     ];
 
@@ -1960,12 +1960,15 @@
         var goldDrop = e.isBoss ? (5 + Math.floor(Math.random() * 4) + Math.ceil(BT.wave / 3)) : (2 + Math.floor(Math.random() * 2));
         goldDrop = Math.round(goldDrop * rewardBonus * diffRewardM);
         BT.gold += goldDrop;
-        // CE 드롭
-        var ceDrop = e.isBoss ? (5 + Math.floor(Math.random() * 4)) : (1 + Math.floor(Math.random() * 2));
-        ceDrop = Math.round(ceDrop * rewardBonus * diffRewardM);
-        BT.ce += ceDrop;
-        progData.ce += ceDrop; saveProg();
-        btLog(e.name + '을(를) 쓰러뜨렸다! <span class="gold-drop">✨MP+' + goldDrop + ' 🔮CE+' + ceDrop + '</span>' + (e.isBoss ? ' <span class="buff">★ 보스 격파!</span>' : ''));
+        // CE 드롭 (보스만)
+        var ceDrop = 0;
+        if (e.isBoss) {
+          ceDrop = 5 + Math.floor(Math.random() * 4);
+          ceDrop = Math.round(ceDrop * rewardBonus * diffRewardM);
+          BT.ce += ceDrop;
+          progData.ce += ceDrop; saveProg();
+        }
+        btLog(e.name + '을(를) 쓰러뜨렸다! <span class="gold-drop">✨MP+' + goldDrop + (ceDrop > 0 ? ' 🔮CE+' + ceDrop : '') + '</span>' + (e.isBoss ? ' <span class="buff">★ 보스 격파!</span>' : ''));
         // 적 SVG 소멸
         var eSvg = $('bt-esvg'); if (eSvg) eSvg.classList.add('dead');
         btFlash(BT.player.color);
