@@ -3244,6 +3244,10 @@
         optsWrap.appendChild(card);
       });
       box.appendChild(optsWrap);
+      // 고르지 않기 버튼
+      var skipBtn = document.createElement('button'); skipBtn.className = 'aug-skip-btn'; skipBtn.textContent = '✕ 고르지 않기';
+      skipBtn.addEventListener('click', function () { overlay.remove(); callback() });
+      box.appendChild(skipBtn);
     }
 
     // ── 미니 보상 ──
