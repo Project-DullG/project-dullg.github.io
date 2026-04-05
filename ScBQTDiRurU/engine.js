@@ -1316,6 +1316,21 @@
     function nextWave() {
       BT.wave++; BT.turn = 0; BT.acting = false;
       BT.player.guarding = false;
+      // 보스레이드: 웨이브 2+ 시작 전에 보상 (풀보상 + 스킬 부가효과)
+      if (currentDiff === 'bossraid' && BT.wave > 1) {
+        showReward(function () {
+          showSkillAugment(function () {
+            restoreBgm();
+            showScr('battle');
+            updateBattleUI(); updateStatusIcons();
+            setTimeout(startWave, 600);
+          });
+        });
+        return;
+      }
+      startWave();
+    }
+    function startWave() {
       // 웨이브 클리어 시 회복 (연구 개발 회복 강화 + 보상 퍽)
       if (BT.wave > 1) {
         var healPct = getLabBonus('heal') + BT.perkEndHpRegen;
@@ -2535,11 +2550,11 @@
             nextWave();
           }
           function doReward() {
-            if (BT.wave % 3 === 0) {
+            if (currentDiff === 'bossraid') {
+              // 보스레이드: 보상은 다음 웨이브 시작 전에 지급
+              afterReward(); return;
+            } else if (BT.wave % 3 === 0) {
               showReward();
-            } else if (currentDiff === 'bossraid') {
-              // 보스레이드: 매 웨이브 미니보상 + 2웨이브마다 풀보상
-              if (BT.wave % 2 === 0) { showReward() } else { showMiniReward(afterReward) }
             } else {
               showMiniReward(afterReward);
             }
@@ -2972,7 +2987,7 @@
     }
 
     // ── 보상 화면 ──
-    function showReward() {
+    function showReward(onComplete) {
       // 보스 클리어 연출
       btChainFlash('#ffd700', 3); btShake(true);
       btDrama('★ 승리! ★', '#ffd700', function () { }, 'victory');
@@ -3008,13 +3023,17 @@
             if (this.dataset.used) return; cards.querySelectorAll('.rw-card').forEach(function (c) { c.dataset.used = '1' });
             var result = rw.fn(BT.player);
             btLog('<span class="buff">' + result + '</span> 획득!');
-            // 보스 클리어 후 → 스킬 강화 선택
-            showSkillAugment(function () {
-              restoreBgm();
-              showScr('battle');
-              updateBattleUI(); updateStatusIcons();
-              setTimeout(nextWave, 600);
-            });
+            if (onComplete) {
+              onComplete();
+            } else {
+              // 보스 클리어 후 → 스킬 강화 선택
+              showSkillAugment(function () {
+                restoreBgm();
+                showScr('battle');
+                updateBattleUI(); updateStatusIcons();
+                setTimeout(nextWave, 600);
+              });
+            }
           });
           cards.appendChild(card);
         });
