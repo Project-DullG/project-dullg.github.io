@@ -1255,7 +1255,7 @@
         if (spHealPct > 0) BT.player.sp = Math.min(BT.player.maxSp, BT.player.sp + Math.round(BT.player.maxSp * spHealPct));
       }
       BT.enemy = generateEnemy(BT.wave);
-      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
+      BT.shield = 0; BT.focusCD = 0; BT.defendCD = 0; BT.skillCD = 0; BT.doctorCD = 0; BT.supportCDs = {}; BT.stunTurns = 0; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.burnDmg = 0; BT.burnTurns = 0; BT.enemyTelegraph = false;
       if (BT.freezeATK > 0) { BT.player.atk += BT.freezeATK; BT.freezeATK = 0; BT.freezeTurns = 0 }
       // 패시브 성장 리셋 (웨이브 끝 초기화)
       resetPassiveGrowth();
