@@ -1378,8 +1378,9 @@
     .sel-diff {
       display: flex;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap
     }
 
     .diff-btn {
@@ -1396,15 +1397,22 @@
     }
 
     .diff-btn.active {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1)
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+      transform: scale(1.08);
+      border-width: 2.5px
     }
 
     .diff-btn.locked {
       opacity: 0.35;
       cursor: not-allowed;
       border-style: dashed
+    }
+
+    .diff-bossraid {
+      font-size: 11px !important;
+      letter-spacing: 0.5px
     }
 
     /* SELECT SCREEN */
@@ -1676,6 +1684,16 @@
     .bt-enemy-svg.boss {
       animation: bossEnter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       filter: drop-shadow(0 0 20px var(--boss-glow, #7b1fa2)) drop-shadow(0 0 40px var(--boss-glow, #7b1fa2))
+    }
+
+    .bt-enemy-svg.dodge-flash {
+      animation: dodgeSlide 0.6s ease;
+    }
+    @keyframes dodgeSlide {
+      0% { transform: translateX(0) }
+      25% { transform: translateX(30px); opacity: 0.4 }
+      50% { transform: translateX(-10px); opacity: 0.7 }
+      100% { transform: translateX(0); opacity: 1 }
     }
 
     .bt-player-svg {
@@ -3653,8 +3671,17 @@
       font-size: 10px; color: #aaa
     }
     .aug-cur {
-      font-size: 10px; color: #ffd700; margin-bottom: 4px;
-      opacity: 0.8
+      font-size: 11px; color: #ffd700; margin-bottom: 4px;
+      font-weight: bold;
+      background: rgba(255,215,0,0.08);
+      border-radius: 4px;
+      padding: 2px 6px;
+      display: inline-block
+    }
+    .aug-cat-btn.aug-cat-equipped {
+      border-color: #ffd700;
+      background: rgba(255,215,0,0.06);
+      box-shadow: 0 0 8px rgba(255,215,0,0.15)
     }
     .aug-opts {
       display: flex; gap: 8px; justify-content: center
