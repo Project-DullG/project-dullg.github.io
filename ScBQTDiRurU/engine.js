@@ -525,6 +525,26 @@
       {
         id: 'general', name: '카오스 장군', color: '#c62828', bodyColor: '#b71c1c',
         hpM: 2.2, atkM: 1.2, defM: 1.3, special: { type: 'rally', every: 2 }, desc: '2턴마다 자가 버프'
+      },
+      {
+        id: 'ironclad', name: '아이언클래드', color: '#546e7a', bodyColor: '#37474f',
+        hpM: 2.8, atkM: 1.1, defM: 1.5, special: { type: 'stunImmune' }, desc: '기절 면역 (높은 방어)'
+      },
+      {
+        id: 'inferno', name: '인페르노', color: '#e65100', bodyColor: '#bf360c',
+        hpM: 2.0, atkM: 1.4, defM: 1.0, special: { type: 'burn', dmg: 3, turns: 3 }, desc: '3턴 화상 부여 (고공격)'
+      },
+      {
+        id: 'hydra', name: '카오스 히드라', color: '#00695c', bodyColor: '#004d40',
+        hpM: 3.5, atkM: 0.8, defM: 1.0, special: { type: 'regen', val: 0.03 }, desc: '매턴 HP 3% 재생 (초고체력)'
+      },
+      {
+        id: 'phantom', name: '팬텀', color: '#4a148c', bodyColor: '#311b92',
+        hpM: 1.8, atkM: 1.3, defM: 0.8, special: { type: 'dodge', val: 0.35 }, desc: '35% 회피 (고공격)'
+      },
+      {
+        id: 'berserker', name: '블러드 버서커', color: '#b71c1c', bodyColor: '#880e4f',
+        hpM: 2.2, atkM: 1.0, defM: 1.0, special: { type: 'enrage' }, desc: 'HP 낮을수록 공격력 증가'
       }
     ];
 
@@ -1418,6 +1438,11 @@
         addIcon('buff', '↑' + statKR(b.stat) + b.turns + 't', statKR(b.stat) + ' +' + Math.round((b.val || 0) * 100) + '%, ' + b.turns + '턴');
       });
       BT.debuffs.forEach(function (d) { addIcon('buff', '↓적' + statKR(d.stat) + d.turns + 't', '적 ' + statKR(d.stat) + ' -' + Math.round(d.val * 100) + '%, ' + d.turns + '턴') });
+      // 보스 특성
+      var e = BT.enemy;
+      if (e && e.special && e.special.type === 'stunImmune') addIcon('guard', '🚫기절면역', '기절 효과 무효');
+      if (e && e.special && e.special.type === 'regen') addIcon('heal', '💚재생', '매턴 HP ' + Math.round(e.special.val * 100) + '% 회복');
+      if (e && e.special && e.special.type === 'enrage') { var hr = e.hp / e.maxHp; var em = hr < 0.25 ? 'x2.0' : hr < 0.5 ? 'x1.5' : hr < 0.75 ? 'x1.2' : '-'; if (em !== '-') addIcon('charge', '🔴' + em, 'HP 낮을수록 공격력 증가') }
       // 적 기절
       if (BT.stunTurns > 0) addIcon('stun', '⚡기절!', '적 행동불가');
       // 쉴드
@@ -1837,11 +1862,14 @@
       if (action === 'doctorSupport') {
         if (BT.doctorCD > 0) { BT.supportUsedThisTurn = false; BT.acting = false; showActions(); return }
         BT.doctorCD = 4;
-        BT.stunTurns += 1;
+        var isStunImmune = e.special && e.special.type === 'stunImmune';
+        if (!isStunImmune) BT.stunTurns += 1;
         var spPct = (BT.augment.doctor === 'docSpUp') ? 0.38 : 0.25;
         var spRecover = Math.round(p.maxSp * spPct); p.sp = Math.min(p.maxSp, p.sp + spRecover);
         btDrama('🔬 박사의 지원!', '#4ecca3', function () {
-          var docLog = '🔬 <span class="buff">박사의 지원! 적 1턴 기절!</span> <span class="heal">SP+' + spRecover + '</span>';
+          var docLog = isStunImmune
+            ? '🔬 <span class="buff">박사의 지원!</span> <span style="color:#f44">기절 면역!</span> <span class="heal">SP+' + spRecover + '</span>'
+            : '🔬 <span class="buff">박사의 지원! 적 1턴 기절!</span> <span class="heal">SP+' + spRecover + '</span>';
           // ── 박사 강화 부가효과 ──
           if (BT.augment.doctor === 'docAnalyze' && e.hp > 0) {
             BT.debuffs.push({ stat: 'def', val: 0.30, turns: 3 });
@@ -2140,8 +2168,8 @@
         }
         // 강타: 15% 확률 기절
         if (BT.augment.attack === 'atkStun' && dmg > 0 && Math.random() < 0.15) {
-          BT.stunTurns = Math.max(BT.stunTurns, 1);
-          btLogAppend('<span class="buff">💫기절!</span>');
+          if (e.special && e.special.type === 'stunImmune') { btLogAppend('<span style="color:#f44">기절 면역!</span>') }
+          else { BT.stunTurns = Math.max(BT.stunTurns, 1); btLogAppend('<span class="buff">💫기절!</span>') }
         }
         // 약점 간파: 적 방어 -15% (2턴)
         if (BT.augment.attack === 'atkWeaken' && dmg > 0) {
@@ -2183,8 +2211,8 @@
           defLog += ' <span class="buff">🔧쿨타임 -1!</span>';
         }
         if (BT.augment.defend === 'guardStun') {
-          BT.stunTurns += 1;
-          defLog += ' <span class="buff">😤도발! 적 1턴 기절!</span>';
+          if (e.special && e.special.type === 'stunImmune') { defLog += ' <span style="color:#f44">기절 면역!</span>' }
+          else { BT.stunTurns += 1; defLog += ' <span class="buff">😤도발! 적 1턴 기절!</span>' }
         }
         if (BT.augment.defend === 'guardNextAtk') {
           BT.nextAtkBonus = 0.40;
@@ -2302,7 +2330,10 @@
           btLog(logMsg);
           // 추가 효과
           var stunVal = (p.skill.stun || 0) + yellowStunBonus;
-          if (stunVal > 0) BT.stunTurns += stunVal;
+          if (stunVal > 0) {
+            if (e.special && e.special.type === 'stunImmune') { btLogAppend('<span style="color:#f44">기절 면역!</span>') }
+            else { BT.stunTurns += stunVal }
+          }
           if (p.skill.heal) {
             var sh = Math.round(getBaseShield(p) * 0.50); BT.shield += sh;
             btLogAppend(' <span class="buff">🛡️ 쉴드 +' + sh + '</span>');
@@ -2320,8 +2351,8 @@
             btLogAppend('<span class="sp-use">💠SP 환류 +' + refund + '</span>');
           }
           if (BT.augment.skill === 'skillStun' && Math.random() < 0.33) {
-            BT.stunTurns += 1;
-            btLogAppend('<span class="buff">💫기절 강화! +1턴</span>');
+            if (e.special && e.special.type === 'stunImmune') { btLogAppend('<span style="color:#f44">기절 면역!</span>') }
+            else { BT.stunTurns += 1; btLogAppend('<span class="buff">💫기절 강화! +1턴</span>') }
           }
           if (BT.augment.skill === 'skillArmorBreak' && e.hp > 0) {
             BT.debuffs.push({ stat: 'def', val: 0.30, turns: 3 });
@@ -2585,6 +2616,27 @@
         if (sp.type === 'stealth' && e.turnCount % sp.every === 0) {
           e.stealthActive = true;
           btLog(e.name + '이(가) 은신 상태!');
+        }
+        // 화상 (burn) - 첫 턴 화상 부여, 이후 강화
+        if (sp.type === 'burn' && e.turnCount === 1) {
+          BT.burnDmg = sp.dmg; BT.burnTurns = sp.turns;
+        }
+        if (sp.type === 'burn' && e.isBoss && BT.burnTurns > 0) {
+          BT.burnDmg++;
+        }
+        // 재생 (regen) - 매턴 HP 회복
+        if (sp.type === 'regen') {
+          var regenAmt = Math.round(e.maxHp * sp.val);
+          e.hp = Math.min(e.maxHp, e.hp + regenAmt);
+          btLog('<span class="heal">' + e.name + ' 재생! HP +' + regenAmt + '</span>');
+        }
+        // 광폭화 (enrage) - HP 낮을수록 공격력 증가
+        if (sp.type === 'enrage') {
+          var hpRatio = e.hp / e.maxHp;
+          if (hpRatio < 0.25) atkMulti = 2.0;
+          else if (hpRatio < 0.50) atkMulti = 1.5;
+          else if (hpRatio < 0.75) atkMulti = 1.2;
+          if (atkMulti > 1) btLog('<span class="dmg">' + e.name + '의 광폭화! 공격 x' + atkMulti.toFixed(1) + '</span>');
         }
         // 자폭 (bomb) - 턴 카운트다운
         if (sp.type === 'bomb') {
