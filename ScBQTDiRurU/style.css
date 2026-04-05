@@ -3561,8 +3561,40 @@
       font-family: 'Do Hyeon', sans-serif;
       font-size: 13px; color: #fff; margin-bottom: 4px
     }
+    .aug-opt-tier {
+      font-size: 9px; font-weight: bold; margin-bottom: 2px;
+      text-transform: uppercase; letter-spacing: 1px
+    }
     .aug-opt-desc {
       font-size: 9px; color: #ccc; white-space: pre-line; line-height: 1.5
+    }
+    .aug-opt-card.aug-common { border-color: #666 }
+    .aug-opt-card.aug-rare { border-color: #4fc3f7; box-shadow: 0 0 6px rgba(79,195,247,0.15) }
+    .aug-opt-card.aug-unique { border-color: #ab47bc; box-shadow: 0 0 8px rgba(171,71,188,0.2) }
+    .aug-opt-card.aug-legendary {
+      border-color: #ffd700; box-shadow: 0 0 12px rgba(255,215,0,0.3);
+      animation: aug-glow 2s ease-in-out infinite
+    }
+    @keyframes aug-glow {
+      0%,100% { box-shadow: 0 0 8px rgba(255,215,0,0.2) }
+      50% { box-shadow: 0 0 16px rgba(255,215,0,0.5) }
+    }
+    .aug-opt-card.aug-rare:hover { border-color: #81d4fa; background: rgba(79,195,247,0.1) }
+    .aug-opt-card.aug-unique:hover { border-color: #ce93d8; background: rgba(171,71,188,0.1) }
+    .aug-opt-card.aug-legendary:hover { border-color: #ffecb3; background: rgba(255,215,0,0.12) }
+    .aug-fuse-btn {
+      display: block; margin: 10px auto 0; padding: 8px 24px;
+      background: rgba(171,71,188,0.12); border: 1.5px solid #ab47bc;
+      border-radius: 8px; color: #ce93d8; font-size: 12px;
+      cursor: pointer; transition: all 0.2s
+    }
+    .aug-fuse-btn:hover {
+      background: rgba(171,71,188,0.25); border-color: #ce93d8;
+      box-shadow: 0 0 10px rgba(171,71,188,0.3)
+    }
+    .aug-opt-card.aug-fuse-selected {
+      border-color: #ffd700 !important; background: rgba(255,215,0,0.15) !important;
+      transform: translateY(-4px) !important
     }
     .aug-skip-btn {
       display: block; margin: 14px auto 0; padding: 8px 28px;
