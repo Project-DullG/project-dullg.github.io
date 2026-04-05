@@ -443,7 +443,7 @@
         name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uCE58\uBA85\uD0C0 \uD655\uB960 +20%', critBonus: 0.20, ignoreDef: 0 },
-        support: { name: '\uC804\uC220 \uC9C0\uC6D0', desc: '3\uD134\uAC04 \uCD94\uAC00 \uD589\uB3D9 +40%', type: 'extraAtkBuff', val: 0.40, turns: 3 }
+        support: { name: '\uC804\uC220 \uC9C0\uC6D0', desc: '3\uD134\uAC04 \uCD94\uAC00 \uD589\uB3D9 +20%', type: 'extraAtkBuff', val: 0.20, turns: 3 }
       },
       yellow: {
         name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
@@ -527,34 +527,42 @@
       }
     ];
 
+    // ── 보상 등급: 0=일반, 1=레어, 2=유니크, 3=전설 ──
+    var TIER_INFO = [
+      { name: '일반', cls: 'normal', color: '#888' },
+      { name: '레어', cls: 'rare', color: '#4fc3f7' },
+      { name: '유니크', cls: 'unique', color: '#ffd700' },
+      { name: '전설', cls: 'legend', color: '#ff6e40' }
+    ];
+
     // ── 보상 풀 ──
     var REWARDS = [
-      // 1회성 회복
-      { name: '체력 회복', desc: '체력 80% 회복', icon: '❤️', fn: function (p) { var h = Math.round(p.maxHp * 0.8); p.hp = Math.min(p.maxHp, p.hp + h); return '체력 +' + h } },
-      { name: 'SP 회복', desc: 'SP 전체 회복', icon: '💎', fn: function (p) { p.sp = p.maxSp; return 'SP 최대!' } },
-      // 기본 스탯 강화
-      { name: '공격력 강화', desc: '공격력 +3', icon: '⚔️', fn: function (p) { p.atk += 3; return '공격력 +3' } },
-      { name: '쉴드력 강화', desc: '쉴드력 +3', icon: '🛡️', fn: function (p) { p.def += 3; return '쉴드력 +3' } },
-      { name: '치명타확률 강화', desc: '치명타확률 +4%', icon: '💥', fn: function (p) { p.crit += 4; return '치명타확률 +4%' } },
-      { name: '회피확률 강화', desc: '회피확률 +4%', icon: '💨', fn: function (p) { p.dodge += 4; return '회피확률 +4%' } },
-      { name: '최대 체력 증가', desc: '최대 체력 +8', icon: '💖', fn: function (p) { p.maxHp += 8; p.hp += 8; return '최대 체력 +8' } },
-      { name: '최대 SP 증가', desc: '최대 SP +20', icon: '💠', fn: function (p) { p.maxSp += 20; p.sp = Math.min(p.maxSp, p.sp + 20); return '최대 SP +20' } },
-      // 비례 스탯 강화
-      { name: '공격력 연마', desc: '공격력 +15%', icon: '⚔️', fn: function (p) { var add = Math.max(2, Math.round(p.atk * 0.15)); p.atk += add; return '공격력 +' + add + ' (+15%)' } },
-      { name: '체력 단련', desc: '최대 체력 +15%', icon: '💖', fn: function (p) { var add = Math.max(3, Math.round(p.maxHp * 0.15)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add + ' (+15%)' } },
-      { name: '쉴드 연마', desc: '쉴드력 +15%', icon: '🛡️', fn: function (p) { var add = Math.max(2, Math.round(p.def * 0.15)); p.def += add; return '쉴드력 +' + add + ' (+15%)' } },
-      // 희귀 — 세부 스탯
-      { name: '전체 강화', desc: '공격+2 쉴드력+2 치명타+3%', icon: '⚡', fn: function (p) { p.atk += 2; p.def += 2; p.crit += 3; return '전체 강화!' }, rare: 1 },
-      { name: '강화 장갑', desc: '받는 피해 -8%', icon: '🔰', fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.08); return '피해 감소 +8%! (총 ' + Math.round(BT.perkDmgReduce * 100) + '%)' }, rare: 1 },
-      { name: '치명타 증폭', desc: '치명타 피해 +25%', icon: '💥', fn: function (p) { BT.perkCritDmg += 0.25; return '치명타 피해 +25%! (x' + (1.5 + BT.perkCritDmg).toFixed(2) + ')' }, rare: 1 },
-      { name: '쉴드 강화', desc: '쉴드 생성량 +25%', icon: '🛡️', fn: function (p) { BT.perkShieldUp += 0.25; return '쉴드량 +25%! (총 +' + Math.round(BT.perkShieldUp * 100) + '%)' }, rare: 1 },
-      { name: '파괴자', desc: '주는 피해 +8%', icon: '⚔️', fn: function (p) { BT.perkDmgUp += 0.08; return '피해 +8%! (총 +' + Math.round(BT.perkDmgUp * 100) + '%)' }, rare: 1 },
-      { name: '관통탄', desc: '방어 관통 +15% (최대 70%)', icon: '🎯', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.15); return '관통 +15%! (총 ' + Math.round(BT.perkArmorPen * 100) + '%)' }, rare: 1 },
-      // 희귀 — 전투 특수 효과
-      { name: '재생의 기운', desc: '웨이브 종료 시 체력 5% 회복', icon: '💚', fn: function (p) { BT.perkEndHpRegen += 0.05; return '웨이브 종료 체력 회복 +5%! (총 ' + Math.round(BT.perkEndHpRegen * 100) + '%)' }, rare: 1 },
-      { name: '에너지 충전', desc: '웨이브 종료 시 SP 10% 회복', icon: '🔋', fn: function (p) { BT.perkEndSpRegen += 0.10; return '웨이브 종료 SP 회복 +10%! (총 ' + Math.round(BT.perkEndSpRegen * 100) + '%)' }, rare: 1 },
-      { name: '흡혈의 손길', desc: '공격 시 체력 10% 흡수', icon: '🧛', fn: function (p) { BT.perkVamp += 0.10; return '체력 흡수 +10%! (총 ' + Math.round(BT.perkVamp * 100) + '%)' }, rare: 1 },
-      { name: '기선제압', desc: '매 웨이브 첫 공격 피해 +20%', icon: '⚡', fn: function (p) { BT.perkFirstStrike += 0.20; return '첫 공격 +20%! (총 +' + Math.round(BT.perkFirstStrike * 100) + '%)' }, rare: 1 }
+      // 일반 — 회복
+      { name: '체력 회복', desc: '체력 80% 회복', icon: '❤️', tier: 0, fn: function (p) { var h = Math.round(p.maxHp * 0.8); p.hp = Math.min(p.maxHp, p.hp + h); return '체력 +' + h } },
+      { name: 'SP 회복', desc: 'SP 전체 회복', icon: '💎', tier: 0, fn: function (p) { p.sp = p.maxSp; return 'SP 최대!' } },
+      // 일반 — 기본 스탯
+      { name: '공격력 강화', desc: '공격력 +3', icon: '⚔️', tier: 0, fn: function (p) { p.atk += 3; return '공격력 +3' } },
+      { name: '쉴드력 강화', desc: '쉴드력 +3', icon: '🛡️', tier: 0, fn: function (p) { p.def += 3; return '쉴드력 +3' } },
+      { name: '치명타확률 강화', desc: '치명타확률 +4%', icon: '💥', tier: 0, fn: function (p) { p.crit += 4; return '치명타확률 +4%' } },
+      { name: '회피확률 강화', desc: '회피확률 +4%', icon: '💨', tier: 0, fn: function (p) { p.dodge += 4; return '회피확률 +4%' } },
+      { name: '최대 체력 증가', desc: '최대 체력 +8', icon: '💖', tier: 0, fn: function (p) { p.maxHp += 8; p.hp += 8; return '최대 체력 +8' } },
+      { name: '최대 SP 증가', desc: '최대 SP +20', icon: '💠', tier: 0, fn: function (p) { p.maxSp += 20; p.sp = Math.min(p.maxSp, p.sp + 20); return '최대 SP +20' } },
+      // 레어 — 비례 강화
+      { name: '공격력 연마', desc: '공격력 +15%', icon: '⚔️', tier: 1, fn: function (p) { var add = Math.max(2, Math.round(p.atk * 0.15)); p.atk += add; return '공격력 +' + add + ' (+15%)' } },
+      { name: '체력 단련', desc: '최대 체력 +15%', icon: '💖', tier: 1, fn: function (p) { var add = Math.max(3, Math.round(p.maxHp * 0.15)); p.maxHp += add; p.hp += add; return '최대 체력 +' + add + ' (+15%)' } },
+      { name: '쉴드 연마', desc: '쉴드력 +15%', icon: '🛡️', tier: 1, fn: function (p) { var add = Math.max(2, Math.round(p.def * 0.15)); p.def += add; return '쉴드력 +' + add + ' (+15%)' } },
+      // 유니크 — 특화 퍽
+      { name: '전체 강화', desc: '공격+2 쉴드력+2 치명타+3%', icon: '⚡', tier: 2, fn: function (p) { p.atk += 2; p.def += 2; p.crit += 3; return '전체 강화!' } },
+      { name: '강화 장갑', desc: '받는 피해 -8%', icon: '🔰', tier: 2, fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.08); return '피해 감소 +8%! (총 ' + Math.round(BT.perkDmgReduce * 100) + '%)' } },
+      { name: '치명타 증폭', desc: '치명타 피해 +25%', icon: '💥', tier: 2, fn: function (p) { BT.perkCritDmg += 0.25; return '치명타 피해 +25%! (x' + (1.5 + BT.perkCritDmg).toFixed(2) + ')' } },
+      { name: '쉴드 강화', desc: '쉴드 생성량 +25%', icon: '🛡️', tier: 2, fn: function (p) { BT.perkShieldUp += 0.25; return '쉴드량 +25%! (총 +' + Math.round(BT.perkShieldUp * 100) + '%)' } },
+      { name: '파괴자', desc: '주는 피해 +8%', icon: '⚔️', tier: 2, fn: function (p) { BT.perkDmgUp += 0.08; return '피해 +8%! (총 +' + Math.round(BT.perkDmgUp * 100) + '%)' } },
+      { name: '관통탄', desc: '방어 관통 +15% (최대 70%)', icon: '🎯', tier: 2, fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.15); return '관통 +15%! (총 ' + Math.round(BT.perkArmorPen * 100) + '%)' } },
+      // 전설 — 전투 특수 효과
+      { name: '재생의 기운', desc: '웨이브 종료 시 체력 5% 회복', icon: '💚', tier: 3, fn: function (p) { BT.perkEndHpRegen += 0.05; return '웨이브 종료 체력 회복 +5%! (총 ' + Math.round(BT.perkEndHpRegen * 100) + '%)' } },
+      { name: '에너지 충전', desc: '웨이브 종료 시 SP 10% 회복', icon: '🔋', tier: 3, fn: function (p) { BT.perkEndSpRegen += 0.10; return '웨이브 종료 SP 회복 +10%! (총 ' + Math.round(BT.perkEndSpRegen * 100) + '%)' } },
+      { name: '흡혈의 손길', desc: '공격 시 체력 10% 흡수', icon: '🧛', tier: 3, fn: function (p) { BT.perkVamp += 0.10; return '체력 흡수 +10%! (총 ' + Math.round(BT.perkVamp * 100) + '%)' } },
+      { name: '기선제압', desc: '매 웨이브 첫 공격 피해 +20%', icon: '⚡', tier: 3, fn: function (p) { BT.perkFirstStrike += 0.20; return '첫 공격 +20%! (총 +' + Math.round(BT.perkFirstStrike * 100) + '%)' } }
     ];
 
     // ── 패시브 버프 (기본 수치 + 매턴 성장) ──
@@ -572,10 +580,10 @@
         growDesc: '공격력 +5%'
       },
       blue: {
-        name: '전술의 눈', desc: '치명타+5%, 추가행동 +5% (매턴 둘 다 +5%)', icon: '🎯',
-        apply: function (p) { BT.perkCritChance += 0.05; BT.perkExtraAtk = (BT.perkExtraAtk || 0) + 0.05 },
-        grow: function (p) { BT.perkCritChance += 0.05; BT.passiveGrowth.critChance += 0.05; BT.perkExtraAtk += 0.05; BT.passiveGrowth.extraAtk += 0.05 },
-        growDesc: '치명타+5% 추가행동+5%'
+        name: '전술의 눈', desc: '치명타+5%, 추가행동 +2.5% (매턴 둘 다 성장)', icon: '🎯',
+        apply: function (p) { BT.perkCritChance += 0.05; BT.perkExtraAtk = (BT.perkExtraAtk || 0) + 0.025 },
+        grow: function (p) { BT.perkCritChance += 0.05; BT.passiveGrowth.critChance += 0.05; BT.perkExtraAtk += 0.025; BT.passiveGrowth.extraAtk += 0.025 },
+        growDesc: '치명타+5% 추가행동+2.5%'
       },
       yellow: {
         name: '번개의 에너지', desc: '매턴 SP 10% 회복 (매턴 회피확률 +5%)', icon: '⚡',
@@ -1960,10 +1968,10 @@
         var goldDrop = e.isBoss ? (5 + Math.floor(Math.random() * 4) + Math.ceil(BT.wave / 3)) : (2 + Math.floor(Math.random() * 2));
         goldDrop = Math.round(goldDrop * rewardBonus * diffRewardM);
         BT.gold += goldDrop;
-        // CE 드롭 (보스만)
+        // CE 드롭 (보스만 — 보스 전용이므로 드롭량 상향)
         var ceDrop = 0;
         if (e.isBoss) {
-          ceDrop = 5 + Math.floor(Math.random() * 4);
+          ceDrop = 8 + Math.floor(Math.random() * 6);
           ceDrop = Math.round(ceDrop * rewardBonus * diffRewardM);
           BT.ce += ceDrop;
           progData.ce += ceDrop; saveProg();
@@ -2317,20 +2325,29 @@
         var cycle = Math.ceil(BT.wave / 3);
         $('rw-title').textContent = '★ ' + cycle + ' 사이클 클리어 ★';
         var cards = $('rw-cards'); clr(cards);
-        // 3개 랜덤 보상 선택
-        var pool = REWARDS.slice();
-        // 희귀 보상은 사이클 2부터
-        if (cycle < 2) pool = pool.filter(function (r) { return !r.rare });
+        // 3개 랜덤 보상 선택 (등급별 해금 + 가중치)
+        var maxTier = cycle >= 3 ? 3 : cycle >= 2 ? 2 : 1;
+        var pool = REWARDS.filter(function (r) { return (r.tier || 0) <= maxTier });
+        // 등급별 가중치: 일반 4, 레어 3, 유니크 2, 전설 1
+        var tierWeight = [4, 3, 2, 1];
+        var weighted = []; pool.forEach(function (r) { for (var w = 0; w < tierWeight[r.tier || 0]; w++) weighted.push(r) });
         var picked = [];
-        while (picked.length < 3 && pool.length > 0) {
-          var ri = Math.floor(Math.random() * pool.length);
-          picked.push(pool[ri]); pool.splice(ri, 1);
+        while (picked.length < 3 && weighted.length > 0) {
+          var ri = Math.floor(Math.random() * weighted.length);
+          var sel = weighted[ri];
+          if (picked.indexOf(sel) === -1) { picked.push(sel); weighted = weighted.filter(function (w) { return w !== sel }) }
+          else { weighted.splice(ri, 1) }
         }
         picked.forEach(function (rw) {
-          var isRare = !!rw.rare;
-          var card = document.createElement('div'); card.className = 'rw-card' + (isRare ? ' rare' : '');
-          var tierLabel = isRare ? '<div class="rw-tier rare">★ 희귀 ★</div>' : '<div class="rw-tier normal">일반</div>';
-          card.innerHTML = tierLabel + '<div class="rw-icon">' + rw.icon + '</div><div class="rw-rname">' + rw.name + '</div><div class="rw-rdesc">' + rw.desc + '</div>';
+          var t = rw.tier || 0; var ti = TIER_INFO[t];
+          var card = document.createElement('div'); card.className = 'rw-card rw-' + ti.cls;
+          // 등급 라벨
+          var tierDiv = document.createElement('div'); tierDiv.className = 'rw-tier ' + ti.cls;
+          tierDiv.textContent = t >= 2 ? '\u2605 ' + ti.name + ' \u2605' : ti.name;
+          var iconDiv = document.createElement('div'); iconDiv.className = 'rw-icon'; iconDiv.textContent = rw.icon;
+          var nameDiv = document.createElement('div'); nameDiv.className = 'rw-rname'; nameDiv.textContent = rw.name;
+          var descDiv = document.createElement('div'); descDiv.className = 'rw-rdesc'; descDiv.textContent = rw.desc;
+          card.appendChild(tierDiv); card.appendChild(iconDiv); card.appendChild(nameDiv); card.appendChild(descDiv);
           card.addEventListener('click', function () {
             if (this.dataset.used) return; cards.querySelectorAll('.rw-card').forEach(function (c) { c.dataset.used = '1' });
             var result = rw.fn(BT.player);

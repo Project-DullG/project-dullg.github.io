@@ -2660,14 +2660,40 @@
       word-break: keep-all
     }
 
-    .rw-card.rare {
-      border-color: #ffd700;
-      background: linear-gradient(180deg, rgba(255, 215, 0, 0.10), rgba(255, 215, 0, 0.03));
-      box-shadow: 0 0 12px rgba(255, 215, 0, 0.15)
+    .rw-card.rw-rare {
+      border-color: #4fc3f7;
+      background: linear-gradient(180deg, rgba(79, 195, 247, 0.10), rgba(79, 195, 247, 0.03));
+      box-shadow: 0 0 10px rgba(79, 195, 247, 0.12)
     }
 
-    .rw-card.rare .rw-rname {
+    .rw-card.rw-rare .rw-rname {
+      color: #4fc3f7
+    }
+
+    .rw-card.rw-unique {
+      border-color: #ffd700;
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.03));
+      box-shadow: 0 0 14px rgba(255, 215, 0, 0.18)
+    }
+
+    .rw-card.rw-unique .rw-rname {
       color: #ffd700
+    }
+
+    .rw-card.rw-legend {
+      border-color: #ff6e40;
+      background: linear-gradient(180deg, rgba(255, 110, 64, 0.14), rgba(255, 110, 64, 0.04));
+      box-shadow: 0 0 18px rgba(255, 110, 64, 0.22);
+      animation: legendGlow 2s ease-in-out infinite
+    }
+
+    .rw-card.rw-legend .rw-rname {
+      color: #ff6e40
+    }
+
+    @keyframes legendGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(255, 110, 64, 0.15) }
+      50% { box-shadow: 0 0 22px rgba(255, 110, 64, 0.35) }
     }
 
     .rw-tier {
@@ -2682,7 +2708,16 @@
     }
 
     .rw-tier.rare {
+      color: #4fc3f7
+    }
+
+    .rw-tier.unique {
       color: #ffd700
+    }
+
+    .rw-tier.legend {
+      color: #ff6e40;
+      text-shadow: 0 0 8px rgba(255, 110, 64, 0.4)
     }
 
     .mini-rw-card.rare {
