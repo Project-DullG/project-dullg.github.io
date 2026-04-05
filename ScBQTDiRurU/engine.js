@@ -1351,6 +1351,14 @@
         if (BT.stunTurns > 0) { eSvg.classList.add('stunned') }
         else { eSvg.classList.remove('stunned') }
       }
+      // 플레이어 독/화상 상태 시각 표시
+      var pSvg = $('bt-psvg');
+      if (pSvg) {
+        if (BT.poisonTurns > 0) { pSvg.classList.add('poisoned') }
+        else { pSvg.classList.remove('poisoned') }
+        if (BT.burnTurns > 0) { pSvg.classList.add('burning') }
+        else { pSvg.classList.remove('burning') }
+      }
     }
 
     // ── 상태이상 아이콘 갱신 (핵심만 표시) ──
@@ -1680,7 +1688,12 @@
     // ── 피해 숫자 표시 ──
     function showDmgNum(val, targetId, type) {
       var el = document.createElement('div');
-      el.className = 'bt-dmg-num' + (type === 'heal' ? ' heal' : '') + (type === 'crit' ? ' crit' : '');
+      var cls = 'bt-dmg-num';
+      if (type === 'heal') cls += ' heal';
+      else if (type === 'crit') cls += ' crit';
+      else if (type === 'poison') cls += ' poison';
+      else if (type === 'burn') cls += ' burn';
+      el.className = cls;
       el.textContent = (type === 'heal' ? '+' : '-') + val;
       var tgt = $(targetId);
       if (!tgt) return;
@@ -2563,8 +2576,9 @@
       if (BT.poisonTurns > 0 && p.hp > 0) {
         BT.poisonTurns--;
         p.hp = Math.max(0, p.hp - BT.poisonDmg);
-        showDmgNum(BT.poisonDmg, 'bt-psvg', '');
-        btLogAppend('독 피해 <span class="dmg">' + BT.poisonDmg + '</span>');
+        showDmgNum(BT.poisonDmg, 'bt-psvg', 'poison');
+        btFlash('#2e7d32');
+        btLogAppend('☠️ <span style="color:#a5d6a7">독 피해</span> <span class="dmg">' + BT.poisonDmg + '</span>');
         updateBattleUI();
       }
       // SP 드레인
@@ -2638,16 +2652,16 @@
       if (BT.enemyBurnTurns > 0 && BT.enemy && BT.enemy.hp > 0) {
         BT.enemyBurnTurns--;
         BT.enemy.hp = Math.max(0, BT.enemy.hp - BT.enemyBurnDmg);
-        showDmgNum(BT.enemyBurnDmg, 'bt-esvg', '');
-        btLogAppend('<span class="dmg">🔥적 화상! -' + BT.enemyBurnDmg + '</span>');
+        showDmgNum(BT.enemyBurnDmg, 'bt-esvg', 'burn');
+        btLogAppend('🔥 <span style="color:#ffab40">적 화상!</span> <span class="dmg">-' + BT.enemyBurnDmg + '</span>');
         updateBattleUI();
       }
       // 적 출혈 (보상 퍽 효과)
       if (BT.enemyBleedTurns > 0 && BT.enemy && BT.enemy.hp > 0) {
         BT.enemyBleedTurns--;
         BT.enemy.hp = Math.max(0, BT.enemy.hp - BT.enemyBleedDmg);
-        showDmgNum(BT.enemyBleedDmg, 'bt-esvg', '');
-        btLogAppend('<span class="dmg">🩸적 출혈! -' + BT.enemyBleedDmg + '</span>');
+        showDmgNum(BT.enemyBleedDmg, 'bt-esvg', 'poison');
+        btLogAppend('🩸 <span style="color:#ef9a9a">적 출혈!</span> <span class="dmg">-' + BT.enemyBleedDmg + '</span>');
         updateBattleUI();
       }
       // 잔류 에너지 DoT (스킬 강화)
@@ -2670,8 +2684,9 @@
       if (BT.burnTurns > 0 && p.hp > 0) {
         BT.burnTurns--;
         p.hp = Math.max(0, p.hp - BT.burnDmg);
-        showDmgNum(BT.burnDmg, 'bt-psvg', '');
-        btLogAppend('<span class="dmg">화상! -' + BT.burnDmg + '</span>');
+        showDmgNum(BT.burnDmg, 'bt-psvg', 'burn');
+        btFlash('#e65100');
+        btLogAppend('🔥 <span style="color:#ffab40">화상!</span> <span class="dmg">-' + BT.burnDmg + '</span>');
         updateBattleUI();
       }
       // Passive regen
