@@ -1598,18 +1598,16 @@
       font-size: 13px;
       color: #ffd700;
       text-align: center;
-      padding: 10px 0 4px;
-      letter-spacing: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
+      padding: 10px 50px 2px;
+      letter-spacing: 3px
     }
 
     .bt-cycle {
       font-size: 10px;
       color: #666;
       letter-spacing: 1px;
-      margin-left: 4px
+      display: block;
+      margin-top: 2px
     }
 
     .bt-ehud {
@@ -3075,10 +3073,8 @@
       font-family: 'Do Hyeon', sans-serif;
       font-size: 11px;
       color: #ffd700;
-      position: absolute;
-      top: 14px;
-      right: 52px;
-      z-index: 5;
+      text-align: center;
+      padding: 0 0 4px;
       letter-spacing: 1px
     }
 
