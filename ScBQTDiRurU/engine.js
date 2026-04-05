@@ -435,7 +435,7 @@
         name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uC18C\uB2C9 \uBE14\uB808\uC774\uB4DC', cost: 50, multi: 2.5, desc: '\uACF5\uACA9\uB825 250% + \uCE58\uBA85\uD0C0 \uD655\uB960 +20%', critBonus: 0.20, ignoreDef: 0 },
-        support: { name: '\uC804\uC220 \uC9C0\uC6D0', desc: '3\uD134\uAC04 \uCD94\uAC00 \uD589\uB3D9 +20%', type: 'extraAtkBuff', val: 0.20, turns: 3 }
+        support: { name: '\uC804\uC220 \uC9C0\uC6D0', desc: '2\uD134\uAC04 \uCD94\uAC00 \uD589\uB3D9 +50%', type: 'extraAtkBuff', val: 0.50, turns: 2 }
       },
       yellow: {
         name: '\uC610\uB85C', color: '#f9a825', weapon: '\uD074\uB85C',
