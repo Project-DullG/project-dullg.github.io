@@ -309,6 +309,102 @@
       word-break: keep-all;
     }
 
+    .intro-step-wrap {
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .intro-step-text {
+      font-size: 1rem;
+      color: var(--ink);
+      line-height: 2;
+      word-break: keep-all;
+      text-align: center;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .intro-step-text.fade-out {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+
+    .intro-step-text.fade-in {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .intro-step-text .narration {
+      color: var(--dim);
+      font-size: 0.95rem;
+    }
+
+    .intro-step-text .dialogue {
+      color: var(--ink);
+      font-size: 1rem;
+    }
+
+    .intro-step-text strong {
+      color: var(--ink);
+    }
+
+    .intro-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-intro-next {
+      padding: 13px 36px;
+      background: var(--ink);
+      color: var(--bg);
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn-intro-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      background: var(--gold);
+    }
+
+    .btn-intro-skip {
+      background: none;
+      border: none;
+      color: var(--dim);
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      letter-spacing: 0.5px;
+      padding: 0;
+      transition: color 0.2s;
+    }
+    .btn-intro-skip:hover { color: var(--ink); }
+
+    .intro-step-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .intro-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.12);
+      transition: background 0.3s ease;
+    }
+    .intro-dot.active { background: var(--accent); }
+
     .btn-start {
       padding: 16px 40px;
       background: var(--ink);
@@ -442,6 +538,21 @@
     }
     .btn-kakao:hover { background: #FADA0A; }
 
+    .char-ending {
+      margin: 28px 0;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-size: 0.88rem;
+      color: var(--ink);
+      line-height: 2;
+      text-align: left;
+    }
+
+    .char-ending .inner-voice {
+      color: var(--dim);
+      font-style: italic;
+    }
+
     .result-notice {
       margin-top: 28px;
       font-size: 0.72rem;
@@ -467,20 +578,21 @@
 
     <header class="hd">
       <div class="hd-eyebrow">DIAGNOSTIC ORACLE</div>
-      <div class="hd-title">삼신의 진단: 의사가 너무 많아!</div>
+      <div class="hd-title">의사가 너무 많아! : 캐릭터 테스트</div>
       <div class="hd-sub">너무 많은 의사 중, 당신은 어떤 의사를 닮았을까요?</div>
       <div class="hd-divider"></div>
     </header>
 
     <!-- 인트로 -->
     <div class="intro-card" id="intro-card">
-      <div class="intro-text">
-        정신을 차리니 당신 앞에 삼신 닥터가 나타납니다.<br><br>
-        이미 이 세상에는 의사가 너무나도 많습니다.<br>
-        하지만 당신을 위한 자리는 아직 정해지지 않았군요.<br><br>
-        삼신의 눈이 당신의 운명을 꿰뚫어 보기 시작합니다.
+      <div class="intro-step-dots" id="intro-dots"></div>
+      <div class="intro-step-wrap">
+        <div class="intro-step-text" id="intro-step-text"></div>
       </div>
-      <button class="btn-start" onclick="quizRealStart()">진단 시작하기</button>
+      <div class="intro-nav">
+        <button class="btn-intro-next" id="btn-intro-next" onclick="introNext()">다음</button>
+        <button class="btn-intro-skip" onclick="skipIntro()">건너뛰기</button>
+      </div>
     </div>
 
     <!-- 진행 표시 -->
@@ -508,6 +620,7 @@
       <div class="char-divider" id="char-divider"></div>
       <p class="char-desc" id="char-desc"></p>
       <div class="char-keys" id="char-keys"></div>
+      <div class="char-ending" id="char-ending"></div>
       <div class="result-btns">
         <button class="btn-share" onclick="copyLink()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -528,6 +641,72 @@
   <div id="toast"></div>
 
   <script>
+    var INTRO_STEPS = [
+      {
+        html: '<span class="narration">왕궁으로 향하던 당신은 하루 여관을 잡고 쉬어가기로 합니다.<br>저녁 식사를 위해 여관에 딸린 식당으로 들어가자,<br>반대쪽에 앉아있던 남자가 심심한데 잘됐다는 표정으로 당신을 바라봅니다.</span>'
+      },
+      {
+        html: '<span class="dialogue">"어이, 그 소문 들었소?<br>왕께서 전국의 이름난 의사를 모으고 있다 하는데,<br>왕궁에 누구 아픈 자가 있는 모양이오."</span>'
+      },
+      {
+        html: '<span class="dialogue">"그런데, 내가 알기로 이번에 자리를 비웠다고 소문이 도는 의사들 있잖소?<br>하나같이 <strong>특이한 성품</strong>을 가지고 있다 하오.<br>마침 내가 사람 심리를 조금 볼 줄 아는데,<br>몇 가지 질문에 대답하면 당신과 어떤 의사가 닮았는지 짚어주리다."</span>'
+      },
+      {
+        html: '<span class="narration">흥미가 동한 당신은<br>그 자의 질문에 귀를 기울입니다...</span>',
+        last: true
+      }
+    ];
+
+    var introCur = 0;
+
+    function introRender(animate) {
+      var step = INTRO_STEPS[introCur];
+      var el = document.getElementById('intro-step-text');
+      var btn = document.getElementById('btn-intro-next');
+
+      btn.textContent = step.last ? '진단 시작하기' : '다음';
+
+      // 점 업데이트
+      var dots = document.getElementById('intro-dots');
+      dots.innerHTML = '';
+      INTRO_STEPS.forEach(function(_, i) {
+        var d = document.createElement('div');
+        d.className = 'intro-dot' + (i === introCur ? ' active' : '');
+        dots.appendChild(d);
+      });
+
+      if (!animate) {
+        el.innerHTML = step.html;
+        return;
+      }
+
+      el.classList.add('fade-out');
+      setTimeout(function() {
+        el.innerHTML = step.html;
+        el.classList.remove('fade-out');
+        el.classList.add('fade-in');
+        // 다음 프레임에 클래스 제거해 fade-in 트랜지션 발동
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() {
+            el.classList.remove('fade-in');
+          });
+        });
+      }, 360);
+    }
+
+    function introNext() {
+      if (INTRO_STEPS[introCur].last) {
+        quizRealStart();
+        return;
+      }
+      introCur++;
+      introRender(true);
+    }
+
+    function skipIntro() {
+      quizRealStart();
+    }
+
     var Q = [
       {
         part: "PART 1 · 기초 기질",
@@ -555,7 +734,7 @@
       },
       {
         part: "PART 1 · 기초 기질",
-        q: "모르는 이들과의 첫 만남,\n당신이 가장 중요하게 살피는 것은?",
+        q: "모르는 이들과의 첫 만남,\n당신이 가장 중요하게 살피는 것은 무엇이오?",
         opts: [
           { t: "상대방이 품고 있는 의도나 보이지 않는 기운.", c: ["B", "S"] },
           { t: "상대방의 목소리 톤과 미세한 표정의 변화.", c: ["C"] },
@@ -578,7 +757,7 @@
       },
       {
         part: "PART 2 · 심층 가치관",
-        q: "탁 트인 들판. 반대쪽에서 거센 회오리바람이 보입니다.\n당신의 행동은?",
+        q: "탁 트인 들판. 반대쪽에서 거센 회오리바람이 보이오.\n어찌 하겠소?",
         opts: [
           { t: "카메라를 꺼내 폭풍 속에서 가장 극적인 순간을 포착하려 한다.", c: ["Y"] },
           { t: "휩쓸리면 날아가지 않을까? 생각하며 종이비행기를 날려본다.", c: ["R"] },
@@ -590,7 +769,7 @@
       },
       {
         part: "PART 2 · 심층 가치관",
-        q: "누구에게도 방해받지 않는,\n당신이 꿈꾸는 '완벽한 휴식'의 풍경은?",
+        q: "누구에게도 방해받지 않는,\n당신이 꿈꾸는 '완벽한 휴식'의 풍경은 어떠하오?",
         opts: [
           { t: "즐거운 웃음소리가 가득한 공원.", c: ["Y"] },
           { t: "홀로 지식을 탐구하는 조용한 시간.", c: ["R"] },
@@ -601,7 +780,7 @@
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "길가에 시들어가는 꽃 한 송이를 보았습니다.\n당신의 생각은?",
+        q: "길가에 시들어가는 꽃 한 송이를 보았소.\n무슨 생각이 드오?",
         opts: [
           { t: "이 꽃이 또 다른 생명으로 순환하기를 소망한다.", c: ["S"] },
           { t: "시드는 원인을 파악해 다시 꽃피울 수 있게 돕고 싶다.", c: ["R"] },
@@ -613,7 +792,7 @@
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "당신은 남들이 모르는 '특별한 능력'을 하나 가지고 있습니다.\n언제 그 능력을 쓸 건가요?",
+        q: "당신은 남들이 모르는 '특별한 능력'을 하나 가지고 있소.\n언제 그 능력을 쓰겠소?",
         opts: [
           { t: "혼란을 바로잡고 질서를 세우기 위해 필요할 때.", c: ["H"] },
           { t: "뒤틀린 인연을 바로잡고 잃어버린 것들을 되찾을 때.", c: ["B"] },
@@ -625,7 +804,7 @@
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "어떤 문제가 당신을 막아섰습니다.\n어떻게 지나가겠습니까?",
+        q: "어떤 문제가 당신을 막아섰소.\n어떻게 지나가겠소?",
         opts: [
           { t: "남들이 상상하지 못한 해결책를 찾아내어 의외의 길로 지나간다.", c: ["R"] },
           { t: "묵직하게 기다리며 해결책이 보일 때까지 인내심을 가지고 기다린다.", c: ["H"] },
@@ -653,7 +832,8 @@
       Y: {
         name: "양의사",
         role: "왕국 중앙 의원회 수장",
-        desc: "삼신이 당신에게 ‘광휘’의 명운을 내렸습니다. 25년의 무게는 당신의 기도를 통해 증명될 것이니, 찬란한 빛으로 병든 세상을 비추는 수장이 되십시오.",
+        desc: "당신에게는 ‘광휘’의 명운이 보이오. 25년간 의사 일을 하며 현재 중앙 의원회의 중심에 있는 의원장이 떠오르는구려. 찬란한 빛으로 병든 세상을 비추는 수장과 같은 사람이지...",
+        ending: "...<em>이걸 맞추다니. 그런데 그걸 아는 놈이 내 얼굴은 못알아봐?</em><br><br>당신은 속으로 쓴웃음을 삼키며 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["광휘", "리더십", "명성"],
         color: "#d4a855",
         bg: "rgba(212,168,85,0.08)",
@@ -662,7 +842,8 @@
       S: {
         name: "고위 사제",
         role: "타사칼 본산 파견 고위 사제",
-        desc: "삼신이 당신에게 ‘성결’의 명운을 내렸습니다. 흔들리는 세상에서 변하지 않는 진리를 지키는 방패가 되십시오. 당신의 정결함이 곧 구원의 시작입니다.",
+        desc: "당신에게는 ‘성결’의 명운이 보이오. 흔들리는 세상에서 변하지 않는 진리를 지키는 방패와 같은 사제가 떠오르는구려. 당신의 정결함으로 사한 자들은 무찌른 위인이라 할 수 있지...",
+        ending: "...<em>이걸 맞추다니. 이것 또한 타사칼의 인도인가. 그렇다면 쉬고 있을수는 없다.</em><br><br>당신은 표정 하나 흐트러뜨리지 않고 조용히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["신앙", "성결", "권위"],
         color: "#b0a8d8",
         bg: "rgba(176,168,216,0.08)",
@@ -671,7 +852,8 @@
       R: {
         name: "역병의사",
         role: "뒷골목의 기적",
-        desc: "삼신이 당신에게 ‘개척’의 명운을 내렸습니다. 남들이 포기한 어둠 속에서 기적을 일궈내십시오. 당신은 틀에 얽매이지 않는 자유로운 치유자입니다.",
+        desc: "당신에게는 ‘개척’의 명운이 보이오. 남들이 포기한 어둠 속에서 기적을 일궈내는 역병의사가 떠오르는군. 틀에 얽매이지 않고 가장 약한 자들을 치료하다가, 결국 왕의 인정을 받은 자 아니겠소?.",
+        ending: "...<em>이걸 맞추다니. 표정 관리가 잘 되지 않는군. 마스크라도 있어서 다행이야.</em><br><br>당신은 피식 웃음을 흘리며 가볍게 자리를 털고 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["개척", "기적", "자유"],
         color: "#4aa880",
         bg: "rgba(74,168,128,0.08)",
@@ -680,7 +862,8 @@
       B: {
         name: "부적술사",
         role: "도술에 통달한 젊은 술사",
-        desc: "삼신이 당신에게 ‘통찰’의 명운을 내렸습니다. 보이지 않는 흐름을 읽고 세상의 수수께끼를 꿰뚫으십시오. 당신의 부적 끝에 생명의 기운이 머물 것입니다.",
+        desc: "당신에게는 ‘통찰’의 명운이 보이오. 보이지 않는 신비한 흐름을 읽는 통찰력의 부적술사가 떠오르는군. 당신도 겉보기는 퍽 젋어보이는데, 이런 기운이라니. 소문과 비슷하구려...",
+        ending: "...<em>이걸 맞추다니. 역시나 생각보다 소문은 빠른 법인가? 들키면 늦어질 수 있으니 잘 따돌려야겠군. </em><br><br>당신은 잠시 그 남자를 빤히 바라보다, 천천히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["통찰", "신비", "이상"],
         color: "#9060c0",
         bg: "rgba(144,96,192,0.08)",
@@ -689,7 +872,8 @@
       H: {
         name: "한의사",
         role: "대대로 이어온 가문의 의사",
-        desc: "삼신이 당신에게 ‘수호’의 명운을 내렸습니다. 대대로 이어져 온 묵직한 전통의 기둥이 되십시오. 흔들림 없이 자리를 지키는 것이 당신의 소명입니다.",
+        desc: "당신에게는 ‘수호’의 명운이 보이오. 왕국이 세워질 때는 아버지가, 지금은 그 자식이 묵묵히 일을 한다는 한의원이 떠오르는군. 자신의 명예를 알고, 흔들림 없이 자리를 지키는 든든함이야말로 의사의 자질이지.",
+        ending: "...<em>이걸 맞추다니. 식은땀이 다 나는군. 조금 예리한 눈길을 하는 것은 알아봤는데 이정도일 줄이야.</em><br><br>당신은 묵묵히 고개를 한 번 끄덕이고 무겁게 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["전통", "수호", "안정"],
         color: "#c87840",
         bg: "rgba(200,120,64,0.08)",
@@ -698,7 +882,8 @@
       C: {
         name: "침술사",
         role: "명예 주치의",
-        desc: "삼신이 당신에게 ‘정밀’의 명운을 내렸습니다. 티끌만 한 오차도 허용하지 않는 완벽함으로 문제의 핵심을 찌르십시오. 순수한 완성이 당신의 손끝에서 태어납니다.",
+        desc: "당신에게는 ‘정밀’의 명운이 보이오. 완벽한 시술으로 귀족가에서 명성이 자자한 침술사가 떠오르는군. 그 자의 의술은 둘째치고, 그가 하는 시술 중에는 용모가 좋아진다는 겄도 있다 하오.",
+        ending: "...<em>이걸 맞추다니. 저 자도 꽤나 날카롭군. 하지만, 지금은 시간이 없지.</em><br><br>당신은 잠시 침묵한 뒤, 조용히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["정밀", "완성", "집중"],
         color: "#60a8c8",
         bg: "rgba(96,168,200,0.08)",
@@ -726,6 +911,8 @@
       scores = { Y:0, S:0, R:0, B:0, H:0, C:0 };
       sel = null;
       answers = [];
+      introCur = 0;
+      introRender(false);
 
       document.getElementById('intro-card').style.display = 'block';
       document.getElementById('quiz-card').style.display = 'none';
@@ -833,6 +1020,7 @@
       div.style.background = 'linear-gradient(90deg, transparent, ' + ch.color + ', transparent)';
 
       document.getElementById('char-desc').textContent = ch.desc;
+      document.getElementById('char-ending').innerHTML = ch.ending;
 
       var keysEl = document.getElementById('char-keys');
       keysEl.innerHTML = ch.keys.map(function(k) {
