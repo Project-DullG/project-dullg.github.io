@@ -61,13 +61,16 @@ var S = [
   { t: 'n', tx: '모니터 화면이 일그러질 정도의 충격파.\n땅이 갈라지며 거대한 괴인이 나타났다.\n\n...이건 좀 다르다.', ch: ['titan'], lo: 'center', en: true },
   { t: 'd', sp: '블루', cl: '#42a5f5', tx: '"야, 이건 좀 다른데?\n크기가..."', ch: ['blue'], lo: 'left', tk: 'blue' },
   { t: 'd', sp: '레드', cl: '#e53935', tx: '"상관없어.\n간다."', ch: ['red', 'black', 'blue', 'yellow', 'pink'], lo: 'spread', tk: 'red' },
+  { t: 'pause', ms: 400 },
+  { t: 'd', sp: '블루', cl: '#42a5f5', tx: '"박사님, 통신 연결됐어?\n저놈 정보 좀 부탁해."', ch: ['blue'], lo: 'left', tk: 'blue' },
+  { t: 'd', sp: '레드', cl: '#e53935', tx: '"박사님, 지시해주세요.\n저희가 움직일게요."', ch: ['red', 'black', 'blue', 'yellow', 'pink'], lo: 'spread', tk: 'red' },
   { t: 'pause', ms: 600 },
 
   // ─── ACT 3: 전투 — 밀린다 (모니터 관전) ───
   { t: 'bs', en: '다크 타이탄', eHp: 100, tHp: 100 },
 
   // TURN 1
-  { t: 'n', tx: '나는 통신기를 잡았다.\n카오스의 신무기, 분석해내야 한다.\n\n손끝이 차가웠다.', ch: ['doc'] },
+  { t: 'n', tx: '통신기를 쥐는 손에 힘이 들어갔다.\n카오스의 신무기, 분석해내야 한다.\n\n손끝이 차가웠다.', ch: ['doc'] },
   {
     t: 'q', tx: '통신기로 지시를 내린다.', fl: 't1', opts: [
       { tx: '⚔️ 블랙, 먼저 정찰 사격!', v: 'shoot' },
