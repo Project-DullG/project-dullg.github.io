@@ -526,7 +526,7 @@
       // 희귀 — 세부 스탯
       { name: '전체 강화', desc: '공격+2 쉴드력+2 치명타+3%', icon: '⚡', fn: function (p) { p.atk += 2; p.def += 2; p.crit += 3; return '전체 강화!' }, rare: 1 },
       { name: '강화 장갑', desc: '받는 피해 -8%', icon: '🔰', fn: function (p) { BT.perkDmgReduce = Math.min(0.50, BT.perkDmgReduce + 0.08); return '피해 감소 +8%! (총 ' + Math.round(BT.perkDmgReduce * 100) + '%)' }, rare: 1 },
-      { name: '치명타 증폭', desc: '치명타 피해 +25% (수확체감)', icon: '💥', fn: function (p) { var add = 0.25 * Math.max(0.3, 1 - BT.perkCritDmg); BT.perkCritDmg += add; return '치명타 피해 +' + Math.round(add * 100) + '%! (x' + (1.5 + BT.perkCritDmg).toFixed(2) + ')' }, rare: 1 },
+      { name: '치명타 증폭', desc: '치명타 피해 +25%', icon: '💥', fn: function (p) { BT.perkCritDmg += 0.25; return '치명타 피해 +25%! (x' + (1.5 + BT.perkCritDmg).toFixed(2) + ')' }, rare: 1 },
       { name: '쉴드 강화', desc: '쉴드 생성량 +25%', icon: '🛡️', fn: function (p) { BT.perkShieldUp += 0.25; return '쉴드량 +25%! (총 +' + Math.round(BT.perkShieldUp * 100) + '%)' }, rare: 1 },
       { name: '파괴자', desc: '주는 피해 +8%', icon: '⚔️', fn: function (p) { BT.perkDmgUp += 0.08; return '피해 +8%! (총 +' + Math.round(BT.perkDmgUp * 100) + '%)' }, rare: 1 },
       { name: '관통탄', desc: '방어 관통 +15% (최대 70%)', icon: '🎯', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.15); return '관통 +15%! (총 ' + Math.round(BT.perkArmorPen * 100) + '%)' }, rare: 1 },
@@ -588,14 +588,14 @@
       { name: '치명타 확률', icon: '🎯', desc: '치명타 확률 +5%', fn: function (p) { BT.perkCritChance += 0.05; return '치명타 확률 +5%!' } },
       { name: '쉴드 보강', icon: '🛡️', desc: '쉴드 생성량 +12%', fn: function (p) { BT.perkShieldUp += 0.12; return '쉴드량 +12%!' } },
       { name: '관통력', icon: '🎯', desc: '방어 관통 +8% (최대 70%)', fn: function (p) { BT.perkArmorPen = Math.min(0.70, BT.perkArmorPen + 0.08); return '관통 +8%!' } },
-      { name: '치명타 피해', icon: '💥', desc: '치명타 피해 +12% (수확체감)', fn: function (p) { var add = 0.12 * Math.max(0.3, 1 - BT.perkCritDmg); BT.perkCritDmg += add; return '치명타 피해 +' + Math.round(add * 100) + '%!' } }
+      { name: '치명타 피해', icon: '💥', desc: '치명타 피해 +12%', fn: function (p) { BT.perkCritDmg += 0.12; return '치명타 피해 +12%!' } }
     ];
 
     // ── 난이도 시스템 ──
     var DIFF = {
-      easy:   { label: '이지', hpM: 0.80, atkM: 0.70, rewardM: 0.7, color: '#4ecca3' },
-      normal: { label: '노말', hpM: 1.00, atkM: 1.00, rewardM: 1.0, color: '#ffd700' },
-      hard:   { label: '하드', hpM: 1.25, atkM: 1.50, rewardM: 1.5, color: '#e53935' }
+      easy:   { label: '이지', hpM: 0.80, atkM: 0.70, rewardM: 1.0, color: '#4ecca3' },
+      normal: { label: '노말', hpM: 1.00, atkM: 1.00, rewardM: 1.5, color: '#ffd700' },
+      hard:   { label: '하드', hpM: 1.25, atkM: 1.50, rewardM: 2.0, color: '#e53935' }
     };
     var currentDiff = 'easy';
     function getDiffUnlock() {
@@ -831,7 +831,7 @@
       var unlock = getDiffUnlock();
       ['easy', 'normal', 'hard'].forEach(function (key) {
         var d = DIFF[key]; var btn = document.createElement('button'); btn.className = 'diff-btn';
-        var rewardLabel = d.rewardM < 1 ? ' (보상 ' + Math.round(d.rewardM * 100) + '%)' : d.rewardM > 1 ? ' (보상 ' + Math.round(d.rewardM * 100) + '%)' : '';
+        var rewardLabel = key === 'normal' ? ' (보상 +50%)' : key === 'hard' ? ' (보상 +100%)' : '';
         btn.textContent = d.label + rewardLabel;
         btn.style.borderColor = d.color; btn.style.color = d.color;
         if (key === currentDiff) btn.classList.add('active');
@@ -1139,6 +1139,8 @@
       // 패시브 성장 리셋 (웨이브 끝 초기화)
       resetPassiveGrowth();
       saveGrowthBase(); // 새 웨이브 기준값 저장
+      // 캐릭터 고유 메카닉 초기화
+      BT.redMomentum = 0; BT.blackAim = 0; BT.blueCritChain = 0; BT.yellowMarks = 0;
       BT.buffs = []; BT.debuffs = []; BT.boosterUsed = false;
       // 웨이브 전환 오버레이
       var ov = $('bt-overlay'); ov.classList.add('on');
