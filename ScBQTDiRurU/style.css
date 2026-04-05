@@ -894,7 +894,6 @@
       max-width: 65%;
       border-radius: 6px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-      mix-blend-mode: screen;
       transition: box-shadow 0.5s
     }
 
