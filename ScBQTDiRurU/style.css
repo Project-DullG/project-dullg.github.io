@@ -748,71 +748,138 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 40px
+      padding: 40px;
+      overflow: hidden;
+      position: relative
+    }
+
+    #ending-screen::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 80%, rgba(229,57,53,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0
     }
 
     #ending-screen>* {
-      opacity: 0
+      opacity: 0;
+      position: relative;
+      z-index: 1
+    }
+
+    .end-particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(229,57,53,0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: endParticleFloat 6s ease-in-out infinite
+    }
+
+    @keyframes endParticleFloat {
+      0% { transform: translateY(0) scale(1); opacity: 0 }
+      20% { opacity: 1 }
+      80% { opacity: 0.6 }
+      100% { transform: translateY(-120px) scale(0); opacity: 0 }
     }
 
     #ending-screen.end-show>#endQ {
-      animation: endFadeIn 1.5s ease 0.8s forwards
+      animation: endFadeIn 2s ease 1s forwards
     }
 
     #ending-screen.end-show>.end-img {
-      animation: endFadeIn 1.5s ease 2s forwards
+      animation: endFadeIn 2s ease 3s forwards
     }
 
     #ending-screen.end-show>.end-title-wrap {
-      animation: endFadeIn 1.5s ease 3s forwards
+      animation: endTitleIn 2.5s ease 5s forwards
     }
 
     #ending-screen.end-show>.end-coming {
-      animation: endFadeIn 1.5s ease 4s forwards
+      animation: endFadeIn 1.5s ease 7s forwards
     }
 
     #ending-screen.end-show>.end-btn {
-      animation: endFadeIn 1.5s ease 5s forwards
+      animation: endBtnIn 1.5s ease 8.5s forwards
     }
 
     @keyframes endFadeIn {
       0% {
         opacity: 0;
-        transform: translateY(8px)
+        transform: translateY(12px)
       }
-
       100% {
         opacity: 1;
         transform: translateY(0)
       }
     }
 
-    @keyframes fadeIn {
+    @keyframes endTitleIn {
       0% {
-        opacity: 0
+        opacity: 0;
+        transform: translateY(12px) scale(0.9);
+        filter: blur(4px)
       }
-
+      60% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0)
+      }
+      75% {
+        text-shadow: 0 0 40px rgba(229,57,53,0.6)
+      }
       100% {
-        opacity: 1
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0)
       }
+    }
+
+    @keyframes endBtnIn {
+      0% { opacity: 0 }
+      100% { opacity: 1 }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0 }
+      100% { opacity: 1 }
     }
 
     .end-line {
       font-family: 'Noto Serif KR', serif;
       font-size: 15px;
       color: #888;
-      line-height: 2.4;
-      letter-spacing: 1px
+      line-height: 2.6;
+      letter-spacing: 1.5px
     }
 
     .end-line.bright {
-      color: #ccc
+      color: #ddd;
+      font-size: 16px
     }
 
     .end-line.red {
       color: #e53935;
       font-weight: bold;
       font-size: 17px
+    }
+
+    .end-line.dim {
+      color: #555;
+      font-size: 13px;
+      line-height: 2
+    }
+
+    .end-divider {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #e53935, transparent);
+      margin: 16px auto;
+      opacity: 0;
+      animation: fadeIn 2s 2.5s forwards
     }
 
     .end-img {
@@ -826,7 +893,12 @@
     .end-cg {
       max-width: 65%;
       border-radius: 6px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6)
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+      transition: box-shadow 0.5s
+    }
+
+    .end-show .end-cg {
+      box-shadow: 0 4px 32px rgba(229,57,53,0.15), 0 4px 24px rgba(0,0,0,0.6)
     }
 
     .end-symbol {
@@ -838,25 +910,46 @@
     .end-title-wrap {
       position: relative;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-top: 12px
+      margin-top: 20px
     }
 
     .end-logo {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      opacity: 0.12;
-      z-index: 0
+      width: 200px;
+      height: 200px;
+      opacity: 0;
+      mix-blend-mode: screen;
+      animation: endLogoPulse 4s ease-in-out infinite
+    }
+
+    .end-show .end-logo {
+      opacity: 0.18
+    }
+
+    @keyframes endLogoPulse {
+      0%, 100% { opacity: 0.15; transform: scale(1) rotate(0deg) }
+      50% { opacity: 0.25; transform: scale(1.05) rotate(3deg) }
     }
 
     .end-title {
       font-family: 'Do Hyeon', sans-serif;
-      font-size: 24px;
+      font-size: 26px;
       color: #e53935;
-      letter-spacing: 4px;
-      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3);
+      letter-spacing: 5px;
+      text-shadow: 0 0 30px rgba(229, 57, 53, 0.3), 0 0 60px rgba(229, 57, 53, 0.1);
+      margin-top: -40px;
+      position: relative;
+      z-index: 1
+    }
+
+    .end-subtitle {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 3px;
+      margin-top: 6px;
       position: relative;
       z-index: 1
     }
@@ -864,25 +957,27 @@
     .end-coming {
       font-size: 12px;
       color: #444;
-      margin-top: 20px;
-      letter-spacing: 3px
+      margin-top: 24px;
+      letter-spacing: 4px
     }
 
     .end-btn {
-      margin-top: 20px;
-      padding: 9px 24px;
+      margin-top: 24px;
+      padding: 10px 28px;
       border: 1px solid #333;
       background: none;
-      color: #666;
+      color: #555;
       font-size: 13px;
       font-family: 'Gowun Dodum', sans-serif;
       border-radius: 6px;
-      cursor: pointer
+      cursor: pointer;
+      transition: all 0.3s ease
     }
 
     .end-btn:hover {
-      border-color: #666;
-      color: #aaa
+      border-color: #e53935;
+      color: #e53935;
+      box-shadow: 0 0 16px rgba(229,57,53,0.2)
     }
 
     /* FX */
@@ -1506,18 +1601,16 @@
       font-size: 13px;
       color: #ffd700;
       text-align: center;
-      padding: 10px 0 4px;
-      letter-spacing: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis
+      padding: 10px 50px 2px;
+      letter-spacing: 3px
     }
 
     .bt-cycle {
       font-size: 10px;
       color: #666;
       letter-spacing: 1px;
-      margin-left: 4px
+      display: block;
+      margin-top: 2px
     }
 
     .bt-ehud {
@@ -2568,14 +2661,40 @@
       word-break: keep-all
     }
 
-    .rw-card.rare {
-      border-color: #ffd700;
-      background: linear-gradient(180deg, rgba(255, 215, 0, 0.10), rgba(255, 215, 0, 0.03));
-      box-shadow: 0 0 12px rgba(255, 215, 0, 0.15)
+    .rw-card.rw-rare {
+      border-color: #4fc3f7;
+      background: linear-gradient(180deg, rgba(79, 195, 247, 0.10), rgba(79, 195, 247, 0.03));
+      box-shadow: 0 0 10px rgba(79, 195, 247, 0.12)
     }
 
-    .rw-card.rare .rw-rname {
+    .rw-card.rw-rare .rw-rname {
+      color: #4fc3f7
+    }
+
+    .rw-card.rw-unique {
+      border-color: #ffd700;
+      background: linear-gradient(180deg, rgba(255, 215, 0, 0.12), rgba(255, 215, 0, 0.03));
+      box-shadow: 0 0 14px rgba(255, 215, 0, 0.18)
+    }
+
+    .rw-card.rw-unique .rw-rname {
       color: #ffd700
+    }
+
+    .rw-card.rw-legend {
+      border-color: #ff6e40;
+      background: linear-gradient(180deg, rgba(255, 110, 64, 0.14), rgba(255, 110, 64, 0.04));
+      box-shadow: 0 0 18px rgba(255, 110, 64, 0.22);
+      animation: legendGlow 2s ease-in-out infinite
+    }
+
+    .rw-card.rw-legend .rw-rname {
+      color: #ff6e40
+    }
+
+    @keyframes legendGlow {
+      0%, 100% { box-shadow: 0 0 12px rgba(255, 110, 64, 0.15) }
+      50% { box-shadow: 0 0 22px rgba(255, 110, 64, 0.35) }
     }
 
     .rw-tier {
@@ -2590,7 +2709,16 @@
     }
 
     .rw-tier.rare {
+      color: #4fc3f7
+    }
+
+    .rw-tier.unique {
       color: #ffd700
+    }
+
+    .rw-tier.legend {
+      color: #ff6e40;
+      text-shadow: 0 0 8px rgba(255, 110, 64, 0.4)
     }
 
     .mini-rw-card.rare {
@@ -2948,10 +3076,8 @@
       font-family: 'Do Hyeon', sans-serif;
       font-size: 11px;
       color: #ffd700;
-      position: absolute;
-      top: 14px;
-      right: 52px;
-      z-index: 5;
+      text-align: center;
+      padding: 0 0 4px;
       letter-spacing: 1px
     }
 
@@ -3365,4 +3491,85 @@
     .lab-reset:hover {
       background: rgba(198, 40, 40, 0.15);
       border-color: #c62828
+    }
+
+    /* ── 스킬 강화 오버레이 ── */
+    .aug-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9000;
+      animation: fadeIn 0.3s ease
+    }
+    .aug-box {
+      width: 90%; max-width: 380px;
+      text-align: center; padding: 18px 12px
+    }
+    .aug-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 20px; color: #ffd700;
+      letter-spacing: 3px; margin-bottom: 6px;
+      text-shadow: 0 0 12px rgba(255,215,0,0.4)
+    }
+    .aug-sub {
+      font-size: 11px; color: #aaa; margin-bottom: 16px
+    }
+    .aug-cats {
+      display: flex; flex-direction: column; gap: 10px
+    }
+    .aug-cat-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid #555; border-radius: 10px;
+      padding: 12px 14px; cursor: pointer;
+      transition: all 0.2s; text-align: left
+    }
+    .aug-cat-btn:hover {
+      border-color: #ffd700; background: rgba(255,215,0,0.06);
+      transform: scale(1.02)
+    }
+    .aug-cat-lbl {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px; color: #fff; margin-bottom: 2px
+    }
+    .aug-cat-desc {
+      font-size: 10px; color: #aaa
+    }
+    .aug-cur {
+      font-size: 10px; color: #ffd700; margin-bottom: 4px;
+      opacity: 0.8
+    }
+    .aug-opts {
+      display: flex; gap: 8px; justify-content: center
+    }
+    .aug-opt-card {
+      flex: 1; max-width: 120px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid #555; border-radius: 12px;
+      padding: 14px 8px; cursor: pointer;
+      transition: all 0.2s; text-align: center
+    }
+    .aug-opt-card:hover {
+      border-color: #4ecca3; background: rgba(78,204,163,0.08);
+      transform: translateY(-3px)
+    }
+    .aug-opt-card.aug-equipped {
+      border-color: #ffd700; background: rgba(255,215,0,0.08)
+    }
+    .aug-opt-icon { font-size: 30px; margin-bottom: 6px }
+    .aug-opt-name {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 13px; color: #fff; margin-bottom: 4px
+    }
+    .aug-opt-desc {
+      font-size: 9px; color: #ccc; white-space: pre-line; line-height: 1.5
+    }
+    .aug-skip-btn {
+      display: block; margin: 14px auto 0; padding: 8px 28px;
+      background: rgba(255,255,255,0.06); border: 1px solid #555;
+      border-radius: 8px; color: #999; font-size: 13px;
+      cursor: pointer; transition: all 0.2s
+    }
+    .aug-skip-btn:hover {
+      border-color: #888; color: #ddd; background: rgba(255,255,255,0.10)
     }
