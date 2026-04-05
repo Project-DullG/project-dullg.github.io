@@ -3011,6 +3011,23 @@
       color: #fff
     }
 
+    .go-log-panel {
+      max-height: 200px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 8px 0 0;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.5;
+      text-align: left;
+      scrollbar-width: thin;
+      scrollbar-color: #555 transparent
+    }
+
     .go-bg>* {
       opacity: 0
     }
@@ -3041,6 +3058,10 @@
 
     #gameover-screen.go-show .go-btns {
       animation: goFadeIn 0.8s ease 2.8s forwards
+    }
+
+    #gameover-screen.go-show .go-log-panel {
+      opacity: 1
     }
 
     .bt-overlay {

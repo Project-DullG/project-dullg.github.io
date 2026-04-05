@@ -429,7 +429,7 @@
         name: '\uBE14\uB799', color: '#555', weapon: '\uCD1D',
         hp: 30, atk: 12, def: 10, crit: 15, dodge: 10, sp: 100,
         skill: { name: '\uD480\uBC84\uC2A4\uD2B8 \uC0F7', cost: 50, multi: 2.0, desc: '\uACF5\uACA9\uB825 200% + \uBC29\uC5B4\uBB34\uC2DC 50%', ignoreDef: 0.5 },
-        support: { name: '\uD654\uB825 \uC9C0\uC6D0', desc: '3\uD134\uAC04 \uC790\uB3D9 \uD53C\uD574 75%', type: 'autoAttack', multi: 0.75, turns: 3 }
+        support: { name: '\uD654\uB825 \uC9C0\uC6D0', desc: '3\uD134\uAC04 \uC790\uB3D9 \uD53C\uD574 125%', type: 'autoAttack', multi: 1.25, turns: 3 }
       },
       blue: {
         name: '\uBE14\uB8E8', color: '#1565c0', weapon: '\uAC80',
@@ -1176,7 +1176,7 @@
         { title: '❤️ 체력 / 💎 SP', desc: '체력이 0이 되면 패배!\nSP는 필살기와 미라클 부스터에 사용합니다.\n공격·방어·지원은 SP를 소모하지 않습니다.' },
         { title: '⚔️ 행동 선택', desc: '⚔️ 공격: 기본 피해\n🛡️ 방어: 쉴드 생성 (쿨타임 2턴)\n🧘 집중: 체력 10% + SP 25% 회복 (쿨타임 3턴)\n✨ 필살기: SP 50 소모, 강력한 일격!\n🌟 미라클 부스터: SP 100 소모, 전 능력 2배 (2턴)' },
         { title: '💠 출동 패시브', desc: '메인 레인저와 파트너의\n출동 패시브가 동시에 적용됩니다!\n\n패시브는 매턴 성장하며\n웨이브 클리어 시 성장치가 초기화됩니다.' },
-        { title: '🔬 지원 스킬', desc: '🔬 박사의 지원: 적 1턴 기절 (쿨타임 3턴)\n🌟 지원스킬: 전투에 미참여하는\n레인저가 고유 스킬로 지원! (쿨타임 4턴)\n\n⭐ 지원스킬은 턴을 소모하지 않습니다!\n한 턴에 1회 사용 후 행동을 선택하세요.' },
+        { title: '🔬 지원 스킬', desc: '🔬 박사의 지원: 적 1턴 기절 (쿨타임 4턴)\n🌟 지원스킬: 전투에 미참여하는\n레인저가 고유 스킬로 지원! (쿨타임 4턴)\n\n⭐ 지원스킬은 턴을 소모하지 않습니다!\n한 턴에 1회 사용 후 행동을 선택하세요.' },
         { title: '🛡️ 쉴드 & 피해 감소', desc: '쉴드력이 높을수록 강한 쉴드 생성!\n쉴드는 적 공격을 먼저 흡수합니다.\n⚠️ 쉴드는 매 턴 50% 감소합니다.\n\n보상으로 \'피해 감소\'를 얻으면\n받는 피해가 영구적으로 줄어듭니다!' },
         { title: '⚠️ 적 의도 & 보상', desc: '적의 다음 행동이 상단에 예고됩니다.\n예고를 읽고 공격/방어를 판단하세요!\n\n웨이브 클리어 시 보상을 획득합니다.\n다양한 강화를 조합해 빌드를 만드세요!' },
         { title: 'ℹ️ 정보 & 팁', desc: '전투 중 ℹ️ 버튼을 누르면\n현재 스탯과 패시브를 확인할 수 있습니다.\n\n버튼에 마우스를 올리면(터치)\n예상 효과를 미리 볼 수 있습니다.' },
@@ -1779,7 +1779,7 @@
       }
       if (action === 'doctorSupport') {
         if (BT.doctorCD > 0) { BT.supportUsedThisTurn = false; BT.acting = false; showActions(); return }
-        BT.doctorCD = 3;
+        BT.doctorCD = 4;
         BT.stunTurns += 1;
         var spPct = (BT.augment.doctor === 'docSpUp') ? 0.38 : 0.25;
         var spRecover = Math.round(p.maxSp * spPct); p.sp = Math.min(p.maxSp, p.sp + spRecover);
@@ -2625,9 +2625,10 @@
         if (b.stat === 'autoAttack' && b.turns > 0 && BT.enemy && BT.enemy.hp > 0) {
           var aaDmg = calcDmg(p.atk + getBuffVal('atk'), BT.enemy.def + getDebuffVal('def'), b.multi, BT.perkArmorPen);
           if (BT.perkDmgUp > 0) aaDmg = Math.round(aaDmg * (1 + BT.perkDmgUp));
-          BT.enemy.hp -= aaDmg;
+          BT.enemy.hp = Math.max(0, BT.enemy.hp - aaDmg);
           showDmgNum(aaDmg, 'bt-esvg', ''); btFlash('#555');
           btLogAppend(' <span class="dmg">🔫자동 피해 ' + aaDmg + '</span>');
+          updateBattleUI();
         }
       });
       // 버프/디버프 틱
@@ -3134,6 +3135,8 @@
         document.querySelector('.go-title').textContent = 'GAME OVER';
         document.querySelector('.go-title').style.color = '#e53935';
       }
+      // 전투 로그 저장 (게임오버 화면에서 열람)
+      BT.savedLog = $('bt-log') ? $('bt-log').innerHTML : '';
       showScr('gameover'); gs.classList.add('go-show');
       $('bt-overlay').classList.remove('on');
     }
@@ -3175,6 +3178,18 @@
 
     $('go-retry').addEventListener('click', function () { playBgm('daily'); initSelect(); showScr('select') });
     $('go-title').addEventListener('click', function () { stopAllBgm(); playBgm('daily'); initSelect(); showScr('select') });
+    $('go-log-btn').addEventListener('click', function () {
+      var panel = $('go-log-panel');
+      if (panel.style.display === 'none') {
+        panel.innerHTML = BT.savedLog || '<em>로그 없음</em>';
+        panel.style.display = 'block';
+        panel.scrollTop = panel.scrollHeight;
+        this.textContent = '📜 로그 닫기';
+      } else {
+        panel.style.display = 'none';
+        this.textContent = '📜 전투 로그';
+      }
+    });
     $('bt-retreat').addEventListener('click', function () {
       if (BT.acting) return;
       gamePaused = true; $('pause-overlay').classList.add('on');
