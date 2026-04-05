@@ -1345,6 +1345,12 @@
       if (hpRatio <= 0.3) { hpBar.style.background = 'linear-gradient(90deg,#b71c1c,#e53935)'; hpBar.classList.add('hp-critical'); hpBar.classList.remove('hp-warning') }
       else if (hpRatio <= 0.5) { hpBar.style.background = 'linear-gradient(90deg,#e65100,#ff9800)'; hpBar.classList.add('hp-warning'); hpBar.classList.remove('hp-critical') }
       else { hpBar.style.background = ''; hpBar.classList.remove('hp-warning', 'hp-critical') }
+      // 적 기절 상태 시각 표시
+      var eSvg = $('bt-esvg');
+      if (eSvg) {
+        if (BT.stunTurns > 0) { eSvg.classList.add('stunned') }
+        else { eSvg.classList.remove('stunned') }
+      }
     }
 
     // ── 상태이상 아이콘 갱신 (핵심만 표시) ──
