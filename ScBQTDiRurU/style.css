@@ -3682,6 +3682,18 @@
       font-size: 9px; font-weight: bold; margin-bottom: 2px;
       text-transform: uppercase; letter-spacing: 1px
     }
+    .aug-fuse-cat {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+      text-align: center
+    }
     .aug-opt-desc {
       font-size: 9px; color: #ccc; white-space: pre-line; line-height: 1.5
     }

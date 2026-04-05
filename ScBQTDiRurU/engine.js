@@ -2810,20 +2810,25 @@
     }
 
     // ── 스킬 강화 선택 (보스 후) ──
-    function showSkillAugment(callback) {
+    function showSkillAugment(callback, savedCats) {
       var overlay = document.createElement('div'); overlay.className = 'aug-overlay';
       var box = document.createElement('div'); box.className = 'aug-box';
 
-      // 1단계: 행동 카테고리 선택 (7개 중 랜덤 3개)
+      // 1단계: 행동 카테고리 선택 (7개 중 랜덤 3개, 또는 저장된 카테고리 복원)
       var title = document.createElement('div'); title.className = 'aug-title'; title.textContent = '★ 행동 강화 ★';
       var sub = document.createElement('div'); sub.className = 'aug-sub'; sub.textContent = '강화할 행동을 선택하세요';
       box.appendChild(title); box.appendChild(sub);
 
-      var allKeys = Object.keys(SKILL_AUGMENTS);
-      var pool = allKeys.slice(); var pickedCats = [];
-      while (pickedCats.length < 3 && pool.length > 0) {
-        var ri = Math.floor(Math.random() * pool.length);
-        pickedCats.push(pool[ri]); pool.splice(ri, 1);
+      var pickedCats;
+      if (savedCats) {
+        pickedCats = savedCats;
+      } else {
+        var allKeys = Object.keys(SKILL_AUGMENTS);
+        var pool = allKeys.slice(); pickedCats = [];
+        while (pickedCats.length < 3 && pool.length > 0) {
+          var ri = Math.floor(Math.random() * pool.length);
+          pickedCats.push(pool[ri]); pool.splice(ri, 1);
+        }
       }
 
       var catWrap = document.createElement('div'); catWrap.className = 'aug-cats';
@@ -2859,7 +2864,7 @@
       if (canFuse) {
         var fuseBtn = document.createElement('button'); fuseBtn.className = 'aug-fuse-btn';
         fuseBtn.textContent = '🔮 합성 (같은 등급 2개 → 상위 등급)';
-        fuseBtn.addEventListener('click', function () { showAugFuse(overlay, box, callback, equippedAugs) });
+        fuseBtn.addEventListener('click', function () { showAugFuse(overlay, box, callback, equippedAugs, pickedCats) });
         box.appendChild(fuseBtn);
       }
 
@@ -2874,7 +2879,7 @@
     }
 
     // ── 합성: 같은 등급 2개 → 상위 등급 3개 중 선택 ──
-    function showAugFuse(overlay, box, callback, equippedAugs) {
+    function showAugFuse(overlay, box, callback, equippedAugs, savedCats) {
       clr(box);
       var tierOrder = ['common', 'rare', 'unique'];
       var nextTier = { common: 'rare', rare: 'unique', unique: 'legendary' };
@@ -2909,7 +2914,7 @@
 
       var backBtn = document.createElement('button'); backBtn.className = 'aug-skip-btn';
       backBtn.textContent = '← 돌아가기';
-      backBtn.addEventListener('click', function () { overlay.remove(); showSkillAugment(callback) });
+      backBtn.addEventListener('click', function () { overlay.remove(); showSkillAugment(callback, savedCats) });
       box.appendChild(backBtn);
     }
 
@@ -2930,10 +2935,10 @@
       group.forEach(function (aug) {
         var ti = AUG_TIER[aug.tier];
         var card = document.createElement('div'); card.className = 'aug-opt-card ' + ti.cls;
-        card.innerHTML = '<div class="aug-opt-tier" style="color:' + ti.color + '">' + ti.name + '</div>' +
+        card.innerHTML = '<div class="aug-fuse-cat">' + SKILL_AUGMENTS[aug.catKey].label + '</div>' +
+          '<div class="aug-opt-tier" style="color:' + ti.color + '">' + ti.name + '</div>' +
           '<div class="aug-opt-icon">' + aug.opt.icon + '</div>' +
-          '<div class="aug-opt-name">' + aug.opt.name + '</div>' +
-          '<div class="aug-opt-desc" style="font-size:8px;color:#999">' + SKILL_AUGMENTS[aug.catKey].label + '</div>';
+          '<div class="aug-opt-name">' + aug.opt.name + '</div>';
         card.addEventListener('click', function () {
           if (card.classList.contains('aug-fuse-selected')) {
             card.classList.remove('aug-fuse-selected');
@@ -2981,13 +2986,13 @@
       picked.forEach(function (item) {
         var opt = item.opt; var catKey = item.catKey;
         var card = document.createElement('div'); card.className = 'aug-opt-card ' + nti.cls;
+        var catLbl = document.createElement('div'); catLbl.className = 'aug-fuse-cat';
+        catLbl.textContent = SKILL_AUGMENTS[catKey].label;
         var tierDiv = document.createElement('div'); tierDiv.className = 'aug-opt-tier'; tierDiv.textContent = nti.name; tierDiv.style.color = nti.color;
         var icon = document.createElement('div'); icon.className = 'aug-opt-icon'; icon.textContent = opt.icon;
         var name = document.createElement('div'); name.className = 'aug-opt-name'; name.textContent = opt.name;
-        var catLbl = document.createElement('div'); catLbl.className = 'aug-opt-desc'; catLbl.textContent = SKILL_AUGMENTS[catKey].label;
-        catLbl.style.cssText = 'margin-bottom:4px;color:#999';
         var desc = document.createElement('div'); desc.className = 'aug-opt-desc'; desc.textContent = opt.desc;
-        card.appendChild(tierDiv); card.appendChild(icon); card.appendChild(name); card.appendChild(catLbl); card.appendChild(desc);
+        card.appendChild(catLbl); card.appendChild(tierDiv); card.appendChild(icon); card.appendChild(name); card.appendChild(desc);
         card.addEventListener('click', function () {
           if (card.dataset.used) return;
           optsWrap.querySelectorAll('.aug-opt-card').forEach(function (c) { c.dataset.used = '1' });
