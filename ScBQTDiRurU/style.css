@@ -894,6 +894,7 @@
       max-width: 65%;
       border-radius: 6px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+      mix-blend-mode: screen;
       transition: box-shadow 0.5s
     }
 
@@ -921,6 +922,7 @@
       height: 140px;
       opacity: 0;
       z-index: 0;
+      mix-blend-mode: screen;
       animation: endLogoPulse 4s ease-in-out infinite
     }
 
@@ -3489,3 +3491,79 @@
       background: rgba(198, 40, 40, 0.15);
       border-color: #c62828
     }
+
+    /* ── 스킬 강화 오버레이 ── */
+    .aug-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.92);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 500;
+      animation: fadeIn 0.3s ease
+    }
+    .aug-box {
+      width: 90%; max-width: 380px;
+      text-align: center; padding: 18px 12px
+    }
+    .aug-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 20px; color: #ffd700;
+      letter-spacing: 3px; margin-bottom: 6px;
+      text-shadow: 0 0 12px rgba(255,215,0,0.4)
+    }
+    .aug-sub {
+      font-size: 11px; color: #aaa; margin-bottom: 16px
+    }
+    .aug-cats {
+      display: flex; flex-direction: column; gap: 10px
+    }
+    .aug-cat-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid #555; border-radius: 10px;
+      padding: 12px 14px; cursor: pointer;
+      transition: all 0.2s; text-align: left
+    }
+    .aug-cat-btn:hover {
+      border-color: #ffd700; background: rgba(255,215,0,0.06);
+      transform: scale(1.02)
+    }
+    .aug-cat-lbl {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 15px; color: #fff; margin-bottom: 2px
+    }
+    .aug-cat-desc {
+      font-size: 10px; color: #aaa
+    }
+    .aug-cur {
+      font-size: 10px; color: #ffd700; margin-bottom: 4px;
+      opacity: 0.8
+    }
+    .aug-opts {
+      display: flex; flex-direction: column; gap: 8px
+    }
+    .aug-opt-card {
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid #555; border-radius: 10px;
+      padding: 12px; cursor: pointer;
+      transition: all 0.2s; text-align: center
+    }
+    .aug-opt-card:hover {
+      border-color: #4ecca3; background: rgba(78,204,163,0.08);
+      transform: scale(1.02)
+    }
+    .aug-opt-card.aug-equipped {
+      border-color: #ffd700; background: rgba(255,215,0,0.08)
+    }
+    .aug-opt-icon { font-size: 28px; margin-bottom: 4px }
+    .aug-opt-name {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 14px; color: #fff; margin-bottom: 3px
+    }
+    .aug-opt-desc {
+      font-size: 10px; color: #ccc; white-space: pre-line; line-height: 1.5
+    }
+    .aug-back {
+      margin-top: 14px; font-size: 12px; color: #888;
+      cursor: pointer; transition: color 0.2s
+    }
+    .aug-back:hover { color: #fff }
