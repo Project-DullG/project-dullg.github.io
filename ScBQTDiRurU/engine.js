@@ -1013,7 +1013,7 @@
       var r = RANGERS[rangerKey];
       loadProg();
       BT.wave = 0; BT.kills = 0; BT.turn = 0; BT.supportCD = 0; BT.acting = false;
-      BT.buffs = []; BT.debuffs = []; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.stunTurns = 0; BT.freezeATK = 0; BT.freezeTurns = 0; BT.supportUsedThisTurn = false;
+      BT.buffs = []; BT.debuffs = []; BT.poisonTurns = 0; BT.poisonDmg = 0; BT.stunTurns = 0; BT.freezeATK = 0; BT.freezeTurns = 0; BT.supportUsedThisTurn = false; BT.inExtraAction = false;
       BT.gold = 0; BT.ce = 0;
       BT.passiveKey = passiveKey; BT.supportIndex = 0; BT.nextAtkBonus = 0; BT.comboAttackCharged = false; BT.boosterUsed = false;
       BT.redMomentum = 0; BT.blackAim = 0; BT.blueCritChain = 0; BT.yellowMarks = 0;
@@ -1544,11 +1544,13 @@
       el.textContent = (type === 'heal' ? '+' : '-') + val;
       var tgt = $(targetId);
       if (!tgt) return;
-      var rect = tgt.getBoundingClientRect();
-      var pRect = $('bt-bg').getBoundingClientRect();
-      el.style.left = (rect.left - pRect.left + rect.width / 2 - 20) + 'px';
-      el.style.top = (rect.top - pRect.top + rect.height * 0.3) + 'px';
-      $('bt-bg').appendChild(el);
+      var bg = $('bt-bg');
+      var top = 0, left = 0, cur = tgt;
+      while (cur && cur !== bg) { top += cur.offsetTop; left += cur.offsetLeft; cur = cur.offsetParent }
+      el.style.left = (left + tgt.offsetWidth / 2 - 20) + 'px';
+      var isEnemy = targetId === 'bt-esvg';
+      el.style.top = (top - (isEnemy ? 20 : 10)) + 'px';
+      bg.appendChild(el);
       setTimeout(function () { el.remove() }, 1000);
     }
 
@@ -1957,14 +1959,19 @@
         }, 1000);
         return;
       }
-      // 추가 행동 확률 체크 (턴당 1회)
-      if (!BT.extraActionUsedThisTurn && BT.perkExtraAtk > 0 && Math.random() < BT.perkExtraAtk) {
+      // 추가 행동 확률 체크 (턴당 1회, 추가행동 중 재발동 불가)
+      if (!BT.extraActionUsedThisTurn && !BT.inExtraAction && BT.perkExtraAtk > 0 && Math.random() < BT.perkExtraAtk) {
         BT.extraActionUsedThisTurn = true;
+        BT.inExtraAction = true;
         btLog('⚡ <span class="buff">추가 행동 발동!</span>');
-        BT.acting = false;
-        setTimeout(showActions, 400);
+        btFlash('#ffd700'); btShake();
+        btDrama('⚡ 추가 행동!', '#ffd700', function () {
+          BT.acting = false;
+          showActions();
+        });
         return;
       }
+      BT.inExtraAction = false;
       // 적 턴
       setTimeout(enemyTurn, 400);
     }
