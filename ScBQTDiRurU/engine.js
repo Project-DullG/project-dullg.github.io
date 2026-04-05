@@ -2340,17 +2340,22 @@
         btFlash(BT.player.color);
         updateStatusIcons();
         setTimeout(function () {
-          if (BT.wave % 3 === 0) {
-            showReward();
+          // 다음 웨이브가 보스(3의 배수)면 보상 전에 경고
+          var needWarning = (BT.wave + 1) % 3 === 0;
+          function afterReward() {
+            nextWave();
+          }
+          function doReward() {
+            if (BT.wave % 3 === 0) {
+              showReward();
+            } else {
+              showMiniReward(afterReward);
+            }
+          }
+          if (needWarning) {
+            showBossWarning(doReward);
           } else {
-            showMiniReward(function () {
-              // 다음 웨이브가 보스(3의 배수)면 경고
-              if ((BT.wave + 1) % 3 === 0) {
-                showBossWarning(function () { nextWave() });
-              } else {
-                nextWave();
-              }
-            });
+            doReward();
           }
         }, 1000);
         return;
