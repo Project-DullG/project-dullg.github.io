@@ -1664,7 +1664,8 @@
       gap: 16px;
       position: relative;
       min-height: 140px;
-      overflow: hidden
+      overflow-x: hidden;
+      overflow-y: visible
     }
 
     .bt-enemy-svg {
@@ -1741,7 +1742,7 @@
       white-space: nowrap;
       pointer-events: none;
       animation: eivPop 0.4s ease;
-      z-index: 5
+      z-index: 15
     }
 
     .bt-enemy-intent-val.dmg {

@@ -1155,6 +1155,8 @@
       if (passiveKey && PASSIVE_BUFFS[passiveKey] && passiveKey !== rangerKey) {
         PASSIVE_BUFFS[passiveKey].apply(BT.player);
       }
+      // 초기 스탯 저장 (능력치 합산 표시용)
+      BT.baseStats = { maxHp: BT.player.maxHp, atk: BT.player.atk, def: BT.player.def, crit: BT.player.crit, dodge: BT.player.dodge, maxSp: BT.player.maxSp };
       // 성장 기준값 저장 (패시브 apply 후, grow 전)
       saveGrowthBase();
       // Support pool: exclude active AND passive
@@ -1410,7 +1412,13 @@
       panel.id = 'bt-info-panel'; panel.className = 'bt-info-panel';
       var lines = [];
       lines.push('<b>\u2694\uFE0F ' + p.name + ' \uC2A4\uD0EF</b>');
-      lines.push('\uCCB4\uB825 ' + p.hp + '/' + p.maxHp + ' | \uACF5\uACA9 ' + p.atk + ' | \uC274\uB4DC\uB825 ' + p.def + ' | \uCE58\uBA85\uD0C0 ' + p.crit + '% | \uD68C\uD53C ' + p.dodge + '%');
+      var bs = BT.baseStats || {};
+      function statLine(label, cur, base) {
+        var diff = cur - (base || 0);
+        return label + ' ' + cur + (diff > 0 ? ' <span style="color:#4ecca3">(+' + diff + ')</span>' : '');
+      }
+      lines.push(statLine('❤️체력', p.maxHp, bs.maxHp) + ' | ' + statLine('⚔️공격', p.atk, bs.atk) + ' | ' + statLine('🛡️쉴드력', p.def, bs.def));
+      lines.push(statLine('💥치명타', p.crit, bs.crit) + '% | ' + statLine('💨회피', p.dodge, bs.dodge) + '% | ' + statLine('💎SP', p.maxSp, bs.maxSp));
       // 출동 패시브
       var passives = [];
       if (PASSIVE_BUFFS[p.key]) passives.push(PASSIVE_BUFFS[p.key].icon + ' ' + PASSIVE_BUFFS[p.key].name + ': ' + PASSIVE_BUFFS[p.key].desc);
@@ -1431,12 +1439,16 @@
       if (BT.perkEndSpRegen > 0) perks.push('\uD83D\uDD0B\uC6E8\uC774\uBE0CSP +' + Math.round(BT.perkEndSpRegen * 100) + '%');
       if (BT.perkRage) perks.push('🔥분노의 일격 (HP30%↓ +30%)');
       if (perks.length) { lines.push('<b>\uD83D\uDCCA \uC2A4\uD0EF \uBCF4\uB108\uC2A4</b>'); lines.push(perks.join(' \u00B7 ')) }
-      // 스킬 강화 표시
+      // 스킬 강화 표시 (7카테고리 전체)
       var augs = [];
-      ['attack', 'skill', 'support'].forEach(function (catKey) {
+      Object.keys(SKILL_AUGMENTS).forEach(function (catKey) {
         if (BT.augment[catKey]) {
           var cat = SKILL_AUGMENTS[catKey]; var opt = cat.opts.filter(function (o) { return o.key === BT.augment[catKey] })[0];
-          if (opt) augs.push(opt.icon + ' ' + cat.label.split(' ')[1] + ': ' + opt.name);
+          if (opt) {
+            var tierInfo = AUG_TIER[opt.tier] || {};
+            var tierColor = tierInfo.color || '#aaa';
+            augs.push(opt.icon + ' <span style="color:' + tierColor + '">' + opt.name + '</span>');
+          }
         }
       });
       if (augs.length) { lines.push('<b>🔧 스킬 강화</b>'); lines.push(augs.join(' · ')) }
@@ -2713,6 +2725,12 @@
           var ov = $('bt-overlay'); ov.classList.add('on');
           setTimeout(gameOver, 600);
         }, 800);
+        return;
+      }
+      // 적 사망 확인 (자폭 등으로 endTurn 도중 적이 죽은 경우)
+      if (BT.enemy && BT.enemy.hp <= 0) {
+        BT.enemy.hp = 0; updateBattleUI();
+        afterPlayerAction();
         return;
       }
       // 쉴드 감쇠: 매 턴 50% 감소
