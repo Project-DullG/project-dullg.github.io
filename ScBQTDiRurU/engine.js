@@ -605,7 +605,7 @@
           { name: 'SP 환류', desc: '스킬 시 소모 SP\n30% 환급', icon: '💠', key: 'skillSpRefund', tier: 'common' },
           { name: '스킬 연소', desc: '스킬 시 적에게 강화 화상\n(공격력 20%, 3턴)', icon: '🌋', key: 'skillBurn', tier: 'rare' },
           { name: '연쇄 번개', desc: '스킬 시 추가 피해\n(공격력 30%)', icon: '⚡', key: 'chainLightning', tier: 'rare' },
-          { name: '기절 강화', desc: '스킬 시 적 1턴\n추가 기절', icon: '💫', key: 'skillStun', tier: 'rare' },
+          { name: '기절 강화', desc: '스킬 시 30% 확률\n적 1턴 추가 기절', icon: '💫', key: 'skillStun', tier: 'rare' },
           { name: '파괴의 일격', desc: '스킬 시 적 방어\n-30% (3턴)', icon: '💥', key: 'skillArmorBreak', tier: 'unique' },
           { name: '흡수', desc: '스킬 피해의 15%\n체력으로 회복', icon: '🧛', key: 'skillVamp', tier: 'unique' },
           { name: '잔류 에너지', desc: '스킬 후 2턴간 매턴\n공격력 15% 추가 피해', icon: '✨', key: 'skillDot', tier: 'unique' },
@@ -2219,7 +2219,7 @@
             p.sp = Math.min(p.maxSp, p.sp + refund);
             btLogAppend('<span class="sp-use">💠SP 환류 +' + refund + '</span>');
           }
-          if (BT.augment.skill === 'skillStun') {
+          if (BT.augment.skill === 'skillStun' && Math.random() < 0.30) {
             BT.stunTurns += 1;
             btLogAppend('<span class="buff">💫기절 강화! +1턴</span>');
           }
