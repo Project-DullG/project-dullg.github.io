@@ -2527,8 +2527,14 @@
       var sub = document.createElement('div'); sub.className = 'aug-sub'; sub.textContent = '부가 효과를 선택하세요 (변경 시 기존 효과 대체)';
       box.appendChild(title); box.appendChild(sub);
 
+      // 5개 중 랜덤 3개 선택
+      var pool = cat.opts.slice(); var picked = [];
+      while (picked.length < 3 && pool.length > 0) {
+        var ri = Math.floor(Math.random() * pool.length);
+        picked.push(pool[ri]); pool.splice(ri, 1);
+      }
       var optsWrap = document.createElement('div'); optsWrap.className = 'aug-opts';
-      cat.opts.forEach(function (opt) {
+      picked.forEach(function (opt) {
         var card = document.createElement('div'); card.className = 'aug-opt-card';
         if (BT.augment[catKey] === opt.key) card.classList.add('aug-equipped');
         var icon = document.createElement('div'); icon.className = 'aug-opt-icon'; icon.textContent = opt.icon;
@@ -2546,21 +2552,12 @@
             msg += ' (' + (prev ? prev.name : '') + ' 해제)';
           }
           btLog('<span class="buff">' + msg + '</span>');
-          updateStatusIcons();
           overlay.remove();
           callback();
         });
         optsWrap.appendChild(card);
       });
       box.appendChild(optsWrap);
-
-      // 뒤로가기
-      var backBtn = document.createElement('div'); backBtn.className = 'aug-back'; backBtn.textContent = '← 돌아가기';
-      backBtn.addEventListener('click', function () {
-        overlay.remove();
-        showSkillAugment(callback);
-      });
-      box.appendChild(backBtn);
     }
 
     // ── 미니 보상 ──
