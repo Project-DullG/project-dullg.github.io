@@ -3564,3 +3564,12 @@
     .aug-opt-desc {
       font-size: 9px; color: #ccc; white-space: pre-line; line-height: 1.5
     }
+    .aug-skip-btn {
+      display: block; margin: 14px auto 0; padding: 8px 28px;
+      background: rgba(255,255,255,0.06); border: 1px solid #555;
+      border-radius: 8px; color: #999; font-size: 13px;
+      cursor: pointer; transition: all 0.2s
+    }
+    .aug-skip-btn:hover {
+      border-color: #888; color: #ddd; background: rgba(255,255,255,0.10)
+    }
