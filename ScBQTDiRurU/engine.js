@@ -2312,7 +2312,14 @@
           if (BT.wave % 3 === 0) {
             showReward();
           } else {
-            showMiniReward(function () { nextWave() });
+            showMiniReward(function () {
+              // 다음 웨이브가 보스(3의 배수)면 경고
+              if ((BT.wave + 1) % 3 === 0) {
+                showBossWarning(function () { nextWave() });
+              } else {
+                nextWave();
+              }
+            });
           }
         }, 1000);
         return;
@@ -2969,9 +2976,12 @@
       box.appendChild(title); box.appendChild(sub);
 
       // 가중치 랜덤 3개 선택 (일반4 레어3 유니크2 전설1)
-      var tierW = { common: 4, rare: 3, unique: 2, legendary: 1 };
+      // 일반/레어만 직접 등장 (유니크/전설은 합성으로만 획득)
+      var tierW = { common: 4, rare: 3 };
       var weighted = []; cat.opts.forEach(function (o) {
-        var w = tierW[o.tier || 'common'] || 3;
+        var t = o.tier || 'common';
+        if (t === 'unique' || t === 'legendary') return; // 합성 전용
+        var w = tierW[t] || 3;
         for (var i = 0; i < w; i++) weighted.push(o);
       });
       var picked = [];
@@ -3091,7 +3101,37 @@
     function gameOver() { endBattle(false) }
     function retreatBattle() {
       if (BT.wave < 2) { btLog('웨이브 2 이상부터 종료 가능!'); return }
-      endBattle(true);
+      showConfirm('정말로 훈련을 종료하시겠습니까?\n(획득한 보상은 전액 지급됩니다)', function () { endBattle(true) });
+    }
+    function showBossWarning(callback) {
+      var cycle = Math.ceil((BT.wave + 1) / 3);
+      var ov = document.createElement('div'); ov.className = 'boss-warn-overlay';
+      var box = document.createElement('div'); box.className = 'boss-warn-box';
+      box.innerHTML = '<div class="boss-warn-icon">⚠️</div>' +
+        '<div class="boss-warn-title">강적 접근!</div>' +
+        '<div class="boss-warn-msg">다음 웨이브에 사이클 ' + cycle + ' 보스가 등장합니다.\n전투 준비를 갖추세요!</div>';
+      var btn = document.createElement('button'); btn.className = 'boss-warn-btn';
+      btn.textContent = '▶ 출격';
+      btn.addEventListener('click', function () { ov.remove(); callback() });
+      box.appendChild(btn);
+      ov.appendChild(box);
+      document.getElementById('game').appendChild(ov);
+      // 자동 진행 (3초)
+      setTimeout(function () { if (ov.parentNode) { ov.remove(); callback() } }, 3000);
+    }
+    function showConfirm(msg, onYes) {
+      var ov = document.createElement('div'); ov.className = 'confirm-overlay';
+      var box = document.createElement('div'); box.className = 'confirm-box';
+      var txt = document.createElement('div'); txt.className = 'confirm-msg'; txt.textContent = msg;
+      var btns = document.createElement('div'); btns.className = 'confirm-btns';
+      var yesBtn = document.createElement('button'); yesBtn.className = 'confirm-btn yes'; yesBtn.textContent = '확인';
+      var noBtn = document.createElement('button'); noBtn.className = 'confirm-btn no'; noBtn.textContent = '취소';
+      yesBtn.addEventListener('click', function () { ov.remove(); onYes() });
+      noBtn.addEventListener('click', function () { ov.remove() });
+      btns.appendChild(yesBtn); btns.appendChild(noBtn);
+      box.appendChild(txt); box.appendChild(btns);
+      ov.appendChild(box);
+      document.getElementById('game').appendChild(ov);
     }
 
     $('go-retry').addEventListener('click', function () { playBgm('daily'); initSelect(); showScr('select') });
