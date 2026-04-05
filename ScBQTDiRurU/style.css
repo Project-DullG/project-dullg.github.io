@@ -3752,6 +3752,15 @@
       border-color: #ffd700 !important; background: rgba(255,215,0,0.15) !important;
       transform: translateY(-4px) !important
     }
+    .aug-cur-label, .aug-new-label {
+      text-align: center; font-size: 11px; color: #999;
+      margin: 8px 0 4px; letter-spacing: 1px
+    }
+    .aug-cur-label { color: #ffd700 }
+    .aug-opts-current { margin-bottom: 4px }
+    .aug-opts-current .aug-opt-card {
+      border-color: #ffd700; background: rgba(255,215,0,0.08)
+    }
     .aug-skip-btn {
       display: block; margin: 14px auto 0; padding: 8px 28px;
       background: rgba(255,255,255,0.06); border: 1px solid #555;

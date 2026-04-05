@@ -3232,11 +3232,38 @@
         if (picked.indexOf(sel) === -1) { picked.push(sel); weighted = weighted.filter(function (w) { return w !== sel }) }
         else { weighted.splice(ri, 1) }
       }
+      // 기존 장착 부가효과 카드 (있을 경우)
+      var currentAugKey = BT.augment[catKey];
+      var currentOpt = currentAugKey ? cat.opts.filter(function (o) { return o.key === currentAugKey })[0] : null;
+      if (currentOpt) {
+        var curLabel = document.createElement('div'); curLabel.className = 'aug-cur-label'; curLabel.textContent = '현재 장착';
+        box.appendChild(curLabel);
+        var curWrap = document.createElement('div'); curWrap.className = 'aug-opts aug-opts-current';
+        var cti = AUG_TIER[currentOpt.tier || 'common'];
+        var curCard = document.createElement('div'); curCard.className = 'aug-opt-card aug-equipped ' + cti.cls;
+        var ctierDiv = document.createElement('div'); ctierDiv.className = 'aug-opt-tier'; ctierDiv.textContent = cti.name; ctierDiv.style.color = cti.color;
+        var cicon = document.createElement('div'); cicon.className = 'aug-opt-icon'; cicon.textContent = currentOpt.icon;
+        var cname = document.createElement('div'); cname.className = 'aug-opt-name'; cname.textContent = currentOpt.name;
+        var cdesc = document.createElement('div'); cdesc.className = 'aug-opt-desc'; cdesc.textContent = currentOpt.desc;
+        curCard.appendChild(ctierDiv); curCard.appendChild(cicon); curCard.appendChild(cname); curCard.appendChild(cdesc);
+        curCard.addEventListener('click', function () {
+          if (curCard.dataset.used) return;
+          curWrap.querySelectorAll('.aug-opt-card').forEach(function (c) { c.dataset.used = '1' });
+          optsWrap.querySelectorAll('.aug-opt-card').forEach(function (c) { c.dataset.used = '1' });
+          btLog('<span class="buff">' + currentOpt.icon + ' ' + currentOpt.name + ' 유지!</span>');
+          overlay.remove(); callback();
+        });
+        curWrap.appendChild(curCard); box.appendChild(curWrap);
+        // 새 옵션 라벨
+        var newLabel = document.createElement('div'); newLabel.className = 'aug-new-label'; newLabel.textContent = '새 선택지';
+        box.appendChild(newLabel);
+        // 기존 것과 중복되지 않도록 랜덤 풀에서 제외
+        picked = picked.filter(function (o) { return o.key !== currentAugKey });
+      }
       var optsWrap = document.createElement('div'); optsWrap.className = 'aug-opts';
       picked.forEach(function (opt) {
         var ti = AUG_TIER[opt.tier || 'common'];
         var card = document.createElement('div'); card.className = 'aug-opt-card ' + ti.cls;
-        if (BT.augment[catKey] === opt.key) card.classList.add('aug-equipped');
         // 등급 라벨
         var tierDiv = document.createElement('div'); tierDiv.className = 'aug-opt-tier'; tierDiv.textContent = ti.name;
         tierDiv.style.color = ti.color;
@@ -3247,6 +3274,7 @@
         card.addEventListener('click', function () {
           if (card.dataset.used) return;
           optsWrap.querySelectorAll('.aug-opt-card').forEach(function (c) { c.dataset.used = '1' });
+          if (currentOpt) document.querySelectorAll('.aug-opts-current .aug-opt-card').forEach(function (c) { c.dataset.used = '1' });
           var prevAug = BT.augment[catKey];
           BT.augment[catKey] = opt.key;
           var msg = '[' + ti.name + '] ' + opt.icon + ' ' + opt.name + ' 장착!';
