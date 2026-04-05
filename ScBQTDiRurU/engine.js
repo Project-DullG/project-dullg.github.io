@@ -369,16 +369,8 @@
       var ep = document.createElement('div'); ep.style.cssText = 'color:#9575cd;font-size:12px;text-align:center;margin-top:24px;letter-spacing:2px;opacity:0;animation:fadeIn 2s 4s forwards'; ep.textContent = '— 프리퀄 에피소드 —';
       var ep2 = document.createElement('div'); ep2.style.cssText = 'color:#555;font-size:11px;text-align:center;margin-top:8px;opacity:0;animation:fadeIn 2s 5s forwards'; ep2.textContent = '본편에서 이어집니다.';
       el.appendChild(ep); el.appendChild(ep2);
-      // 이미지 영역
+      // 이미지 영역: 로고만 표시
       var imgArea = $('end-img'); clr(imgArea);
-      var img1 = document.createElement('img'); img1.src = 'explosion.png'; img1.className = 'end-cg';
-      imgArea.appendChild(img1);
-      // 서브타이틀 추가
-      var tw = document.querySelector('.end-title-wrap');
-      if (tw && !tw.querySelector('.end-subtitle')) {
-        var st = document.createElement('div'); st.className = 'end-subtitle'; st.textContent = "DOCTOR'S DAY";
-        tw.appendChild(st);
-      }
     }
 
     function setChars(s) {
