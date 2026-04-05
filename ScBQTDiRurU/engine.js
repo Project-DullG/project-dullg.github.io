@@ -2568,6 +2568,7 @@
         if (sp.type === 'rally' && sp.every > 0 && nextTurn % sp.every === 0) { BT.enemyIntent = '📢 자가 강화 준비 (빠른 처치 추천)'; return }
         if (sp.type === 'bomb') { var rem = sp.turns - nextTurn; if (rem <= 1) { BT.enemyIntent = '💣 자폭 임박!! (~' + Math.round(p.maxHp * 0.35) + ') 방어 필수'; return } else if (rem <= 2) { BT.enemyIntent = '💣 자폭까지 ' + rem + '턴!'; return } }
         if (sp.type === 'double' && e.executeMode) { BT.enemyIntent = '☠️ 처형자 모드!' + estDmgTag(1) + ' (높은 피해 주의)'; return }
+        if (sp.type === 'double' && !e.executeMode) { BT.enemyIntent = '⚔️ 공격 준비' + estDmgTag(1) + ' (' + Math.round(sp.chance * 100) + '% 2연타)'; return }
         if (sp.type === 'stealth' && nextTurn % sp.every === 0) { BT.enemyIntent = '👁️ 은신 준비 (스킬로만 타격 가능)'; return }
       }
       // 쉴드 생성 여부 미리 결정 (웨이브 3+, 쉴드 없을 때 20%)
