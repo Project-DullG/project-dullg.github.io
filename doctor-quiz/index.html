@@ -1168,6 +1168,17 @@
           clonedTarget.style.backdropFilter = 'none';
           clonedTarget.style.webkitBackdropFilter = 'none';
           clonedTarget.style.boxShadow = 'none';
+
+          // "궁궐에서 만날 다른 의사들에게..." 공유 문구 숨기기
+          const shareText = clonedTarget.querySelector('p[style*="margin-top: 32px"]');
+          if (shareText) shareText.style.display = 'none';
+
+          // 버튼 영역도 캡처본에서 확실히 숨기기
+          const clonedBtns = clonedTarget.querySelector('.result-btns');
+          if (clonedBtns) clonedBtns.style.display = 'none';
+          
+          // 하단 여백 최적화
+          clonedTarget.style.paddingBottom = '40px';
         }
       }).then(canvas => {
         btns.style.display = 'flex';
