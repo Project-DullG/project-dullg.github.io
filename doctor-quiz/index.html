@@ -1173,14 +1173,9 @@
           const shareText = clonedTarget.querySelector('p[style*="margin-top: 32px"]');
           if (shareText) shareText.style.display = 'none';
 
-          // 스토리 텍스트 줄이기 (속마음 파트까지만 남기기)
+          // 스토리 텍스트(속마음 및 대사 전체) 숨기기
           const endingEl = clonedTarget.querySelector('.char-ending');
-          if (endingEl) {
-            const emPart = endingEl.querySelector('em');
-            if (emPart) {
-              endingEl.innerHTML = '...' + emPart.outerHTML;
-            }
-          }
+          if (endingEl) endingEl.style.display = 'none';
 
           // 버튼 영역도 캡처본에서 확실히 숨기기
           const clonedBtns = clonedTarget.querySelector('.result-btns');
