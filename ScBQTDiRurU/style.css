@@ -1378,8 +1378,9 @@
     .sel-diff {
       display: flex;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 10px
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap
     }
 
     .diff-btn {
@@ -1396,15 +1397,22 @@
     }
 
     .diff-btn.active {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       font-weight: bold;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1)
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+      transform: scale(1.08);
+      border-width: 2.5px
     }
 
     .diff-btn.locked {
       opacity: 0.35;
       cursor: not-allowed;
       border-style: dashed
+    }
+
+    .diff-bossraid {
+      font-size: 11px !important;
+      letter-spacing: 0.5px
     }
 
     /* SELECT SCREEN */
@@ -1664,7 +1672,8 @@
       gap: 16px;
       position: relative;
       min-height: 140px;
-      overflow: hidden
+      overflow-x: hidden;
+      overflow-y: visible
     }
 
     .bt-enemy-svg {
@@ -1677,9 +1686,63 @@
       filter: drop-shadow(0 0 20px var(--boss-glow, #7b1fa2)) drop-shadow(0 0 40px var(--boss-glow, #7b1fa2))
     }
 
+    .bt-enemy-svg.dodge-flash {
+      animation: dodgeSlide 0.6s ease;
+    }
+    @keyframes dodgeSlide {
+      0% { transform: translateX(0) }
+      25% { transform: translateX(30px); opacity: 0.4 }
+      50% { transform: translateX(-10px); opacity: 0.7 }
+      100% { transform: translateX(0); opacity: 1 }
+    }
+
     .bt-player-svg {
+      position: relative;
       transition: all 0.3s;
       animation: playerEnter 0.5s ease
+    }
+
+    .bt-player-svg.poisoned {
+      animation: poison-pulse 0.8s ease-in-out infinite;
+      filter: brightness(0.85) hue-rotate(80deg) saturate(1.4)
+    }
+    .bt-player-svg.poisoned::after {
+      content: '☠️';
+      position: absolute; top: -16px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      animation: poison-bob 1.2s ease-in-out infinite;
+      pointer-events: none
+    }
+    @keyframes poison-pulse {
+      0%, 100% { filter: brightness(0.85) hue-rotate(80deg) saturate(1.4) }
+      50% { filter: brightness(0.7) hue-rotate(100deg) saturate(1.8) }
+    }
+    @keyframes poison-bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.8 }
+      50% { transform: translateX(-50%) translateY(-6px); opacity: 1 }
+    }
+
+    .bt-player-svg.burning {
+      animation: burn-flicker 0.3s ease-in-out infinite;
+      filter: brightness(1.1) saturate(1.3)
+    }
+    .bt-player-svg.burning::after {
+      content: '🔥';
+      position: absolute; top: -16px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+      animation: burn-dance 0.6s ease-in-out infinite;
+      pointer-events: none
+    }
+    @keyframes burn-flicker {
+      0%, 100% { filter: brightness(1.1) saturate(1.3) }
+      50% { filter: brightness(1.3) saturate(1.6) sepia(0.3) }
+    }
+    @keyframes burn-dance {
+      0%, 100% { transform: translateX(-50%) translateY(0) scale(1) }
+      25% { transform: translateX(-55%) translateY(-3px) scale(1.1) }
+      75% { transform: translateX(-45%) translateY(-5px) scale(0.9) }
     }
 
     .bt-enemy-svg {
@@ -1689,7 +1752,7 @@
     .bt-enemy-intent-val {
       position: absolute;
       right: -8px;
-      top: -4px;
+      bottom: -4px;
       font-size: 13px;
       font-weight: bold;
       padding: 2px 7px;
@@ -1697,7 +1760,7 @@
       white-space: nowrap;
       pointer-events: none;
       animation: eivPop 0.4s ease;
-      z-index: 5
+      z-index: 15
     }
 
     .bt-enemy-intent-val.dmg {
@@ -1719,6 +1782,27 @@
       to { opacity: 1; transform: scale(1) translateY(0) }
     }
 
+    .bt-enemy-svg.stunned {
+      animation: stun-wobble 0.4s ease-in-out infinite;
+      filter: brightness(0.7) saturate(0.5)
+    }
+    .bt-enemy-svg.stunned::after {
+      content: '💫';
+      position: absolute; top: -18px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 18px;
+      animation: stun-spin 1s linear infinite;
+      pointer-events: none
+    }
+    @keyframes stun-wobble {
+      0%,100% { transform: rotate(0deg) }
+      25% { transform: rotate(-5deg) }
+      75% { transform: rotate(5deg) }
+    }
+    @keyframes stun-spin {
+      0% { transform: translateX(-50%) rotate(0deg) }
+      100% { transform: translateX(-50%) rotate(360deg) }
+    }
     .bt-enemy-svg.dead {
       opacity: 0;
       transform: scale(0.3);
@@ -2251,6 +2335,20 @@
       animation: critFloat 1.4s ease forwards
     }
 
+    .bt-dmg-num.poison {
+      color: #a5d6a7;
+      font-size: 28px;
+      text-shadow: 2px 2px 0 #1b5e20, 0 0 12px rgba(76, 175, 80, 0.7), 0 0 24px rgba(76, 175, 80, 0.3);
+      animation: poisonFloat 1.4s ease forwards
+    }
+
+    .bt-dmg-num.burn {
+      color: #ffab40;
+      font-size: 28px;
+      text-shadow: 2px 2px 0 #bf360c, 0 0 12px rgba(255, 87, 34, 0.7), 0 0 24px rgba(255, 87, 34, 0.3);
+      animation: burnFloat 1.4s ease forwards
+    }
+
     @keyframes dmgFloat {
       0% {
         opacity: 1;
@@ -2291,6 +2389,22 @@
         opacity: 0;
         transform: translateY(-70px) scale(0.6)
       }
+    }
+
+    @keyframes poisonFloat {
+      0% { opacity: 1; transform: translateY(0) scale(0.8) }
+      20% { transform: translateY(-8px) scale(1.3); opacity: 1 }
+      40% { transform: translateY(-16px) scale(1.1) }
+      60% { transform: translateY(-10px) scale(1.2); opacity: 0.9 }
+      100% { opacity: 0; transform: translateY(-45px) scale(0.7) }
+    }
+
+    @keyframes burnFloat {
+      0% { opacity: 1; transform: translateY(0) scale(0.9) }
+      15% { transform: translateY(-5px) scale(1.2) rotate(-3deg); opacity: 1 }
+      30% { transform: translateY(-12px) scale(1.1) rotate(3deg) }
+      50% { transform: translateY(-20px) scale(1.15) rotate(-1deg); opacity: 0.9 }
+      100% { opacity: 0; transform: translateY(-50px) scale(0.6) }
     }
 
     @keyframes enemyEnter {
@@ -2915,6 +3029,23 @@
       color: #fff
     }
 
+    .go-log-panel {
+      max-height: 200px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 8px 0 0;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.5;
+      text-align: left;
+      scrollbar-width: thin;
+      scrollbar-color: #555 transparent
+    }
+
     .go-bg>* {
       opacity: 0
     }
@@ -2945,6 +3076,10 @@
 
     #gameover-screen.go-show .go-btns {
       animation: goFadeIn 0.8s ease 2.8s forwards
+    }
+
+    #gameover-screen.go-show .go-log-panel {
+      opacity: 1
     }
 
     .bt-overlay {
@@ -3536,8 +3671,17 @@
       font-size: 10px; color: #aaa
     }
     .aug-cur {
-      font-size: 10px; color: #ffd700; margin-bottom: 4px;
-      opacity: 0.8
+      font-size: 11px; color: #ffd700; margin-bottom: 4px;
+      font-weight: bold;
+      background: rgba(255,215,0,0.08);
+      border-radius: 4px;
+      padding: 2px 6px;
+      display: inline-block
+    }
+    .aug-cat-btn.aug-cat-equipped {
+      border-color: #ffd700;
+      background: rgba(255,215,0,0.06);
+      box-shadow: 0 0 8px rgba(255,215,0,0.15)
     }
     .aug-opts {
       display: flex; gap: 8px; justify-content: center
@@ -3561,8 +3705,61 @@
       font-family: 'Do Hyeon', sans-serif;
       font-size: 13px; color: #fff; margin-bottom: 4px
     }
+    .aug-opt-tier {
+      font-size: 9px; font-weight: bold; margin-bottom: 2px;
+      text-transform: uppercase; letter-spacing: 1px
+    }
+    .aug-fuse-cat {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 10px;
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+      text-align: center
+    }
     .aug-opt-desc {
       font-size: 9px; color: #ccc; white-space: pre-line; line-height: 1.5
+    }
+    .aug-opt-card.aug-common { border-color: #666 }
+    .aug-opt-card.aug-rare { border-color: #4fc3f7; box-shadow: 0 0 6px rgba(79,195,247,0.15) }
+    .aug-opt-card.aug-unique { border-color: #ab47bc; box-shadow: 0 0 8px rgba(171,71,188,0.2) }
+    .aug-opt-card.aug-legendary {
+      border-color: #ffd700; box-shadow: 0 0 12px rgba(255,215,0,0.3);
+      animation: aug-glow 2s ease-in-out infinite
+    }
+    @keyframes aug-glow {
+      0%,100% { box-shadow: 0 0 8px rgba(255,215,0,0.2) }
+      50% { box-shadow: 0 0 16px rgba(255,215,0,0.5) }
+    }
+    .aug-opt-card.aug-rare:hover { border-color: #81d4fa; background: rgba(79,195,247,0.1) }
+    .aug-opt-card.aug-unique:hover { border-color: #ce93d8; background: rgba(171,71,188,0.1) }
+    .aug-opt-card.aug-legendary:hover { border-color: #ffecb3; background: rgba(255,215,0,0.12) }
+    .aug-fuse-btn {
+      display: block; margin: 10px auto 0; padding: 8px 24px;
+      background: rgba(171,71,188,0.12); border: 1.5px solid #ab47bc;
+      border-radius: 8px; color: #ce93d8; font-size: 12px;
+      cursor: pointer; transition: all 0.2s
+    }
+    .aug-fuse-btn:hover {
+      background: rgba(171,71,188,0.25); border-color: #ce93d8;
+      box-shadow: 0 0 10px rgba(171,71,188,0.3)
+    }
+    .aug-opt-card.aug-fuse-selected {
+      border-color: #ffd700 !important; background: rgba(255,215,0,0.15) !important;
+      transform: translateY(-4px) !important
+    }
+    .aug-cur-label, .aug-new-label {
+      text-align: center; font-size: 11px; color: #999;
+      margin: 8px 0 4px; letter-spacing: 1px
+    }
+    .aug-cur-label { color: #ffd700 }
+    .aug-opts-current { margin-bottom: 4px }
+    .aug-opts-current .aug-opt-card {
+      border-color: #ffd700; background: rgba(255,215,0,0.08)
     }
     .aug-skip-btn {
       display: block; margin: 14px auto 0; padding: 8px 28px;
@@ -3572,4 +3769,69 @@
     }
     .aug-skip-btn:hover {
       border-color: #888; color: #ddd; background: rgba(255,255,255,0.10)
+    }
+    /* 확인 다이얼로그 */
+    .confirm-overlay {
+      position: absolute; inset: 0; z-index: 9500;
+      background: rgba(0,0,0,0.7); display: flex;
+      align-items: center; justify-content: center
+    }
+    .confirm-box {
+      background: #1a1a2e; border: 2px solid #555;
+      border-radius: 16px; padding: 24px 20px; text-align: center;
+      max-width: 280px
+    }
+    .confirm-msg {
+      color: #eee; font-size: 14px; margin-bottom: 18px;
+      white-space: pre-line; line-height: 1.6
+    }
+    .confirm-btns { display: flex; gap: 12px; justify-content: center }
+    .confirm-btn {
+      padding: 8px 24px; border-radius: 8px; font-size: 13px;
+      cursor: pointer; border: 1.5px solid; transition: all 0.2s
+    }
+    .confirm-btn.yes {
+      background: rgba(78,204,163,0.15); border-color: #4ecca3; color: #4ecca3
+    }
+    .confirm-btn.yes:hover { background: rgba(78,204,163,0.3) }
+    .confirm-btn.no {
+      background: rgba(255,255,255,0.06); border-color: #666; color: #999
+    }
+    .confirm-btn.no:hover { background: rgba(255,255,255,0.12); color: #ddd }
+    /* 보스 경고 */
+    .boss-warn-overlay {
+      position: absolute; inset: 0; z-index: 9400;
+      background: rgba(0,0,0,0.75); display: flex;
+      align-items: center; justify-content: center;
+      animation: bw-fade 0.3s ease
+    }
+    @keyframes bw-fade { from { opacity: 0 } to { opacity: 1 } }
+    .boss-warn-box {
+      background: linear-gradient(135deg, #1a1a2e 0%, #2a1020 100%);
+      border: 2px solid #e53935; border-radius: 16px;
+      padding: 24px 20px; text-align: center; max-width: 280px;
+      box-shadow: 0 0 20px rgba(229,57,53,0.3);
+      animation: bw-pulse 1.5s ease-in-out infinite
+    }
+    @keyframes bw-pulse {
+      0%,100% { box-shadow: 0 0 15px rgba(229,57,53,0.2) }
+      50% { box-shadow: 0 0 30px rgba(229,57,53,0.5) }
+    }
+    .boss-warn-icon { font-size: 36px; margin-bottom: 8px }
+    .boss-warn-title {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 22px; color: #ff6b6b; margin-bottom: 8px
+    }
+    .boss-warn-msg {
+      font-size: 13px; color: #ddd; white-space: pre-line;
+      line-height: 1.6; margin-bottom: 16px
+    }
+    .boss-warn-btn {
+      padding: 10px 32px; background: rgba(229,57,53,0.15);
+      border: 1.5px solid #e53935; border-radius: 8px;
+      color: #ff6b6b; font-size: 14px; cursor: pointer;
+      transition: all 0.2s
+    }
+    .boss-warn-btn:hover {
+      background: rgba(229,57,53,0.3); box-shadow: 0 0 10px rgba(229,57,53,0.4)
     }
