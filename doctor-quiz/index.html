@@ -1157,9 +1157,18 @@
       // html2canvas 실행
       html2canvas(target, {
         useCORS: true,
-        backgroundColor: '#fdfaf5', // var(--bg)
-        scale: 2, // 고해상도
+        backgroundColor: '#fdfaf5',
+        scale: 2,
         logging: false,
+        onclone: (clonedDoc) => {
+          const clonedTarget = clonedDoc.getElementById('result-card');
+          // 캡처용 복제본에서 애니메이션, 필터, 트랜스폼 제거
+          clonedTarget.style.animation = 'none';
+          clonedTarget.style.transform = 'none';
+          clonedTarget.style.backdropFilter = 'none';
+          clonedTarget.style.webkitBackdropFilter = 'none';
+          clonedTarget.style.boxShadow = 'none';
+        }
       }).then(canvas => {
         btns.style.display = 'flex';
         const image = canvas.toDataURL('image/png');
