@@ -6,8 +6,8 @@
   <title>캐릭터 성향 테스트 — 의사가 너무 많아! | Project DullG</title>
 
   <!-- Open Graph / Kakao Share Metadata -->
-  <meta property="og:title" content="삼신의 진단: 의사가 너무 많아!">
-  <meta property="og:description" content="너무 많은 의사 중, 당신은 어떤 의사를 닮았을까요? 당신의 운명을 확인해 보세요.">
+  <meta property="og:title" content="관상쟁이의 진단 — 의사가 너무 많아!">
+  <meta property="og:description" content="낯선 여관에서 마주친 관상쟁이가 당신의 운명을 짚어냅니다. 당신은 어떤 의사의 운명을 타고났소?">
   <meta property="og:image" content="https://project-dullg.github.io/사용 이미지/타이틀 우리가 이김.jpeg">
   <meta property="og:url" content="https://project-dullg.github.io/doctor-quiz/index.html">
   <meta property="og:type" content="website">
@@ -468,6 +468,16 @@
       margin: 0 auto 24px;
     }
 
+    .char-prelude {
+      font-size: 0.82rem;
+      color: var(--dim);
+      font-style: italic;
+      line-height: 1.8;
+      margin-bottom: 12px;
+      text-align: center;
+      white-space: pre-line;
+    }
+
     .char-desc {
       font-size: 0.92rem;
       color: var(--ink);
@@ -500,43 +510,42 @@
       flex-wrap: wrap;
     }
 
+    .btn-share {
+      padding: 12px 24px;
+      background: var(--ink);
+      border: none;
+      color: var(--bg);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+    }
+    .btn-share:hover {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
     .btn-restart {
-      padding: 11px 22px;
-      background: none;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--dim);
+      padding: 12px 24px;
+      background: rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.15);
+      color: var(--ink);
       border-radius: 8px;
       font-size: 0.85rem;
       cursor: pointer;
       font-family: 'Pretendard', -apple-system, sans-serif;
       transition: all 0.2s;
     }
-    .btn-restart:hover { border-color: rgba(255,255,255,0.2); color: var(--ink); }
-
-    .btn-home:hover { background: rgba(212,168,85,0.18); }
-
-    .btn-share {
-      padding: 11px 22px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--ink);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
+    .btn-restart:hover {
+      background: rgba(0,0,0,0.1);
+      border-color: rgba(0,0,0,0.25);
     }
-    .btn-share:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
 
-    .btn-kakao {
-      background: #FEE500;
-      border: none;
-      color: #3C1E1E;
-      font-weight: 700;
-    }
-    .btn-kakao:hover { background: #FADA0A; }
 
     .char-ending {
       margin: 28px 0;
@@ -577,9 +586,9 @@
     </nav>
 
     <header class="hd">
-      <div class="hd-eyebrow">DIAGNOSTIC ORACLE</div>
+      <div class="hd-eyebrow">관상 · 운명 진단</div>
       <div class="hd-title">의사가 너무 많아! : 캐릭터 테스트</div>
-      <div class="hd-sub">너무 많은 의사 중, 당신은 어떤 의사를 닮았을까요?</div>
+      <div class="hd-sub">여관에서 마주친 낯선 자가 당신의 관상을 보겠다 합니다.</div>
       <div class="hd-divider"></div>
     </header>
 
@@ -613,26 +622,23 @@
 
     <!-- 결과 -->
     <div class="result-card" id="result-card">
-      <div class="result-eyebrow">RESULT — 당신에게 어울리는 캐릭터</div>
+      <div class="result-eyebrow">관상쟁이가 짚어낸 당신의 운명</div>
       <div class="char-emblem" id="char-emblem"></div>
       <div class="char-name" id="char-name"></div>
       <div class="char-role" id="char-role"></div>
       <div class="char-divider" id="char-divider"></div>
+      <p class="char-prelude" id="char-prelude"></p>
       <p class="char-desc" id="char-desc"></p>
       <div class="char-keys" id="char-keys"></div>
       <div class="char-ending" id="char-ending"></div>
+      <p style="margin-top: 32px; margin-bottom: 28px; font-size: 0.9rem; color: var(--ink); line-height: 1.7;">궁궐에서 만날 다른 의사들에게 <strong>당신의 운명</strong>을 공유해보세요.</p>
       <div class="result-btns">
         <button class="btn-share" onclick="copyLink()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
           링크 복사
         </button>
-        <button class="btn-share btn-kakao" onclick="shareKakao()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 3.185-9 7.115 0 2.558 1.712 4.8 4.346 6.09-.19.648-.684 2.361-.782 2.701-.123.423.14.417.296.315.122-.08.1.954 1.942-1.319l.068-.046c.365.05.74.074 1.12.074 4.97 0 9-3.185 9-7.115S16.97 3 12 3z"/></svg>
-          카카오톡
-        </button>
         <button class="btn-restart" onclick="quizStart()">↺ 다시 하기</button>
       </div>
-      <p class="result-notice">* 의사가 너무 많아! 시나리오는 현재 제작 중입니다</p>
     </div>
 
   </div>
@@ -643,13 +649,13 @@
   <script>
     var INTRO_STEPS = [
       {
-        html: '<span class="narration">왕궁으로 향하던 당신은 하루 여관을 잡고 쉬어가기로 합니다.<br>저녁 식사를 위해 여관에 딸린 식당으로 들어가자,<br>반대쪽에 앉아있던 남자가 심심한데 잘됐다는 표정으로 당신을 바라봅니다.</span>'
+        html: '<span class="narration">왕궁으로 향하던 당신은 잠시 식사를 위해 여관에 들릅니다.<br> 식당으로 들어가자, 반대쪽에 앉아있던 남자가<br>심심한데 잘됐다는 표정으로 당신을 바라봅니다.</span>'
       },
       {
         html: '<span class="dialogue">"어이, 그 소문 들었소?<br>왕께서 전국의 이름난 의사를 모으고 있다 하는데,<br>왕궁에 누구 아픈 자가 있는 모양이오."</span>'
       },
       {
-        html: '<span class="dialogue">"그런데, 내가 알기로 이번에 자리를 비웠다고 소문이 도는 의사들 있잖소?<br>하나같이 <strong>특이한 성품</strong>을 가지고 있다 하오.<br>마침 내가 사람 심리를 조금 볼 줄 아는데,<br>몇 가지 질문에 대답하면 당신과 어떤 의사가 닮았는지 짚어주리다."</span>'
+        html: '<span class="dialogue">"그런데, 내가 알기로 이번에 자리를 비웠다고 소문이 도는 의사들 있잖소?<br> 그들은 하나같이 <strong>특이한 성품</strong>을 가지고 있다 하오.<br>마침 내가 사람 심리를 조금 볼 줄 아는데,<br>몇 가지 질문에 대답하면 자네와 어떤 의사가 닮았는지 짚어주리다."</span>'
       },
       {
         html: '<span class="narration">흥미가 동한 당신은<br>그 자의 질문에 귀를 기울입니다...</span>',
@@ -710,7 +716,7 @@
     var Q = [
       {
         part: "PART 1 · 기초 기질",
-        q: "어지러운 세상을 잠시 뒤로하고 완벽한 휴식을 취한다면,\n어떤 공간에 머물고 싶습니까?",
+        q: "어지러운 세상을 잠시 뒤로하고 완벽한 휴식을 취한다면,\n어떤 공간에 머물고 싶소?",
         opts: [
           { t: "노을이 한눈에 보이는 높은 정자.", c: ["Y"] },
           { t: "정갈하게 타오르는 촛불이 놓인 빈 방.", c: ["S"] },
@@ -722,7 +728,7 @@
       },
       {
         part: "PART 1 · 기초 기질",
-        q: "필기구를 선물받는다면,\n어떤 것을 가장 먼저 선택하시겠습니까?",
+        q: "필기구를 선물받는다면,\n어떤 것을 가장 먼저 선택하시겠소?",
         opts: [
           { t: "손에 맞게 길들여진 나무 만년필.", c: ["R"] },
           { t: "정밀하게 설계되어 항상 날카롭게 쓸 수 있는 샤프펜슬.", c: ["C"] },
@@ -745,7 +751,7 @@
       },
       {
         part: "PART 2 · 심층 가치관",
-        q: "당신의 인생에서 가장 가치 있게 여기는\n'보물'은 무엇입니까?",
+        q: "당신의 인생에서 가장 가치 있게 여기는\n'보물'은 무엇이오?",
         opts: [
           { t: "누구에게도 간섭받지 않는 지식과 자유.", c: ["R"] },
           { t: "시간이 흘러도 변하지 않는 역사와 전통.", c: ["H"] },
@@ -759,11 +765,11 @@
         part: "PART 2 · 심층 가치관",
         q: "탁 트인 들판. 반대쪽에서 거센 회오리바람이 보이오.\n어찌 하겠소?",
         opts: [
-          { t: "카메라를 꺼내 폭풍 속에서 가장 극적인 순간을 포착하려 한다.", c: ["Y"] },
+          { t: "붓을 꺼내 폭풍의 가장 극적인 순간을 화폭에 담으려 한다.", c: ["Y"] },
           { t: "휩쓸리면 날아가지 않을까? 생각하며 종이비행기를 날려본다.", c: ["R"] },
           { t: "폭풍이 지나가기를 묵묵히 지켜본다.", c: ["H"] },
-          { t: "폭풍이 어디로 나아갈지 찬찬히 계산해본다", c: ["B"] },
-          { t: "바람 속에서 날아다니는 것들에 안타깝다고 생각한다.", c: ["S"] },
+          { t: "폭풍이 어디로 나아갈지 찬찬히 계산해본다.", c: ["B"] },
+          { t: "바람 속에 휘말려 날아다니는 것들을 불쌍히 여긴다.", c: ["S"] },
           { t: "폭풍의 중심을 짚는다.", c: ["C"] }
         ]
       },
@@ -780,12 +786,12 @@
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "길가에 시들어가는 꽃 한 송이를 보았소.\n무슨 생각이 드오?",
+        q: "길가에 시들어가는 꽃 한 송이를 본다면,\n무슨 생각이 들 것 같소?",
         opts: [
-          { t: "이 꽃이 또 다른 생명으로 순환하기를 소망한다.", c: ["S"] },
+          { t: "이 꽃이 또 다른 값진 생명으로 순환하기를 바란다.", c: ["S"] },
           { t: "시드는 원인을 파악해 다시 꽃피울 수 있게 돕고 싶다.", c: ["R"] },
           { t: "더 아름다운 꽃으로 교체하여 주변을 가꾸고 싶다.", c: ["Y"] },
-          { t: "자연의 섭리이니 사진만 찍고 그대로 둔다.", c: ["H"] },
+          { t: "자연의 섭리는 잔인한 법. 사진만 찍고 그대로 둔다.", c: ["H"] },
           { t: "이 꽃이 지고 나면 어떤 생명이 자라날지 생각해본다.", c: ["B"] },
           { t: "꽃은 아쉽지만 깔끔하게 정리한다.", c: ["C"] }
         ]
@@ -799,24 +805,24 @@
           { t: "나의 존재감을 증명하고 최고의 자리에 오를 때.", c: ["Y"] },
           { t: "나만의 숭고한 가치를 지키기 위해 필요할 때.", c: ["S"] },
           { t: "세상에 없는 새로운 길을 찾아낼 때.", c: ["R"] },
-          { t: "모든 문제의 본질을 찾아내어 명쾌하게 해결하는 순간에.", c: ["C"] }
+          { t: "문제의 본질을 찾아내어 명쾌하게 해결하는 순간에.", c: ["C"] }
         ]
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "어떤 문제가 당신을 막아섰소.\n어떻게 지나가겠소?",
+        q: "어떤 문제가 당신을 막아선다면,\n어떻게 지나가겠소?",
         opts: [
           { t: "남들이 상상하지 못한 해결책를 찾아내어 의외의 길로 지나간다.", c: ["R"] },
           { t: "묵직하게 기다리며 해결책이 보일 때까지 인내심을 가지고 기다린다.", c: ["H"] },
+          { t: "문제의 핵심을 찾아내어, 효율적으로 지나가려 시도한다.", c: ["C"] },
           { t: "사람들이 나를 따르게 만들고, 모두의 지지와 함께 나아간다.", c: ["Y"] },
-          { t: "작은 틈이 보인다면 망설임 없이 운명을 걸고 기회를 잡는다.", c: ["B"] },
-          { t: "문제 너머의 진실을 응시하며, 문제가 해결되게 만든다.", c: ["S"] },
-          { t: "문제의 본질을 찾아내어, 명쾌하게 해결하려 시도한다.", c: ["C"] }
+          { t: "가능성이 보이는 작은 틈을 발견한다면 운명을 걸고 기회를 잡는다.", c: ["B"] },
+          { t: "문제 너머의 진실을 응시하며, 문제가 스스로 해결되게 만든다.", c: ["S"] }
         ]
       },
       {
         part: "PART 3 · 상황적 대처",
-        q: "만약 당신의 삶이 한 단어로 기억된다면,\n무엇이길 바랍니까?",
+        q: "만약 당신의 삶이 한 단어로 기억된다면,\n무엇이길 바라오?",
         opts: [
           { t: "멈추지 않고 끊임없이 나아가는 개혁.", c: ["R"] },
           { t: "한 치의 오차도 허용하지 않는 완벽.", c: ["C"] },
@@ -832,7 +838,7 @@
       Y: {
         name: "양의사",
         role: "왕국 중앙 의원회 수장",
-        desc: "당신에게는 ‘광휘’의 명운이 보이오. 25년간 의사 일을 하며 현재 중앙 의원회의 중심에 있는 의원장이 떠오르는구려. 찬란한 빛으로 병든 세상을 비추는 수장과 같은 사람이지...",
+        desc: "\"당신에게는 ‘광휘’의 명운이 보이오. 25년간 의사 일을 하며 현재 중앙 의원회의 중심에 있는 의원장이 떠오르는구려. 찬란한 빛으로 병든 세상을 비추는 수장과 같은 사람이지...\"",
         ending: "...<em>이걸 맞추다니. 그런데 그걸 아는 놈이 내 얼굴은 못알아봐?</em><br><br>당신은 속으로 쓴웃음을 삼키며 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["광휘", "리더십", "명성"],
         color: "#d4a855",
@@ -842,7 +848,7 @@
       S: {
         name: "고위 사제",
         role: "타사칼 본산 파견 고위 사제",
-        desc: "당신에게는 ‘성결’의 명운이 보이오. 흔들리는 세상에서 변하지 않는 진리를 지키는 방패와 같은 사제가 떠오르는구려. 당신의 정결함으로 사한 자들은 무찌른 위인이라 할 수 있지...",
+        desc: "\"당신에게는 ‘성결’의 명운이 보이오. 흔들리는 세상에서 변하지 않는 진리를 지키는 방패와 같은 사제가 떠오르는구려. 당신의 정결함으로 사한 자들은 무찌른 위인이라 할 수 있지...\"",
         ending: "...<em>이걸 맞추다니. 이것 또한 타사칼의 인도인가. 그렇다면 쉬고 있을수는 없다.</em><br><br>당신은 표정 하나 흐트러뜨리지 않고 조용히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["신앙", "성결", "권위"],
         color: "#b0a8d8",
@@ -852,7 +858,7 @@
       R: {
         name: "역병의사",
         role: "뒷골목의 기적",
-        desc: "당신에게는 ‘개척’의 명운이 보이오. 남들이 포기한 어둠 속에서 기적을 일궈내는 역병의사가 떠오르는군. 틀에 얽매이지 않고 가장 약한 자들을 치료하다가, 결국 왕의 인정을 받은 자 아니겠소?.",
+        desc: "\"당신에게는 ‘개척’의 명운이 보이오. 남들이 포기한 어둠 속에서 기적을 일궈내는 역병의사가 떠오르는군. 틀에 얽매이지 않고 가장 약한 자들을 치료하다가, 결국 왕의 인정을 받은 자 아니겠소?\"",
         ending: "...<em>이걸 맞추다니. 표정 관리가 잘 되지 않는군. 마스크라도 있어서 다행이야.</em><br><br>당신은 피식 웃음을 흘리며 가볍게 자리를 털고 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["개척", "기적", "자유"],
         color: "#4aa880",
@@ -862,8 +868,8 @@
       B: {
         name: "부적술사",
         role: "도술에 통달한 젊은 술사",
-        desc: "당신에게는 ‘통찰’의 명운이 보이오. 보이지 않는 신비한 흐름을 읽는 통찰력의 부적술사가 떠오르는군. 당신도 겉보기는 퍽 젋어보이는데, 이런 기운이라니. 소문과 비슷하구려...",
-        ending: "...<em>이걸 맞추다니. 역시나 생각보다 소문은 빠른 법인가? 들키면 늦어질 수 있으니 잘 따돌려야겠군. </em><br><br>당신은 잠시 그 남자를 빤히 바라보다, 천천히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
+        desc: "\"당신에게는 ‘통찰’의 명운이 보이오. 보이지 않는 신비한 흐름을 읽는 통찰력의 부적술사가 떠오르는군. 당신도 겉보기는 퍽 젊어보이는데, 이런 기운이라니. 소문과 비슷하구려...\"",
+        ending: "...<em>이걸 맞추다니. 역시나 생각보다 소문은 빠른 법인가? 사람들 사이에 휩쓸리면 늦어질 수 있으니 잘 따돌려야겠군. </em><br><br>당신은 잠시 그 남자를 빤히 바라보다, 천천히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["통찰", "신비", "이상"],
         color: "#9060c0",
         bg: "rgba(144,96,192,0.08)",
@@ -872,7 +878,7 @@
       H: {
         name: "한의사",
         role: "대대로 이어온 가문의 의사",
-        desc: "당신에게는 ‘수호’의 명운이 보이오. 왕국이 세워질 때는 아버지가, 지금은 그 자식이 묵묵히 일을 한다는 한의원이 떠오르는군. 자신의 명예를 알고, 흔들림 없이 자리를 지키는 든든함이야말로 의사의 자질이지.",
+        desc: "\"당신에게는 ‘수호’의 명운이 보이오. 왕국이 세워질 때는 아버지가, 지금은 그 자식이 묵묵히 일을 한다는 한의원이 떠오르는군. 자신의 명예를 알고, 흔들림 없이 자리를 지키는 든든함이야말로 의사의 자질이지.\"",
         ending: "...<em>이걸 맞추다니. 식은땀이 다 나는군. 조금 예리한 눈길을 하는 것은 알아봤는데 이정도일 줄이야.</em><br><br>당신은 묵묵히 고개를 한 번 끄덕이고 무겁게 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["전통", "수호", "안정"],
         color: "#c87840",
@@ -882,7 +888,7 @@
       C: {
         name: "침술사",
         role: "명예 주치의",
-        desc: "당신에게는 ‘정밀’의 명운이 보이오. 완벽한 시술으로 귀족가에서 명성이 자자한 침술사가 떠오르는군. 그 자의 의술은 둘째치고, 그가 하는 시술 중에는 용모가 좋아진다는 겄도 있다 하오.",
+        desc: "\"당신에게는 ‘정밀’의 명운이 보이오. 완벽한 시술로 귀족가에서 명성이 자자한 침술사가 떠오르는군. 그 자의 의술은 둘째치고, 그가 하는 시술 중에는 용모가 좋아진다는 것도 있다 하오.\"",
         ending: "...<em>이걸 맞추다니. 저 자도 꽤나 날카롭군. 하지만, 지금은 시간이 없지.</em><br><br>당신은 잠시 침묵한 뒤, 조용히 자리에서 일어납니다.<br>\"대단하오. 허나 나는 이만 갈 길이 급해서 말이지...\"<br><br>여관 문을 나서는 당신의 발걸음은, 다시 왕궁을 향합니다.",
         keys: ["정밀", "완성", "집중"],
         color: "#60a8c8",
@@ -1019,6 +1025,7 @@
       var div = document.getElementById('char-divider');
       div.style.background = 'linear-gradient(90deg, transparent, ' + ch.color + ', transparent)';
 
+      document.getElementById('char-prelude').textContent = '남자는 당신의 대답을 듣고 골똘히 생각하다가,\n무언가를 떠올린 듯 씩 웃으며 입을 열었습니다.';
       document.getElementById('char-desc').textContent = ch.desc;
       document.getElementById('char-ending').innerHTML = ch.ending;
 
@@ -1042,8 +1049,8 @@
     function copyLink() {
       const ch = window.__winner;
       const url = window.location.href;
-      const text = `이미 의사가 너무 많습니다. 당신의 자리는 어디일까요? 🏥\n나의 정체성 진단: ${ch.name} 🩺\n지금 내 차트 확인하고 참여하기: ${url}`;
-      
+      const text = `의사가 너무 많아! 심리테스트\n\n나에게 어울리는 캐릭터: ${ch.name} 🩺\n\n궁궐에서 만날 다른 의사들의 운명도 확인해보세요.\n${url}`;
+
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
           showToast('진단 결과와 링크가 복사되었습니다!');
@@ -1069,12 +1076,6 @@
       document.body.removeChild(textArea);
     }
 
-    function shareKakao() {
-      const url = encodeURIComponent(window.location.href);
-      const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/link?url=${url}`;
-      window.open(kakaoUrl, '_blank');
-      showToast('카카오톡 공유창으로 연결합니다.');
-    }
 
     quizStart();
   </script>
