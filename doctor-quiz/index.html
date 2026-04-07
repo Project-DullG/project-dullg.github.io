@@ -12,6 +12,8 @@
   <meta property="og:url" content="https://project-dullg.github.io/doctor-quiz/index.html">
   <meta property="og:type" content="website">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
@@ -546,6 +548,60 @@
       border-color: rgba(0,0,0,0.25);
     }
 
+    .btn-save {
+      padding: 12px 24px;
+      background: #3fb4a5;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+    }
+    .btn-save:hover {
+      background: #2c6b63;
+    }
+
+    /* 이미지 오버레이 */
+    #image-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 24px;
+    }
+    #image-overlay img {
+      max-width: 100%;
+      max-height: 80%;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      margin-bottom: 24px;
+    }
+    .overlay-msg {
+      color: #fff;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .btn-close-overlay {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
     .char-ending {
       margin: 28px 0;
@@ -633,6 +689,10 @@
       <div class="char-ending" id="char-ending"></div>
       <p style="margin-top: 32px; margin-bottom: 28px; font-size: 0.9rem; color: var(--ink); line-height: 1.7;">궁궐에서 만날 다른 의사들에게 <strong>당신의 운명</strong>을 공유해보세요.</p>
       <div class="result-btns">
+        <button class="btn-save" onclick="saveAsImage()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          이미지 저장
+        </button>
         <button class="btn-share" onclick="copyLink()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
           링크 복사
@@ -641,6 +701,13 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- 이미지 저장 오버레이 -->
+  <div id="image-overlay">
+    <div class="overlay-msg">이미지가 생성되었습니다.<br>이미지를 길게 눌러 저장하세요.</div>
+    <img id="result-img" src="" alt="결과 이미지">
+    <button class="btn-close-overlay" onclick="closeOverlay()">닫기</button>
   </div>
 
   <!-- 토스트 메시지 -->
@@ -1077,6 +1144,55 @@
         showToast('복사에 실패했습니다.');
       }
       document.body.removeChild(textArea);
+    }
+
+    function saveAsImage() {
+      const target = document.getElementById('result-card');
+      const btns = target.querySelector('.result-btns');
+      
+      // 버튼 숨기기
+      btns.style.display = 'none';
+      showToast('이미지를 생성 중입니다...');
+
+      // html2canvas 실행
+      html2canvas(target, {
+        useCORS: true,
+        backgroundColor: '#fdfaf5', // var(--bg)
+        scale: 2, // 고해상도
+        logging: false,
+      }).then(canvas => {
+        btns.style.display = 'flex';
+        const image = canvas.toDataURL('image/png');
+
+        // 모바일 여부 확인
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        if (isMobile) {
+          showImageOverlay(image);
+        } else {
+          const link = document.createElement('a');
+          link.download = `doctor-quiz-${window.__winner.name}.png`;
+          link.href = image;
+          link.click();
+          showToast('이미지가 저장되었습니다!');
+        }
+      }).catch(err => {
+        btns.style.display = 'flex';
+        console.error(err);
+        showToast('이미지 생성에 실패했습니다.');
+      });
+    }
+
+    function showImageOverlay(src) {
+      const overlay = document.getElementById('image-overlay');
+      const img = document.getElementById('result-img');
+      img.src = src;
+      overlay.style.display = 'flex';
+    }
+
+    function closeOverlay() {
+      const overlay = document.getElementById('image-overlay');
+      overlay.style.display = 'none';
     }
 
     function showResultFromChar(charCode) {
