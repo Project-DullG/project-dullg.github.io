@@ -1009,6 +1009,9 @@
 
       window.__winner = ch; // 공유용 저장
 
+      // URL에 결과 저장 (새로고침해도 유지)
+      window.history.pushState({ char: winner }, '', '?char=' + winner);
+
       document.getElementById('quiz-card').style.display = 'none';
       document.getElementById('progress-wrap').style.display = 'none';
 
@@ -1076,8 +1079,50 @@
       document.body.removeChild(textArea);
     }
 
+    function showResultFromChar(charCode) {
+      var ch = CHARS[charCode];
+      if (!ch) return false;
 
-    quizStart();
+      window.__winner = ch;
+
+      document.getElementById('intro-card').style.display = 'none';
+      document.getElementById('quiz-card').style.display = 'none';
+      document.getElementById('progress-wrap').style.display = 'none';
+
+      var emblem = document.getElementById('char-emblem');
+      emblem.textContent = ch.emblem;
+      emblem.style.background = ch.bg;
+      emblem.style.borderColor = ch.color;
+      emblem.style.color = ch.color;
+
+      document.getElementById('char-name').textContent = ch.name;
+      document.getElementById('char-name').style.color = ch.color;
+      document.getElementById('char-role').textContent = ch.role;
+
+      var div = document.getElementById('char-divider');
+      div.style.background = 'linear-gradient(90deg, transparent, ' + ch.color + ', transparent)';
+
+      document.getElementById('char-prelude').textContent = '남자는 당신의 대답을 듣고 골똘히 생각하다가,\n무언가를 떠올린 듯 씩 웃으며 입을 열었습니다.';
+      document.getElementById('char-desc').textContent = ch.desc;
+      document.getElementById('char-ending').innerHTML = ch.ending;
+
+      var keysEl = document.getElementById('char-keys');
+      keysEl.innerHTML = ch.keys.map(function(k) {
+        return '<span class="key-tag" style="color:' + ch.color + ';border-color:' + ch.color.replace(')', ',0.3)').replace('rgb', 'rgba') + ';background:' + ch.bg + '">' + k + '</span>';
+      }).join('');
+
+      document.getElementById('result-card').style.display = 'block';
+      return true;
+    }
+
+    // 초기화: 쿼리 파라미터 확인
+    var params = new URLSearchParams(window.location.search);
+    var charParam = params.get('char');
+    if (charParam && CHARS[charParam]) {
+      showResultFromChar(charParam);
+    } else {
+      quizStart();
+    }
   </script>
 </body>
 </html>
