@@ -1,96 +1,61 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>보충반의 사라진 열쇠 · 엔딩북</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="보충반의 사라진 열쇠 · 미스터리 추리 게임 엔딩북. 다섯 가지 엔딩과 사건의 전말을 확인합니다.">
+  <title>보충반의 사라진 열쇠 · 엔딩 선택</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <span class="eyebrow">Mystery Ending Book</span>
-      <h1 id="projectTitle">보충반의 사라진 열쇠</h1>
-      <p id="projectSubtitle">사건 해결 기록</p>
-    </div>
-    <nav class="top-nav" aria-label="페이지 이동">
-      <a href="#truth">진상</a>
-      <a href="#timeline">타임라인</a>
-      <a href="#characters">인물 엔딩</a>
-      <a href="#clues">단서 해설</a>
-      <a href="#score">점수</a>
+  <main class="container">
+    <header class="header">
+      <a href="index.html" class="tag" style="text-decoration:none">Ending Book</a>
+      <h1>보충반의 사라진 열쇠</h1>
+      <p class="subtitle">재시험이 시작되지 못한 밤, <strong>두 열쇠</strong>는 어디로 사라졌는가.</p>
+    </header>
+
+    <section class="guide-box">
+      <div class="guide-title">진행 안내</div>
+      <p>플레이어들이 최종 토론을 마친 뒤, 가장 많이 지목된 인물의 엔딩을 열어 주세요.</p>
+      <p class="warning">주의: 아래 페이지에는 사건의 진상과 각 인물의 비밀이 포함되어 있습니다.</p>
+    </section>
+
+    <nav class="ending-list" aria-label="엔딩 선택">
+      <a href="ending-a.html" class="ending-card ending-a">
+        <span class="ending-badge">ENDING A</span>
+        <div class="ending-info"><div class="ending-title">윤지원이 지목된 경우</div><div class="ending-desc">필통 속 열쇠와 공기계 제출이 의심을 만든다.</div></div>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a href="ending-b.html" class="ending-card ending-b">
+        <span class="ending-badge">ENDING B</span>
+        <div class="ending-info"><div class="ending-title">박세준이 지목된 경우</div><div class="ending-desc">영어책 절도와 생일 초대 카드가 사건의 중심처럼 보인다.</div></div>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a href="ending-c.html" class="ending-card ending-c">
+        <span class="ending-badge">ENDING C</span>
+        <div class="ending-info"><div class="ending-title">차하린이 지목된 경우</div><div class="ending-desc">정답표를 꺼낸 사람. 그러나 열쇠 실종의 끝은 다른 곳에 있다.</div></div>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a href="ending-d.html" class="ending-card ending-d">
+        <span class="ending-badge">ENDING D</span>
+        <div class="ending-info"><div class="ending-title">한도경이 지목된 경우</div><div class="ending-desc">토요일 보충반을 피하고 싶었던 학생. 진상에 가장 가까운 선택.</div></div>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a href="ending-e.html" class="ending-card ending-e">
+        <span class="ending-badge">ENDING E</span>
+        <div class="ending-info"><div class="ending-title">표가 갈렸거나 결론을 내리지 못한 경우</div><div class="ending-desc">각자의 비밀은 드러났지만, 사건은 완전히 봉합되지 않는다.</div></div>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
     </nav>
-    <button class="print-button" type="button" onclick="window.print()">PDF로 저장</button>
-  </header>
 
-  <main>
-    <section class="hero page">
-      <div class="hero-card">
-        <p class="eyebrow">Ending Book</p>
-        <h2>모든 단서가 공개되었다.</h2>
-        <p class="hero-copy">이제 사라진 두 열쇠의 진짜 흐름을 확인할 시간이다.</p>
-        <div class="verdict-box">
-          <span>최종 결론</span>
-          <strong id="oneLineVerdict">열쇠 실종 사건의 최종 범인은 한도경이다.</strong>
-        </div>
-      </div>
-    </section>
+    <div class="link-list">
+      <a href="story.html" class="story-link"><strong>사건의 전말 확인하기 &#8594;</strong><span>정답표, 두 열쇠, 각자의 비밀이 어떻게 겹쳤는지 정리합니다.</span></a>
+      <a href="score.html" class="story-link" style="--card-color:var(--green);--card-glow:var(--green-soft)"><strong>점수 계산표 보기 &#8594;</strong><span>개인 목표와 엔딩 등급을 체크합니다.</span></a>
+    </div>
 
-    <section id="truth" class="page section-block">
-      <div class="section-title">
-        <span>01</span>
-        <h2>사건의 진상</h2>
-      </div>
-      <article class="truth-summary" id="truthSummary"></article>
-      <div class="grid two" id="truthBlocks"></div>
-    </section>
-
-    <section id="timeline" class="page section-block">
-      <div class="section-title">
-        <span>02</span>
-        <h2>사건 당일 타임라인</h2>
-      </div>
-      <div class="timeline" id="timelineList"></div>
-    </section>
-
-    <section id="characters" class="page section-block">
-      <div class="section-title">
-        <span>03</span>
-        <h2>인물별 엔딩</h2>
-      </div>
-      <div class="character-grid" id="characterGrid"></div>
-    </section>
-
-    <section id="clues" class="page section-block">
-      <div class="section-title">
-        <span>04</span>
-        <h2>단서 해설</h2>
-      </div>
-      <div class="clue-table" id="clueTable"></div>
-    </section>
-
-    <section id="score" class="page section-block">
-      <div class="section-title">
-        <span>05</span>
-        <h2>점수 계산</h2>
-      </div>
-      <div class="score-layout">
-        <article class="panel">
-          <h3>개인 목표 체크</h3>
-          <div id="goalList"></div>
-        </article>
-        <article class="panel">
-          <h3>엔딩 등급</h3>
-          <div id="rankList" class="rank-list"></div>
-        </article>
-      </div>
-    </section>
+    <footer class="footer">보충반의 사라진 열쇠 · Ending Book</footer>
   </main>
-
-  <footer class="site-footer">
-    <p>GitHub Pages용 테스트 엔딩북 · index.html / style.css / app.js / ending_data.json / episode_data.json</p>
-  </footer>
-
-  <script src="app.js"></script>
 </body>
 </html>
