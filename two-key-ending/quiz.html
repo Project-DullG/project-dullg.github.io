@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="보충반의 사라진 열쇠 · 시나리오 이해 점검 퀴즈 (7문항)">
+  <title>보충반의 사라진 열쇠 · 시나리오 이해 점검</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <a href="index.html" class="tag" style="text-decoration:none">STEP 2 · QUIZ</a>
+      <h1>시나리오 이해 점검</h1>
+      <p class="subtitle">사건의 전말을 보기 전, 본인이 추리한 내용을 점검합니다.</p>
+    </header>
+
+    <section id="char-select" class="guide-box">
+      <div class="guide-title">캐릭터 선택</div>
+      <p>당신이 플레이한 인물을 선택해 주세요. 결과 기록에 함께 저장됩니다.</p>
+      <div class="char-grid">
+        <button class="char-btn" data-char="윤지원" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">윤지원</button>
+        <button class="char-btn" data-char="박세준" style="--card-color:var(--violet);--card-glow:var(--violet-soft)">박세준</button>
+        <button class="char-btn" data-char="차하린" style="--card-color:var(--red);--card-glow:var(--red-soft)">차하린</button>
+        <button class="char-btn" data-char="한도경" style="--card-color:var(--green);--card-glow:var(--green-soft)">한도경</button>
+        <button class="char-btn char-btn-wide" data-char="관전자" style="--card-color:var(--slate);--card-glow:var(--slate-soft)">관전자 · 진행자</button>
+      </div>
+    </section>
+
+    <section id="quiz" hidden>
+      <div class="quiz-bar">
+        <span class="active-char" id="activeChar"></span>
+        <span class="quiz-progress" id="quizProgress">0 / 7 응답</span>
+      </div>
+      <div id="questions"></div>
+      <button class="submit-btn" id="submitBtn" disabled>결과 확인</button>
+    </section>
+
+    <section id="result" hidden>
+      <section class="chapter conclusion result-card" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+        <div class="chapter-num">RESULT</div>
+        <div class="chapter-title">시나리오 이해 점수</div>
+        <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of">/ 7</span></p>
+        <p class="result-rank" id="scoreRank">—</p>
+      </section>
+      <p class="result-note" id="saveStatus"></p>
+      <a href="story.html" class="story-link" style="--card-color:var(--gold)"><strong>다음 단계 · 사건의 전말 보기 &#8594;</strong><span>이제 진실을 확인합니다.</span></a>
+      <button class="retry-btn" id="retryBtn">다시 풀기</button>
+    </section>
+
+    <a href="index.html" class="back-link">&#8592; 처음으로</a>
+    <footer class="footer">보충반의 사라진 열쇠 · Ending Book</footer>
+  </main>
+
+  <script>
+    const QUESTIONS = [
+      {
+        q: "자료함을 열어 재시험 정답표를 꺼낸 사람은?",
+        choices: ["윤지원", "박세준", "차하린", "한도경"],
+        answer: 2,
+        explain: "차하린은 토요일 약속을 지키고 싶어 자료함 열쇠로 정답표를 꺼냈다. 단, 열쇠는 사용 직후 선반에 반환했다."
+      },
+      {
+        q: "윤지원의 필통 안에 핸드폰함 열쇠를 슬쩍 넣은 사람은?",
+        choices: ["윤지원 본인", "박세준", "차하린", "한도경"],
+        answer: 3,
+        explain: "한도경은 두 열쇠를 동시에 가지고 있는 것이 위험해, 가장 흔들리고 있던 윤지원의 필통에 핸드폰함 열쇠를 떠넘겼다."
+      },
+      {
+        q: "한도경에게 사건의 동기를 만들어 준 단서는?",
+        choices: ["영어 단어장", "네 컷 사진", "상담실의 이면지", "KTX 티켓"],
+        answer: 2,
+        explain: '상담실 이면지 뒷면의 "재시험 미진행 시, 대상자는 토요일 보충반 출석" 규정을 본 인물은 도경 한 사람뿐이다.'
+      },
+      {
+        q: "박세준의 가방 안에 들어 있던 것은?",
+        choices: ["자료함 열쇠", "재시험 정답표", "한도경의 영어책", "핸드폰함 열쇠"],
+        answer: 2,
+        explain: "박세준은 시험 불안 때문에 한도경의 영어책을 잠깐 가져왔다가 돌려놓지 못하고 가방에 넣었다."
+      },
+      {
+        q: "두 열쇠가 함께 사라진 시점, 자습실 밖에서 관리 선반 방향으로 이동한 인물은?",
+        choices: ["윤지원 (정수기·화장실)", "박세준 (자기 자리)", "차하린 (이미 자리로 복귀)", "한도경 (사라진 영어책을 찾으러)"],
+        answer: 3,
+        explain: "한도경은 사라진 자기 영어책을 찾는다는 핑계로 자습실을 두 번째로 나갔고, 그 동선 안에 관리 선반이 있었다."
+      },
+      {
+        q: "차하린은 자료함 열쇠를 사용한 후 어디에 두었는가?",
+        choices: ["자기 가방", "자료함 안", "선반 안쪽 고리 (원래 자리)", "자료함 위"],
+        answer: 2,
+        explain: '하린은 정답표만 가져가고, 열쇠는 곧바로 선반 안쪽 고리에 다시 걸어두었다. 그래서 "열쇠 실종"은 그 시점 이후에 시작된다.'
+      },
+      {
+        q: "결정적 물증인 자료함 열쇠는 사건 발각 시점에 어디에 있었는가?",
+        choices: ["한도경의 가방", "윤지원의 필통", "자료함 안", "박세준의 가방"],
+        answer: 0,
+        explain: "도경은 위험 분산을 위해 핸드폰함 열쇠만 떠넘기고, 자료함 열쇠는 자기 가방에 그대로 보관했다. 이것이 사건의 단일 결정타다."
+      }
+    ];
+
+    // === Google Forms 연동 (사용자 설정) =======================
+    // 1) Google Forms 만들기: character / score / answers / timestamp 단답형 4개 필드
+    // 2) 미리보기 페이지 소스에서 entry.XXXXXXXX 값을 추출해 아래에 채우기
+    // 3) FORMS_ENDPOINT 에 formResponse URL 채우기
+    //    형태: https://docs.google.com/forms/d/e/FORM_ID/formResponse
+    const FORMS_ENDPOINT = '';
+    const FORMS_FIELDS = {
+      character: 'entry.XXXXXXXX',
+      score:     'entry.XXXXXXXX',
+      answers:   'entry.XXXXXXXX',
+      timestamp: 'entry.XXXXXXXX'
+    };
+    // ===========================================================
+
+    const RANK = [
+      { min: 7, label: '완벽한 추리 — 모든 진실을 짚었습니다.' },
+      { min: 5, label: '근접한 추리 — 사건의 큰 줄기를 정확히 봤습니다.' },
+      { min: 3, label: '절반의 진실 — 표면은 봤지만 결정타까지 닿지 못했습니다.' },
+      { min: 0, label: '흐릿한 추리 — 사건의 전말을 다시 확인해 보세요.' }
+    ];
+
+    const state = { character: null, answers: Array(QUESTIONS.length).fill(null), submitted: false };
+
+    const $charSelect = document.getElementById('char-select');
+    const $quiz = document.getElementById('quiz');
+    const $result = document.getElementById('result');
+    const $questions = document.getElementById('questions');
+    const $activeChar = document.getElementById('activeChar');
+    const $progress = document.getElementById('quizProgress');
+    const $submitBtn = document.getElementById('submitBtn');
+    const $scoreNum = document.getElementById('scoreNum');
+    const $scoreRank = document.getElementById('scoreRank');
+    const $saveStatus = document.getElementById('saveStatus');
+    const $retryBtn = document.getElementById('retryBtn');
+
+    document.querySelectorAll('.char-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.character = btn.dataset.char;
+        $activeChar.textContent = `플레이어 · ${state.character}`;
+        const color = btn.style.getPropertyValue('--card-color');
+        if (color) $activeChar.style.setProperty('--card-color', color);
+        $charSelect.hidden = true;
+        $quiz.hidden = false;
+        renderQuestions();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    function renderQuestions() {
+      QUESTIONS.forEach((item, idx) => {
+        const article = document.createElement('article');
+        article.className = 'chapter question';
+        article.dataset.q = idx;
+
+        const num = document.createElement('div');
+        num.className = 'chapter-num';
+        num.textContent = 'Q' + (idx + 1);
+        article.appendChild(num);
+
+        const qText = document.createElement('h3');
+        qText.className = 'q-text';
+        qText.textContent = item.q;
+        article.appendChild(qText);
+
+        const choicesEl = document.createElement('div');
+        choicesEl.className = 'q-choices';
+        item.choices.forEach((c, ci) => {
+          const label = document.createElement('label');
+          label.className = 'q-choice';
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'q' + idx;
+          input.value = String(ci);
+          const span = document.createElement('span');
+          span.className = 'q-choice-text';
+          span.textContent = c;
+          label.appendChild(input);
+          label.appendChild(span);
+          choicesEl.appendChild(label);
+        });
+        article.appendChild(choicesEl);
+
+        const ex = document.createElement('div');
+        ex.className = 'explanation';
+        ex.hidden = true;
+        article.appendChild(ex);
+
+        $questions.appendChild(article);
+      });
+
+      $questions.addEventListener('change', e => {
+        if (e.target.matches('input[type="radio"]') && !state.submitted) {
+          const card = e.target.closest('.question');
+          const q = Number(card.dataset.q);
+          state.answers[q] = Number(e.target.value);
+          updateProgress();
+        }
+      });
+    }
+
+    function updateProgress() {
+      const answered = state.answers.filter(a => a !== null).length;
+      $progress.textContent = answered + ' / ' + QUESTIONS.length + ' 응답';
+      $submitBtn.disabled = answered < QUESTIONS.length;
+    }
+
+    $submitBtn.addEventListener('click', submit);
+
+    function submit() {
+      if (state.submitted) return;
+      state.submitted = true;
+      let score = 0;
+
+      document.querySelectorAll('.question').forEach((card, idx) => {
+        const correct = QUESTIONS[idx].answer;
+        const picked = state.answers[idx];
+        card.querySelectorAll('.q-choice').forEach((label, li) => {
+          label.querySelector('input').disabled = true;
+          if (li === correct) label.classList.add('is-correct');
+          else if (li === picked) label.classList.add('is-wrong');
+        });
+
+        const ex = card.querySelector('.explanation');
+        ex.hidden = false;
+        ex.textContent = '';
+        const verdict = document.createElement('strong');
+        verdict.textContent = picked === correct ? '정답.' : '오답.';
+        if (picked !== correct) verdict.classList.add('is-wrong-text');
+        ex.appendChild(verdict);
+        ex.appendChild(document.createTextNode(' ' + QUESTIONS[idx].explain));
+
+        if (picked === correct) score++;
+      });
+
+      $submitBtn.hidden = true;
+      $result.hidden = false;
+      $scoreNum.textContent = String(score);
+      $scoreRank.textContent = RANK.find(r => score >= r.min).label;
+
+      saveResult(score);
+      $result.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function saveResult(score) {
+      const payload = {
+        character: state.character,
+        score,
+        answers: state.answers,
+        timestamp: new Date().toISOString()
+      };
+      try { localStorage.setItem('two-key-quiz-result', JSON.stringify(payload)); } catch (e) {}
+
+      if (FORMS_ENDPOINT && FORMS_FIELDS.character && !FORMS_FIELDS.character.endsWith('XXXXXXXX')) {
+        const fd = new FormData();
+        fd.append(FORMS_FIELDS.character, payload.character);
+        fd.append(FORMS_FIELDS.score,     String(payload.score));
+        fd.append(FORMS_FIELDS.answers,   JSON.stringify(payload.answers));
+        fd.append(FORMS_FIELDS.timestamp, payload.timestamp);
+        fetch(FORMS_ENDPOINT, { method: 'POST', body: fd, mode: 'no-cors' })
+          .then(() => { $saveStatus.textContent = '결과가 서버에 기록되었습니다.'; })
+          .catch(() => { $saveStatus.textContent = '서버 전송 실패 — 로컬에만 저장되었습니다.'; });
+      } else {
+        $saveStatus.textContent = '결과가 로컬에 저장되었습니다. (서버 연동 미설정)';
+      }
+    }
+
+    $retryBtn.addEventListener('click', () => location.reload());
+  </script>
+</body>
+</html>
