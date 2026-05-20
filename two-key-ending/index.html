@@ -3,105 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitHub Pages Test</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #f4f7ff, #e8f5f0);
-      color: #222;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card {
-      width: min(90%, 640px);
-      background: white;
-      padding: 48px 36px;
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: #eef3ff;
-      color: #3b5bfd;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 36px;
-      margin: 0 0 16px;
-    }
-
-    p {
-      font-size: 18px;
-      line-height: 1.6;
-      color: #555;
-      margin: 0 0 28px;
-    }
-
-    button {
-      border: none;
-      background: #3b5bfd;
-      color: white;
-      padding: 14px 22px;
-      font-size: 16px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #2847d8;
-      transform: translateY(-2px);
-    }
-
-    .result {
-      margin-top: 24px;
-      font-size: 15px;
-      color: #777;
-    }
-  </style>
+  <title>보충반의 사라진 열쇠 · 엔딩북</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <main class="card">
-    <div class="badge">GitHub Pages Test</div>
-
-    <h1>배포 성공!</h1>
-
-    <p>
-      이 페이지가 보인다면 GitHub Pages가 정상적으로 작동하고 있습니다.<br />
-      이제 원하는 HTML, CSS, JavaScript 파일을 추가하면 됩니다.
-    </p>
-
-    <button onclick="showMessage()">테스트 버튼</button>
-
-    <div class="result" id="result">
-      버튼을 눌러 JavaScript 작동 여부를 확인하세요.
+  <header class="site-header">
+    <div class="brand">
+      <span class="eyebrow">Mystery Ending Book</span>
+      <h1 id="projectTitle">보충반의 사라진 열쇠</h1>
+      <p id="projectSubtitle">사건 해결 기록</p>
     </div>
+    <nav class="top-nav" aria-label="페이지 이동">
+      <a href="#truth">진상</a>
+      <a href="#timeline">타임라인</a>
+      <a href="#characters">인물 엔딩</a>
+      <a href="#clues">단서 해설</a>
+      <a href="#score">점수</a>
+    </nav>
+    <button class="print-button" type="button" onclick="window.print()">PDF로 저장</button>
+  </header>
+
+  <main>
+    <section class="hero page">
+      <div class="hero-card">
+        <p class="eyebrow">Ending Book</p>
+        <h2>모든 단서가 공개되었다.</h2>
+        <p class="hero-copy">이제 사라진 두 열쇠의 진짜 흐름을 확인할 시간이다.</p>
+        <div class="verdict-box">
+          <span>최종 결론</span>
+          <strong id="oneLineVerdict">열쇠 실종 사건의 최종 범인은 한도경이다.</strong>
+        </div>
+      </div>
+    </section>
+
+    <section id="truth" class="page section-block">
+      <div class="section-title">
+        <span>01</span>
+        <h2>사건의 진상</h2>
+      </div>
+      <article class="truth-summary" id="truthSummary"></article>
+      <div class="grid two" id="truthBlocks"></div>
+    </section>
+
+    <section id="timeline" class="page section-block">
+      <div class="section-title">
+        <span>02</span>
+        <h2>사건 당일 타임라인</h2>
+      </div>
+      <div class="timeline" id="timelineList"></div>
+    </section>
+
+    <section id="characters" class="page section-block">
+      <div class="section-title">
+        <span>03</span>
+        <h2>인물별 엔딩</h2>
+      </div>
+      <div class="character-grid" id="characterGrid"></div>
+    </section>
+
+    <section id="clues" class="page section-block">
+      <div class="section-title">
+        <span>04</span>
+        <h2>단서 해설</h2>
+      </div>
+      <div class="clue-table" id="clueTable"></div>
+    </section>
+
+    <section id="score" class="page section-block">
+      <div class="section-title">
+        <span>05</span>
+        <h2>점수 계산</h2>
+      </div>
+      <div class="score-layout">
+        <article class="panel">
+          <h3>개인 목표 체크</h3>
+          <div id="goalList"></div>
+        </article>
+        <article class="panel">
+          <h3>엔딩 등급</h3>
+          <div id="rankList" class="rank-list"></div>
+        </article>
+      </div>
+    </section>
   </main>
 
-  <script>
-    function showMessage() {
-      const result = document.getElementById("result");
-      const now = new Date().toLocaleString("ko-KR");
+  <footer class="site-footer">
+    <p>GitHub Pages용 테스트 엔딩북 · index.html / style.css / app.js / ending_data.json / episode_data.json</p>
+  </footer>
 
-      result.textContent = "JavaScript도 정상 작동 중입니다. 확인 시간: " + now;
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
