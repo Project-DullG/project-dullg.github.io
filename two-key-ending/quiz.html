@@ -16,6 +16,15 @@
       <p class="subtitle">사건의 전말을 보기 전, 본인이 추리한 내용을 점검합니다.</p>
     </header>
 
+    <div class="step-indicator" aria-label="진행 단계 2/3">
+      <span class="step-dot done">1</span>
+      <span class="step-line done"></span>
+      <span class="step-dot current">2</span>
+      <span class="step-line"></span>
+      <span class="step-dot">3</span>
+    </div>
+    <p class="step-label">점수 계산 → 시나리오 이해 점검 → 엔딩</p>
+
     <section id="char-select" class="guide-box">
       <div class="guide-title">캐릭터 선택</div>
       <p>당신이 플레이한 인물을 선택해 주세요. 결과 기록에 함께 저장됩니다.</p>
@@ -44,7 +53,7 @@
         <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of">/ 7</span></p>
       </section>
       <p class="result-note" id="saveStatus"></p>
-      <a href="story.html" class="story-link" style="--card-color:var(--gold)"><strong>다음 단계 · 사건의 전말 보기 &#8594;</strong><span>이제 진실을 확인합니다.</span></a>
+      <a href="endings.html" class="next-step-btn">다음 단계 · 엔딩 보기 &#8594;<span class="next-sub">지목된 인물의 결말을 먼저 본 뒤, 사건의 전말을 확인합니다</span></a>
       <button class="retry-btn" id="retryBtn">다시 풀기</button>
     </section>
 

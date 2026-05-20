@@ -158,6 +158,20 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 .score-card input[type="number"].clue-count { width: 60px; padding: 5px 8px; border-radius: 6px; background: rgba(255,255,255,.04); border: 1px solid var(--line); color: var(--ink); font: 600 .95rem 'Pretendard', sans-serif; text-align: center; transform: none; }
 .score-card input[type="number"].clue-count:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
 
+/* === Step indicator === */
+.step-indicator { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 auto 12px; animation: fadeDown .9s ease both; }
+.step-dot { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line); background: rgba(255,255,255,.025); color: var(--dim); font-weight: 800; font-size: .82rem; display: flex; align-items: center; justify-content: center; transition: all .25s ease; flex-shrink: 0; }
+.step-dot.done { border-color: rgba(212,168,85,.45); color: var(--gold); background: rgba(212,168,85,.10); }
+.step-dot.current { border-color: var(--gold); color: #1a1411; background: var(--gold); box-shadow: 0 0 0 4px var(--gold-soft); transform: scale(1.08); }
+.step-line { width: 28px; height: 2px; background: var(--line); border-radius: 2px; flex-shrink: 0; }
+.step-line.done { background: rgba(212,168,85,.45); }
+.step-label { color: var(--dim); font-size: .72rem; letter-spacing: 2.5px; text-transform: uppercase; text-align: center; margin: 0 auto 30px; font-weight: 700; }
+
+/* === Primary CTA — next step button === */
+.next-step-btn { display: block; padding: 20px 24px; margin: 28px 0 14px; background: linear-gradient(135deg, var(--gold) 0%, #b9914a 100%); color: #1a1411; text-align: center; text-decoration: none; border-radius: 14px; font: 800 1.04rem 'Pretendard', sans-serif; letter-spacing: .3px; box-shadow: 0 10px 32px var(--gold-soft); transition: all .25s ease; }
+.next-step-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px var(--gold-soft); color: #1a1411; }
+.next-step-btn .next-sub { display: block; margin-top: 6px; font-weight: 600; font-size: .82rem; color: rgba(26,20,17,.68); letter-spacing: .2px; }
+
 /* === Quiz (STEP 2) === */
 .char-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 18px; }
 .char-btn { padding: 18px 16px; border-radius: 12px; background: linear-gradient(135deg, rgba(30,30,36,.92), rgba(15,15,19,.92)); border: 1px solid var(--line); color: var(--ink); font: 700 1.02rem 'Pretendard', sans-serif; cursor: pointer; transition: all .25s ease; position: relative; overflow: hidden; }
@@ -234,6 +248,10 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
   .story-link strong { font-size: 1rem; }
   .story-link span { font-size: .85rem; }
   .back-link { padding: 15px; font-size: .9rem; }
+  .step-indicator { gap: 4px; margin-bottom: 28px; }
+  .step-dot { width: 30px; height: 30px; font-size: .76rem; }
+  .step-line { width: 20px; }
+  .next-step-btn { padding: 17px 20px; font-size: .98rem; }
   .char-grid { grid-template-columns: 1fr; gap: 10px; }
   .char-btn { padding: 16px; font-size: .96rem; }
   .char-btn:hover { transform: none; }
