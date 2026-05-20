@@ -130,11 +130,19 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 .highlight-red { color: #ff7b8e; font-weight: 800; }
 .highlight-green { color: #76e3a8; font-weight: 800; }
 .quote, .note-box {
-  margin: 20px 0; padding: 18px 22px; border-left: 3px solid var(--gold);
-  background: rgba(255,255,255,.035); color: #bdbdc7; font-style: italic;
+  margin: 20px 0; padding: 18px 22px; border-left: 3px solid var(--card-color, var(--gold));
+  background: rgba(255,255,255,.035); color: #d6d6de; font-style: italic;
 }
-.conclusion { text-align: center; border-color: rgba(44,180,109,.32); background: linear-gradient(135deg, rgba(44,180,109,.13), rgba(18,18,23,.94)); }
-.conclusion p { font-size: 1.13rem; color: #d2f5df; font-weight: 700; }
+.quote-by { display: block; margin-top: 10px; color: var(--dim); font-style: normal; font-size: .82rem; letter-spacing: 1px; }
+.conclusion { text-align: center; border-color: var(--card-color, rgba(44,180,109,.32)); background: linear-gradient(135deg, var(--card-glow, rgba(44,180,109,.13)), rgba(18,18,23,.94)); }
+.conclusion .chapter-num { color: var(--card-color, var(--gold)); }
+.conclusion p { font-size: 1.1rem; color: #ededf1; font-weight: 700; }
+.case-board { padding: 28px 30px; }
+.evidence-row { display: grid; grid-template-columns: 96px 1fr; gap: 16px; padding: 12px 0; border-top: 1px dashed rgba(255,255,255,.08); align-items: start; color: #d4d4dc; font-size: .96rem; line-height: 1.65; }
+.evidence-row:first-of-type { border-top: 0; padding-top: 6px; }
+.evidence-row:last-of-type { padding-bottom: 4px; }
+.evidence-tag { display: inline-block; font-size: .68rem; font-weight: 900; letter-spacing: 1.5px; color: var(--card-color, var(--gold)); border: 1px solid var(--card-color, var(--gold)); border-radius: 4px; padding: 5px 8px; text-align: center; background: rgba(255,255,255,.025); white-space: nowrap; }
+.evidence-tag.is-verdict { color: var(--gold); border-color: var(--gold); background: var(--gold-soft); }
 .table-card { padding: 20px; margin-bottom: 18px; overflow: hidden; }
 .timeline { display: grid; gap: 10px; }
 .timeline-row { display: grid; grid-template-columns: 118px 1fr; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--line); }
@@ -161,12 +169,69 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 @keyframes fadeDown { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 640px) {
-  .container, .wide { width: min(100% - 28px, 760px); padding-top: 36px; }
+  .container, .wide { width: min(100% - 28px, 760px); padding: 36px 0 32px; }
+  body { line-height: 1.78; }
+  .header { margin-bottom: 32px; }
+  h1 { font-size: clamp(1.7rem, 5.6vw, 2.4rem); line-height: 1.18; letter-spacing: -.035em; }
+  .subtitle { font-size: .93rem; margin-top: 10px; }
+  .tag { font-size: .68rem; letter-spacing: 3px; padding: 7px 13px; margin-bottom: 18px; }
+  .guide-box { padding: 22px; margin-bottom: 26px; }
+  .guide-box p { font-size: .92rem; }
+  .ending-list, .link-list { gap: 14px; margin-bottom: 28px; }
   .ending-card, .choice-btn { padding: 18px; gap: 12px; }
-  .ending-badge, .choice-num { min-width: 70px; font-size: .66rem; letter-spacing: 1px; }
-  .ending-title, .choice-title { font-size: 1rem; }
-  .story-panel, .chapter, .guide-box { padding: 22px; }
-  .timeline-row, .score-grid { grid-template-columns: 1fr; }
+  .ending-card:hover, .choice-btn:hover, .story-link:hover, .chapter:hover { transform: none; }
+  .ending-badge, .choice-num { min-width: 72px; font-size: .66rem; letter-spacing: 1px; padding: 6px 10px; }
+  .ending-title, .choice-title { font-size: 1rem; line-height: 1.4; }
+  .ending-desc, .choice-desc { font-size: .85rem; line-height: 1.5; }
+  .story-panel { padding: 24px; }
+  .story-panel p { font-size: 1.02rem; line-height: 1.95; text-align: left; }
+  .story-panel p + p { text-indent: 0; }
+  .quote, .note-box { margin: 18px 0; padding: 16px 18px; font-size: .98rem; line-height: 1.85; }
+  .chapter, .table-card, .case-board { padding: 22px; margin-bottom: 18px; }
+  .chapter p, .chapter li { font-size: .96rem; line-height: 1.9; }
+  .chapter-title { font-size: 1.1rem; padding-bottom: 12px; margin-bottom: 14px; }
+  .timeline-row { grid-template-columns: 1fr; gap: 6px; padding: 13px 0; }
+  .time { font-size: .82rem; }
+  .event { font-size: .94rem; }
+  .evidence-row { grid-template-columns: 1fr; gap: 8px; padding: 13px 0; }
+  .evidence-tag { justify-self: start; }
+  .score-grid { grid-template-columns: 1fr; }
+  .score-card { padding: 20px; }
+  .score-card label { grid-template-columns: auto 1fr; gap: 9px 12px; padding: 10px 0; font-size: .94rem; }
+  .score-card label .score { grid-column: 2; margin-top: 2px; font-size: .82rem; text-align: right; }
+  .card-total { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .story-link { padding: 18px; }
+  .story-link strong { font-size: 1rem; }
+  .story-link span { font-size: .85rem; }
+  .back-link { padding: 15px; font-size: .9rem; }
+}
+@media (max-width: 480px) {
+  .container, .wide { width: min(100% - 22px, 760px); padding: 30px 0 28px; }
+  h1 { font-size: 1.55rem; }
+  .subtitle { font-size: .88rem; }
+  .tag { font-size: .64rem; letter-spacing: 2.5px; padding: 6px 11px; }
+  .header { margin-bottom: 26px; }
+  .guide-box { padding: 18px; }
+  .guide-box p { font-size: .88rem; }
+  .ending-card, .choice-btn { padding: 15px; gap: 10px; }
+  .ending-badge, .choice-num { min-width: 62px; font-size: .6rem; padding: 5px 8px; letter-spacing: .8px; }
+  .ending-title { font-size: .94rem; }
+  .ending-desc { font-size: .8rem; }
+  .ending-arrow, .choice-arrow { font-size: 1rem; }
+  .story-panel, .chapter, .table-card, .case-board { padding: 20px 16px; }
+  .story-panel p { font-size: .98rem; line-height: 1.88; }
+  .quote, .note-box { padding: 14px 16px; font-size: .94rem; }
+  .chapter-title { font-size: 1.04rem; }
+  .chapter-num { font-size: .72rem; letter-spacing: 1.5px; }
+  .conclusion p { font-size: 1rem; }
+  .evidence-row { font-size: .92rem; }
+  .evidence-tag { font-size: .62rem; padding: 4px 7px; }
+  .score-card { padding: 16px; }
+  .score-card h3 { font-size: 1.02rem; }
+  .score-card label { font-size: .88rem; gap: 8px 10px; }
+  .card-total strong { font-size: 1.2rem; }
+  .story-link { padding: 15px; }
+  .footer { font-size: .72rem; padding: 22px 0 14px; }
 }
 @media print {
   body { background: #080808; }
