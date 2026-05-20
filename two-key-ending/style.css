@@ -5,7 +5,6 @@
   --bg-2: #101014;
   --ink: #ededf1;
   --dim: #858590;
-  --muted: #b9b1a5;
   --line: rgba(255,255,255,.075);
   --panel: rgba(18,18,23,.92);
   --panel-2: rgba(27,27,34,.88);
@@ -83,11 +82,11 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
   background: var(--card-color, var(--gold)); transform: scaleY(.25); transform-origin: top; transition: transform .28s ease;
 }
-.ending-card:hover, .choice-btn:hover, .story-link:hover, .chapter:hover {
+.ending-card:hover, .choice-btn:hover, .story-link:hover {
   transform: translateX(5px); border-color: var(--card-color, var(--gold));
   box-shadow: 0 14px 44px rgba(0,0,0,.35), 0 0 24px var(--card-glow, var(--gold-soft));
 }
-.ending-card:hover::before, .choice-btn:hover::before, .chapter:hover::before, .story-link:hover::before { transform: scaleY(1); }
+.ending-card:hover::before, .choice-btn:hover::before, .story-link:hover::before { transform: scaleY(1); }
 .ending-badge, .choice-num {
   flex: 0 0 auto; min-width: 92px; text-align: center;
   color: var(--card-color, var(--gold)); font-size: .75rem; font-weight: 900; letter-spacing: 1.8px;
@@ -114,17 +113,15 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 .story-panel { padding: 34px; margin-bottom: 28px; animation: fadeUp 1s ease both; }
 .story-panel p { color: #d5d5dc; font-size: 1.07rem; line-height: 2.05; margin-bottom: 24px; text-align: justify; }
 .story-panel p:last-child { margin-bottom: 0; }
-.dialogue { color: var(--gold); font-style: italic; font-weight: 600; }
 .truth-tag { display: inline-block; margin-left: 8px; padding: 3px 9px; border-radius: 4px; background: rgba(44,180,109,.16); color: #7ee2aa; font-size: .65rem; letter-spacing: 1.5px; vertical-align: middle; }
 .chapter { position: relative; padding: 30px; margin-bottom: 22px; animation: fadeUp .9s ease both; --card-color: var(--gold); --card-glow: var(--gold-soft); }
 .chapter-num { color: var(--card-color); font-weight: 900; letter-spacing: 2px; font-size: .78rem; margin-bottom: 8px; }
 .chapter-title { color: #fff; font-weight: 850; font-size: 1.22rem; padding-bottom: 14px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
 .chapter p, .chapter li { color: #c8c8d0; font-size: 1rem; line-height: 1.95; }
 .chapter ul { margin-left: 18px; }
-.chapter:nth-of-type(2) { --card-color: var(--blue); --card-glow: var(--blue-soft); }
-.chapter:nth-of-type(3) { --card-color: var(--gold); --card-glow: var(--gold-soft); }
-.chapter:nth-of-type(4) { --card-color: var(--red); --card-glow: var(--red-soft); }
-.chapter:nth-of-type(5) { --card-color: var(--violet); --card-glow: var(--violet-soft); }
+.wide .chapter:nth-of-type(2) { --card-color: var(--blue); --card-glow: var(--blue-soft); }
+.wide .chapter:nth-of-type(3) { --card-color: var(--gold); --card-glow: var(--gold-soft); }
+.wide .chapter:nth-of-type(4) { --card-color: var(--red); --card-glow: var(--red-soft); }
 .highlight { color: #fff; font-weight: 800; }
 .highlight-gold { color: var(--gold); font-weight: 800; }
 .highlight-red { color: #ff7b8e; font-weight: 800; }
@@ -155,6 +152,7 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 .score-card label { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px dashed rgba(255,255,255,.08); color: #cfcfd7; }
 .score-card input { transform: translateY(6px); accent-color: var(--gold); }
 .score { color: var(--gold); font-weight: 900; white-space: nowrap; }
+.score-note { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,.025); border: 1px dashed rgba(255,255,255,.10); color: var(--dim); font-size: .82rem; line-height: 1.55; }
 .card-total { margin-top: 16px; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,.10); display: flex; justify-content: space-between; align-items: baseline; gap: 12px; color: var(--dim); font-size: .92rem; }
 .card-total strong { color: var(--gold); font-size: 1.4rem; font-weight: 900; margin: 0 4px; }
 .card-total .rank-label { color: #e6d4af; font-weight: 700; }
