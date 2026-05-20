@@ -147,6 +147,10 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 .time { color: var(--gold); font-weight: 900; font-size: .9rem; }
 .event { color: #d4d4dc; }
 .score-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.score-grid.single-card { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+.change-char-btn { background: transparent; border: 1px solid var(--line); color: var(--dim); padding: 7px 13px; border-radius: 8px; font: 600 .8rem 'Pretendard', sans-serif; cursor: pointer; transition: all .25s ease; }
+.change-char-btn:hover { color: var(--gold); border-color: var(--gold); background: rgba(212,168,85,.06); }
+.result-side { color: var(--dim); font-size: .92rem; margin-top: 12px; }
 .score-card { padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.025); }
 .score-card h3 { color: #fff; margin-bottom: 12px; }
 .score-card label { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: start; padding: 10px 0; border-top: 1px dashed rgba(255,255,255,.08); color: #cfcfd7; }

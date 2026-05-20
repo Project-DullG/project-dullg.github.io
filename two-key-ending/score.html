@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="보충반의 사라진 열쇠 · 인물별 목표 체크와 합계 계산">
-  <title>보충반의 사라진 열쇠 · 점수 계산표</title>
+  <meta name="description" content="보충반의 사라진 열쇠 · 본인 캐릭터를 선택하고 미션 점수를 계산합니다">
+  <title>보충반의 사라진 열쇠 · 점수 계산</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="container wide">
+  <main class="container">
     <header class="header">
-      <a href="index.html" class="tag" style="text-decoration:none">STEP 1 · Score Sheet</a>
-      <h1>점수 계산표</h1>
-      <p class="subtitle">개인 목표와 비공개 단서 공개 여부를 체크해 <strong>최종 점수</strong>를 계산합니다.</p>
+      <a href="index.html" class="tag" style="text-decoration:none">STEP 1 · Score</a>
+      <h1>미션 점수 계산</h1>
+      <p class="subtitle">본인 캐릭터를 선택한 뒤, 개인 목표 달성 여부를 체크합니다.</p>
     </header>
 
     <div class="step-indicator" aria-label="진행 단계 1/3">
@@ -25,79 +25,166 @@
     </div>
     <p class="step-label">점수 계산 → 시나리오 이해 점검 → 엔딩</p>
 
-    <section class="guide-box">
-      <div class="guide-title">체크 방법</div>
-      <p>각 플레이어는 자신의 목표 달성 여부를 체크하면 합계가 자동으로 갱신됩니다.</p>
-      <p>“공개되지 않은 단서 카드”는 게임 종료 시 끝까지 공개하지 않은 단서 수를 직접 입력해 주세요.</p>
+    <section id="char-select" class="guide-box">
+      <div class="guide-title">캐릭터 선택</div>
+      <p>당신이 플레이한 인물을 선택해 주세요.</p>
+      <div class="char-grid">
+        <button class="char-btn" data-char="윤지원" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">윤지원</button>
+        <button class="char-btn" data-char="박세준" style="--card-color:var(--violet);--card-glow:var(--violet-soft)">박세준</button>
+        <button class="char-btn" data-char="차하린" style="--card-color:var(--red);--card-glow:var(--red-soft)">차하린</button>
+        <button class="char-btn" data-char="한도경" style="--card-color:var(--green);--card-glow:var(--green-soft)">한도경</button>
+      </div>
     </section>
 
-    <div class="score-grid">
-      <section class="score-card" data-pc="윤지원">
-        <h3>윤지원</h3>
-        <label><input type="checkbox" data-score="3"><span>열쇠를 훔친 범인을 찾아 원장님께 보고한다.</span><span class="score">+3</span></label>
-        <label><input type="checkbox" data-score="3"><span>핸드폰을 2개 가지고 있으며, 보관함에는 공기계를 넣었다는 사실을 들키지 않는다.</span><span class="score">+3</span></label>
-        <label><input type="checkbox" data-score="3"><span>자신에게 핸드폰 열쇠를 준 사람을 지목한다.</span><span class="score">+3</span></label>
-        <label><input type="number" class="clue-count" data-score-per="1" min="0" max="20" value="0"><span>공개되지 않은 단서 카드 수</span><span class="score">+1 × N</span></label>
-        <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
-      </section>
+    <section id="score-area" hidden>
+      <div class="quiz-bar">
+        <span class="active-char" id="activeChar"></span>
+        <button class="change-char-btn" id="changeCharBtn" type="button">캐릭터 변경</button>
+      </div>
 
-      <section class="score-card" data-pc="박세준">
-        <h3>박세준</h3>
-        <label><input type="checkbox" data-score="6"><span>열쇠를 훔친 범인을 찾아 원장님께 보고한다.</span><span class="score">+6</span></label>
-        <label><input type="checkbox" data-score="3"><span>자신이 도경이의 영어책을 훔쳤다는 사실을 들키지 않는다.</span><span class="score">+3</span></label>
-        <label><input type="number" class="clue-count" data-score-per="1" min="0" max="20" value="0"><span>공개되지 않은 단서 카드 수</span><span class="score">+1 × N</span></label>
-        <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
-      </section>
+      <div class="score-grid single-card">
+        <section class="score-card" data-pc="윤지원" hidden>
+          <h3>윤지원</h3>
+          <label><input type="checkbox" data-goal="열쇠를 훔친 범인을 찾아 원장님께 보고한다" data-score="3"><span>열쇠를 훔친 범인을 찾아 원장님께 보고한다.</span><span class="score">+3</span></label>
+          <label><input type="checkbox" data-goal="핸드폰 2개 비밀을 들키지 않는다" data-score="3"><span>핸드폰을 2개 가지고 있으며, 보관함에는 공기계를 넣었다는 사실을 들키지 않는다.</span><span class="score">+3</span></label>
+          <label><input type="checkbox" data-goal="자신에게 핸드폰 열쇠를 준 사람을 지목한다" data-score="3"><span>자신에게 핸드폰 열쇠를 준 사람을 지목한다.</span><span class="score">+3</span></label>
+          <label><input type="number" class="clue-count" data-goal="공개되지 않은 단서 카드" data-score-per="1" min="0" max="20" value="0"><span>공개되지 않은 단서 카드 수</span><span class="score">+1 × N</span></label>
+          <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
+        </section>
 
-      <section class="score-card" data-pc="차하린">
-        <h3>차하린</h3>
-        <label><input type="checkbox" data-score="6"><span>열쇠를 훔친 범인을 찾아 원장님께 보고한다.</span><span class="score">+6</span></label>
-        <label><input type="checkbox" data-score="3"><span>원장님의 딸이라는 사실을 들키지 않는다.</span><span class="score">+3</span></label>
-        <label><input type="number" class="clue-count" data-score-per="1" min="0" max="20" value="0"><span>공개되지 않은 단서 카드 수</span><span class="score">+1 × N</span></label>
-        <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
-      </section>
+        <section class="score-card" data-pc="박세준" hidden>
+          <h3>박세준</h3>
+          <label><input type="checkbox" data-goal="열쇠를 훔친 범인을 찾아 원장님께 보고한다" data-score="6"><span>열쇠를 훔친 범인을 찾아 원장님께 보고한다.</span><span class="score">+6</span></label>
+          <label><input type="checkbox" data-goal="도경의 영어책 절도를 들키지 않는다" data-score="3"><span>자신이 도경이의 영어책을 훔쳤다는 사실을 들키지 않는다.</span><span class="score">+3</span></label>
+          <label><input type="number" class="clue-count" data-goal="공개되지 않은 단서 카드" data-score-per="1" min="0" max="20" value="0"><span>공개되지 않은 단서 카드 수</span><span class="score">+1 × N</span></label>
+          <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
+        </section>
 
-      <section class="score-card" data-pc="한도경">
-        <h3>한도경</h3>
-        <label><input type="checkbox" data-score="6"><span>본인이 열쇠를 훔친 범인으로 원장님께 최종 보고되지 않는다.</span><span class="score">+6</span></label>
-        <label><input type="checkbox" data-score="3"><span>거슬리는 세준이가 이 사건의 범인으로 원장님께 최종 보고된다.</span><span class="score">+3</span></label>
-        <label><input type="checkbox" data-score="2"><span>자신이 하린이를 좋아한다는 사실이 들키지 않는다.</span><span class="score">+2</span></label>
-        <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
-      </section>
-    </div>
+        <section class="score-card" data-pc="차하린" hidden>
+          <h3>차하린</h3>
+          <label><input type="checkbox" data-goal="열쇠를 훔친 범인을 찾아 원장님께 보고한다" data-score="6"><span>열쇠를 훔친 범인을 찾아 원장님께 보고한다.</span><span class="score">+6</span></label>
+          <label><input type="checkbox" data-goal="원장님의 딸이라는 사실을 들키지 않는다" data-score="3"><span>원장님의 딸이라는 사실을 들키지 않는다.</span><span class="score">+3</span></label>
+          <label><input type="number" class="clue-count" data-goal="공개되지 않은 단서 카드" data-score-per="1" min="0" max="20" value="0"><span>공개되지 않은 단서 카드 수</span><span class="score">+1 × N</span></label>
+          <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
+        </section>
 
-    <a href="quiz.html" class="next-step-btn">다음 단계 · 시나리오 이해 점검 &#8594;<span class="next-sub">캐릭터를 선택하고 7문항을 풉니다</span></a>
+        <section class="score-card" data-pc="한도경" hidden>
+          <h3>한도경</h3>
+          <label><input type="checkbox" data-goal="본인이 범인으로 보고되지 않는다" data-score="6"><span>본인이 열쇠를 훔친 범인으로 원장님께 최종 보고되지 않는다.</span><span class="score">+6</span></label>
+          <label><input type="checkbox" data-goal="세준이 범인으로 보고된다" data-score="3"><span>거슬리는 세준이가 이 사건의 범인으로 원장님께 최종 보고된다.</span><span class="score">+3</span></label>
+          <label><input type="checkbox" data-goal="하린을 좋아한다는 사실을 들키지 않는다" data-score="2"><span>자신이 하린이를 좋아한다는 사실이 들키지 않는다.</span><span class="score">+2</span></label>
+          <p class="score-note">한도경은 진범 역할로, "공개되지 않은 단서 카드" 보너스를 받지 않습니다.</p>
+          <div class="card-total"><span>합계 <strong data-total>0</strong>점</span></div>
+        </section>
+      </div>
+
+      <a href="quiz.html" class="next-step-btn" id="nextStepBtn">다음 단계 · 시나리오 이해 점검 &#8594;<span class="next-sub">본인 캐릭터로 자동 이어집니다</span></a>
+    </section>
+
     <a href="index.html" class="back-link">&#8592; 처음으로</a>
-
     <footer class="footer">보충반의 사라진 열쇠 · Ending Book</footer>
   </main>
 
   <script>
     (function () {
-      const cards = document.querySelectorAll('.score-card');
+      const STORAGE_KEY = 'two-key-state';
 
-      function computeCard(card) {
+      const $charSelect = document.getElementById('char-select');
+      const $scoreArea = document.getElementById('score-area');
+      const $activeChar = document.getElementById('activeChar');
+      const $changeCharBtn = document.getElementById('changeCharBtn');
+
+      function loadState() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+      }
+      function saveState(patch) {
+        const state = { ...loadState(), ...patch };
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+      }
+
+      function showCard(pc, color) {
+        $charSelect.hidden = true;
+        $scoreArea.hidden = false;
+        $activeChar.textContent = '플레이어 · ' + pc;
+        if (color) $activeChar.style.setProperty('--card-color', color);
+
+        document.querySelectorAll('.score-card').forEach(card => {
+          card.hidden = card.dataset.pc !== pc;
+        });
+        recompute();
+      }
+
+      function pickCharacter(pc, color) {
+        saveState({ character: pc, scoreItems: [], scoreCalc: 0 });
+        showCard(pc, color);
+      }
+
+      function getActiveCard() {
+        const state = loadState();
+        return document.querySelector('.score-card[data-pc="' + state.character + '"]');
+      }
+
+      function recompute() {
+        const card = getActiveCard();
+        if (!card) return;
         let total = 0;
+        const items = [];
         card.querySelectorAll('input[type="checkbox"][data-score]').forEach(cb => {
-          if (cb.checked) total += Number(cb.dataset.score) || 0;
+          if (cb.checked) {
+            total += Number(cb.dataset.score) || 0;
+            items.push(cb.dataset.goal);
+          }
         });
         card.querySelectorAll('input[type="number"][data-score-per]').forEach(num => {
           const n = Math.max(0, Number(num.value) || 0);
-          total += n * (Number(num.dataset.scorePer) || 0);
+          if (n > 0) {
+            total += n * (Number(num.dataset.scorePer) || 0);
+            items.push(num.dataset.goal + ' × ' + n);
+          }
         });
         const totalEl = card.querySelector('[data-total]');
         if (totalEl) totalEl.textContent = String(total);
+
+        saveState({ scoreCalc: total, scoreItems: items });
       }
 
-      function refresh() { cards.forEach(computeCard); }
+      document.querySelectorAll('.char-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const color = btn.style.getPropertyValue('--card-color');
+          pickCharacter(btn.dataset.char, color);
+        });
+      });
+
+      $changeCharBtn.addEventListener('click', () => {
+        $scoreArea.hidden = true;
+        $charSelect.hidden = false;
+      });
 
       document.addEventListener('change', e => {
-        if (e.target.matches('.score-card input')) refresh();
+        if (e.target.matches('.score-card input')) recompute();
       });
       document.addEventListener('input', e => {
-        if (e.target.matches('.score-card input[type="number"]')) refresh();
+        if (e.target.matches('.score-card input[type="number"]')) recompute();
       });
-      refresh();
+
+      const state = loadState();
+      if (state.character) {
+        const btn = document.querySelector('.char-btn[data-char="' + state.character + '"]');
+        const color = btn ? btn.style.getPropertyValue('--card-color') : '';
+        const card = document.querySelector('.score-card[data-pc="' + state.character + '"]');
+        if (card) {
+          (state.scoreItems || []).forEach(item => {
+            const cb = card.querySelector('input[type="checkbox"][data-goal="' + item.replace(/"/g, '\\"') + '"]');
+            if (cb) cb.checked = true;
+            const numMatch = item.match(/^(.+) × (\d+)$/);
+            if (numMatch) {
+              const num = card.querySelector('input[type="number"][data-goal="' + numMatch[1] + '"]');
+              if (num) num.value = numMatch[2];
+            }
+          });
+          showCard(state.character, color);
+        }
+      }
     })();
   </script>
 </body>

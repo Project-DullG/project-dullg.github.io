@@ -25,15 +25,14 @@
     </div>
     <p class="step-label">점수 계산 → 시나리오 이해 점검 → 엔딩</p>
 
-    <section id="char-select" class="guide-box">
+    <section id="char-select" class="guide-box" hidden>
       <div class="guide-title">캐릭터 선택</div>
-      <p>당신이 플레이한 인물을 선택해 주세요. 결과 기록에 함께 저장됩니다.</p>
+      <p>이전 단계의 캐릭터 정보를 찾지 못했습니다. 다시 선택해 주세요.</p>
       <div class="char-grid">
         <button class="char-btn" data-char="윤지원" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">윤지원</button>
         <button class="char-btn" data-char="박세준" style="--card-color:var(--violet);--card-glow:var(--violet-soft)">박세준</button>
         <button class="char-btn" data-char="차하린" style="--card-color:var(--red);--card-glow:var(--red-soft)">차하린</button>
         <button class="char-btn" data-char="한도경" style="--card-color:var(--green);--card-glow:var(--green-soft)">한도경</button>
-        <button class="char-btn char-btn-wide" data-char="관전자" style="--card-color:var(--slate);--card-glow:var(--slate-soft)">관전자 · 진행자</button>
       </div>
     </section>
 
@@ -51,13 +50,14 @@
         <div class="chapter-num">RESULT</div>
         <div class="chapter-title">시나리오 이해 점수</div>
         <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of">/ 7</span></p>
+        <p class="result-side" id="resultSide"></p>
       </section>
       <p class="result-note" id="saveStatus"></p>
-      <a href="endings.html" class="next-step-btn">다음 단계 · 엔딩 보기 &#8594;<span class="next-sub">지목된 인물의 결말을 먼저 본 뒤, 사건의 전말을 확인합니다</span></a>
+      <a href="endings.html" class="next-step-btn">다음 단계 · 엔딩 보기 &#8594;<span class="next-sub">지목된 인물의 결말을 본 뒤, 사건의 전말을 확인합니다</span></a>
       <button class="retry-btn" id="retryBtn">다시 풀기</button>
     </section>
 
-    <a href="index.html" class="back-link">&#8592; 처음으로</a>
+    <a href="score.html" class="back-link">&#8592; STEP 1 점수 계산으로 돌아가기</a>
     <footer class="footer">보충반의 사라진 열쇠 · Ending Book</footer>
   </main>
 
@@ -107,19 +107,27 @@
       }
     ];
 
-    // === Google Forms 연동 (사용자 설정) =======================
-    // 1) Google Forms 만들기: character / score / answers / timestamp 단답형 4개 필드
-    // 2) 미리보기 페이지 소스에서 entry.XXXXXXXX 값을 추출해 아래에 채우기
-    // 3) FORMS_ENDPOINT 에 formResponse URL 채우기
-    //    형태: https://docs.google.com/forms/d/e/FORM_ID/formResponse
+    // === Google Forms 연동 ===========================================
     const FORMS_ENDPOINT = 'https://docs.google.com/forms/d/e/1FAIpQLSfuFxbkJ4wYZ-Js7sKnKif-gVsnm3kQC_i1M_TL598z_n7a7A/formResponse';
     const FORMS_FIELDS = {
-      character: 'entry.467603329',
-      score:     'entry.1789114153',
-      answers:   'entry.738327544',
-      timestamp: 'entry.502976306'
+      character:       'entry.467603329',
+      score_calc:      'entry.307547757',
+      mission_status:  'entry.1618865703',
+      quiz_score:      'entry.1789114153',
+      quiz_answers:    'entry.738327544',
+      timestamp:       'entry.502976306'
     };
-    // ===========================================================
+    // =================================================================
+
+    const STORAGE_KEY = 'two-key-state';
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+    }
+    function saveState(patch) {
+      const state = { ...loadState(), ...patch };
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
+    }
 
     const state = { character: null, answers: Array(QUESTIONS.length).fill(null), submitted: false };
 
@@ -131,21 +139,32 @@
     const $progress = document.getElementById('quizProgress');
     const $submitBtn = document.getElementById('submitBtn');
     const $scoreNum = document.getElementById('scoreNum');
+    const $resultSide = document.getElementById('resultSide');
     const $saveStatus = document.getElementById('saveStatus');
     const $retryBtn = document.getElementById('retryBtn');
 
     document.querySelectorAll('.char-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        state.character = btn.dataset.char;
-        $activeChar.textContent = `플레이어 · ${state.character}`;
         const color = btn.style.getPropertyValue('--card-color');
-        if (color) $activeChar.style.setProperty('--card-color', color);
-        $charSelect.hidden = true;
-        $quiz.hidden = false;
-        renderQuestions();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        startQuiz(btn.dataset.char, color);
+        saveState({ character: btn.dataset.char });
       });
     });
+
+    function startQuiz(character, color) {
+      state.character = character;
+      $activeChar.textContent = '플레이어 · ' + character;
+      if (color) $activeChar.style.setProperty('--card-color', color);
+      $charSelect.hidden = true;
+      $quiz.hidden = false;
+      renderQuestions();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function colorForCharacter(character) {
+      const map = { '윤지원': 'var(--blue)', '박세준': 'var(--violet)', '차하린': 'var(--red)', '한도경': 'var(--green)' };
+      return map[character] || '';
+    }
 
     function renderQuestions() {
       QUESTIONS.forEach((item, idx) => {
@@ -237,25 +256,37 @@
       $result.hidden = false;
       $scoreNum.textContent = String(score);
 
+      const saved = loadState();
+      if (typeof saved.scoreCalc === 'number') {
+        $resultSide.textContent = '미션 점수 ' + saved.scoreCalc + '점 · 시나리오 이해 ' + score + ' / 7';
+      } else {
+        $resultSide.textContent = '시나리오 이해 ' + score + ' / 7';
+      }
+
       saveResult(score);
       $result.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function saveResult(score) {
+    function saveResult(quizScore) {
+      const saved = loadState();
       const payload = {
-        character: state.character,
-        score,
-        answers: state.answers,
-        timestamp: new Date().toISOString()
+        character:      state.character,
+        score_calc:     typeof saved.scoreCalc === 'number' ? saved.scoreCalc : 0,
+        mission_status: JSON.stringify(saved.scoreItems || []),
+        quiz_score:     quizScore,
+        quiz_answers:   JSON.stringify(state.answers),
+        timestamp:      new Date().toISOString()
       };
-      try { localStorage.setItem('two-key-quiz-result', JSON.stringify(payload)); } catch (e) {}
+      try { localStorage.setItem('two-key-quiz-result', JSON.stringify(payload)); } catch {}
 
       if (FORMS_ENDPOINT && FORMS_FIELDS.character && !FORMS_FIELDS.character.endsWith('XXXXXXXX')) {
         const fd = new FormData();
-        fd.append(FORMS_FIELDS.character, payload.character);
-        fd.append(FORMS_FIELDS.score,     String(payload.score));
-        fd.append(FORMS_FIELDS.answers,   JSON.stringify(payload.answers));
-        fd.append(FORMS_FIELDS.timestamp, payload.timestamp);
+        fd.append(FORMS_FIELDS.character,      payload.character || '');
+        fd.append(FORMS_FIELDS.score_calc,     String(payload.score_calc));
+        fd.append(FORMS_FIELDS.mission_status, payload.mission_status);
+        fd.append(FORMS_FIELDS.quiz_score,     String(payload.quiz_score));
+        fd.append(FORMS_FIELDS.quiz_answers,   payload.quiz_answers);
+        fd.append(FORMS_FIELDS.timestamp,      payload.timestamp);
         fetch(FORMS_ENDPOINT, { method: 'POST', body: fd, mode: 'no-cors' })
           .then(() => { $saveStatus.textContent = '결과가 서버에 기록되었습니다.'; })
           .catch(() => { $saveStatus.textContent = '서버 전송 실패 — 로컬에만 저장되었습니다.'; });
@@ -265,6 +296,14 @@
     }
 
     $retryBtn.addEventListener('click', () => location.reload());
+
+    // === 진입 시 localStorage 인계 ===
+    const saved = loadState();
+    if (saved.character) {
+      startQuiz(saved.character, colorForCharacter(saved.character));
+    } else {
+      $charSelect.hidden = false;
+    }
   </script>
 </body>
 </html>
