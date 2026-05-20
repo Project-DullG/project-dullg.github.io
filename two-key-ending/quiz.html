@@ -42,7 +42,6 @@
         <div class="chapter-num">RESULT</div>
         <div class="chapter-title">시나리오 이해 점수</div>
         <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of">/ 7</span></p>
-        <p class="result-rank" id="scoreRank">—</p>
       </section>
       <p class="result-note" id="saveStatus"></p>
       <a href="story.html" class="story-link" style="--card-color:var(--gold)"><strong>다음 단계 · 사건의 전말 보기 &#8594;</strong><span>이제 진실을 확인합니다.</span></a>
@@ -113,13 +112,6 @@
     };
     // ===========================================================
 
-    const RANK = [
-      { min: 7, label: '완벽한 추리 — 모든 진실을 짚었습니다.' },
-      { min: 5, label: '근접한 추리 — 사건의 큰 줄기를 정확히 봤습니다.' },
-      { min: 3, label: '절반의 진실 — 표면은 봤지만 결정타까지 닿지 못했습니다.' },
-      { min: 0, label: '흐릿한 추리 — 사건의 전말을 다시 확인해 보세요.' }
-    ];
-
     const state = { character: null, answers: Array(QUESTIONS.length).fill(null), submitted: false };
 
     const $charSelect = document.getElementById('char-select');
@@ -130,7 +122,6 @@
     const $progress = document.getElementById('quizProgress');
     const $submitBtn = document.getElementById('submitBtn');
     const $scoreNum = document.getElementById('scoreNum');
-    const $scoreRank = document.getElementById('scoreRank');
     const $saveStatus = document.getElementById('saveStatus');
     const $retryBtn = document.getElementById('retryBtn');
 
@@ -236,7 +227,6 @@
       $submitBtn.hidden = true;
       $result.hidden = false;
       $scoreNum.textContent = String(score);
-      $scoreRank.textContent = RANK.find(r => score >= r.min).label;
 
       saveResult(score);
       $result.scrollIntoView({ behavior: 'smooth' });
