@@ -166,25 +166,6 @@
       document.addEventListener('input', e => {
         if (e.target.matches('.score-card input[type="number"]')) recompute();
       });
-
-      const state = loadState();
-      if (state.character) {
-        const btn = document.querySelector('.char-btn[data-char="' + state.character + '"]');
-        const color = btn ? btn.style.getPropertyValue('--card-color') : '';
-        const card = document.querySelector('.score-card[data-pc="' + state.character + '"]');
-        if (card) {
-          (state.scoreItems || []).forEach(item => {
-            const cb = card.querySelector('input[type="checkbox"][data-goal="' + item.replace(/"/g, '\\"') + '"]');
-            if (cb) cb.checked = true;
-            const numMatch = item.match(/^(.+) × (\d+)$/);
-            if (numMatch) {
-              const num = card.querySelector('input[type="number"][data-goal="' + numMatch[1] + '"]');
-              if (num) num.value = numMatch[2];
-            }
-          });
-          showCard(state.character, color);
-        }
-      }
     })();
   </script>
 </body>
