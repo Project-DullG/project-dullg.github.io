@@ -72,18 +72,10 @@
     (function () {
       const toggle = document.getElementById('revealToggle');
       const later = document.getElementById('laterSteps');
-
-      function reveal() {
+      toggle.addEventListener('click', () => {
         later.hidden = false;
         toggle.hidden = true;
-      }
-      toggle.addEventListener('click', reveal);
-
-      try {
-        const state = JSON.parse(localStorage.getItem('two-key-state') || '{}');
-        const quizResult = localStorage.getItem('two-key-quiz-result');
-        if ((state && state.character) || quizResult) reveal();
-      } catch {}
+      });
     })();
   </script>
 </body>
