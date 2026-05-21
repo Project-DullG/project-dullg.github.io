@@ -210,6 +210,16 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
 .result-score strong { color: var(--gold); font-size: 3.4rem; font-weight: 900; margin-right: 4px; letter-spacing: -.04em; }
 .result-of { color: var(--dim); font-size: 1.2rem; font-weight: 700; }
 .result-note { text-align: center; color: var(--dim); font-size: .85rem; margin-bottom: 16px; }
+.answer-summary { padding: 26px 28px; }
+.answer-list { list-style: none; padding: 0; margin: 0; counter-reset: ans; display: grid; gap: 10px; }
+.answer-item { padding: 14px 16px; border-radius: 10px; border-left: 3px solid var(--line); background: rgba(255,255,255,.02); }
+.answer-item.is-correct { border-left-color: var(--green); background: rgba(44,180,109,.06); }
+.answer-item.is-wrong   { border-left-color: var(--red);   background: rgba(191,48,69,.06); }
+.answer-q { color: #e8e8ec; font-weight: 700; font-size: .96rem; line-height: 1.5; margin-bottom: 6px; }
+.answer-pick { color: var(--dim); font-size: .9rem; line-height: 1.55; }
+.answer-correct-line { color: #7ee2aa; font-size: .85rem; margin-top: 4px; }
+.verdict-correct { color: var(--green); margin-right: 4px; }
+.verdict-wrong { color: #ff7b8e; margin-right: 4px; }
 /* === /Quiz === */
 
 .back-link { display: block; text-align: center; margin-top: 28px; padding: 17px; border: 1px solid var(--line); border-radius: 12px; color: var(--dim); text-decoration: none; background: rgba(255,255,255,.025); transition: all .25s ease; }
@@ -267,6 +277,10 @@ h1 { font-size: clamp(2rem, 6vw, 3.15rem); line-height: 1.08; font-weight: 900; 
   .submit-btn, .retry-btn { padding: 16px; font-size: .96rem; }
   .result-card { padding: 28px 22px; }
   .result-score strong { font-size: 2.8rem; }
+  .answer-summary { padding: 22px 20px; }
+  .answer-item { padding: 12px 14px; }
+  .answer-q { font-size: .92rem; }
+  .answer-pick { font-size: .86rem; }
 }
 @media (max-width: 480px) {
   .container, .wide { width: min(100% - 22px, 760px); padding: 30px 0 28px; }

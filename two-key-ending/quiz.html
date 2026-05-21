@@ -52,6 +52,11 @@
         <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of">/ 7</span></p>
         <p class="result-side" id="resultSide"></p>
       </section>
+      <section class="chapter answer-summary" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+        <div class="chapter-num">RESPONSES</div>
+        <div class="chapter-title">응답 요약</div>
+        <ol class="answer-list" id="answerList"></ol>
+      </section>
       <p class="result-note" id="saveStatus"></p>
       <a href="endings.html" class="next-step-btn">다음 단계 · 엔딩 보기 &#8594;<span class="next-sub">지목된 인물의 결말을 본 뒤, 사건의 전말을 확인합니다</span></a>
       <button class="retry-btn" id="retryBtn">다시 풀기</button>
@@ -140,6 +145,7 @@
     const $submitBtn = document.getElementById('submitBtn');
     const $scoreNum = document.getElementById('scoreNum');
     const $resultSide = document.getElementById('resultSide');
+    const $answerList = document.getElementById('answerList');
     const $saveStatus = document.getElementById('saveStatus');
     const $retryBtn = document.getElementById('retryBtn');
 
@@ -263,18 +269,65 @@
         $resultSide.textContent = '시나리오 이해 ' + score + ' / 7';
       }
 
+      renderAnswerSummary();
       saveResult(score);
       $result.scrollIntoView({ behavior: 'smooth' });
     }
 
+    function formatAnswerText(idx) {
+      const item = QUESTIONS[idx];
+      const picked = state.answers[idx];
+      const pickedText = (picked !== null && picked !== undefined) ? item.choices[picked] : '(미답)';
+      const correct = picked === item.answer;
+      return 'Q' + (idx + 1) + '. ' + item.q + ' → ' + pickedText + ' (' + (correct ? '정답' : '오답') + ')';
+    }
+
+    function renderAnswerSummary() {
+      $answerList.textContent = '';
+      QUESTIONS.forEach((item, idx) => {
+        const picked = state.answers[idx];
+        const correct = picked === item.answer;
+
+        const li = document.createElement('li');
+        li.className = 'answer-item ' + (correct ? 'is-correct' : 'is-wrong');
+
+        const qLine = document.createElement('div');
+        qLine.className = 'answer-q';
+        qLine.textContent = 'Q' + (idx + 1) + '. ' + item.q;
+
+        const aLine = document.createElement('div');
+        aLine.className = 'answer-pick';
+        const verdict = document.createElement('strong');
+        verdict.textContent = correct ? '정답' : '오답';
+        verdict.className = correct ? 'verdict-correct' : 'verdict-wrong';
+        aLine.appendChild(verdict);
+        aLine.appendChild(document.createTextNode(' · 내 답: ' + (item.choices[picked] || '(미답)')));
+        if (!correct) {
+          const correctEl = document.createElement('div');
+          correctEl.className = 'answer-correct-line';
+          correctEl.textContent = '정답: ' + item.choices[item.answer];
+          li.appendChild(qLine);
+          li.appendChild(aLine);
+          li.appendChild(correctEl);
+        } else {
+          li.appendChild(qLine);
+          li.appendChild(aLine);
+        }
+
+        $answerList.appendChild(li);
+      });
+    }
+
     function saveResult(quizScore) {
       const saved = loadState();
+      const answersText = QUESTIONS.map((_, idx) => formatAnswerText(idx)).join('\n');
+      const missionText = (saved.scoreItems || []).join(' / ') || '(달성 없음)';
       const payload = {
         character:      state.character,
         score_calc:     typeof saved.scoreCalc === 'number' ? saved.scoreCalc : 0,
-        mission_status: JSON.stringify(saved.scoreItems || []),
+        mission_status: missionText,
         quiz_score:     quizScore,
-        quiz_answers:   JSON.stringify(state.answers),
+        quiz_answers:   answersText,
         timestamp:      new Date().toISOString()
       };
       try { localStorage.setItem('two-key-quiz-result', JSON.stringify(payload)); } catch {}
