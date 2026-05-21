@@ -492,6 +492,35 @@ body::after{
 </head>
 <body>
 
+<!-- 사이트 흐름 복귀 버튼 -->
+<a href="index.html" class="rulebook-back" aria-label="처음으로">
+  <span class="rulebook-back-arrow">&#8592;</span>
+  <span class="rulebook-back-text">처음으로</span>
+</a>
+<style>
+  .rulebook-back {
+    position: fixed; top: 18px; left: 18px; z-index: 100;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: 999px;
+    background: rgba(20, 18, 28, 0.78); backdrop-filter: blur(8px);
+    border: 1px solid rgba(201, 168, 76, 0.4);
+    color: #f2ead9; text-decoration: none;
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+  }
+  .rulebook-back:hover {
+    background: rgba(30, 26, 38, 0.92);
+    border-color: #c9a84c;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  }
+  .rulebook-back-arrow { font-size: 1rem; line-height: 1; }
+  @media (max-width: 640px) {
+    .rulebook-back { top: 12px; left: 12px; padding: 7px 12px; font-size: 0.76rem; }
+  }
+</style>
+
 <!-- 영상 스테이지 — 슬라이드들 -->
 <div class="stage" id="stage">
 
@@ -500,6 +529,7 @@ body::after{
     <div class="slide-eyebrow">게임 진행 가이드</div>
     <h1 class="slide-title">룰은 <strong>두 구간</strong>으로 나뉘어요</h1>
     <p class="slide-sub">첫 라운드만 선 플레이어가 자기 짐을 먼저 공개합니다.<br>그 이후부터는 <strong>지목받은 사람만</strong> 공개해요.</p>
+    <p class="rule-note"><strong>핵심:</strong> 누가 지목권을 갖는지와 누가 짐을 공개하는지는 따로 봅니다.</p>
   </div>
 
   <!-- 1. Step 1 -->
@@ -515,6 +545,7 @@ body::after{
       </div>
     </div>
     <p class="slide-sub">게임을 시작할 때 한 번만,<br>선 플레이어가 자기 짐 3장 중 1장을 공개합니다.</p>
+    <p class="rule-note"><strong>공개된 짐</strong>은 계속 테이블 위에 남아 모두가 볼 수 있습니다.</p>
   </div>
 
   <!-- 2. Step 2 -->
@@ -530,7 +561,7 @@ body::after{
         <div class="player"><div class="pname">D</div><div class="prole">대기</div></div>
       </div>
     </div>
-    <p class="slide-sub">짐을 공개한 뒤, 선 플레이어가<br>수상해 보이는 사람 두 명을 지목합니다.</p>
+    <p class="slide-sub">짐을 공개한 뒤, 선 플레이어가<br>자신을 제외한 사람 중 <strong>두 명</strong>을 지목합니다.</p>
   </div>
 
   <!-- 3. Step 3 -->
@@ -557,6 +588,7 @@ body::after{
       <div class="timer-big">05:00</div>
     </div>
     <p class="slide-sub">보인 카드와 단서를 보고<br>누가 의심스러운지 함께 말합니다.</p>
+    <p class="rule-note"><strong>토론 기준:</strong> 공개된 짐, 공통 단서, 서로의 말을 근거로 삼습니다.</p>
   </div>
 
   <!-- 5. Step 5 -->
@@ -572,6 +604,7 @@ body::after{
       </div>
     </div>
     <p class="slide-sub">공통 단서 더미에서 1장을 공개하면<br>이번 라운드는 끝입니다.</p>
+    <p class="rule-note"><strong>순서:</strong> 토론이 끝난 뒤에만 공통 단서를 공개합니다.</p>
   </div>
 
   <!-- 6. 주의 -->
@@ -626,7 +659,7 @@ body::after{
       </div>
     </div>
     <p class="slide-sub">B와 C가 모두 D를 고르면,<br>D는 짐을 1장이 아니라 <strong>2장</strong> 한 번에 공개합니다.</p>
-    <p class="rule-note"><strong>그리고 다음 라운드:</strong> D는 지목도 <strong>2번</strong> 할 수 있습니다.</p>
+    <p class="rule-note"><strong>그리고 다음 라운드:</strong> D는 혼자 지목권 <strong>2회</strong>를 처리합니다.</p>
   </div>
 
   <!-- 10. 종료 조건 -->
@@ -641,7 +674,8 @@ body::after{
         <span class="c lock"></span><span class="c lock"></span><span class="c lock"></span>
       </div>
     </div>
-    <p class="slide-sub">전체 12장 중 9장이 열리는 순간 게임을 멈춥니다.<br>남은 <strong>3장</strong>은 끝까지 비밀입니다.</p>
+    <p class="slide-sub">개인 짐 12장 중 9장이 열리는 순간 게임을 멈춥니다.<br>남은 <strong>3장</strong>은 끝까지 비밀입니다.</p>
+    <p class="rule-note"><strong>주의:</strong> 공통 단서 카드는 이 9장 계산에 넣지 않습니다.</p>
   </div>
 
   <!-- 11. 투표 -->
@@ -657,6 +691,7 @@ body::after{
       </div>
     </div>
     <p class="slide-sub">모두 동시에 가장 의심되는 사람을 가리킵니다.<br><strong>표를 가장 많이 받은 사람</strong>이 책임자로 보고됩니다.</p>
+    <p class="rule-note"><strong>투표 전:</strong> 공개되지 않은 짐은 추측만 할 수 있습니다.</p>
   </div>
 
   <!-- 12. 엔딩 -->
@@ -721,20 +756,20 @@ body::after{
 <script>
 // ═══ 슬라이드 + 내레이션 ═══
 const SLIDES = [
-  { id:0,  duration:10, text:'사라진 두 열쇠 사건. 룰은 두 구간으로 나뉩니다. 첫 라운드만 선 플레이어가 자기 짐을 먼저 공개하고, 그 이후부터는 지목받은 사람만 공개합니다.' },
-  { id:1,  duration:9,  text:'첫 라운드입니다. 선 플레이어가 자기 짐 카드 세 장 중 한 장을 골라 모두에게 보여줍니다.' },
-  { id:2,  duration:9,  text:'그 다음, 선 플레이어가 의심되는 사람 두 명을 차례로 지목합니다.' },
-  { id:3,  duration:10, text:'지목받은 두 사람도 짐 한 장씩을 공개합니다. 그래서 첫 라운드에는 총 세 장이 열립니다.' },
-  { id:4,  duration:9,  text:'공개된 짐과 단서를 보고, 모두 함께 5분 동안 이야기합니다.' },
-  { id:5,  duration:9,  text:'토론이 끝나면 공통 단서 더미에서 카드 한 장을 공개합니다. 그러면 이번 라운드는 끝입니다.' },
-  { id:6,  duration:12, text:'중요한 규칙입니다. 이후 라운드에서는 지목자가 자기 짐을 먼저 공개하지 않습니다. 새로 지목받은 사람만 짐을 공개합니다.' },
-  { id:7,  duration:10, text:'예시로 볼게요. 첫 라운드에서 A가 선 플레이어라면, A는 자기 짐 한 장을 공개한 뒤 B와 C를 의심 대상으로 고릅니다.' },
-  { id:8,  duration:12, text:'다음 라운드에는 B와 C가 지목자가 됩니다. 하지만 B와 C는 자기 짐을 더 공개하지 않습니다. B와 C가 새로 지목한 사람만 공개합니다.' },
-  { id:9,  duration:14, text:'만약 B와 C가 둘 다 D를 고르면, D는 짐을 한 장이 아니라 두 장 한 번에 공개합니다. 그리고 다음 라운드에서 D는 지목도 두 번 할 수 있습니다.' },
-  { id:10, duration:10, text:'전체 짐 열두 장 중 아홉 장이 열리는 순간 게임을 멈춥니다. 남은 세 장은 끝까지 비밀입니다.' },
-  { id:11, duration:10, text:'마지막 투표입니다. 모두 동시에 가장 의심되는 사람 한 명을 가리킵니다. 표를 가장 많이 받은 사람이 책임자로 보고됩니다.' },
-  { id:12, duration:10, text:'투표가 끝난 뒤에만 QR을 스캔합니다. QR을 보면 진상과 후일담을 확인할 수 있습니다.' },
-  { id:13, duration:7,  text:'이제 추리를 시작하세요.' }
+  { id:0,  duration:14.255, text:'사라진 두 열쇠 사건. 룰은 두 구간으로 나뉩니다. 첫 라운드만 선 플레이어가 자기 짐을 먼저 공개하고, 그 이후부터는 지목받은 사람만 공개합니다. 지목권과 짐 공개 대상을 따로 기억하면 쉽습니다.' },
+  { id:1,  duration:9.515,  text:'첫 라운드입니다. 선 플레이어가 자기 짐 카드 세 장 중 한 장을 골라 모두에게 보여줍니다. 공개된 짐은 계속 테이블 위에 남습니다.' },
+  { id:2,  duration:5.286,  text:'그 다음, 선 플레이어가 자신을 제외한 사람 중 의심되는 두 명을 차례로 지목합니다.' },
+  { id:3,  duration:6.635, text:'지목받은 두 사람도 짐 한 장씩을 공개합니다. 그래서 첫 라운드에는 총 세 장이 열립니다.' },
+  { id:4,  duration:6.004,  text:'공개된 짐과 공통 단서, 그리고 서로의 말을 근거로 모두 함께 5분 동안 이야기합니다.' },
+  { id:5,  duration:6.852,  text:'토론이 끝난 뒤에만 공통 단서 더미에서 카드 한 장을 공개합니다. 그러면 이번 라운드는 끝입니다.' },
+  { id:6,  duration:9.197, text:'중요한 규칙입니다. 이후 라운드에서는 지목자가 자기 짐을 먼저 공개하지 않습니다. 새로 지목받은 사람만 짐을 공개합니다.' },
+  { id:7,  duration:8.572, text:'예시로 볼게요. 첫 라운드에서 A가 선 플레이어라면, A는 자기 짐 한 장을 공개한 뒤 B와 C를 의심 대상으로 고릅니다.' },
+  { id:8,  duration:10.068, text:'다음 라운드에는 B와 C가 지목자가 됩니다. 하지만 B와 C는 자기 짐을 더 공개하지 않습니다. B와 C가 새로 지목한 사람만 공개합니다.' },
+  { id:9,  duration:9.680, text:'만약 B와 C가 둘 다 D를 고르면, D는 짐을 한 장이 아니라 두 장 한 번에 공개합니다. 그리고 다음 라운드에서 D는 혼자 지목권 두 회를 처리합니다.' },
+  { id:10, duration:10.044, text:'개인 짐 열두 장 중 아홉 장이 열리는 순간 게임을 멈춥니다. 공통 단서 카드는 이 숫자에 넣지 않습니다. 남은 세 장은 끝까지 비밀입니다.' },
+  { id:11, duration:11.116, text:'마지막 투표입니다. 공개되지 않은 짐은 추측만 할 수 있습니다. 모두 동시에 가장 의심되는 사람 한 명을 가리키고, 표를 가장 많이 받은 사람이 책임자로 보고됩니다.' },
+  { id:12, duration:6.446, text:'투표가 끝난 뒤에만 QR을 스캔합니다. QR을 보면 진상과 후일담을 확인할 수 있습니다.' },
+  { id:13, duration:3.086,  text:'이제 추리를 시작하세요.' }
 ];
 
 const stage = document.getElementById('stage');
@@ -772,8 +807,8 @@ const slideStarts = SLIDES.map((_, idx) => SLIDES.slice(0, idx).reduce((s,x)=>s+
 // NotebookLM 등 외부 보이스오버를 정확히 맞추고 싶다면 초 단위 시작점을 넣습니다.
 // 예: [0, 8.2, 16.5, ...]. 비워두면 전체 길이에 맞춰 자동으로 비율 싱크합니다.
 const VOICEOVER_CUES = [
-  0.000, 11.685, 18.551, 23.595, 30.780, 35.883, 42.925,
-  52.887, 62.130, 73.013, 83.359, 90.623, 100.408, 107.209
+  0.000, 14.255, 23.770, 29.056, 35.691, 41.695, 48.547,
+  57.744, 66.316, 76.384, 86.064, 96.108, 107.224, 113.670
 ];
 
 const synth = window.speechSynthesis;
@@ -955,10 +990,10 @@ function voiceLooksMale(voice){
 
 function naturalRateForVoice(voice){
   const name = (voice?.name || '').toLowerCase();
-  if (name.includes('grandpa')) return 0.94;
-  if (voiceLooksMale(voice)) return 0.94;
-  if (name.includes('google') || name.includes('microsoft') || name.includes('siri')) return 0.9;
-  return 0.9;
+  if (name.includes('grandpa')) return 1.0;
+  if (voiceLooksMale(voice)) return 1.02;
+  if (name.includes('google') || name.includes('microsoft') || name.includes('siri')) return 1.0;
+  return 0.98;
 }
 
 function naturalPitchForVoice(voice){

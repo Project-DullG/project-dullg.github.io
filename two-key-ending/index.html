@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="보충반의 사라진 열쇠 · 미스터리 추리 게임 엔딩북. 점수 계산 → 시나리오 이해 점검 → 엔딩과 사건의 전말까지.">
+  <meta name="description" content="보충반의 사라진 열쇠 · 미스터리 추리 게임 엔딩북. 룰북 → 점수 → 퀴즈 → 엔딩 → 사건의 전말 순서로 진행합니다.">
   <title>보충반의 사라진 열쇠 · 엔딩북</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="style.css">
@@ -34,29 +34,57 @@
         <span class="ending-badge">STEP 1</span>
         <div class="ending-info">
           <div class="ending-title">점수 계산</div>
-          <div class="ending-desc">각자 본인의 목표 달성 여부를 체크해 개인 점수를 정리합니다.</div>
+          <div class="ending-desc">각자 본인의 캐릭터를 선택하고 목표 달성 여부를 체크합니다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
-      <a href="quiz.html" class="ending-card" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">
-        <span class="ending-badge">STEP 2</span>
-        <div class="ending-info">
-          <div class="ending-title">시나리오 이해 점검</div>
-          <div class="ending-desc">본인의 캐릭터를 선택한 뒤 7문항 추리 퀴즈를 풉니다. 결과는 기록에 저장됩니다.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
-      <a href="endings.html" class="ending-card" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
-        <span class="ending-badge">STEP 3</span>
-        <div class="ending-info">
-          <div class="ending-title">엔딩 · 사건의 전말</div>
-          <div class="ending-desc">지목된 인물의 결말을 먼저 본 뒤, 사건의 전말을 확인합니다. <strong style="color:#eecb86">사건의 진상이 포함됩니다.</strong></div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
+
+      <button type="button" class="reveal-toggle" id="revealToggle">
+        <span class="reveal-icon">▼</span>
+        <span class="reveal-text">다음 단계 펼치기 (STEP 2 · 3)</span>
+        <span class="reveal-hint">스포일러 주의 · 게임이 끝난 뒤 펼치세요</span>
+      </button>
+
+      <div id="laterSteps" class="later-steps" hidden>
+        <a href="quiz.html" class="ending-card" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">
+          <span class="ending-badge">STEP 2</span>
+          <div class="ending-info">
+            <div class="ending-title">시나리오 이해 점검</div>
+            <div class="ending-desc">캐릭터를 그대로 이어 7문항 추리 퀴즈를 풉니다. 결과는 기록에 저장됩니다.</div>
+          </div>
+          <span class="ending-arrow">&#10095;</span>
+        </a>
+        <a href="endings.html" class="ending-card" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+          <span class="ending-badge">STEP 3</span>
+          <div class="ending-info">
+            <div class="ending-title">엔딩 · 사건의 전말</div>
+            <div class="ending-desc">지목된 인물의 결말을 본 뒤, 사건의 전말을 확인합니다. <strong style="color:#eecb86">사건의 진상이 포함됩니다.</strong></div>
+          </div>
+          <span class="ending-arrow">&#10095;</span>
+        </a>
+      </div>
     </nav>
 
     <footer class="footer">보충반의 사라진 열쇠 · Ending Book</footer>
   </main>
+
+  <script>
+    (function () {
+      const toggle = document.getElementById('revealToggle');
+      const later = document.getElementById('laterSteps');
+
+      function reveal() {
+        later.hidden = false;
+        toggle.hidden = true;
+      }
+      toggle.addEventListener('click', reveal);
+
+      try {
+        const state = JSON.parse(localStorage.getItem('two-key-state') || '{}');
+        const quizResult = localStorage.getItem('two-key-quiz-result');
+        if ((state && state.character) || quizResult) reveal();
+      } catch {}
+    })();
+  </script>
 </body>
 </html>
