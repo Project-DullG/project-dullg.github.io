@@ -13,7 +13,7 @@
     <header class="header">
       <a href="index.html" class="tag" style="text-decoration:none">STEP 2 · QUIZ</a>
       <h1>시나리오 이해 점검</h1>
-      <p class="subtitle">사건의 전말을 보기 전, 본인이 추리한 내용을 점검합니다.</p>
+      <p class="subtitle">엔딩을 보기 전, 본인이 추리한 내용을 점검합니다.</p>
     </header>
 
     <div class="step-indicator" aria-label="진행 단계 2/3">
@@ -39,7 +39,7 @@
     <section id="quiz" hidden>
       <div class="quiz-bar">
         <span class="active-char" id="activeChar"></span>
-        <span class="quiz-progress" id="quizProgress">0 / 7 응답</span>
+        <span class="quiz-progress" id="quizProgress"></span>
       </div>
       <div id="questions"></div>
       <button class="submit-btn" id="submitBtn" disabled>결과 확인</button>
@@ -49,7 +49,7 @@
       <section class="chapter conclusion result-card" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
         <div class="chapter-num">RESULT</div>
         <div class="chapter-title">시나리오 이해 점수</div>
-        <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of">/ 7</span></p>
+        <p class="result-score"><strong id="scoreNum">0</strong> <span class="result-of" id="scoreOf"></span></p>
         <p class="result-side" id="resultSide"></p>
       </section>
       <section class="chapter answer-summary" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -145,6 +145,7 @@
     const $progress = document.getElementById('quizProgress');
     const $submitBtn = document.getElementById('submitBtn');
     const $scoreNum = document.getElementById('scoreNum');
+    const $scoreOf = document.getElementById('scoreOf');
     const $resultSide = document.getElementById('resultSide');
     const $answerList = document.getElementById('answerList');
     const $saveStatus = document.getElementById('saveStatus');
@@ -164,6 +165,7 @@
       if (color) $activeChar.style.setProperty('--card-color', color);
       $charSelect.hidden = true;
       $quiz.hidden = false;
+      initProgress();
       renderQuestions();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -231,6 +233,11 @@
       $submitBtn.disabled = answered < QUESTIONS.length;
     }
 
+    function initProgress() {
+      $progress.textContent = '0 / ' + QUESTIONS.length + ' 응답';
+      $scoreOf.textContent = '/ ' + QUESTIONS.length;
+    }
+
     $submitBtn.addEventListener('click', submit);
 
     function submit() {
@@ -264,10 +271,11 @@
       $scoreNum.textContent = String(score);
 
       const saved = loadState();
+      const quizSummary = '시나리오 이해 ' + score + ' / ' + QUESTIONS.length;
       if (typeof saved.scoreCalc === 'number') {
-        $resultSide.textContent = '미션 점수 ' + saved.scoreCalc + '점 · 시나리오 이해 ' + score + ' / 7';
+        $resultSide.textContent = '미션 점수 ' + saved.scoreCalc + '점 · ' + quizSummary;
       } else {
-        $resultSide.textContent = '시나리오 이해 ' + score + ' / 7';
+        $resultSide.textContent = quizSummary;
       }
 
       renderAnswerSummary();
