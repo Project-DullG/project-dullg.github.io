@@ -300,6 +300,46 @@ body::after{
   color:var(--gold-bright); letter-spacing:.05em;
   text-shadow:0 0 40px rgba(217,185,86,.5);
 }
+.discussion-panel{
+  width:min(720px,92vw);
+  display:grid; grid-template-columns:170px 1fr; gap:1rem; align-items:stretch;
+}
+.discussion-clock{
+  border:2px solid rgba(217,185,86,.42); border-radius:12px;
+  background:rgba(217,185,86,.08);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  box-shadow:0 16px 34px rgba(0,0,0,.36), inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.discussion-clock .timer-big{ font-size:3.9rem; }
+.discussion-clock span{
+  margin-top:.25rem; color:var(--muted); font-size:.75rem; font-weight:800;
+  letter-spacing:.18em;
+}
+.discussion-guide{
+  display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.65rem;
+}
+.guide-card{
+  min-height:128px; padding:1rem .85rem;
+  border:2px solid var(--line); border-radius:12px;
+  background:rgba(28,26,36,.82);
+  box-shadow:0 14px 30px rgba(0,0,0,.34);
+  display:flex; flex-direction:column; justify-content:center; text-align:left;
+}
+.guide-card b{
+  color:var(--gold-bright); font-family:'Noto Serif KR',serif;
+  font-size:1.02rem; line-height:1.25;
+}
+.guide-card span{
+  margin-top:.45rem; color:var(--text); font-size:.78rem; line-height:1.45;
+}
+.extension-note{
+  grid-column:1 / -1;
+  border:1px solid rgba(192,53,74,.44); border-radius:8px;
+  background:rgba(192,53,74,.12); color:var(--bone);
+  padding:.48rem .7rem; font-size:.78rem; font-weight:800;
+  letter-spacing:.03em; text-align:center;
+}
+.extension-note strong{ color:#ffd9df; }
 
 /* 12장 덱 */
 .deck-12{
@@ -521,6 +561,14 @@ body::after{
   .mini-luggage::before{ top:-5px; width:10px; height:7px; }
   .deck-12 .c{ width:22px; height:32px; }
   .timer-big{ font-size:3rem; }
+  .discussion-panel{ grid-template-columns:1fr; gap:.65rem; width:100%; }
+  .discussion-clock{ padding:.65rem 0; }
+  .discussion-clock .timer-big{ font-size:2.8rem; }
+  .discussion-guide{ grid-template-columns:1fr; gap:.45rem; }
+  .guide-card{ min-height:auto; padding:.7rem .8rem; }
+  .guide-card b{ font-size:.88rem; }
+  .guide-card span{ font-size:.7rem; }
+  .extension-note{ font-size:.68rem; padding:.4rem .55rem; }
   .qr-box{ width:100px; height:100px; font-size:.78rem; }
   .caption{ bottom:5.5rem; padding:0 1rem; }
   .caption-text{ font-size:.88rem; padding:.55rem 1rem; }
@@ -540,35 +588,6 @@ body::after{
 </style>
 </head>
 <body>
-
-<!-- 사이트 흐름 복귀 버튼 -->
-<a href="index.html" class="rulebook-back" aria-label="처음으로">
-  <span class="rulebook-back-arrow">&#8592;</span>
-  <span class="rulebook-back-text">처음으로</span>
-</a>
-<style>
-  .rulebook-back {
-    position: fixed; top: 18px; left: 18px; z-index: 100;
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 14px; border-radius: 999px;
-    background: rgba(20, 18, 28, 0.78); backdrop-filter: blur(8px);
-    border: 1px solid rgba(201, 168, 76, 0.4);
-    color: #f2ead9; text-decoration: none;
-    font-family: 'Noto Sans KR', -apple-system, sans-serif;
-    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.3px;
-    transition: all 0.25s ease;
-  }
-  .rulebook-back:hover {
-    background: rgba(30, 26, 38, 0.92);
-    border-color: #c9a84c;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-  }
-  .rulebook-back-arrow { font-size: 1rem; line-height: 1; }
-  @media (max-width: 640px) {
-    .rulebook-back { top: 12px; left: 12px; padding: 7px 12px; font-size: 0.76rem; }
-  }
-</style>
 
 <!-- 영상 스테이지 — 슬라이드들 -->
 <div class="stage" id="stage">
@@ -655,9 +674,20 @@ body::after{
     <div class="slide-step-number">04</div>
     <h2 class="slide-title">공개된 짐으로 <strong>5분</strong> 이야기</h2>
     <div class="visual">
-      <div class="timer-big">05:00</div>
+      <div class="discussion-panel">
+        <div class="discussion-clock">
+          <div class="timer-big">05:00</div>
+          <span>DISCUSSION</span>
+        </div>
+        <div class="discussion-guide">
+          <div class="guide-card"><b>왜 이 짐을?</b><span>공개된 짐을 왜 가지고 있었는지 먼저 설명합니다.</span></div>
+          <div class="guide-card"><b>말이 맞는가?</b><span>카드 내용과 설명이 서로 어긋나는지 확인합니다.</span></div>
+          <div class="guide-card"><b>누가 범인 같나?</b><span>두 열쇠 사건의 범인을 근거와 함께 지목해 봅니다.</span></div>
+          <div class="extension-note">시간 부족 시 <strong>최대 5분 연장 가능</strong> · 연장 시간에는 <strong>한국말 사용 불가</strong></div>
+        </div>
+      </div>
     </div>
-    <p class="slide-sub">보인 카드와 단서를 보고<br>누가 의심스러운지 함께 말합니다.</p>
+    <p class="slide-sub">보인 카드와 단서를 근거로<br>짐의 이유와 의심 대상을 함께 이야기합니다.</p>
     <p class="rule-note"><strong>토론 기준:</strong> 공개된 짐, 공통 단서, 서로의 말을 근거로 삼습니다.</p>
   </div>
 
@@ -826,20 +856,20 @@ body::after{
 <script>
 // ═══ 슬라이드 + 내레이션 ═══
 const SLIDES = [
-  { id:0,  duration:9.791, text:'게임을 시작하기 전, 각자 자신의 소지품 카드 세 장을 받습니다. 그리고 가위바위보처럼 모두가 동의한 방법으로 가장 먼저 시작할 선 플레이어를 정합니다.' },
-  { id:1,  duration:9.827,  text:'첫 라운드입니다. 정해진 선 플레이어가 자기 짐 카드 세 장 중 한 장을 골라 모두에게 보여줍니다. 공개된 짐은 계속 테이블 위에 남습니다.' },
-  { id:2,  duration:5.286,  text:'그 다음, 선 플레이어가 자신을 제외한 사람 중 의심되는 두 명을 차례로 지목합니다.' },
-  { id:3,  duration:6.635, text:'지목받은 두 사람도 짐 한 장씩을 공개합니다. 그래서 첫 라운드에는 총 세 장이 열립니다.' },
-  { id:4,  duration:6.004,  text:'공개된 짐과 공통 단서, 그리고 서로의 말을 근거로 모두 함께 5분 동안 이야기합니다.' },
-  { id:5,  duration:6.852,  text:'토론이 끝난 뒤에만 공통 단서 더미에서 카드 한 장을 공개합니다. 그러면 이번 라운드는 끝입니다.' },
-  { id:6,  duration:9.197, text:'중요한 규칙입니다. 이후 라운드에서는 지목자가 자기 짐을 먼저 공개하지 않습니다. 새로 지목받은 사람만 짐을 공개합니다.' },
-  { id:7,  duration:8.530, text:'예시로 볼게요. 첫 라운드에서 A가 선 플레이어라면, A는 자기 짐 한 장을 공개한 뒤 B와 C를 의심 대상으로 고릅니다.' },
-  { id:8,  duration:10.045, text:'다음 라운드에는 B와 C가 지목자가 됩니다. 하지만 B와 C는 자기 짐을 더 공개하지 않습니다. B와 C가 새로 지목한 사람만 공개합니다.' },
-  { id:9,  duration:9.697, text:'만약 B와 C가 둘 다 D를 고르면, D는 짐을 한 장이 아니라 두 장 한 번에 공개합니다. 그리고 다음 라운드에서 D는 혼자 지목권 두 회를 처리합니다.' },
-  { id:10, duration:10.045, text:'개인 짐 열두 장 중 아홉 장이 열리는 순간 게임을 멈춥니다. 공통 단서 카드는 이 숫자에 넣지 않습니다. 남은 세 장은 끝까지 비밀입니다.' },
-  { id:11, duration:11.116, text:'마지막 투표입니다. 공개되지 않은 짐은 추측만 할 수 있습니다. 모두 동시에 가장 의심되는 사람 한 명을 가리키고, 표를 가장 많이 받은 사람이 책임자로 보고됩니다.' },
-  { id:12, duration:6.281, text:'투표가 끝난 뒤에만 QR을 스캔합니다. QR을 보면 진상과 후일담을 확인할 수 있습니다.' },
-  { id:13, duration:2.276,  text:'이제 추리를 시작하세요.' }
+  { id:0,  duration:11.448, text:'게임을 시작하기 전, 각자 자신의 소지품 카드 세 장을 받습니다. 그리고 가위바위보처럼 모두가 동의한 방법으로 가장 먼저 시작할 선 플레이어를 정합니다.' },
+  { id:1,  duration:10.728, text:'첫 라운드입니다. 정해진 선 플레이어가 자기 짐 카드 세 장 중 한 장을 골라 모두에게 보여줍니다. 공개된 짐은 계속 테이블 위에 남습니다.' },
+  { id:2,  duration:6.072, text:'그 다음, 선 플레이어가 자신을 제외한 사람 중 의심되는 두 명을 차례로 지목합니다.' },
+  { id:3,  duration:7.296, text:'지목받은 두 사람도 짐 한 장씩을 공개합니다. 그래서 첫 라운드에는 총 세 장이 열립니다.' },
+  { id:4,  duration:11.928, text:'공개된 짐과 공통 단서, 그리고 서로의 말을 근거로 모두 함께 5분 동안 이야기합니다. 왜 이 짐을 가지고 있었는지, 누가 두 열쇠 사건의 범인처럼 보이는지 말해 보세요.' },
+  { id:5,  duration:7.656, text:'토론이 끝난 뒤에만 공통 단서 더미에서 카드 한 장을 공개합니다. 그러면 이번 라운드는 끝입니다.' },
+  { id:6,  duration:10.032, text:'중요한 규칙입니다. 이후 라운드에서는 지목자가 자기 짐을 먼저 공개하지 않습니다. 새로 지목받은 사람만 짐을 공개합니다.' },
+  { id:7,  duration:9.168, text:'예시로 볼게요. 첫 라운드에서 A가 선 플레이어라면, A는 자기 짐 한 장을 공개한 뒤 B와 C를 의심 대상으로 고릅니다.' },
+  { id:8,  duration:10.944, text:'다음 라운드에는 B와 C가 지목자가 됩니다. 하지만 B와 C는 자기 짐을 더 공개하지 않습니다. B와 C가 새로 지목한 사람만 공개합니다.' },
+  { id:9,  duration:10.872, text:'만약 B와 C가 둘 다 D를 고르면, D는 짐을 한 장이 아니라 두 장 한 번에 공개합니다. 그리고 다음 라운드에서 D는 혼자 지목권 두 회를 처리합니다.' },
+  { id:10, duration:10.632, text:'개인 짐 열두 장 중 아홉 장이 열리는 순간 게임을 멈춥니다. 공통 단서 카드는 이 숫자에 넣지 않습니다. 남은 세 장은 끝까지 비밀입니다.' },
+  { id:11, duration:11.88, text:'마지막 투표입니다. 공개되지 않은 짐은 추측만 할 수 있습니다. 모두 동시에 가장 의심되는 사람 한 명을 가리키고, 표를 가장 많이 받은 사람이 책임자로 보고됩니다.' },
+  { id:12, duration:7.008, text:'투표가 끝난 뒤에만 QR을 스캔합니다. QR을 보면 진상과 후일담을 확인할 수 있습니다.' },
+  { id:13, duration:2.112, text:'이제 추리를 시작하세요.' }
 ];
 
 const stage = document.getElementById('stage');
@@ -877,8 +907,8 @@ const slideStarts = SLIDES.map((_, idx) => SLIDES.slice(0, idx).reduce((s,x)=>s+
 // NotebookLM 등 외부 보이스오버를 정확히 맞추고 싶다면 초 단위 시작점을 넣습니다.
 // 예: [0, 8.2, 16.5, ...]. 비워두면 전체 길이에 맞춰 자동으로 비율 싱크합니다.
 const VOICEOVER_CUES = [
-  0.000, 9.791, 19.618, 24.904, 31.539, 37.543, 44.395,
-  53.592, 62.122, 72.167, 81.864, 91.909, 103.025, 109.306
+  0.000, 11.448, 22.176, 28.248, 35.544, 47.472, 55.128,
+  65.160, 74.328, 85.272, 96.144, 106.776, 118.656, 125.664
 ];
 
 const synth = window.speechSynthesis;
