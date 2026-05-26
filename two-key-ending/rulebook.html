@@ -318,6 +318,54 @@ body::after{
 .discussion-guide{
   display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:.65rem;
 }
+.immersion-panel{
+  width:min(760px,92vw);
+  display:grid; grid-template-columns:1.05fr .95fr; gap:1rem; align-items:stretch;
+}
+.identity-card{
+  border:2px solid rgba(217,185,86,.46); border-radius:18px;
+  background:
+    linear-gradient(135deg, rgba(217,185,86,.13), rgba(107,63,160,.18)),
+    rgba(28,26,36,.88);
+  box-shadow:0 18px 42px rgba(0,0,0,.42), inset 0 0 0 1px rgba(255,255,255,.05);
+  padding:1.35rem 1.25rem; text-align:left;
+  display:flex; flex-direction:column; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.identity-card::before{
+  content:'ROLE'; position:absolute; right:-.2rem; top:.2rem;
+  font-family:'Noto Serif KR',serif; font-size:4.8rem; font-weight:900;
+  color:rgba(255,255,255,.035); letter-spacing:.04em;
+}
+.identity-card .label{
+  color:var(--gold); font-size:.72rem; letter-spacing:.18em;
+  font-weight:900; margin-bottom:.7rem;
+}
+.identity-card b{
+  color:var(--bone); font-family:'Noto Serif KR',serif;
+  font-size:1.55rem; line-height:1.25;
+}
+.identity-card p{
+  color:var(--text); font-size:.9rem; line-height:1.55;
+  margin-top:.8rem;
+}
+.identity-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:.7rem;
+}
+.identity-chip{
+  min-height:88px; border:2px solid var(--line); border-radius:14px;
+  background:rgba(28,26,36,.82); padding:.9rem .85rem;
+  text-align:left; display:flex; flex-direction:column; justify-content:center;
+  box-shadow:0 14px 30px rgba(0,0,0,.28);
+}
+.identity-chip b{
+  color:var(--gold-bright); font-family:'Noto Serif KR',serif;
+  font-size:1rem; line-height:1.2;
+}
+.identity-chip span{
+  color:var(--text); font-size:.76rem; line-height:1.4;
+  margin-top:.42rem;
+}
 .guide-card{
   min-height:128px; padding:1rem .85rem;
   border:2px solid var(--line); border-radius:12px;
@@ -565,6 +613,14 @@ body::after{
   .discussion-clock{ padding:.65rem 0; }
   .discussion-clock .timer-big{ font-size:2.8rem; }
   .discussion-guide{ grid-template-columns:1fr; gap:.45rem; }
+  .immersion-panel{ grid-template-columns:1fr; gap:.65rem; width:100%; }
+  .identity-card{ padding:1rem .95rem; }
+  .identity-card b{ font-size:1.22rem; }
+  .identity-card p{ font-size:.78rem; }
+  .identity-grid{ grid-template-columns:1fr 1fr; gap:.45rem; }
+  .identity-chip{ min-height:74px; padding:.72rem .65rem; }
+  .identity-chip b{ font-size:.86rem; }
+  .identity-chip span{ font-size:.67rem; }
   .guide-card{ min-height:auto; padding:.7rem .8rem; }
   .guide-card b{ font-size:.88rem; }
   .guide-card span{ font-size:.7rem; }
@@ -591,6 +647,29 @@ body::after{
 
 <!-- 영상 스테이지 — 슬라이드들 -->
 <div class="stage" id="stage">
+
+  <!-- 작품 특성 -->
+  <div class="slide" data-id="intro">
+    <div class="slide-eyebrow">작품 특성</div>
+    <h2 class="slide-title">관객이 아니라<br><strong>사건 속 인물</strong>이 됩니다</h2>
+    <div class="visual">
+      <div class="immersion-panel">
+        <div class="identity-card">
+          <div class="label">IMMERSIVE MYSTERY</div>
+          <b>내가 맡은 캐릭터처럼<br>생각하고 말하는 게임</b>
+          <p>각자에게는 비밀, 목적, 알고 있는 정보가 다르게 주어집니다. 여러분은 그 인물의 입장에서 선택하고 의심하며 사건 안으로 들어갑니다.</p>
+        </div>
+        <div class="identity-grid">
+          <div class="identity-chip"><b>비밀</b><span>말할 것과 숨길 것을 직접 고릅니다.</span></div>
+          <div class="identity-chip"><b>목적</b><span>내 캐릭터가 원하는 결과를 생각합니다.</span></div>
+          <div class="identity-chip"><b>대화</b><span>질문과 반박으로 모순을 찾습니다.</span></div>
+          <div class="identity-chip"><b>단서</b><span>공개된 정보만 근거로 조합합니다.</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="slide-sub">이 작품은 미스터리 추리 장르의 체험형 스토리입니다.<br>한 사건에 얽힌 캐릭터가 되어 직접 이야기 안으로 들어갑니다.</p>
+    <p class="rule-note"><strong>핵심:</strong> 범인을 맞히는 것만이 아니라, 역할에 몰입해 사건의 전말을 함께 완성하는 과정이 중요합니다.</p>
+  </div>
 
   <!-- 0. 초기 세팅 -->
   <div class="slide" data-id="0">
@@ -680,14 +759,14 @@ body::after{
           <span>DISCUSSION</span>
         </div>
         <div class="discussion-guide">
-          <div class="guide-card"><b>왜 이 짐을?</b><span>공개된 짐을 왜 가지고 있었는지 먼저 설명합니다.</span></div>
+          <div class="guide-card"><b>캐릭터 입장</b><span>내가 왜 이 짐을 가지고 있었는지 역할 안에서 설명합니다.</span></div>
           <div class="guide-card"><b>말이 맞는가?</b><span>카드 내용과 설명이 서로 어긋나는지 확인합니다.</span></div>
-          <div class="guide-card"><b>누가 범인 같나?</b><span>두 열쇠 사건의 범인을 근거와 함께 지목해 봅니다.</span></div>
+          <div class="guide-card"><b>비밀은 지키기</b><span>비공개 시트와 닫힌 카드는 보여주지 않고, 말로 선택해 설명합니다.</span></div>
           <div class="extension-note">시간 부족 시 <strong>최대 5분 연장 가능</strong> · 연장 시간에는 <strong>한국말 사용 불가</strong></div>
         </div>
       </div>
     </div>
-    <p class="slide-sub">보인 카드와 단서를 근거로<br>짐의 이유와 의심 대상을 함께 이야기합니다.</p>
+    <p class="slide-sub">보인 카드와 단서를 근거로<br>캐릭터의 선택, 말의 모순, 의심 대상을 함께 이야기합니다.</p>
     <p class="rule-note"><strong>토론 기준:</strong> 공개된 짐, 공통 단서, 서로의 말을 근거로 삼습니다.</p>
   </div>
 
@@ -840,7 +919,7 @@ body::after{
     <div class="timeline-progress" id="timelineProgress"></div>
   </div>
   <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
-  <div class="slide-counter" id="slideCounter">01 / 14</div>
+  <div class="slide-counter" id="slideCounter">01 / 15</div>
 </div>
 
 <!-- 시작 오버레이 -->
@@ -856,20 +935,21 @@ body::after{
 <script>
 // ═══ 슬라이드 + 내레이션 ═══
 const SLIDES = [
-  { id:0,  duration:11.448, text:'게임을 시작하기 전, 각자 자신의 소지품 카드 세 장을 받습니다. 그리고 가위바위보처럼 모두가 동의한 방법으로 가장 먼저 시작할 선 플레이어를 정합니다.' },
-  { id:1,  duration:10.728, text:'첫 라운드입니다. 정해진 선 플레이어가 자기 짐 카드 세 장 중 한 장을 골라 모두에게 보여줍니다. 공개된 짐은 계속 테이블 위에 남습니다.' },
-  { id:2,  duration:6.072, text:'그 다음, 선 플레이어가 자신을 제외한 사람 중 의심되는 두 명을 차례로 지목합니다.' },
-  { id:3,  duration:7.296, text:'지목받은 두 사람도 짐 한 장씩을 공개합니다. 그래서 첫 라운드에는 총 세 장이 열립니다.' },
-  { id:4,  duration:11.928, text:'공개된 짐과 공통 단서, 그리고 서로의 말을 근거로 모두 함께 5분 동안 이야기합니다. 왜 이 짐을 가지고 있었는지, 누가 두 열쇠 사건의 범인처럼 보이는지 말해 보세요.' },
-  { id:5,  duration:7.656, text:'토론이 끝난 뒤에만 공통 단서 더미에서 카드 한 장을 공개합니다. 그러면 이번 라운드는 끝입니다.' },
-  { id:6,  duration:10.032, text:'중요한 규칙입니다. 이후 라운드에서는 지목자가 자기 짐을 먼저 공개하지 않습니다. 새로 지목받은 사람만 짐을 공개합니다.' },
-  { id:7,  duration:9.168, text:'예시로 볼게요. 첫 라운드에서 A가 선 플레이어라면, A는 자기 짐 한 장을 공개한 뒤 B와 C를 의심 대상으로 고릅니다.' },
-  { id:8,  duration:10.944, text:'다음 라운드에는 B와 C가 지목자가 됩니다. 하지만 B와 C는 자기 짐을 더 공개하지 않습니다. B와 C가 새로 지목한 사람만 공개합니다.' },
-  { id:9,  duration:10.872, text:'만약 B와 C가 둘 다 D를 고르면, D는 짐을 한 장이 아니라 두 장 한 번에 공개합니다. 그리고 다음 라운드에서 D는 혼자 지목권 두 회를 처리합니다.' },
-  { id:10, duration:10.632, text:'개인 짐 열두 장 중 아홉 장이 열리는 순간 게임을 멈춥니다. 공통 단서 카드는 이 숫자에 넣지 않습니다. 남은 세 장은 끝까지 비밀입니다.' },
-  { id:11, duration:11.88, text:'마지막 투표입니다. 공개되지 않은 짐은 추측만 할 수 있습니다. 모두 동시에 가장 의심되는 사람 한 명을 가리키고, 표를 가장 많이 받은 사람이 책임자로 보고됩니다.' },
-  { id:12, duration:7.008, text:'투표가 끝난 뒤에만 QR을 스캔합니다. QR을 보면 진상과 후일담을 확인할 수 있습니다.' },
-  { id:13, duration:2.112, text:'이제 추리를 시작하세요.' }
+  { id:'intro', duration:25.413, text:'이 작품은 미스터리 추리 장르의 체험형 스토리입니다. 참가자는 관객처럼 사건을 지켜보는 것이 아니라, 사건에 얽힌 한 명의 캐릭터가 되어 직접 이야기 안으로 들어갑니다. 각자의 비밀과 목적을 생각하며 말하고, 선택하고, 의심하는 것이 이 작품의 핵심입니다.' },
+  { id:0,  duration:15.548, text:'게임을 시작하기 전, 각자 자신의 소지품 카드 세 장을 받습니다. 그리고 가위바위보처럼 모두가 동의한 방법으로 가장 먼저 시작할 선 플레이어를 정합니다.' },
+  { id:1,  duration:14.591, text:'첫 라운드입니다. 정해진 선 플레이어가 자기 짐 카드 세 장 중 한 장을 골라 모두에게 보여줍니다. 공개된 짐은 계속 테이블 위에 남습니다.' },
+  { id:2,  duration:8.524, text:'그 다음, 선 플레이어가 자신을 제외한 사람 중 의심되는 두 명을 차례로 지목합니다.' },
+  { id:3,  duration:9.797, text:'지목받은 두 사람도 짐 한 장씩을 공개합니다. 그래서 첫 라운드에는 총 세 장이 열립니다.' },
+  { id:4,  duration:24.700, text:'공개된 짐과 공통 단서, 그리고 서로의 말을 근거로 모두 함께 5분 동안 이야기합니다. 내 캐릭터가 왜 이 짐을 가지고 있었는지 설명하고, 다른 사람의 말과 카드 내용이 어긋나는지도 확인하세요. 비공개 시트와 아직 닫힌 카드는 직접 보여주지 않습니다.' },
+  { id:5,  duration:10.170, text:'토론이 끝난 뒤에만 공통 단서 더미에서 카드 한 장을 공개합니다. 그러면 이번 라운드는 끝입니다.' },
+  { id:6,  duration:13.317, text:'중요한 규칙입니다. 이후 라운드에서는 지목자가 자기 짐을 먼저 공개하지 않습니다. 새로 지목받은 사람만 짐을 공개합니다.' },
+  { id:7,  duration:12.197, text:'예시로 볼게요. 첫 라운드에서 A가 선 플레이어라면, A는 자기 짐 한 장을 공개한 뒤 B와 C를 의심 대상으로 고릅니다.' },
+  { id:8,  duration:15.316, text:'다음 라운드에는 B와 C가 지목자가 됩니다. 하지만 B와 C는 자기 짐을 더 공개하지 않습니다. B와 C가 새로 지목한 사람만 공개합니다.' },
+  { id:9,  duration:15.092, text:'만약 B와 C가 둘 다 D를 고르면, D는 짐을 한 장이 아니라 두 장 한 번에 공개합니다. 그리고 다음 라운드에서 D는 혼자 지목권 두 회를 처리합니다.' },
+  { id:10, duration:14.428, text:'개인 짐 열두 장 중 아홉 장이 열리는 순간 게임을 멈춥니다. 공통 단서 카드는 이 숫자에 넣지 않습니다. 남은 세 장은 끝까지 비밀입니다.' },
+  { id:11, duration:17.236, text:'마지막 투표입니다. 공개되지 않은 짐은 추측만 할 수 있습니다. 모두 동시에 가장 의심되는 사람 한 명을 가리키고, 표를 가장 많이 받은 사람이 책임자로 보고됩니다.' },
+  { id:12, duration:10.074, text:'투표가 끝난 뒤에만 QR을 스캔합니다. QR을 보면 진상과 후일담을 확인할 수 있습니다.' },
+  { id:13, duration:2.905, text:'이제 추리를 시작하세요.' }
 ];
 
 const stage = document.getElementById('stage');
@@ -907,8 +987,9 @@ const slideStarts = SLIDES.map((_, idx) => SLIDES.slice(0, idx).reduce((s,x)=>s+
 // NotebookLM 등 외부 보이스오버를 정확히 맞추고 싶다면 초 단위 시작점을 넣습니다.
 // 예: [0, 8.2, 16.5, ...]. 비워두면 전체 길이에 맞춰 자동으로 비율 싱크합니다.
 const VOICEOVER_CUES = [
-  0.000, 11.448, 22.176, 28.248, 35.544, 47.472, 55.128,
-  65.160, 74.328, 85.272, 96.144, 106.776, 118.656, 125.664
+  0.000, 25.413, 40.960, 55.551, 64.075, 73.872, 98.571,
+  108.741, 122.058, 134.254, 149.571, 164.663, 179.091,
+  196.327, 206.401
 ];
 
 const synth = window.speechSynthesis;
@@ -978,6 +1059,10 @@ function hasVoiceoverCues(){
   return Array.isArray(VOICEOVER_CUES) && VOICEOVER_CUES.length === SLIDES.length;
 }
 
+function canUseVoiceoverAudio(){
+  return hasVoiceoverAudio() && hasVoiceoverCues();
+}
+
 function slideIndexForTime(seconds){
   for (let i = 0; i < SLIDES.length; i++) {
     if (seconds < slideStarts[i] + SLIDES[i].duration) return i;
@@ -1005,7 +1090,8 @@ function setSlide(idx, animate=true){
   if (idx < 0 || idx >= SLIDES.length) return;
   currentIdx = idx;
   slides.forEach(s => s.classList.remove('active'));
-  const target = document.querySelector('[data-id="'+idx+'"]');
+  const targetId = SLIDES[idx]?.id ?? idx;
+  const target = document.querySelector('[data-id="'+targetId+'"]');
   if (target) target.classList.add('active');
   // MP3 보이스오버를 쓸 때는 화면 본문과 겹치지 않도록 별도 자막을 숨깁니다.
   captionText.textContent = SLIDES[idx].text;
@@ -1209,7 +1295,7 @@ function play(){
   isPlaying = true;
   setIconPlaying(true);
   controls.classList.add('always');
-  useVoiceoverAudio = hasVoiceoverAudio();
+  useVoiceoverAudio = canUseVoiceoverAudio();
   if (useVoiceoverAudio) {
     setSlide(currentIdx);
     playVoiceoverFromCurrentSlide();
@@ -1241,7 +1327,7 @@ function prev(){
     if (wasPlaying) goToSlide(currentIdx - 1);
     else {
       setSlide(currentIdx - 1);
-      if (hasVoiceoverAudio()) {
+      if (canUseVoiceoverAudio()) {
         useVoiceoverAudio = true;
         voiceoverAudio.currentTime = hasVoiceoverCues()
           ? (VOICEOVER_CUES[currentIdx] || 0)
@@ -1259,7 +1345,7 @@ function next(){
     if (wasPlaying) goToSlide(currentIdx + 1);
     else {
       setSlide(currentIdx + 1);
-      if (hasVoiceoverAudio()) {
+      if (canUseVoiceoverAudio()) {
         useVoiceoverAudio = true;
         voiceoverAudio.currentTime = hasVoiceoverCues()
           ? (VOICEOVER_CUES[currentIdx] || 0)
@@ -1290,7 +1376,7 @@ timeline.addEventListener('click', (e) => {
   const idx = slideIndexForTime(targetSec);
   const wasPlaying = isPlaying;
   synth.cancel();
-  if (hasVoiceoverAudio()) {
+  if (canUseVoiceoverAudio()) {
     useVoiceoverAudio = true;
     const idxStart = hasVoiceoverCues() ? (VOICEOVER_CUES[idx] || 0) : null;
     const idxEnd = hasVoiceoverCues() ? (VOICEOVER_CUES[idx + 1] ?? voiceoverAudio.duration) : null;
