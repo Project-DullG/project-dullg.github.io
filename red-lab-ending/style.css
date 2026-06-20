@@ -189,6 +189,17 @@ h1 {
   line-height: 1.55;
 }
 
+.verdict-note {
+  border-color: rgba(229, 57, 53, .30);
+  background:
+    linear-gradient(135deg, rgba(229, 57, 53, .12), rgba(0, 0, 0, .16)),
+    radial-gradient(circle at 0% 0%, rgba(229, 57, 53, .20), transparent 18rem);
+}
+
+.verdict-note strong {
+  color: #ffb7b3;
+}
+
 .section-title {
   color: var(--dim);
   font-size: .78rem;
