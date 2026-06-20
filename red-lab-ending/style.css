@@ -209,6 +209,24 @@ h1 {
   animation: fadeUp 1.1s ease both;
 }
 
+.signal-line {
+  padding: 18px 20px;
+  color: #ddd !important;
+  text-align: left !important;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-left: 3px solid var(--card-color, var(--red));
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .015)),
+    radial-gradient(circle at 0% 0%, var(--card-glow, rgba(229, 57, 53, .14)), transparent 22rem);
+}
+
+.signal-line strong {
+  color: var(--card-color, var(--red));
+  font-weight: 950;
+  letter-spacing: 1.5px;
+}
+
 .ending-list,
 .link-list {
   display: grid;
@@ -562,6 +580,75 @@ h1 {
   font-size: clamp(1.5rem, 6vw, 2.3rem);
   line-height: 1.2;
   font-weight: 950;
+}
+
+.status-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.status-board-compact {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.status-chip {
+  min-height: 82px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.status-chip span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--dim);
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.status-chip strong {
+  display: block;
+  color: #fff;
+  font-size: .95rem;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.status-red {
+  border-color: rgba(229, 57, 53, .28);
+  background: rgba(229, 57, 53, .07);
+}
+
+.status-red strong { color: #ff8a86; }
+
+.status-tracker {
+  border-color: rgba(78, 204, 163, .28);
+  background: rgba(78, 204, 163, .07);
+}
+
+.status-tracker strong { color: var(--green); }
+.blue-chip strong { color: var(--blue); }
+.yellow-chip strong { color: var(--yellow); }
+.pink-chip strong { color: var(--pink); }
+
+.empty-call {
+  opacity: .78;
+  background: rgba(229, 57, 53, .045);
+}
+
+.empty-call strong {
+  color: #ffb7b3;
+}
+
+.mission-block {
+  --card-color: var(--green);
+  --card-glow: var(--green-soft);
 }
 
 .closing-line {
@@ -1262,6 +1349,20 @@ h1 {
   .rollcall-red {
     grid-template-columns: 1fr;
     gap: 4px;
+  }
+
+  .status-board,
+  .status-board-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .status-chip {
+    min-height: auto;
+    padding: 14px;
+  }
+
+  .signal-line {
+    padding: 16px;
   }
 
   .rollcall-box {
