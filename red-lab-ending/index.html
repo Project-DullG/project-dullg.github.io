@@ -3,93 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="레드가 죽은 연구소 · 진엔딩 페이지">
+  <meta name="description" content="레드가 죽은 연구소 · 진엔딩">
   <title>[Red Lab] 레드가 죽은 연구소 - 진엔딩</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="container">
+  <main class="container landing-simple">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
       <a href="/" class="tag" style="text-decoration:none">Project DullG</a>
-      <h1>〈레드가 죽은 연구소〉</h1>
-      <p class="subtitle">추리는 끝났고, 이제 레드가 남긴 마지막 작전을 읽는다.</p>
+      <h1>레드가 죽은 연구소</h1>
+      <p class="subtitle">진실을 확인한 뒤, 모두가 함께 읽는 마지막 결말.</p>
     </header>
 
-    <section class="guide-box">
-      <div class="guide-title">엔딩 진행 안내</div>
-      <p>최종 투표가 끝난 뒤 진행자가 정답 여부를 확인하고, 모든 플레이어가 함께 진엔딩을 읽습니다. 이 엔딩은 개별 지목 분기가 아니라 사건의 진상, 레드의 진심, 미라클 레인저의 마지막 출동을 한 번에 정리하는 결말입니다.</p>
-      <p class="warning">주의: 아래 페이지에는 범인, 트릭, 동기, 후일담이 모두 포함됩니다.</p>
-      <p>엔딩 페이지에는 〈뱀이 죽은 축제〉와 같은 BGM이 포함되어 있습니다. 하단의 BGM 버튼으로 On/Off 할 수 있습니다.</p>
+    <section class="landing-panel">
+      <p class="landing-kicker">TRUE ENDING</p>
+      <h2>미라클 레인저, 마지막 출동</h2>
+      <p>개별 분기는 없습니다. 범인, 트릭, 레드의 진심, 그리고 남은 네 사람의 선택이 하나의 엔딩으로 이어집니다.</p>
+      <a href="story.html" class="primary-start">엔딩 읽기</a>
     </section>
 
-    <div class="section-title">엔딩의 약속</div>
-    <div class="promise-grid" aria-label="엔딩 구성">
-      <div class="promise-card">
-        <strong>납득</strong>
-        <span>새로운 반전으로 속이지 않고, 이미 나온 단서의 의미를 순서대로 뒤집습니다.</span>
-      </div>
-      <div class="promise-card">
-        <strong>감정</strong>
-        <span>각자의 비밀을 벌하지 않고, 그 침묵이 왜 레드를 고립시켰는지 보여줍니다.</span>
-      </div>
-      <div class="promise-card">
-        <strong>뽕</strong>
-        <span>진상 공개 뒤에 멈추지 않고, 레드 없는 롤콜과 마지막 출동으로 끝냅니다.</span>
-      </div>
-    </div>
-
-    <div class="section-title">회수될 단서</div>
-    <div class="suspect-grid clue-preview" aria-label="핵심 단서 요약">
-      <div class="suspect-card ending-f">
-        <div class="suspect-role">Weapon</div>
-        <div class="suspect-name">피 묻은 소화기</div>
-        <div class="suspect-desc">사람을 구하는 도구가, 그 밤에는 레드를 죽인 흉기가 되었다.</div>
-      </div>
-      <div class="suspect-card ending-a">
-        <div class="suspect-role">Trick</div>
-        <div class="suspect-name">위기감지 알림</div>
-        <div class="suspect-desc">모두가 무시하던 소리가 모든 방문을 열었다.</div>
-      </div>
-      <div class="suspect-card ending-e">
-        <div class="suspect-role">Truth</div>
-        <div class="suspect-name">검은 날개 뱃지</div>
-        <div class="suspect-desc">배신의 표식처럼 보였지만, 사실은 같은 임무의 흔적이었다.</div>
-      </div>
-      <div class="suspect-card ending-b">
-        <div class="suspect-role">Red Herring</div>
-        <div class="suspect-name">금고와 금열쇠</div>
-        <div class="suspect-desc">블루의 죄는 살인이 아니라, 누군가를 돕고 싶던 절박함이었다.</div>
-      </div>
-      <div class="suspect-card ending-c">
-        <div class="suspect-role">Heart</div>
-        <div class="suspect-name">사진 두 장</div>
-        <div class="suspect-desc">옐로의 거짓말은 동기가 되었지만, 범행의 시간이 되지는 못했다.</div>
-      </div>
-      <div class="suspect-card ending-d">
-        <div class="suspect-role">Witness</div>
-        <div class="suspect-name">파우치와 마스터키</div>
-        <div class="suspect-desc">핑크의 부끄러운 수집벽이 오히려 밤의 흐름을 증명한다.</div>
-      </div>
-    </div>
-
-    <a href="story.html" class="final-start">
-      <span class="final-start-kicker">TRUE ENDING</span>
-      <strong>미라클 레인저, 마지막 출동</strong>
-      <span>사건의 전말과 레드 없는 롤콜을 낭독합니다.</span>
-    </a>
-
-    <a href="../ScBQTDiRurU/" class="story-link" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">
-      <strong>프리퀄 게임으로 이동 &#8594;</strong>
-      <span>미라클 레인저 · 박사의 하루</span>
-    </a>
+    <section class="quiet-note">
+      <p>이 페이지에는 사건의 진상과 후일담이 포함됩니다. BGM은 하단 버튼으로 켜고 끌 수 있습니다.</p>
+    </section>
 
     <a href="/" class="back-link">Project DullG 메인 페이지</a>
 
-    <footer class="footer">
-      &copy; Project DullG &middot; 레드가 죽은 연구소
-    </footer>
+    <footer class="footer">&copy; Project DullG &middot; 레드가 죽은 연구소</footer>
   </main>
   <script src="bgm.js"></script>
 </body>
