@@ -463,20 +463,19 @@ h1 {
 }
 
 .ending-script {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: rgba(16, 16, 20, .76);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, .26);
-  overflow: hidden;
+  display: grid;
+  gap: 24px;
 }
 
 .script-block {
   padding: 34px;
-  border-bottom: 1px solid rgba(255, 255, 255, .075);
-}
-
-.script-block:last-child {
-  border-bottom: 0;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(28, 28, 34, .92), rgba(11, 11, 15, .94)),
+    radial-gradient(circle at 0% 0%, var(--card-glow, rgba(229, 57, 53, .11)), transparent 28rem);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, .28);
+  overflow: hidden;
 }
 
 .script-block h2 {
@@ -501,7 +500,7 @@ h1 {
 .script-block blockquote {
   margin: 22px 0;
   padding: 20px 22px;
-  border-left: 3px solid var(--card-color, var(--red));
+  border-left: 3px solid var(--red);
   background: rgba(255, 255, 255, .035);
 }
 
@@ -536,6 +535,11 @@ h1 {
   --card-color: var(--green);
 }
 
+.sequence-block {
+  --card-color: var(--gold);
+  --card-glow: var(--gold-soft);
+}
+
 .rollcall-simple {
   --card-color: var(--red);
   background: rgba(229, 57, 53, .045);
@@ -563,6 +567,20 @@ h1 {
 .closing-line {
   color: #fff !important;
   font-weight: 850;
+}
+
+.ending-caption {
+  margin-top: 30px;
+  padding: 22px;
+  color: #fff !important;
+  font-size: 1.12rem !important;
+  font-weight: 850;
+  line-height: 1.8 !important;
+  text-align: center;
+  border: 1px solid rgba(229, 57, 53, .28);
+  border-radius: 12px;
+  background: rgba(229, 57, 53, .10);
+  box-shadow: inset 0 0 28px rgba(229, 57, 53, .08);
 }
 
 .promise-grid {
@@ -1094,6 +1112,38 @@ h1 {
   border-top: 1px solid var(--line);
 }
 
+#bgm-controller {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 999;
+}
+
+#bgm-btn {
+  width: 46px;
+  height: 46px;
+  color: #fff;
+  font-size: 18px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .48);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .38);
+  transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+
+#bgm-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--red);
+  box-shadow: 0 14px 36px rgba(229, 57, 53, .20);
+}
+
+#bgm-btn.is-playing {
+  border-color: var(--red);
+  box-shadow: 0 14px 38px rgba(229, 57, 53, .26);
+}
+
 @keyframes fadeDown {
   from { opacity: 0; transform: translateY(-18px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1134,6 +1184,10 @@ h1 {
 
   .script-block {
     padding: 25px 20px;
+  }
+
+  .ending-script {
+    gap: 18px;
   }
 
   .script-block p {
@@ -1216,6 +1270,11 @@ h1 {
 
   .team-call {
     padding: 20px 16px;
+  }
+
+  .ending-caption {
+    padding: 18px 16px;
+    font-size: 1rem !important;
   }
 
   .guide-stack {
