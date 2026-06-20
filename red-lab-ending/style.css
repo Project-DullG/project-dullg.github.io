@@ -221,35 +221,6 @@ h1 {
   color: #bda9ef;
 }
 
-.condition-card {
-  border-color: rgba(212, 168, 85, .28);
-  background: rgba(212, 168, 85, .08);
-}
-
-.condition-card p strong {
-  color: var(--gold);
-}
-
-.guide-action {
-  text-align: center;
-  margin-top: 4px;
-}
-
-.guide-action a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 10px 20px;
-  color: var(--gold);
-  text-decoration: none;
-  font-size: .92rem;
-  font-weight: 850;
-  border: 1px solid rgba(212, 168, 85, .38);
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba(212, 168, 85, .16), rgba(212, 168, 85, .06));
-}
-
 .bgm-guide {
   display: flex;
   gap: 8px;
