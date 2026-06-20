@@ -532,6 +532,10 @@ h1 {
   --card-color: var(--gold);
 }
 
+.proof-block {
+  --card-color: var(--green);
+}
+
 .rollcall-simple {
   --card-color: var(--red);
   background: rgba(229, 57, 53, .045);
