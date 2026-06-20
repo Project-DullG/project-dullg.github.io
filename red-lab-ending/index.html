@@ -20,80 +20,84 @@
 
     <section class="guide-box compact-guide">
       <div class="guide-title">엔딩 진행 안내</div>
-      <div class="guide-stack">
-        <div class="guide-note verdict-note">
-          <strong>범인은 블랙입니다.</strong>
-          <span>블랙을 지목한 플레이어는 공통 목표 성공으로 처리합니다. 블랙 담당 플레이어는 최다 지목을 받았다면 범행 은폐에 실패합니다.</span>
+      <div class="score-stack">
+        <div class="score-card culprit-card">
+          <p>범인은 <strong>블랙</strong>입니다.</p>
+          <span>블랙을 지목한 플레이어는 범인 지목 점수를 획득합니다.</span>
+          <span>블랙은 지목당한 수만큼 은폐 점수를 잃습니다.</span>
         </div>
-        <div class="guide-note">
-          <strong>목표/점수 정산</strong>
-          <span>각 캐릭터 시트에 적힌 개인 목표 달성 여부를 먼저 확인합니다. 비밀이 의심받았더라도, 본인이 끝까지 인정하지 않았다면 그 사실은 진행자가 최종 정산에서 판정합니다.</span>
+        <div class="score-card secret-card">
+          <p><strong>비밀 점수</strong> 유지 조건</p>
+          <span>비밀이 다른 플레이어에게 들키거나 지적당했더라도, 본인이 직접 자백하거나 인정하지 않았다면 비밀 점수는 유지됩니다.</span>
         </div>
-        <div class="guide-note">
-          <strong>최종 투표 분기</strong>
-          <span>가장 많은 표를 받은 플레이어 캐릭터의 엔딩을 먼저 읽습니다. 두 번 연속 표가 갈렸거나 결론을 내리지 못했다면 Ending F로 진행합니다.</span>
+        <div class="score-card condition-card">
+          <p><strong>조건달성 카드</strong> 확인</p>
+          <span>1. 책장 또는 훈련용 매트: 비밀통로</span>
+          <span>2. 잠긴 금고: 빈 금고</span>
+          <span>3. CCTV: 박사 연구실 영상</span>
+          <span>4. 책상 위: 위치추적 장치</span>
         </div>
-        <div class="guide-note">
-          <strong>사건의 전말</strong>
-          <span>분기 엔딩을 읽은 뒤에는 반드시 사건의 전말에서 범인, 트릭, 레드와 블랙의 진실, 그리고 후일담을 이어서 확인해 주세요.</span>
+        <div class="guide-action">
+          <a href="story.html#condition-cards">조건달성 카드 요약 -></a>
         </div>
       </div>
+      <p class="bgm-guide"><strong>BGM</strong> 엔딩 페이지에는 배경 음악이 포함되어 있습니다. 하단의 버튼으로 On/Off 할 수 있습니다.</p>
       <p class="warning">아래 페이지에는 사건의 결말과 진상으로 이어지는 내용이 포함됩니다.</p>
     </section>
 
     <div class="section-title">최종 투표 결과에 따른 분기</div>
-    <p class="section-desc">가장 많은 표를 받은 플레이어 캐릭터의 페이지를 선택합니다. 박사님은 진행자/NPC이므로 투표 대상이 아닙니다.</p>
+    <p class="section-desc">참가자들의 투표를 통해 <span class="highlight">최다 지목을 받은 플레이어 캐릭터</span>가 범인으로 지목됩니다. 누구를 지목하느냐, 또한 해당 인물이 어떤 진실을 숨기고 있었느냐에 따라 서로 다른 엔딩과 마주하게 됩니다.</p>
     <nav class="ending-list" aria-label="엔딩 선택">
       <a href="ending-a.html" class="ending-card ending-a">
-        <span class="ending-badge">A</span>
+        <span class="ending-badge">ENDING A</span>
         <div class="ending-info">
-          <div class="ending-title">블랙을 지목했다</div>
-          <div class="ending-desc">정답에 도착했지만, 아무도 이기지 못한 결말.</div>
+          <div class="ending-title">블랙이 최다 지목된 경우</div>
+          <div class="ending-desc">미라클 블랙</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
       <a href="ending-b.html" class="ending-card ending-b">
-        <span class="ending-badge">B</span>
+        <span class="ending-badge">ENDING B</span>
         <div class="ending-info">
-          <div class="ending-title">블루를 지목했다</div>
-          <div class="ending-desc">금열쇠와 절박함이 진짜 밤을 가리는 결말.</div>
+          <div class="ending-title">블루가 최다 지목된 경우</div>
+          <div class="ending-desc">미라클 블루</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
       <a href="ending-c.html" class="ending-card ending-c">
-        <span class="ending-badge">C</span>
+        <span class="ending-badge">ENDING C</span>
         <div class="ending-info">
-          <div class="ending-title">옐로를 지목했다</div>
-          <div class="ending-desc">눈물과 사진 두 장이 살의처럼 보이는 결말.</div>
+          <div class="ending-title">옐로가 최다 지목된 경우</div>
+          <div class="ending-desc">미라클 옐로</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
       <a href="ending-d.html" class="ending-card ending-d">
-        <span class="ending-badge">D</span>
+        <span class="ending-badge">ENDING D</span>
         <div class="ending-info">
-          <div class="ending-title">핑크를 지목했다</div>
-          <div class="ending-desc">부끄러운 수집품이 결정적 목격으로 바뀌는 결말.</div>
+          <div class="ending-title">핑크가 최다 지목된 경우</div>
+          <div class="ending-desc">미라클 핑크</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
       <a href="ending-e.html" class="ending-card ending-e">
-        <span class="ending-badge">E</span>
+        <span class="ending-badge">ENDING E</span>
         <div class="ending-info">
-          <div class="ending-title">기타 인물 또는 시스템을 지목했다</div>
-          <div class="ending-desc">플레이어 캐릭터 바깥을 의심한 결말.</div>
+          <div class="ending-title">기타 인물 또는 시스템이 지목된 경우</div>
+          <div class="ending-desc">박사님, 외부 침입자, 카오스, 시스템 오류 등</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
       <a href="ending-f.html" class="ending-card ending-f">
-        <span class="ending-badge">F</span>
+        <span class="ending-badge">ENDING F</span>
         <div class="ending-info">
-          <div class="ending-title">결론을 내리지 못했다</div>
-          <div class="ending-desc">모두가 조각을 들고도 하나의 밤을 만들지 못한 결말.</div>
+          <div class="ending-title">두 번 연속 표가 갈린 경우</div>
+          <div class="ending-desc">결론을 내리지 못한 결말</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
