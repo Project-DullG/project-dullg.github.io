@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="레드가 죽은 연구소 · 엔딩 선택 페이지">
-  <title>[Red Lab] 레드가 죽은 연구소 - 엔딩 선택</title>
+  <meta name="description" content="레드가 죽은 연구소 · 진엔딩 페이지">
+  <title>[Red Lab] 레드가 죽은 연구소 - 진엔딩</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,78 +14,70 @@
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
       <a href="/" class="tag" style="text-decoration:none">Project DullG</a>
       <h1>〈레드가 죽은 연구소〉</h1>
-      <p class="subtitle">잠긴 방문 너머, <strong>리더가 사라진 아침</strong></p>
+      <p class="subtitle">추리는 끝났고, 이제 레드가 남긴 마지막 작전을 읽는다.</p>
     </header>
 
     <section class="guide-box">
       <div class="guide-title">엔딩 진행 안내</div>
-      <p>최종 토론이 끝난 뒤, 가장 많이 지목된 인물의 엔딩을 확인해 주세요. 결말 확인 후에는 사건의 전말 페이지로 이동해 전체 구조를 정리합니다.</p>
-      <p class="warning">주의: 아래 페이지에는 사건의 결말과 진상으로 이어지는 내용이 포함됩니다.</p>
-      <p>엔딩 페이지에는 배경 음악이 포함되어 있습니다. 하단의 BGM 버튼으로 On/Off 할 수 있습니다.</p>
+      <p>최종 투표가 끝난 뒤 진행자가 정답 여부를 확인하고, 모든 플레이어가 함께 진엔딩을 읽습니다. 이 엔딩은 개별 지목 분기가 아니라 사건의 진상, 레드의 진심, 미라클 레인저의 마지막 출동을 한 번에 정리하는 결말입니다.</p>
+      <p class="warning">주의: 아래 페이지에는 범인, 트릭, 동기, 후일담이 모두 포함됩니다.</p>
+      <p>엔딩 페이지에는 〈뱀이 죽은 축제〉와 같은 BGM이 포함되어 있습니다. 하단의 BGM 버튼으로 On/Off 할 수 있습니다.</p>
     </section>
 
-    <div class="section-title">최종 투표 결과에 따른 분기</div>
-    <p class="section-desc">연구소에 남아 있던 사람들 중 누구를 지목했는지에 따라 서로 다른 결말로 이어집니다. 동률이거나 결론을 내리지 못했다면 마지막 분기를 확인해 주세요.</p>
+    <div class="section-title">엔딩의 약속</div>
+    <div class="promise-grid" aria-label="엔딩 구성">
+      <div class="promise-card">
+        <strong>납득</strong>
+        <span>새로운 반전으로 속이지 않고, 이미 나온 단서의 의미를 순서대로 뒤집습니다.</span>
+      </div>
+      <div class="promise-card">
+        <strong>감정</strong>
+        <span>각자의 비밀을 벌하지 않고, 그 침묵이 왜 레드를 고립시켰는지 보여줍니다.</span>
+      </div>
+      <div class="promise-card">
+        <strong>뽕</strong>
+        <span>진상 공개 뒤에 멈추지 않고, 레드 없는 롤콜과 마지막 출동으로 끝냅니다.</span>
+      </div>
+    </div>
 
-    <nav class="ending-list" aria-label="엔딩 선택">
-      <a href="ending-a.html" class="ending-card ending-a">
-        <span class="ending-badge">ENDING A</span>
-        <div class="ending-info">
-          <div class="ending-title">블랙이 최다 지목을 받은 경우</div>
-          <div class="ending-desc">침묵이 가장 무거운 증언이 되는 결말.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
+    <div class="section-title">회수될 단서</div>
+    <div class="suspect-grid clue-preview" aria-label="핵심 단서 요약">
+      <div class="suspect-card ending-f">
+        <div class="suspect-role">Weapon</div>
+        <div class="suspect-name">피 묻은 소화기</div>
+        <div class="suspect-desc">사람을 구하는 도구가, 그 밤에는 레드를 죽인 흉기가 되었다.</div>
+      </div>
+      <div class="suspect-card ending-a">
+        <div class="suspect-role">Trick</div>
+        <div class="suspect-name">위기감지 알림</div>
+        <div class="suspect-desc">모두가 무시하던 소리가 모든 방문을 열었다.</div>
+      </div>
+      <div class="suspect-card ending-e">
+        <div class="suspect-role">Truth</div>
+        <div class="suspect-name">검은 날개 뱃지</div>
+        <div class="suspect-desc">배신의 표식처럼 보였지만, 사실은 같은 임무의 흔적이었다.</div>
+      </div>
+      <div class="suspect-card ending-b">
+        <div class="suspect-role">Red Herring</div>
+        <div class="suspect-name">금고와 금열쇠</div>
+        <div class="suspect-desc">블루의 죄는 살인이 아니라, 누군가를 돕고 싶던 절박함이었다.</div>
+      </div>
+      <div class="suspect-card ending-c">
+        <div class="suspect-role">Heart</div>
+        <div class="suspect-name">사진 두 장</div>
+        <div class="suspect-desc">옐로의 거짓말은 동기가 되었지만, 범행의 시간이 되지는 못했다.</div>
+      </div>
+      <div class="suspect-card ending-d">
+        <div class="suspect-role">Witness</div>
+        <div class="suspect-name">파우치와 마스터키</div>
+        <div class="suspect-desc">핑크의 부끄러운 수집벽이 오히려 밤의 흐름을 증명한다.</div>
+      </div>
+    </div>
 
-      <a href="ending-b.html" class="ending-card ending-b">
-        <span class="ending-badge">ENDING B</span>
-        <div class="ending-info">
-          <div class="ending-title">블루가 최다 지목을 받은 경우</div>
-          <div class="ending-desc">분석과 기록이 오히려 의심을 키우는 결말.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
-
-      <a href="ending-c.html" class="ending-card ending-c">
-        <span class="ending-badge">ENDING C</span>
-        <div class="ending-info">
-          <div class="ending-title">옐로가 최다 지목을 받은 경우</div>
-          <div class="ending-desc">상처와 친절이 모두 불리한 단서가 되는 결말.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
-
-      <a href="ending-d.html" class="ending-card ending-d">
-        <span class="ending-badge">ENDING D</span>
-        <div class="ending-info">
-          <div class="ending-title">핑크가 최다 지목을 받은 경우</div>
-          <div class="ending-desc">밝은 목소리 뒤에 남은 공백을 따라가는 결말.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
-
-      <a href="ending-e.html" class="ending-card ending-e">
-        <span class="ending-badge">ENDING E</span>
-        <div class="ending-info">
-          <div class="ending-title">박사가 최다 지목을 받은 경우</div>
-          <div class="ending-desc">마스터키와 예비키가 가장 위험한 증거가 되는 결말.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
-
-      <a href="ending-f.html" class="ending-card ending-f">
-        <span class="ending-badge">ENDING F</span>
-        <div class="ending-info">
-          <div class="ending-title">표가 갈렸거나 결론을 내리지 못한 경우</div>
-          <div class="ending-desc">연구소는 아무도 구하지 못한 채 아침을 맞는다.</div>
-        </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
-    </nav>
-
-    <a href="story.html" class="story-link">
-      <strong>사건의 전말 확인하기 &#8594;</strong>
-      <span>잠긴 방, 마스터키, 경보 기록, 그리고 레드가 남긴 빈자리.</span>
+    <a href="story.html" class="final-start">
+      <span class="final-start-kicker">TRUE ENDING</span>
+      <strong>미라클 레인저, 마지막 출동</strong>
+      <span>사건의 전말과 레드 없는 롤콜을 낭독합니다.</span>
     </a>
 
     <a href="../ScBQTDiRurU/" class="story-link" style="--card-color:var(--blue);--card-glow:var(--blue-soft)">
