@@ -42,7 +42,7 @@ body {
   color: var(--ink);
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', system-ui, sans-serif;
   line-height: 1.9;
-  word-break: keep-all;
+  word-break: normal;
   padding: 60px 24px;
 }
 
@@ -110,6 +110,7 @@ h1 {
   font-weight: 800;
   margin-bottom: 12px;
   text-shadow: 0 0 30px rgba(255, 255, 255, .1);
+  overflow-wrap: anywhere;
 }
 
 .subtitle {
@@ -145,6 +146,7 @@ h1 {
   letter-spacing: 2px;
   margin-bottom: 12px;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .guide-box p {
@@ -175,6 +177,7 @@ h1 {
   font-size: .95rem;
   font-weight: 700;
   margin-bottom: 5px;
+  overflow-wrap: anywhere;
 }
 
 .score-card span,
@@ -252,6 +255,7 @@ h1 {
   letter-spacing: 2px;
   margin-bottom: 6px;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .reader-callout span,
@@ -384,6 +388,7 @@ h1 {
   font-weight: 700;
   letter-spacing: 1px;
   transition: all .3s ease;
+  overflow-wrap: anywhere;
 }
 
 .ending-card:hover .ending-badge {
@@ -399,6 +404,7 @@ h1 {
   font-size: 1.1rem;
   font-weight: 700;
   margin-bottom: 4px;
+  overflow-wrap: anywhere;
 }
 
 .ending-card:hover .ending-title {
@@ -440,12 +446,17 @@ h1 {
   --card-glow: var(--gold-glow);
 }
 
+.story-link strong {
+  overflow-wrap: anywhere;
+}
+
 .story-link span {
   display: block;
   color: #7a7a85;
   font-size: .75rem;
   margin-top: 6px;
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 .footer {
@@ -500,6 +511,7 @@ h1 {
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
 }
 
 .chapter p {
@@ -545,6 +557,7 @@ h1 {
   letter-spacing: 2px;
   margin-bottom: 8px;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .case-row div:last-child,
@@ -572,6 +585,7 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   transition: all .3s ease;
+  overflow-wrap: anywhere;
 }
 
 .nav-links a:hover {
@@ -584,6 +598,8 @@ h1 {
   body,
   body.landing-page {
     padding: 32px 16px;
+    overflow-x: hidden;
+    word-break: break-all;
   }
 
   h1 { font-size: 1.8rem; }
@@ -594,6 +610,32 @@ h1 {
   .chapter { padding: 20px; }
   .chapter h2 { font-size: 1.1rem; }
   .chapter p { text-align: left; }
+  h1,
+  .subtitle,
+  .guide-title,
+  .guide-box p,
+  .score-card p,
+  .score-card span,
+  .guide-note strong,
+  .guide-note span,
+  .section-title,
+  .section-desc,
+  .reader-callout strong,
+  .reader-callout span,
+  .ending-title,
+  .ending-desc,
+  .story-link,
+  .story-link span,
+  .chapter h2,
+  .chapter p,
+  .case-row div:last-child,
+  .evidence-card span,
+  .result-box p,
+  .news-box p,
+  .nav-links a {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 400px) {
