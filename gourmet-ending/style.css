@@ -227,6 +227,87 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.reader-callout,
+.condition-box,
+.news-box,
+.result-box {
+  background: rgba(255, 255, 255, .035);
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 8px;
+  margin: 18px 0;
+  padding: 16px 20px;
+}
+
+.reader-callout {
+  border-left: 3px solid var(--card-color, var(--gold));
+}
+
+.reader-callout strong,
+.condition-box strong,
+.news-label {
+  display: block;
+  color: var(--card-color, var(--gold));
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.reader-callout span,
+.condition-box span {
+  display: block;
+  color: #a0a0a8;
+  font-size: .92rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.choice-list {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.choice-list .ending-card {
+  animation: none;
+}
+
+.choice-condition {
+  display: inline-block;
+  color: var(--gold);
+  border: 1px solid rgba(212, 168, 85, .35);
+  border-radius: 6px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-top: 8px;
+  padding: 4px 8px;
+}
+
+.result-split {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.result-box {
+  border-left: 3px solid var(--card-color, var(--gold));
+  margin: 0;
+}
+
+.result-box p,
+.news-box p {
+  color: #b8b8c2;
+  font-size: .95rem;
+  line-height: 1.85;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.news-box {
+  border-left: 3px solid var(--slate);
+}
+
 .highlight {
   color: var(--accent);
   font-weight: 600;
