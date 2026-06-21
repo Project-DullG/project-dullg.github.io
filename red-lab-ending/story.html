@@ -13,13 +13,31 @@
   <main class="container reading-simple" style="--card-color:var(--red);--card-glow:var(--red-soft)">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
-      <div class="tag">Case Truth</div>
+      <a href="index.html" class="tag" style="text-decoration:none">Case Truth</a>
       <h1>사건의 전말</h1>
       <p class="subtitle">한 명은 말하지 못했고, 한 명은 기다리지 않았다.</p>
     </header>
 
     <article class="ending-script">
-      <section class="script-block opening-block">
+      <section class="truth-overview" aria-label="사건의 전말 요약">
+        <a href="#truth-method" class="truth-card">
+          <span>01</span>
+          <strong>밀실의 방법</strong>
+          <em>문을 연 것은 열쇠가 아니라 경보였습니다.</em>
+        </a>
+        <a href="#truth-misread" class="truth-card">
+          <span>02</span>
+          <strong>틀린 의심들</strong>
+          <em>각자의 비밀이 단서의 방향을 흐렸습니다.</em>
+        </a>
+        <a href="#truth-red" class="truth-card">
+          <span>03</span>
+          <strong>레드의 기록</strong>
+          <em>배신이 아니라 구조 작전의 흔적이었습니다.</em>
+        </a>
+      </section>
+
+      <section class="script-block opening-block" id="truth-method">
         <p class="script-kicker">CASE LOG</p>
         <h2>블랙에게 모인 순서</h2>
         <div class="case-board">
@@ -61,7 +79,7 @@
         <p class="closing-line">“누가 열쇠를 가졌는가”가 아니라, “누가 경보가 문을 연다는 사실을 이용했는가”를 물어야 했다.</p>
       </section>
 
-      <section class="script-block proof-block">
+      <section class="script-block proof-block" id="truth-misread">
         <p class="script-kicker">MISREADINGS</p>
         <h2>의심들은 거짓이 아니라, 각자가 숨긴 밤이었다.</h2>
         <div class="evidence-grid">
@@ -101,7 +119,7 @@
         <p>그래서 레드의 침묵은 죄가 되었고, 레드의 상처는 증거가 되었고, 레드가 숨긴 모든 것은 배신의 기록처럼 보였다.</p>
       </section>
 
-      <section class="script-block operation-block">
+      <section class="script-block operation-block" id="truth-red">
         <p class="script-kicker">RED TRUTH</p>
         <h2>그러나 레드는 같은 편이었다.</h2>
         <p>흩어진 단서들이 제대로 이어졌다면, 레드의 침묵은 내통의 증거가 아니라 구조 요청을 숨기기 위한 선택이었다.</p>
