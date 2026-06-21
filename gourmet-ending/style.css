@@ -595,7 +595,7 @@ h1 {
 
 .truth-overview {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 12px;
   margin-bottom: 24px;
 }
@@ -653,6 +653,10 @@ h1 {
   display: grid;
   gap: 12px;
   margin: 20px 0 0;
+}
+
+.landing-board {
+  margin-top: 16px;
 }
 
 .evidence-grid {
