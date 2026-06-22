@@ -696,6 +696,63 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.gourmet-epilogue {
+  --chapter-color: var(--gold);
+  --chapter-glow: var(--gold-soft);
+}
+
+.epilogue-scenes {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.epilogue-scene {
+  border-left: 3px solid var(--gold);
+  padding: 2px 0 2px 18px;
+}
+
+.epilogue-scene span {
+  display: block;
+  color: var(--gold);
+  font-size: .74rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.epilogue-scene h3 {
+  color: #fff;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  margin-bottom: 8px;
+}
+
+.epilogue-scene p {
+  color: #babac4;
+  font-size: .96rem;
+  line-height: 1.9;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.epilogue-lost {
+  border-left-color: var(--accent);
+}
+
+.epilogue-lost span {
+  color: var(--accent);
+}
+
+.epilogue-danger {
+  border-left-color: var(--card-color, var(--blue));
+}
+
+.epilogue-danger span {
+  color: var(--card-color, var(--blue));
+}
+
 .nav-links {
   display: flex;
   justify-content: center;
@@ -762,6 +819,8 @@ h1 {
   .chapter p,
   .case-row div:last-child,
   .evidence-card span,
+  .epilogue-scene h3,
+  .epilogue-scene p,
   .result-box p,
   .news-box p,
   .nav-links a {
