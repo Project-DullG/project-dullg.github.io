@@ -550,6 +550,21 @@ h1 {
 .ending-e { --card-color: var(--violet); --card-glow: var(--violet-soft); animation-delay: .25s; }
 .ending-f { --card-color: var(--red); --card-glow: var(--red-soft); animation-delay: .30s; }
 
+.future-choice {
+  margin-top: 28px;
+  margin-bottom: 0;
+}
+
+.ending-a-choice {
+  --card-color: var(--green);
+  --card-glow: var(--green-soft);
+}
+
+.ending-b-choice {
+  --card-color: var(--black);
+  --card-glow: var(--black-soft);
+}
+
 .story-link {
   display: block;
   color: #ddd;
