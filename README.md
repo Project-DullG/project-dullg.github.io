@@ -11,10 +11,14 @@ Project DullG는 보드게임과 서사 기반 인터랙티브 프로젝트를 �
 - **〈레드가 죽은 연구소〉** (Red Lab)  
   엔딩 허브: https://project-dullg.github.io/red-lab-ending/
 
+- **〈의사가 너무 많아!〉**
+  엔딩 허브: https://project-dullg.github.io/doctor-ending/
+  캐릭터 테스트: https://project-dullg.github.io/doctor-quiz/
+
 - **〈잿빛 소녀가 죽은 추억〉** (Gray Girl Memory) — Coming soon  
 - **〈탐사 대장이 죽은 저택〉** (Explorer’s Mansion) — Coming soon
 
 ## 구조
 - 메인: https://project-dullg.github.io/
-- 게임별: `/snake-carnival-ending/`, `/red-lab-ending/`, `/gray-girl-memory-ending/`, `/explorer-mansion-ending/`
+- 게임별: `/snake-carnival-ending/`, `/red-lab-ending/`, `/doctor-ending/`, `/doctor-quiz/`, `/gray-girl-memory-ending/`, `/explorer-mansion-ending/`
 - 스포일러 엔딩 페이지는 검색 노출 방지를 위해 `noindex,nofollow`로 관리합니다.
