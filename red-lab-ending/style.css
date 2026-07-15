@@ -486,6 +486,22 @@ h1 {
 .choice-btn:hover::before,
 .story-link:hover::before { transform: scaleY(1); }
 
+.story-locked {
+  cursor: default;
+  color: var(--ink);
+}
+
+.story-locked:hover {
+  transform: none;
+  border-color: var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.story-locked::before {
+  transform: scaleY(1);
+  opacity: .45;
+}
+
 .ending-card:focus-visible,
 .story-link:focus-visible,
 .next-step-btn:focus-visible,
