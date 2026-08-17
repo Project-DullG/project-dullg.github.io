@@ -461,12 +461,30 @@ h1 {
 }
 
 .dialogue {
+  position: relative;
+  margin-top: 25px;
   padding-left: 14px;
-  color: #ecd1a0 !important;
-  border-left: 2px solid rgba(212, 173, 98, .42);
+  color: var(--ink-strong) !important;
+  border-left: 2px solid var(--speaker-color, rgba(212, 173, 98, .55));
   font-style: normal;
   font-weight: 620;
 }
+
+.dialogue[data-speaker]::before {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--speaker-color, var(--gold));
+  content: attr(data-speaker);
+  font-size: .7rem;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.dialogue[data-speaker="블랙"] { --speaker-color: #a9a9b3; }
+.dialogue[data-speaker="블루"] { --speaker-color: var(--blue); }
+.dialogue[data-speaker="옐로"] { --speaker-color: var(--yellow); }
+.dialogue[data-speaker="핑크"] { --speaker-color: var(--pink); }
+.dialogue[data-speaker="박사"] { --speaker-color: #d4ad62; }
 
 .next-step-btn {
   display: block;
