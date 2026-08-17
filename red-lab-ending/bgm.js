@@ -35,7 +35,7 @@ const bgmToggle = document.createElement('div');
 bgmToggle.id = 'bgm-controller';
 bgmToggle.innerHTML = `
   <button id="bgm-btn" type="button" aria-label="BGM 켜기">
-    <span id="bgm-icon">♪</span>
+    <span id="bgm-icon"><i data-lucide="music-2" aria-hidden="true"></i></span>
   </button>
 `;
 document.body.appendChild(bgmToggle);
@@ -43,13 +43,41 @@ document.body.appendChild(bgmToggle);
 const btn = document.getElementById('bgm-btn');
 const icon = document.getElementById('bgm-icon');
 
+function setIcon(name) {
+  icon.innerHTML = `<i data-lucide="${name}" aria-hidden="true"></i>`;
+  window.lucide?.createIcons();
+}
+
+function renderInterfaceIcons() {
+  document.querySelectorAll('.ending-arrow, .choice-arrow').forEach((arrow) => {
+    arrow.innerHTML = '<i data-lucide="chevron-right" aria-hidden="true"></i>';
+  });
+  window.lucide?.createIcons();
+}
+
+function loadIconLibrary() {
+  if (window.lucide) {
+    renderInterfaceIcons();
+    updateUI();
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js';
+  script.addEventListener('load', () => {
+    renderInterfaceIcons();
+    updateUI();
+  });
+  document.head.appendChild(script);
+}
+
 function updateUI() {
   if (audio.paused) {
-    icon.innerText = '♪';
+    setIcon('music-2');
     btn.setAttribute('aria-label', 'BGM 켜기');
     btn.classList.remove('is-playing');
   } else {
-    icon.innerText = '■';
+    setIcon('square');
     btn.setAttribute('aria-label', 'BGM 끄기');
     btn.classList.add('is-playing');
   }
@@ -100,6 +128,8 @@ if (shouldPlay) {
 } else {
   updateUI();
 }
+
+loadIconLibrary();
 
 window.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') {

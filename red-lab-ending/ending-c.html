@@ -7,13 +7,13 @@
   <meta name="description" content="레드가 죽은 연구소 · Ending C">
   <title>[Red Lab] Ending C : 옐로를 지목한 경우</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=16">
 </head>
 <body>
   <main class="container" style="--card-color:var(--yellow);--card-glow:var(--yellow-soft)">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
-      <a href="index.html" class="tag" style="color:var(--yellow);border-color:rgba(242,200,75,.50);background:rgba(242,200,75,.06);text-decoration:none">Ending C</a>
+      <a href="index.html" class="tag">Ending C</a>
       <h1>사진 두 장</h1>
       <p class="subtitle">옐로를 지목한 경우</p>
     </header>
@@ -22,28 +22,35 @@
       <div class="guide-title" style="color:var(--yellow)">엔딩 진행 안내</div>
       <p>분기 엔딩을 읽기 전에 먼저 <strong>점수 계산</strong>을 진행해 주세요.</p>
       <p><strong class="reader">옐로 담당 플레이어</strong>가 대표로 아래 내용을 낭독합니다.</p>
-      <p>분기 엔딩을 끝까지 읽은 뒤, 아래 버튼으로 <strong>사건의 전말</strong>을 이어서 확인합니다.</p>
+      <p>분기 엔딩을 읽은 뒤, <strong>옐로 담당 플레이어</strong>가 옐로의 행동을 선택해 주세요.</p>
     </section>
 
     <article class="story-panel">
-      <p>표가 옐로에게 모였다. 레드와 찍은 사진, 블루와 찍은 사진, 밤새 젖은 휴지와 붉은 손수건은 옐로가 감추려던 관계를 드러냈다.</p>
-      <p>옐로는 사건 당일 밤 레드의 방을 찾아간 마지막 사람 중 하나였다. 일주일 전 헤어진 레드에게 다시 만나자고 했고, 거절당한 뒤 울면서 방으로 돌아왔다.</p>
-      <p class="dialogue">"다시 만나자고 했어요. 선배가 거절했고, 저는 나왔어요."</p>
-      <p>옐로는 잠시 말을 멈췄다가 덧붙였다.</p>
-      <p class="dialogue">"그때 선배는 살아 있었어요."</p>
-      <p>알림이 울렸을 때 옐로는 자기 방에 있었다. 방문을 열었을 때 복도 저편에서 문이 닫히는 소리를 들었지만, 누구인지 확인하지 않고 다시 방으로 들어갔다.</p>
-      <p>사진 두 장은 옐로가 레드에게 숨긴 일을 보여줬다. 레드의 죽음 직전까지 둘이 다퉜다는 사실도 분명했다.</p>
-      <p>최다 지목 결과에 따라 옐로는 구속됐다. 블루는 자신이 왜 금고를 열었는지 끝내 말하지 못했고, 블랙은 옐로가 들었다는 문 닫히는 소리에 아무 말도 보태지 않았다.</p>
-      <p>옐로가 레드의 방을 나왔을 때 레드는 살아 있었다. 그 뒤 알림이 울린 동안 방에 들어간 사람은 따로 있었다.</p>
+      <p>긴 토론이 끝난 뒤, 우리는 레드를 죽인 사람으로 옐로를 지목했다.</p>
+      <p class="dialogue">"제가 아니에요. 제가 나올 때 레드 선배는 살아 있었어요."</p>
+      <p>옐로는 곧바로 부인했다. 하지만 왜 레드의 방에 갔으며 무슨 말을 나누었는지는 설명하지 않았다. 우리는 이미 들은 이야기만으로 결론을 바꾸지 않았다.</p>
+      <p>레드의 방에 간 이유를 설명하려면 레드와의 관계뿐 아니라 블루에게 감춘 일도 밝혀야 했다. 옐로는 그 사실을 말하고 살인 혐의에 맞설지, 두 사람에게 숨긴 관계를 끝까지 감출지 선택해야 했다.</p>
     </article>
 
-    <a href="story.html" class="next-step-btn"><span class="next-kicker">분기 이후</span>사건의 전말 확인하기 &#8594;<span class="next-sub">옐로가 방으로 돌아간 뒤 알림이 울린 밤을 확인합니다.</span></a>
+    <section class="ending-decision" aria-labelledby="decision-c">
+      <p class="decision-kicker">옐로의 선택</p>
+      <h2 id="decision-c">옐로는 자신의 비밀을 밝히는가.</h2>
+      <p>옐로 담당 플레이어가 한 가지를 선택해 주세요.</p>
+      <div class="ending-list future-choice">
+        <a href="future-c.html?v=16" class="choice-btn continue-choice">
+          <span class="choice-num">ENDING C-1</span><span class="choice-content"><strong class="choice-title">비밀을 밝힌다</strong><span class="choice-desc">두 사람과의 관계와 레드의 방에서 나눈 말을 밝힙니다.</span></span><span class="choice-arrow">&#10095;</span>
+        </a>
+        <a href="future-c-stop.html?v=16" class="choice-btn stop-choice">
+          <span class="choice-num">ENDING C-2</span><span class="choice-content"><strong class="choice-title">비밀을 지킨다</strong><span class="choice-desc">레드의 방에 간 이유는 말하지 않습니다.</span></span><span class="choice-arrow">&#10095;</span>
+        </a>
+      </div>
+    </section>
     <div class="nav-links">
       <a href="index.html">엔딩 목록</a>
       <a href="/">메인 페이지</a>
     </div>
     <footer class="footer">레드가 죽은 연구소 · Ending C</footer>
   </main>
-  <script src="bgm.js"></script>
+  <script src="bgm.js?v=2"></script>
 </body>
 </html>
