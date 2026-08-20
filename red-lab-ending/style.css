@@ -485,6 +485,27 @@ h1 {
 .dialogue[data-speaker="옐로"] { --speaker-color: var(--yellow); }
 .dialogue[data-speaker="핑크"] { --speaker-color: var(--pink); }
 .dialogue[data-speaker="박사"] { --speaker-color: #d4ad62; }
+.dialogue[data-speaker="아이"] { --speaker-color: #f2d58d; }
+
+.child-voice {
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.script-block .child-voice p,
+.story-panel .child-voice p {
+  margin-bottom: 8px;
+  color: #eeeef3;
+  font-size: 1.01rem;
+  font-weight: 560;
+  line-height: 1.82;
+}
+
+.script-block .child-voice p:last-child,
+.story-panel .child-voice p:last-child {
+  margin-bottom: 0;
+}
 
 .next-step-btn {
   display: block;
