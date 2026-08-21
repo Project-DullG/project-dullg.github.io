@@ -7,20 +7,19 @@
   <meta name="description" content="레드가 죽은 연구소 · 엔딩 선택">
   <title>[Red Lab] 레드가 죽은 연구소 - 엔딩 선택</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=44">
 </head>
 <body>
   <main class="container">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
-      <a href="/" class="tag">Project DullG</a>
       <h1>레드가 죽은 연구소</h1>
       <p class="subtitle">점수 계산, 최종 투표, 그리고 레드가 죽은 밤의 전말.</p>
     </header>
 
-    <section class="guide-box compact-guide hub-guide">
-      <div class="guide-title">엔딩 진행 안내</div>
-      <p class="guide-lead">분기 엔딩을 읽기 전에 먼저 <strong>점수 계산</strong>을 진행해 주세요.</p>
+    <section class="guide-box compact-guide hub-guide" aria-labelledby="score-heading">
+      <div class="guide-title">1. 점수 계산</div>
+      <p class="guide-lead" id="score-heading">아래 기준으로 각자의 점수를 먼저 계산해 주세요.</p>
       <div class="score-stack">
         <div class="score-card culprit-card">
           <p>범인은 <strong>블랙</strong>입니다.</p>
@@ -32,13 +31,12 @@
           <span>비밀이 다른 플레이어에게 들키거나 지적당했더라도, 본인이 직접 자백하거나 인정하지 않았다면 비밀 점수는 유지됩니다.</span>
         </div>
       </div>
-      <p class="reading-order-note">점수 계산 뒤 투표 결과에 맞는 엔딩을 읽어 주세요. 블랙이 아닌 대원을 지목했다면 구조 작전이 끝난 뒤 <strong>블랙 담당 플레이어</strong>가 블랙의 마지막 행동을 결정합니다. 블랙의 범행이 밝혀진 경우에는 나머지 플레이어들이 블랙의 처분을 선택합니다. 사건의 전말은 아래에서 별도로 확인할 수 있습니다.</p>
-      <p class="bgm-guide"><strong>BGM</strong> 엔딩 페이지에는 배경 음악이 포함되어 있습니다. 화면의 BGM 버튼으로 On/Off 할 수 있습니다.</p>
+      <p class="bgm-guide"><strong>BGM</strong> 화면 오른쪽 위 버튼으로 켜고 끌 수 있습니다.</p>
     </section>
 
     <div class="branch-toolbar">
       <div>
-        <span>최종 투표</span>
+        <span>2. 최종 투표</span>
         <strong>투표 결과를 선택해 주세요</strong>
       </div>
       <p>가장 많은 표를 받은 대상을 선택합니다.</p>
@@ -51,7 +49,7 @@
           <div class="ending-title">블랙</div>
           <div class="ending-desc">블랙이 가장 많은 표를 받은 경우</div>
         </div>
-        <span class="ending-arrow">&#10095;</span>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
 
       <a href="ending-b.html" class="ending-card ending-b">
@@ -60,7 +58,7 @@
           <div class="ending-title">블루</div>
           <div class="ending-desc">블루가 가장 많은 표를 받은 경우</div>
         </div>
-        <span class="ending-arrow">&#10095;</span>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
 
       <a href="ending-c.html" class="ending-card ending-c">
@@ -69,7 +67,7 @@
           <div class="ending-title">옐로</div>
           <div class="ending-desc">옐로가 가장 많은 표를 받은 경우</div>
         </div>
-        <span class="ending-arrow">&#10095;</span>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
 
       <a href="ending-d.html" class="ending-card ending-d">
@@ -78,17 +76,28 @@
           <div class="ending-title">핑크</div>
           <div class="ending-desc">핑크가 가장 많은 표를 받은 경우</div>
         </div>
-        <span class="ending-arrow">&#10095;</span>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
 
-      <a href="ending-e.html" class="ending-card ending-e">
-        <span class="ending-badge">ENDING E</span>
-        <div class="ending-info">
-          <div class="ending-title">박사·시스템·외부 인물</div>
-          <div class="ending-desc">미라클 레인저 대원이 아닌 대상이 가장 많은 표를 받은 경우</div>
+      <section class="ending-card ending-card--split ending-e" id="ending-e" aria-labelledby="ending-e-title">
+        <div class="ending-split-heading">
+          <span class="ending-badge">ENDING E</span>
+          <div class="ending-info">
+            <div class="ending-title" id="ending-e-title">박사·시스템·외부 인물</div>
+            <div class="ending-desc">미라클 레인저 대원이 아닌 대상이 가장 많은 표를 받은 경우</div>
+          </div>
         </div>
-        <span class="ending-arrow">&#10095;</span>
-      </a>
+        <div class="ending-split-options">
+          <a href="future-e.html?v=41" class="ending-split-option">
+            <span><strong>박사를 지목했다</strong><span>박사를 레드를 죽인 사람으로 결론 내린 경우</span></span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+          </a>
+          <a href="future-e-stop.html?v=41" class="ending-split-option">
+            <span><strong>시스템·외부 인물을 지목했다</strong><span>연구소 대원이 아닌 대상을 범인으로 결론 내린 경우</span></span>
+            <i data-lucide="chevron-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </section>
 
       <a href="ending-f.html" class="ending-card ending-f">
         <span class="ending-badge">ENDING F</span>
@@ -96,7 +105,7 @@
           <div class="ending-title">결론을 내리지 못함</div>
           <div class="ending-desc">두 번의 투표가 모두 동률로 끝난 경우</div>
         </div>
-        <span class="ending-arrow">&#10095;</span>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
     </nav>
 
@@ -105,10 +114,22 @@
       <i data-lucide="arrow-right" aria-hidden="true"></i>
     </a>
 
-    <a href="/" class="back-link">Project DullG 메인 페이지</a>
 
     <footer class="footer">&copy; Project DullG &middot; 레드가 죽은 연구소</footer>
   </main>
-  <script src="bgm.js?v=2"></script>
+  <script>
+    (() => {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+      Object.keys(sessionStorage)
+        .filter((key) => key.startsWith('red-lab-story-page:'))
+        .forEach((key) => sessionStorage.removeItem(key));
+
+      const resetHub = () => requestAnimationFrame(() => window.scrollTo(0, 0));
+      window.addEventListener('pageshow', resetHub);
+      resetHub();
+    })();
+  </script>
+  <script src="bgm.js?v=5"></script>
 </body>
 </html>

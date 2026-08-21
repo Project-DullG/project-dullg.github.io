@@ -7,7 +7,7 @@
   <meta name="description" content="레드가 죽은 연구소 · Ending E">
   <title>[Red Lab] Ending E : 기타 인물 또는 시스템을 지목한 경우</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=44">
 </head>
 <body>
   <main class="container" style="--card-color:var(--violet);--card-glow:var(--violet-soft)">
@@ -18,11 +18,9 @@
       <p class="subtitle">기타 인물 또는 시스템을 지목한 경우</p>
     </header>
 
-    <section class="guide-box compact-guide ending-guide-panel">
-      <div class="guide-title" style="color:var(--violet)">엔딩 진행 안내</div>
-      <p>분기 엔딩을 읽기 전에 먼저 <strong>점수 계산</strong>을 진행해 주세요.</p>
-      <p>지목된 캐릭터의 담당 플레이어가 없으면, <strong class="reader">블랙 담당 플레이어</strong>가 대표로 아래 내용을 낭독합니다.</p>
-      <p>아래에서 실제로 가장 많은 표를 받은 대상을 선택해 주세요.</p>
+    <section class="ending-context" aria-label="낭독 및 선택 담당">
+      <span><strong>낭독</strong> 블랙 담당 플레이어</span>
+      <span><strong>선택</strong> 실제 지목 대상</span>
     </section>
 
     <article class="story-panel">
@@ -31,25 +29,24 @@
       <p>보안 시스템은 대답할 수 없었다. 외부인을 지목한 경우에도 연구소 안에서 당장 마주 앉혀 추궁할 사람은 없었다.</p>
     </article>
 
-    <section class="ending-decision" aria-labelledby="decision-e">
+    <section class="ending-decision" id="decision" aria-labelledby="decision-e">
       <p class="decision-kicker">투표 결과 확인</p>
       <h2 id="decision-e">우리는 누구를 지목했는가.</h2>
       <p>실제 투표 결과에 맞는 결말을 선택해 주세요.</p>
       <div class="ending-list future-choice">
-        <a href="future-e.html?v=24" class="choice-btn continue-choice">
-          <span class="choice-num">ENDING E-1</span><span class="choice-content"><strong class="choice-title">박사를 지목했다</strong><span class="choice-desc">우리는 박사를 레드를 죽인 사람으로 결론 내렸습니다.</span></span><span class="choice-arrow">&#10095;</span>
+        <a href="future-e.html?v=41" class="choice-btn continue-choice">
+          <span class="choice-num">ENDING E-1</span><span class="choice-content"><strong class="choice-title">박사를 지목했다</strong><span class="choice-desc">우리는 박사를 레드를 죽인 사람으로 결론 내렸습니다.</span></span><span class="choice-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
         </a>
-        <a href="future-e-stop.html?v=24" class="choice-btn stop-choice">
-          <span class="choice-num">ENDING E-2</span><span class="choice-content"><strong class="choice-title">시스템 또는 외부인을 지목했다</strong><span class="choice-desc">대답할 수 없는 대상을 범인으로 결론 내렸습니다.</span></span><span class="choice-arrow">&#10095;</span>
+        <a href="future-e-stop.html?v=41" class="choice-btn stop-choice">
+          <span class="choice-num">ENDING E-2</span><span class="choice-content"><strong class="choice-title">시스템 또는 외부인을 지목했다</strong><span class="choice-desc">연구소 안의 대원이 아닌 대상을 범인으로 결론 내렸습니다.</span></span><span class="choice-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
         </a>
       </div>
     </section>
     <div class="nav-links">
-      <a href="index.html">엔딩 목록</a>
-      <a href="/">메인 페이지</a>
+      <a href="index.html">엔딩 허브</a>
     </div>
     <footer class="footer">레드가 죽은 연구소 · Ending E</footer>
   </main>
-  <script src="bgm.js?v=2"></script>
+  <script src="bgm.js?v=5"></script>
 </body>
 </html>
