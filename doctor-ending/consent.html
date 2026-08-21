@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! 엔딩 — 의사들은 역천의 의식에 찬성합니까?">
+  <title>의사가 너무 많아! · 찬성 투표</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+  <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+    <header class="header">
+      <a href="declare.html" class="tag" data-keep-query>STEP 03</a>
+      <h1>역천(逆天)의 의식에<br>찬성합니까?</h1>
+      <p class="subtitle">역병의사가 비술을 꺼냈습니다. 이제 이 자리에 남은 의사들이 함께 죄를 짊어질지 정합니다.</p>
+    </header>
+    <div class="progress" aria-label="진행 상황">
+      <span class="progress-dots" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-current"></i><i></i><i></i></span>
+      <span class="progress-label"><strong>3</strong> / 5 · 찬반 투표</span>
+    </div>
+
+
+    <div data-session-recap hidden></div>
+
+    <article class="story-panel">
+      <p><strong style="color:var(--ink-strong)">Q2.</strong> 만약 부활에 실패하게 된다면, 이는 왕의 시신을 모독하고 이단 주술을 부린 대역죄로 간주되어 <strong style="color:var(--red)">의식에 가담한 자들 모두가 처형당할 수 있습니다.</strong> 의사들은 이 위험한 역천의 의식을 감수하는 것에 동의합니까?</p>
+      <p class="dialogue" data-speaker="왕비">"왕이 다시 눈을 뜬다면, 그를 살리는 데 손을 보탠 자들에 대한 의혹이나 왕궁에서 품은 살의는 묻지 않겠다."</p>
+    </article>
+
+    <div class="ending-decision">
+      <p class="decision-kicker">테이블에서 거수 또는 동시 투표로 정한 뒤, 결과만 입력합니다</p>
+      <h2>투표 결과는 어떻게 되었습니까?</h2>
+      <p>포박된 자는 의식에 관여할 수 없으므로 투표에서 제외됩니다. 이 판의 투표 인원은 <strong style="color:var(--ink-strong)"><span id="pool">6</span>명</strong>이며, <strong style="color:var(--ink-strong)">찬성이 과반수를 넘으면</strong> 가결입니다. 동수는 부결로 처리합니다.</p>
+
+      <div class="pick-list" id="picks">
+        <button type="button" class="pick" style="--card-color:var(--plague)" data-vote="1">
+          <span class="pick-key">가결</span>
+          <span class="pick-copy">
+            <span class="pick-title">과반수가 찬성했다</span>
+            <span class="pick-desc">남은 의사들이 함께 죄를 짊어지기로 하고, 역천의 의식이 시작됩니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+        <button type="button" class="pick" style="--card-color:var(--red)" data-vote="0">
+          <span class="pick-key">부결</span>
+          <span class="pick-copy">
+            <span class="pick-title">과반수에 미치지 못했다</span>
+            <span class="pick-desc">역병의사는 노트를 다시 접고, 왕은 되살아나지 못합니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="slot"></div>
+
+    <details class="gm-note">
+      <summary>GM 전용 안내 — 펼치기</summary>
+      <ul>
+        <li>찬성이 <strong>투표 인원의 절반을 넘으면</strong> 가결입니다. 동수는 부결로 처리합니다.</li>
+        <li>두 번째 지목에서도 표가 갈려 여러 명이 함께 구속되었다면, 그만큼 투표 인원도 줄어듭니다.</li>
+        <li>부결되면 왕은 되살아나지 못하고 곧바로 심판의 시간으로 넘어갑니다.</li>
+      </ul>
+    </details>
+
+    <div class="nav-links">
+      <a href="declare.html" data-keep-query>부활 선언으로</a>
+      <a href="index.html">처음부터 다시</a>
+    </div>
+    <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
+  </main>
+  <script src="state.js?v=2"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    var st = DE.read();
+    var arrested = st.arrested || [];
+    var slot = document.getElementById('slot');
+
+    document.getElementById('pool').textContent = DE.voters(arrested).length;
+
+    document.getElementById('picks').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-vote]');
+      if (!b) return;
+      var pass = b.getAttribute('data-vote') === '1';
+
+      if (pass) {
+        location.href = 'ritual.html' + DE.query({ arrested: arrested, revive: true, vote: true });
+        return;
+      }
+
+      var v = DE.judge(arrested);
+      var e2 = v.giveUpEnding;
+      var color = DE.ENDING_COLORS[e2];
+      slot.innerHTML =
+        '<section class="verdict is-blocked">' +
+          '<p class="verdict-kicker">부결</p>' +
+          '<h2>의식의 실패와 파멸을 두려워하여 의식을 포기했습니다</h2>' +
+          '<p>찬성이 과반수에 미치지 못했습니다. 역병의사는 노트를 다시 접었고, 왕은 되살아나지 못한 채 서거하셨습니다.</p>' +
+        '</section>' +
+        '<a href="ending-' + e2 + '.html' + DE.query({ arrested: arrested, revive: true, vote: false }) + '" class="next-step-btn" style="--card-color:var(--' + color + ');--card-glow:var(--' + color + '-soft)">' +
+          '<span class="next-kicker">낭독</span>결말 읽기 &#10095;' +
+          '<span class="next-sub">이 판의 결말을 소리 내어 읽습니다.</span></a>';
+      slot.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  })();
+  </script>
+</body>
+</html>

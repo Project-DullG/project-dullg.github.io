@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! — 채점 안내: ?점 목표 판정 기준과 총점 합산">
+  <title>의사가 너무 많아! · 채점 안내</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+  <main class="container reading-simple" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+    <header class="header">
+      <a href="index.html" data-keep-query class="tag">채점 안내</a>
+      <h1>&#127941; 목표 정산과 승패</h1>
+      <p class="subtitle">엔딩과 진상이 모두 공개되면, 각 플레이어는 자기 시트의 목표를 하나씩 짚어 달성한 목표의 승점을 합산합니다.</p>
+    </header>
+
+    <div data-session-recap hidden></div>
+
+    <section class="guide-box">
+      <div class="guide-title">먼저 확인할 것</div>
+      <p>대부분의 목표(체포 회피, 진범 지목, 특정 문양 발견, RP 보너스 등)는 <strong>시트에 적힌 조건</strong>으로 그 자리에서 판정합니다.</p>
+      <p>시트의 <strong>'?점' 목표</strong>는 엔딩 시점에만 판정하는 마무리 목표입니다. 아래 기준으로 각자 달성 여부를 가린 뒤, 점수 값은 각 시트의 ? 칸 기준(또는 테이블 합의)에 따라 부여합니다.</p>
+      <p class="reading-order-note">이 게임은 각자의 총점을 서로 비교해 승패를 가리되, 모두가 제 목표를 다 이루면 대개 동점에 수렴하도록 균형을 맞춘 개인전입니다. 승부는 누군가 자기 목표를 놓치거나, 진범이 이를 역이용하는 지점에서 갈립니다.</p>
+    </section>
+
+    <div class="branch-toolbar">
+      <div>
+        <span>?점 목표</span>
+        <strong>엔딩별 판정 기준</strong>
+      </div>
+      <p>해당 엔딩에 맞춰<br>달성 여부를 가립니다.</p>
+    </div>
+
+    <div class="table-scroll">
+      <table class="score-table">
+        <thead>
+          <tr><th>인물</th><th>달성</th><th>절반</th><th>미달</th></tr>
+        </thead>
+        <tbody>
+      <tr><td style="color:var(--plague)">역병의사</td><td><span class="ok">&#9675; 달성</span> 엔딩 1 &middot; 2 (부활 성공)</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 엔딩 3 &middot; 4 &middot; 5 &middot; 6</td></tr>
+      <tr><td style="color:var(--acupunct)">침술사</td><td><span class="ok">&#9675; 달성</span> 본인이 체포되지 않고, 재상가 &middot; 왕자파와의 연결(지령서)이 폭로되지 않은 경우</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 최다 득표로 포박되거나, 재상가 사주가 드러나 소명파가 위협받는 경우. 엔딩 6은 전원이 구속되므로 자동 미달</td></tr>
+      <tr><td style="color:var(--talisman)">부적술사</td><td><span class="ok">&#9675; 달성</span> 부활이 성공해 활명술이 실제로 사람을 되살렸거나(엔딩 1 &middot; 2), 정체를 지켜 소명파가 존속한 경우</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 소명파가 사교로 낙인찍히거나(엔딩 3 &middot; 5), 정체가 파멸적으로 드러난 경우. 엔딩 6은 전원이 구속되므로 자동 미달</td></tr>
+      <tr><td style="color:var(--herbal)">한의사</td><td><span class="ok">&#9675; 달성</span> 호정의 정체를 끝까지 지키고 호련당이 무사한 채, 형의 수첩으로 부활에 기여(엔딩 1 &middot; 2)했거나 진범 검거에 기여(엔딩 4)한 경우</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 정체가 파멸적으로 드러나거나 호련당이 화를 입은 경우. 엔딩 6은 전원이 구속되므로 자동 미달</td></tr>
+      <tr><td style="color:var(--priest)">사제</td><td><span class="ok">&#9675; 달성</span> 무고한 자를 처형에서 지켜내고, 진범(양의사)이 심판받게 하거나(엔딩 4) 정화에 동의해 왕과 역병의사를 함께 구원(엔딩 1)한 경우</td><td><span class="half">&#9651; 절반</span> 엔딩 2의 침묵. 왕은 살렸으나 역병의사는 구하지 못함</td><td><span class="no">&#10007; 미달</span> 무고한 자가 처형되거나(엔딩 5), 은사 양의사를 맹신해 진범을 놓친 경우. 엔딩 6은 아무도 구하지 못했으므로 자동 미달</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <article class="ending-script" style="margin-top:34px">
+      <section class="script-block final-block">
+        <p class="script-kicker">TOTAL</p>
+        <h2>총점 합산과 승패</h2>
+        <p>각자 달성한 목표 점수를 모두 더해, 총점이 가장 높은 플레이어가 승리합니다. 동점이 나오면 그 자체로 '모두가 제 몫을 해낸 판'이니, 굳이 한 명을 가리기보다 공동 승리로 두어도 좋습니다.</p>
+        <p>진범 양의사는 홀로 목표 구조가 다르므로(체포 회피 &middot; 죄 은폐 &middot; 왕자파 완수), 그가 끝까지 정체를 숨긴 채 높은 점수를 냈다면 <strong style="color:var(--western)">'악의 승리'</strong>로서 따로 기립니다.</p>
+        <p><strong style="color:var(--ash)">엔딩 6</strong>에서는 여섯 명 모두가 ?점 목표를 놓치고 양의사의 체포 회피도 무너지므로, 승자 없이 판이 끝납니다.</p>
+      </section>
+    </article>
+
+    <div class="gm-note">
+      <p class="gm-note-title">각 목표의 요지</p>
+      <ul>
+        <li><strong style="color:var(--plague)">역병의사</strong> — 왕의 부활. 풍수사의 유지를 잇는다.</li>
+        <li><strong style="color:var(--acupunct)">침술사</strong> — 재상가 음모에서 살아남을 탈출 활로를 마련한다.</li>
+        <li><strong style="color:var(--talisman)">부적술사</strong> — 풍수사의 의지를 잇는다.</li>
+        <li><strong style="color:var(--herbal)">한의사</strong> — 아버지와 형을 깜짝 놀라게 할 실적을 낸다.</li>
+        <li><strong style="color:var(--priest)">사제</strong> — 선한 자들을 구한다.</li>
+      </ul>
+    </div>
+
+    <a href="/" class="story-link" style="margin-top:34px">
+      <span class="story-link-copy"><strong>플레이해 주셔서 감사합니다</strong><span>Project DullG의 다른 작품을 보러 갑니다.</span></span>
+      <span class="ending-arrow">&#10095;</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="truth.html" data-keep-query>진상 해설로</a>
+      <a href="index.html" data-keep-query>엔딩 첫 페이지</a>
+    </div>
+    <footer class="footer">의사가 너무 많아! &middot; 채점 안내</footer>
+  </main>
+  <script src="state.js?v=2"></script>
+</body>
+</html>

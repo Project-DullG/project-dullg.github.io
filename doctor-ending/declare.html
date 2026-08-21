@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! 엔딩 — 역병의사는 부활을 선언합니까?">
+  <title>의사가 너무 많아! · 부활 선언</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+  <main class="container" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
+    <header class="header">
+      <a href="index.html" class="tag" data-keep-query>STEP 02</a>
+      <h1>&#128682; 진실의 문</h1>
+      <p class="subtitle">범인 지목 투표와 최후 변론이 모두 완료되었습니다.<br>최종 결말의 분기를 결정하기 위해 아래 질문에 답해 주십시오.</p>
+    </header>
+    <div class="progress" aria-label="진행 상황">
+      <span class="progress-dots" aria-hidden="true"><i class="is-done"></i><i class="is-current"></i><i></i><i></i><i></i></span>
+      <span class="progress-label"><strong>2</strong> / 5 · 최종 분기 결정</span>
+    </div>
+
+
+    <div data-session-recap hidden></div>
+
+    <article class="story-panel">
+      <p>왕은 되살아날 수 있는 자리에 있습니다. 그러나 그 문을 여는 것은 단 한 사람, 스승 풍수사에게서 역천의 비술을 물려받은 <strong style="color:var(--plague)">역병의사</strong>뿐입니다.</p>
+      <p><strong style="color:var(--ink-strong)">Q1.</strong> 역병의사는 부활의 비술 노트를 사용하여 죽은 왕을 살리기 위해 의식을 거행합니까?</p>
+    </article>
+
+    <div class="ending-decision">
+      <p class="decision-kicker">역병의사 담당 플레이어가 답합니다</p>
+      <h2>비술을 꺼내겠습니까?</h2>
+      <p>선언하지 않으면 왕은 되살아나지 못하고, 남는 것은 투표 결과에 따른 단죄뿐입니다.</p>
+
+      <div class="pick-list" id="picks">
+        <button type="button" class="pick" style="--card-color:var(--plague)" data-declare="1">
+          <span class="pick-key">선언한다</span>
+          <span class="pick-copy">
+            <span class="pick-title">부활의 비술을 꺼낸다</span>
+            <span class="pick-desc">역병의사가 스승에게서 받아 적은 노트를 좌중에 내놓습니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+        <button type="button" class="pick" style="--card-color:var(--red)" data-declare="0">
+          <span class="pick-key">선언하지 않는다</span>
+          <span class="pick-copy">
+            <span class="pick-title">비술을 꺼내지 않는다</span>
+            <span class="pick-desc">왕은 끝내 눈을 뜨지 못하고 쓸쓸히 서거합니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="slot"></div>
+
+    <details class="gm-note">
+      <summary>GM 전용 안내 — 펼치기</summary>
+      <ul>
+        <li>경로 &#9312;(부활)은 <strong>역병의사 본인이 부활을 선포해야만</strong> 열립니다. 역병의사가 포박되었거나 부활을 선포하지 않으면 Q1은 자동으로 '아니오'가 되어, 곧바로 심판의 시간으로 넘어갑니다.</li>
+        <li>부활은 죽은 지 <strong>세 시간 안에</strong> 치러야 합니다. 지금이 그 마지막 시간입니다.</li>
+      </ul>
+    </details>
+
+    <div class="nav-links">
+      <a href="index.html" data-keep-query>지목 결과 다시 입력</a>
+      <a href="/">메인 페이지</a>
+    </div>
+    <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
+  </main>
+  <script src="state.js?v=2"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    var st = DE.read();
+    var slot = document.getElementById('slot');
+
+    // 역병의사가 포박된 판 — 문을 열 사람이 없다는 사실이 이 화면에서 처음 드러난다.
+    if ((st.arrested || []).indexOf('plague') !== -1) {
+      var box = document.querySelector('.ending-decision');
+      box.querySelector('.decision-kicker').textContent = '답할 사람이 자리에 없습니다';
+      box.querySelector('h2').textContent = '역병의사는 포박되어 있습니다';
+      box.querySelector('h2 + p').textContent = '묶인 손으로는 문을 열 수 없습니다. 비술은 끝내 꺼내지지 않습니다.';
+      document.getElementById('picks').innerHTML =
+        '<button type="button" class="pick" style="--card-color:var(--red)" data-declare="0">' +
+          '<span class="pick-key">선언 불가</span>' +
+          '<span class="pick-copy">' +
+            '<span class="pick-title">비술은 꺼내지지 않는다</span>' +
+            '<span class="pick-desc">왕은 끝내 눈을 뜨지 못하고 쓸쓸히 서거합니다.</span>' +
+          '</span>' +
+          '<span class="pick-arrow">&#10095;</span>' +
+        '</button>';
+    }
+
+    document.getElementById('picks').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-declare]');
+      if (!b) return;
+      var yes = b.getAttribute('data-declare') === '1';
+      st.revive = yes;
+
+      if (yes) {
+        location.href = 'consent.html' + DE.query({ arrested: st.arrested, revive: true });
+        return;
+      }
+
+      var v = DE.judge(st.arrested || []);
+      var e2 = v.giveUpEnding;
+      var color = DE.ENDING_COLORS[e2];
+      slot.innerHTML =
+        '<section class="verdict is-blocked">' +
+          '<p class="verdict-kicker">경로 &#9313; · 심판의 시간</p>' +
+          '<h2>왕은 되살아나지 못하고 쓸쓸히 서거하셨습니다</h2>' +
+          '<p>이제 남은 것은 플레이어들이 투표로 선정한 범인에 대한 단죄와, 각자의 죄업에 따른 세간의 심판뿐입니다.</p>' +
+        '</section>' +
+        '<a href="ending-' + e2 + '.html' + DE.query({ arrested: st.arrested, revive: false }) + '" class="next-step-btn" style="--card-color:var(--' + color + ');--card-glow:var(--' + color + '-soft)">' +
+          '<span class="next-kicker">낭독</span>결말 읽기 &#10095;' +
+          '<span class="next-sub">이 판의 결말을 소리 내어 읽습니다.</span></a>';
+      slot.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  })();
+  </script>
+</body>
+</html>

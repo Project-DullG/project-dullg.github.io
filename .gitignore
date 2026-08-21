@@ -1,0 +1,12 @@
+# 이 저장소는 공개이며 GitHub Pages가 .md 파일까지 그대로 서빙한다.
+# 작업 메모·설계 문서·스펙은 비공개 저장소(too-many-doctors 등)에 두고,
+# 여기에는 배포할 정적 자산만 남긴다.
+notes/
+docs/spec*
+*.local.md
+*.draft.md
+
+# 편집기·OS 부산물
+.DS_Store
+Thumbs.db
+*.swp
