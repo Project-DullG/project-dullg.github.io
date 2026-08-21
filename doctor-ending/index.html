@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 북 — 투표 결과에 따른 최종 결말">
   <title>의사가 너무 많아! · 엔딩</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -38,7 +38,15 @@
       <button type="button" class="confirm-btn" id="confirm" disabled>확정</button>
     </section>
 
-    <div id="slot"></div>
+    <div class="modal-backdrop" id="confirm-modal" hidden>
+      <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-q">
+        <p class="modal-q" id="modal-q"></p>
+        <div class="modal-actions">
+          <button type="button" class="modal-btn" id="modal-cancel">아니오</button>
+          <button type="button" class="modal-btn is-primary" id="modal-ok">맞습니다</button>
+        </div>
+      </div>
+    </div>
 
     <div class="nav-links">
       <a href="/">Project DullG 메인 페이지</a>
@@ -52,7 +60,9 @@
     var grid = document.getElementById('vote-grid');
     var noneBox = document.getElementById('vote-none');
     var btn = document.getElementById('confirm');
-    var slot = document.getElementById('slot');
+    var modal = document.getElementById('confirm-modal');
+    var modalQ = document.getElementById('modal-q');
+    var nextHref = '';
 
     // 이전에 입력한 결과가 URL에 남아 있으면 되살린다.
     var prev = DE.read();
@@ -76,18 +86,22 @@
 
     function confirm() {
       var arrested = noneBox.checked ? [] : picked();
-      var who = arrested.length ? DE.names(arrested).join(', ') : '없음 (하늘 지목)';
-      var q = DE.query({ arrested: arrested });
-
-      slot.innerHTML =
-        '<section class="verdict is-open">' +
-          '<p class="verdict-kicker">입력 완료</p>' +
-          '<ul class="verdict-list"><li><strong>구속</strong> — ' + who + '</li></ul>' +
-        '</section>' +
-        '<a href="declare.html' + q + '" class="next-step-btn"><span class="next-kicker">다음 순서</span>진실의 문으로 &#10095;' +
-          '<span class="next-sub">최종 결말의 분기를 결정합니다.</span></a>';
-      slot.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      nextHref = 'declare.html' + DE.query({ arrested: arrested });
+      modalQ.innerHTML = arrested.length
+        ? '<strong>' + DE.names(arrested).join(', ') + '</strong>가 지목된 것이 맞습니까?'
+        : '아무도 지목하지 않은 것이 맞습니까?';
+      modal.hidden = false;
     }
+
+    document.getElementById('modal-ok').addEventListener('click', function () {
+      if (nextHref) location.href = nextHref;
+    });
+    document.getElementById('modal-cancel').addEventListener('click', function () {
+      modal.hidden = true;
+    });
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) modal.hidden = true;
+    });
 
     grid.addEventListener('change', function (e) {
       if (e.target === noneBox && noneBox.checked) {
@@ -97,7 +111,6 @@
       } else if (e.target !== noneBox && e.target.checked) {
         noneBox.checked = false;
       }
-      slot.innerHTML = '';
       refresh();
     });
 

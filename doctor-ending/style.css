@@ -2049,3 +2049,70 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
   .card-reveal { padding: 24px 20px; }
   .suit-note { flex-wrap: wrap; }
 }
+
+/* 확정 모달 */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(6, 4, 3, .78);
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  width: min(420px, 100%);
+  padding: 26px 24px 22px;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(30, 24, 19, .98), rgba(18, 14, 11, .99));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .5);
+  animation: fade-up .22s ease both;
+}
+
+.modal-q {
+  color: var(--ink);
+  font-size: 1.02rem;
+  line-height: 1.7;
+}
+
+.modal-q strong { color: var(--ink-strong); }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-btn {
+  flex: 1;
+  min-height: 46px;
+  padding: 11px 14px;
+  color: var(--dim);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .03);
+  cursor: pointer;
+  font: inherit;
+  font-size: .95rem;
+  font-weight: 780;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.modal-btn:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, .07);
+}
+
+.modal-btn.is-primary {
+  color: #14100c;
+  border-color: var(--gold);
+  background: var(--gold);
+}
+
+.modal-btn.is-primary:hover {
+  color: #14100c;
+  background: #d7b76b;
+}
