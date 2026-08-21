@@ -38,6 +38,9 @@
   const currentLabel = controls.querySelector('[data-story-current]');
   const steps = Array.from(controls.querySelectorAll('.story-page-step'));
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hadInitialHash = Boolean(window.location.hash);
+
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   pages.forEach((page, index) => {
     if (!page.id) page.id = `scene-${index + 1}`;
     page.setAttribute('aria-label', page.dataset.storyLabel || `${index + 1}번째 장면`);
@@ -151,7 +154,12 @@
   });
 
   const startsAtDecision = window.location.hash === '#decision';
-  render({ updateLocation: !startsAtDecision });
+  render({ updateLocation: hadInitialHash && !startsAtDecision });
   pager.classList.add('is-ready');
   if (startsAtDecision) requestAnimationFrame(moveToDecision);
+  if (!hadInitialHash) {
+    const resetInitialPosition = () => window.scrollTo(0, 0);
+    requestAnimationFrame(() => requestAnimationFrame(resetInitialPosition));
+    window.addEventListener('pageshow', resetInitialPosition, { once: true });
+  }
 })();

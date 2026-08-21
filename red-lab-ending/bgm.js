@@ -70,6 +70,8 @@ function renderFlowProgress() {
   const currentStage = stageByPage[filename];
   const header = document.querySelector('.header');
 
+  document.body.classList.toggle('is-flow-page', Boolean(currentStage));
+
   if (!currentStage || !header) return;
 
   const progress = document.createElement('aside');

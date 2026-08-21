@@ -230,6 +230,68 @@ h1 {
   border-color: rgba(224, 74, 79, .42);
 }
 
+.score-disclosure {
+  padding: 0;
+  overflow: hidden;
+}
+
+.score-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 76px;
+  padding: 17px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.score-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.score-disclosure summary > span:first-child {
+  display: grid;
+  gap: 2px;
+}
+
+.score-disclosure summary small {
+  color: var(--red);
+  font-size: .7rem;
+  font-weight: 850;
+}
+
+.score-disclosure summary strong {
+  color: var(--ink-strong);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.summary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 720;
+  white-space: nowrap;
+}
+
+.summary-action svg {
+  width: 17px;
+  height: 17px;
+  transition: transform .2s ease;
+}
+
+.score-disclosure[open] .summary-action svg {
+  transform: rotate(180deg);
+}
+
+.score-disclosure-body {
+  padding: 0 22px 21px;
+  border-top: 1px solid var(--line);
+}
+
 .guide-title {
   margin-bottom: 10px;
   color: var(--card-color, var(--red));
@@ -716,6 +778,16 @@ h1 {
   object-position: 50% 42%;
 }
 
+.story-visual--return {
+  aspect-ratio: 16 / 9;
+}
+
+.story-page > .story-visual:first-child {
+  margin-top: 0;
+  border-top: 1px solid var(--line-strong);
+  border-radius: 5px;
+}
+
 .story-visual::after {
   position: absolute;
   inset: 0;
@@ -754,13 +826,47 @@ h1 {
 
 .ending-script > .story-page[data-story-label]:not(.truth-chapter)::before {
   display: block;
-  margin-bottom: 17px;
+  margin-bottom: 19px;
   color: var(--section-color, var(--card-color, var(--red)));
   content: attr(data-story-label);
-  font-size: .7rem;
+  font-size: .79rem;
   font-weight: 850;
   letter-spacing: 0;
   line-height: 1.35;
+}
+
+.is-flow-page .container,
+.is-flow-page .reading-simple {
+  padding-top: 28px;
+}
+
+.is-flow-page .header {
+  margin-bottom: 28px;
+}
+
+.is-flow-page .lab-mark {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 10px;
+}
+
+.is-flow-page .tag {
+  min-height: 36px;
+  margin-bottom: 13px;
+  padding: 6px 12px;
+}
+
+.is-flow-page h1 {
+  font-size: 2.08rem;
+}
+
+.is-flow-page .subtitle {
+  margin-top: 8px;
+  font-size: .92rem;
+}
+
+.is-flow-page .flow-progress {
+  margin: -8px 0 24px;
 }
 
 .story-page--epilogue .child-voice {
@@ -1354,6 +1460,15 @@ h1 {
     margin-bottom: 27px;
   }
 
+  .score-disclosure summary {
+    min-height: 70px;
+    padding: 15px 17px;
+  }
+
+  .score-disclosure-body {
+    padding: 0 17px 18px;
+  }
+
   .lab-mark {
     width: 68px;
     height: 68px;
@@ -1377,6 +1492,29 @@ h1 {
 
   .flow-progress {
     margin: -9px 0 25px;
+  }
+
+  .is-flow-page .container,
+  .is-flow-page .reading-simple {
+    padding-top: 20px;
+  }
+
+  .is-flow-page .header {
+    margin-bottom: 22px;
+  }
+
+  .is-flow-page .lab-mark {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+  }
+
+  .is-flow-page .tag {
+    margin-bottom: 10px;
+  }
+
+  .is-flow-page h1 {
+    font-size: 1.8rem;
   }
 
   .guide-box,
