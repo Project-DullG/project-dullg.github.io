@@ -4,15 +4,15 @@
 
   const data = {
     daniel: {
-      title: "4년 뒤, 왕실 요리사 승강전이 다시 열렸다.",
+      title: "4년 뒤, 왕실 요리사 승강전의 조리대에 다시 불이 켜졌다.",
       cards: [
         {
           label: "다시 열린 승강전",
           name: "애쉬",
           tone: "future",
           paragraphs: [
-            "조살과 과육을 사용한 사실이 드러난 애쉬는 왕실 요리사 자격을 잃었다. 네 해 뒤 다시 조리대 앞에 선 그녀는 조살과도, 낯선 약초도 가져오지 않았다.",
-            "애쉬가 내놓은 음식에는 자신이 익힌 기술과 조살과를 제외한 식재료만 들어 있었다. 이번에는 결과가 나오기 전부터 숨겨야 할 재료가 없었다."
+            "조살과 과육을 사용한 사실이 드러난 애쉬는 왕실 요리사 자격을 잃었다. 네 해 뒤 다시 조리대 앞에 선 그녀의 재료함에는 조살과도, 성분을 밝히지 않은 약초도 없었다.",
+            "애쉬는 심사위원이 보는 앞에서 재료를 하나씩 꺼냈다. 마지막 접시를 내놓았을 때, 그녀가 감춰야 할 것은 아무것도 남아 있지 않았다."
           ]
         },
         {
@@ -20,8 +20,8 @@
           name: "캔디",
           tone: "future",
           paragraphs: [
-            "캔디도 부녀 관계와 심사 개입이 밝혀져 자격을 잃었다. 네 해 뒤, 심사석에 아버지가 없는 승강전에 다시 참가했다.",
-            "이번에는 누구에게도 특정 요리를 피하라고 부탁하지 않았다. 캔디는 자신이 만든 요리를 정해진 순서대로 내놓고 끝까지 결과를 기다렸다."
+            "부녀 관계와 심사 개입이 밝혀진 뒤 캔디도 왕실 주방을 떠났다. 네 해 뒤, 그녀는 아버지와 아무 관계가 없는 심사위원들 앞에서 다시 승강전에 참가했다.",
+            "이번에는 누구에게도 특정 접시를 피하라고 부탁하지 않았다. 캔디는 모든 요리를 정해진 순서대로 내놓았고, 자신의 점수만으로 왕실 요리사 자리를 되찾았다."
           ]
         },
         {
@@ -29,7 +29,7 @@
           name: "류진환",
           tone: "lost",
           paragraphs: [
-            "검은 함과 코트의 쪽지는 류진환이 까마귀의 요원이라는 사실을 드러냈다. 그는 왕실 요리사 선발장이 아니라 왕궁의 조사에서 흑진주의 목적을 설명해야 했다."
+            "검은 함과 쪽지는 류진환이 까마귀의 임무를 맡았다는 사실을 드러냈다. 그는 왕궁 조사에서 흑진주의 목적과 전달 경로를 진술했고, 단약은 호수나 우물에 닿기 전에 모두 회수됐다."
           ]
         }
       ]
@@ -166,18 +166,35 @@
   const article = document.querySelector(".ending-script");
   if (!copy || !article) return;
 
+  const portraits = [
+    ["애쉬", "images/portraits/ash.webp"],
+    ["캔디", "images/portraits/candy.webp"],
+    ["류진환", "images/portraits/ryu.webp"]
+  ];
+
+  function portraitMarkup(name) {
+    const matches = portraits.filter(([character]) => name.includes(character));
+    if (!matches.length) return "";
+    return `<div class="epilogue-portraits">${matches.map(([character, src]) => `<img src="${src}" alt="${character}">`).join("")}</div>`;
+  }
+
   const section = document.createElement("section");
   section.className = "chapter gourmet-epilogue";
   section.innerHTML = [
-    '<p class="script-kicker">EPILOGUE</p>',
+    '<p class="script-kicker">에필로그</p>',
     `<h2>${copy.title}</h2>`,
     '<div class="epilogue-scenes">',
     copy.cards.map((card) => {
       const paragraphs = card.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("");
       return [
         `<article class="epilogue-scene epilogue-${card.tone}">`,
+        '<div class="epilogue-scene-heading">',
+        portraitMarkup(card.name),
+        '<div>',
         `<span>${card.label}</span>`,
         `<h3>${card.name}</h3>`,
+        '</div>',
+        '</div>',
         paragraphs,
         "</article>"
       ].join("");
