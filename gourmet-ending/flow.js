@@ -1,9 +1,9 @@
 (() => {
   const filename = window.location.pathname.split('/').pop() || 'index.html';
   const header = document.querySelector('.header');
-  const stages = ['지목 결과', '대응과 결말', '후일담', '사건의 전말'];
-  const choicePages = new Set(['ending-b.html', 'ending-c.html', 'ending-d.html']);
-  const branchResultPattern = /^ending-[b-d]-[1-3]\.html$/;
+  const stages = ['지목 결과', '인물의 대응', '선택의 결과', '후일담', '사건의 전말'];
+  const choicePages = new Set(['ending-a.html', 'ending-b.html', 'ending-c.html', 'ending-d.html']);
+  const branchResultPattern = /^ending-[a-d]-[1-3]\.html$/;
 
   function loadIcons() {
     const render = () => window.lucide?.createIcons();
@@ -29,12 +29,10 @@
   document.body.classList.add('gourmet-flow-page');
 
   const initialStage = filename === 'story.html'
-    ? 4
-    : choicePages.has(filename)
-      ? 2
-      : branchResultPattern.test(filename)
-        ? 2
-        : 1;
+    ? 5
+    : branchResultPattern.test(filename)
+      ? 3
+      : 1;
 
   const progress = document.createElement('aside');
   progress.className = 'flow-progress';
@@ -60,7 +58,7 @@
       else step.removeAttribute('aria-current');
     });
     progress.setAttribute('aria-label', `전체 진행 ${stage}단계: ${stages[stage - 1]}`);
-    progress.querySelector('[data-flow-current]').textContent = `${stage} / 4 · ${stages[stage - 1]}`;
+    progress.querySelector('[data-flow-current]').textContent = `${stage} / ${stages.length} · ${stages[stage - 1]}`;
   }
 
   setStage(initialStage);
@@ -111,14 +109,16 @@
   });
 
   function stageForPage(page, index) {
-    if (filename === 'story.html') return 4;
-    if (page.classList.contains('gourmet-epilogue')) return 3;
-    if (pages.length === 2 && index === 1) return 2;
+    if (filename === 'story.html') return 5;
+    if (page.classList.contains('gourmet-epilogue')) return 4;
     const kicker = page.querySelector('.script-kicker')?.textContent.trim() || '';
-    if (/AFTERMATH|후일담/i.test(kicker)) return 3;
-    if (choicePages.has(filename)) return 2;
-    if (index === 0 && !branchResultPattern.test(filename)) return 1;
-    return 2;
+    if (/후일담/i.test(kicker)) return 4;
+    if (/인물의 선택|인물의 대응/i.test(kicker)) return 2;
+    if (/선택의 결과|사건 직후/i.test(kicker)) return 3;
+    if (/지목 결과/i.test(kicker)) return 1;
+    if (choicePages.has(filename) && index > 0) return 2;
+    if (branchResultPattern.test(filename)) return 3;
+    return 1;
   }
 
   function render(move = false) {
