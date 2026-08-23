@@ -1101,6 +1101,30 @@ h1 {
   margin-bottom: 0;
 }
 
+.truth-flow {
+  gap: 28px;
+}
+
+.truth-flow .script-block {
+  scroll-margin-top: 20px;
+}
+
+.truth-subheading {
+  margin: 31px 0 14px;
+  padding-top: 25px;
+  color: var(--ink-strong);
+  border-top: 1px solid var(--line);
+  font-size: 1.04rem;
+  font-weight: 790;
+  line-height: 1.5;
+}
+
+.script-block h2 + .truth-subheading {
+  margin-top: 24px;
+  padding-top: 0;
+  border-top: 0;
+}
+
 .script-block {
   --section-color: var(--card-color, var(--red));
   padding: 31px 33px;
