@@ -1109,6 +1109,17 @@ h1 {
   scroll-margin-top: 20px;
 }
 
+.truth-flow .script-block h2,
+.truth-flow .truth-subheading {
+  text-wrap: pretty;
+  word-break: keep-all;
+}
+
+.truth-flow .script-block p {
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
 .truth-subheading {
   margin: 31px 0 14px;
   padding-top: 25px;
