@@ -597,6 +597,42 @@ h1 {
   border-bottom: 1px solid var(--line);
 }
 
+.truth-page .truth-reader {
+  max-width: 760px;
+}
+
+.truth-flow .truth-intro {
+  line-height: 2;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+}
+
+.truth-flow .chapter {
+  margin-bottom: 42px;
+  padding-bottom: 42px;
+}
+
+.truth-flow .chapter h2 {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+}
+
+.truth-flow .chapter p {
+  line-height: 2.05;
+  margin-bottom: 22px;
+}
+
+.truth-flow .chapter strong {
+  color: #f2f2f5;
+  font-weight: 750;
+}
+
+.truth-flow .clue-gallery {
+  margin-top: 36px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
 .truth-subheading {
   color: #f2f2f5;
   font-size: 1.05rem;
@@ -953,6 +989,22 @@ button:focus-visible {
     padding-bottom: 22px;
   }
 
+  .truth-flow .truth-intro {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    line-height: 1.95;
+  }
+
+  .truth-flow .chapter {
+    margin-bottom: 34px;
+    padding: 0 0 34px;
+  }
+
+  .truth-flow .chapter p {
+    line-height: 1.98;
+    margin-bottom: 19px;
+  }
+
   .truth-table {
     font-size: .84rem;
   }
@@ -960,6 +1012,66 @@ button:focus-visible {
   .truth-table th,
   .truth-table td {
     padding: 12px 14px;
+  }
+
+  .truth-table-people-wrap {
+    overflow: visible;
+    border: 0;
+    background: none;
+  }
+
+  .truth-table-people,
+  .truth-table-people tbody,
+  .truth-table-people tr,
+  .truth-table-people td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .truth-table-people thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .truth-table-people tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .truth-table-people tr {
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .018);
+  }
+
+  .truth-table-people td {
+    display: grid;
+    grid-template-columns: minmax(88px, .8fr) minmax(0, 1.35fr);
+    gap: 12px;
+    padding: 10px 12px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+    white-space: normal;
+  }
+
+  .truth-table-people td::before {
+    content: attr(data-label);
+    color: var(--card-text, var(--gold));
+    font-size: .72rem;
+    font-weight: 700;
+  }
+
+  .truth-table-people tr td:last-child {
+    border-bottom: 0;
   }
 
   .story-page .evidence-grid,
@@ -1089,6 +1201,64 @@ body {
   border-top: 1px solid var(--line);
 }
 
+.score-intro {
+  margin-bottom: 12px !important;
+}
+
+.score-stack {
+  border-top: 1px solid var(--line);
+}
+
+.score-card {
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.score-card p {
+  margin: 0 0 6px;
+  color: #e8e8ed;
+  font-weight: 700;
+}
+
+.score-card span {
+  display: block;
+  margin-top: 4px;
+  color: #9f9faa;
+  font-size: .86rem;
+  line-height: 1.62;
+}
+
+.score-card span strong {
+  color: #dedee5;
+}
+
+.culprit-card p strong {
+  color: #f1877f;
+}
+
+.nomination-card p strong {
+  color: #e3bd6d;
+}
+
+.secret-card p strong {
+  color: #c9b6e8;
+}
+
+.bgm-guide {
+  display: flex;
+  gap: 8px;
+  margin-top: 17px !important;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: #92929d !important;
+  font-size: .84rem !important;
+}
+
+.bgm-guide strong {
+  flex: 0 0 auto;
+  color: var(--gold) !important;
+}
+
 .ending-card {
   min-height: 94px;
   padding: 17px 20px;
@@ -1158,7 +1328,7 @@ body {
 
 .flow-progress ol {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   list-style: none;
 }
 
@@ -1230,6 +1400,82 @@ body {
 .gourmet-flow-page .ending-script {
   margin-bottom: 18px;
   padding: 30px 32px;
+}
+
+.gourmet-flow-page .chapter p {
+  line-height: 2.05;
+  margin-bottom: 23px;
+}
+
+.ending-index-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: -6px 0 14px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 6px;
+  color: #b8b8c1;
+  font-size: .78rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color .18s ease, color .18s ease, background .18s ease;
+}
+
+.ending-index-back:hover,
+.ending-index-back:focus-visible {
+  border-color: var(--card-color, var(--gold));
+  background: rgba(255, 255, 255, .035);
+  color: #fff;
+}
+
+.ending-index-back svg {
+  width: 15px;
+  height: 15px;
+}
+
+#bgm-controller {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  z-index: 50;
+}
+
+#bgm-btn {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 50%;
+  background: rgba(9, 9, 12, .88);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .42);
+  color: #f3f3f5;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+#bgm-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold);
+}
+
+#bgm-btn.is-playing {
+  border-color: var(--gold);
+  box-shadow: 0 10px 30px var(--gold-soft);
+}
+
+#bgm-icon,
+#bgm-icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+#bgm-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 
 .ending-script.is-paged > .story-page {
@@ -1346,24 +1592,55 @@ body {
   background: var(--card-color, var(--gold));
 }
 
+.gourmet-epilogue .epilogue-intro {
+  margin: 0 0 30px;
+  padding: 0 0 26px;
+  color: #dedee4;
+  border-bottom: 1px solid var(--line);
+  font-size: 1rem;
+  line-height: 1.95;
+}
+
 .gourmet-epilogue .epilogue-scenes {
-  gap: 20px;
+  display: block;
+  margin-top: 0;
 }
 
 .gourmet-epilogue .epilogue-scene {
-  padding-left: 20px;
+  padding: 4px 0 30px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.gourmet-epilogue .epilogue-scene + .epilogue-scene {
+  margin-top: 30px;
+}
+
+.gourmet-epilogue .epilogue-scene:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .epilogue-scene-heading {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
 .epilogue-scene-heading h3,
+.epilogue-scene-heading h2,
 .epilogue-scene-heading span {
   margin-bottom: 0;
+}
+
+.epilogue-scene-heading h2 {
+  font-size: 1.15rem;
+  line-height: 1.45;
+}
+
+.gourmet-epilogue .epilogue-scene p {
+  margin-bottom: 18px;
+  line-height: 2.02;
 }
 
 .epilogue-portraits {
@@ -1406,6 +1683,10 @@ body {
     padding: 16px;
   }
 
+  .ending-card--no-avatar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
   .ending-badge {
     grid-column: 1 / -1;
     width: fit-content;
@@ -1445,6 +1726,29 @@ body {
 
   .gourmet-flow-page .ending-script {
     padding: 22px 20px;
+  }
+
+  .gourmet-flow-page .chapter p {
+    line-height: 1.95;
+    margin-bottom: 20px;
+  }
+
+  .gourmet-epilogue .epilogue-intro {
+    margin-bottom: 25px;
+    padding-bottom: 22px;
+  }
+
+  .gourmet-epilogue .epilogue-scene {
+    padding: 2px 0 25px 15px;
+  }
+
+  .gourmet-epilogue .epilogue-scene + .epilogue-scene {
+    margin-top: 25px;
+  }
+
+  .gourmet-epilogue .epilogue-scene p {
+    margin-bottom: 16px;
+    line-height: 1.95;
   }
 
   .story-pager-controls {

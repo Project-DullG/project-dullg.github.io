@@ -7,30 +7,54 @@
   <meta name="description" content="미식의 대가 · 엔딩 선택">
   <title>미식의 대가 · 엔딩 선택</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=13">
 </head>
 <body class="landing-page">
   <main class="container">
     <header class="header hero-header">
-      <a href="/" class="tag">Project DullG</a>
+      <span class="tag">Project DullG</span>
       <h1>〈미식의 대가〉</h1>
-      <p class="subtitle">최종 지목에서 시작되는 여섯 갈래의 결말.</p>
+      <p class="subtitle">점수를 정리한 뒤 최종 지목 결과와 같은 엔딩을 선택한다.</p>
     </header>
 
-    <details class="guide-box hub-guide">
+    <details class="guide-box hub-guide score-disclosure">
       <summary>
-        <span><small>엔딩 진행</small><strong>진행 순서 확인</strong></span>
-        <span class="summary-action">안내 보기 <i data-lucide="chevron-down" aria-hidden="true"></i></span>
+        <span><small>1. 점수 계산</small><strong>개인 목표 점수 확인</strong></span>
+        <span class="summary-action">기준 보기 <i data-lucide="chevron-down" aria-hidden="true"></i></span>
       </summary>
-      <div class="hub-guide-body">
-        <p>최종 투표에서 가장 많은 지목을 받은 대상을 선택한다.</p>
-        <p>다니엘·애쉬·류진환·캔디가 지목된 경우에는 해당 인물이 어떤 대응을 택했는지 이어서 선택한다.</p>
-        <p>지목 결과, 인물의 대응, 선택의 결과와 후일담을 차례로 읽은 뒤 사건의 전말을 확인한다.</p>
+      <div class="hub-guide-body score-disclosure-body">
+        <p class="score-intro">캐릭터 시트의 목적과 최종 투표 결과를 대조해 각자의 점수를 먼저 합산한다.</p>
+        <div class="score-stack">
+          <div class="score-card culprit-card">
+            <p>왕실 요리장을 살해한 범인은 <strong>다니엘</strong>이다.</p>
+            <span>다니엘을 지목한 플레이어는 자신의 범인 지목 관련 목표를 확인한다.</span>
+            <span>캔디가 다니엘을 지목했다면 범인 지목 목표 <strong>+5점</strong>을 얻는다.</span>
+          </div>
+          <div class="score-card nomination-card">
+            <p><strong>지목 회피 점수</strong></p>
+            <span>다니엘·애쉬·류진환은 자신을 지목하지 않은 플레이어마다 <strong>+3점</strong>을 얻는다.</span>
+            <span>캔디가 최다 지목을 받지 않았다면 <strong>+1점</strong>을 얻는다.</span>
+          </div>
+          <div class="score-card secret-card">
+            <p><strong>비밀 유지 점수</strong></p>
+            <span>다니엘은 자신이 조살과를 사용했다고 직접 인정하지 않았다면 <strong>+3점</strong>을 얻는다.</span>
+            <span>애쉬는 자신이 조살과를 사용했다고 직접 인정하지 않았다면 <strong>+2점</strong>을 얻는다.</span>
+            <span>류진환은 자신이 까마귀 소속이라고 직접 인정하지 않았다면 <strong>+2점</strong>을 얻는다.</span>
+            <span>캔디는 아버지와 있었던 일을 직접 인정하지 않았다면 <strong>+3점</strong>, 왕실 요리장이 아버지라는 사실을 직접 인정하지 않았다면 <strong>+2점</strong>을 얻는다.</span>
+            <span>다른 플레이어가 비밀을 밝혔더라도 본인이 인정하지 않았다면 점수를 얻는다. 엔딩에서 공개되는 사실은 이미 계산한 점수를 바꾸지 않는다.</span>
+          </div>
+        </div>
+        <p class="bgm-guide"><strong>BGM</strong> 화면 오른쪽 위 버튼으로 켜고 끌 수 있다.</p>
       </div>
     </details>
 
-    <div class="section-title">최종 투표 결과에 따른 분기</div>
-    <p class="section-desc">최종 투표에서 <span class="highlight">가장 많은 지목을 받은 인물</span>의 항목을 선택한다. 두 명 이상이 같은 수의 지목을 받았다면 미확정 엔딩을 선택한다.</p>
+    <div class="branch-toolbar">
+      <div>
+        <span>2. 최종 지목</span>
+        <strong>가장 많은 지목을 받은 대상을 선택한다</strong>
+      </div>
+    </div>
+    <p class="section-desc">최종 투표에서 <span class="highlight">가장 많은 지목을 받은 인물</span>의 항목을 선택한다. 최다 지목이 동률이면 해당 인물들을 다시 지목하고, 재지목도 동률일 때 미확정 엔딩을 선택한다.</p>
 
     <nav class="ending-list" aria-label="엔딩 선택">
       <a href="ending-a.html" class="ending-card ending-a">
@@ -38,7 +62,7 @@
         <img class="ending-avatar" src="images/portraits/daniel.webp" alt="">
         <div class="ending-info">
           <div class="ending-title">다니엘이 최다 지목된 경우</div>
-          <div class="ending-desc">다니엘이 지목에 어떻게 답했는지 선택한다.</div>
+          <div class="ending-desc">다니엘의 범행 인정과 구금, 남은 인물들의 후일담을 확인한다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
@@ -48,7 +72,7 @@
         <img class="ending-avatar" src="images/portraits/ash.webp" alt="">
         <div class="ending-info">
           <div class="ending-title">애쉬가 최다 지목된 경우</div>
-          <div class="ending-desc">애쉬가 조살과 과육 사용을 어떻게 진술했는지 고른다.</div>
+          <div class="ending-desc">애쉬의 구속과 4년 뒤 판결, 남은 인물들의 후일담을 확인한다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
@@ -58,7 +82,7 @@
         <img class="ending-avatar" src="images/portraits/ryu.webp" alt="">
         <div class="ending-info">
           <div class="ending-title">류진환이 최다 지목된 경우</div>
-          <div class="ending-desc">류진환이 검은 단약과 까마귀에 관해 무엇을 밝혔는지 고른다.</div>
+          <div class="ending-desc">류진환의 구속과 까마귀 임무에 대한 판결, 남은 인물들의 후일담을 확인한다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
@@ -68,42 +92,33 @@
         <img class="ending-avatar" src="images/portraits/candy.webp" alt="">
         <div class="ending-info">
           <div class="ending-title">캔디가 최다 지목된 경우</div>
-          <div class="ending-desc">캔디가 부녀 관계와 붉은 음식에 관한 부탁을 어떻게 진술했는지 고른다.</div>
+          <div class="ending-desc">캔디의 구속과 4년 뒤의 삶, 남은 인물들의 후일담을 확인한다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
-      <a href="ending-e.html" class="ending-card ending-e">
+      <a href="ending-e.html" class="ending-card ending-card--no-avatar ending-e">
         <span class="ending-badge">ENDING E</span>
         <div class="ending-info">
           <div class="ending-title">기타 인물이 최다 지목된 경우</div>
-          <div class="ending-desc">네 참가자 이외의 인물이 범인으로 지목된다.</div>
+          <div class="ending-desc">지목된 인물은 구속되고 네 참가자는 왕궁을 나선다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
 
-      <a href="ending-f.html" class="ending-card ending-f">
+      <a href="ending-f.html" class="ending-card ending-card--no-avatar ending-f">
         <span class="ending-badge">ENDING F</span>
         <div class="ending-info">
-          <div class="ending-title">최다 지목이 동률인 경우</div>
-          <div class="ending-desc">한 사람에게 최종 지목이 모이지 않는다.</div>
+          <div class="ending-title">재지목도 동률인 경우</div>
+          <div class="ending-desc">네 참가자가 모두 구속되고 사건은 미제로 남는다.</div>
         </div>
         <span class="ending-arrow">&#10095;</span>
       </a>
     </nav>
 
-    <a href="story.html" class="story-link">
-      <strong>사건의 전말 보기 &#8594;</strong>
-      <span>분기 엔딩을 읽은 뒤 확인한다.</span>
-    </a>
-
-    <a href="/" class="story-link" style="--card-color:var(--green);--card-glow:var(--green-soft)">
-      <strong>Project DullG 메인으로</strong>
-      <span>작품 목록 페이지로 돌아간다.</span>
-    </a>
-
     <footer class="footer">&copy; Project DullG &middot; 미식의 대가</footer>
   </main>
-  <script src="flow.js?v=4"></script>
+  <script src="flow.js?v=9"></script>
+  <script src="bgm.js?v=1"></script>
 </body>
 </html>

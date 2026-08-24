@@ -1,178 +1,127 @@
 (function () {
   const script = document.currentScript;
-  const outcome = script && script.dataset ? script.dataset.outcome : "";
+  const outcome = script?.dataset?.outcome || "";
 
-  const danielChampion = {
-    label: "4년 뒤",
+  const danielEscaped = {
+    label: "다음 승강전",
     name: "다니엘",
     tone: "future",
     paragraphs: [
-      "왕실은 남아 있지 않은 1차 복어국의 성분을 확인하지 못했다. 다니엘은 기소되지 않았고 수도에서 식당을 계속 운영했다.",
-      "4년 뒤 새 승강전이 열리자 다니엘은 다시 참가했다. 마지막 심사에 낸 요리는 와인과 석류를 졸인 붉은 소스 스테이크였다.",
-      "국왕은 고기를 붉은 소스와 함께 먹었다. \"매운맛이 아니군. 와인과 석류의 산미가 고기와 잘 맞는다.\" 다니엘은 고개를 숙였다. \"감사합니다. 4년을 기다린 심사평입니다.\"",
-      "다니엘은 최종 점수 1위로 왕실 요리장에 임명됐다. 그는 임명장을 받아 들고 왕실 주방에 들어갔다."
+      "다른 사람이 구속되자 다니엘은 살인 혐의로 재판받지 않았다. 그는 왕궁을 나와 자신이 운영하던 식당으로 돌아갔다.",
+      "왕실 요리장 살해 사건은 1차 음식이 폐기된 탓에 진범을 확정하지 못했다. 다니엘은 식당을 계속 운영했고, 귀족과 왕족의 예약도 끊이지 않았다.",
+      "4년 뒤 다니엘은 새 승강전에 다시 참가했다. 그는 붉은 석류 와인 소스를 곁들인 스테이크를 냈고, 이번에는 국왕이 고기와 소스를 함께 맛보았다.",
+      "다니엘은 선발 명단에 올라 왕실 요리사가 됐다. 그로부터 8년 뒤에는 평생 목표로 삼았던 왕실 요리장 자리에 올랐다."
     ]
   };
 
-  const ashCleared = {
-    label: "후속 조사",
+  const ashAfterCorrectAccusation = {
+    label: "왕실 주방",
     name: "애쉬",
     tone: "future",
     paragraphs: [
-      "왕실 요리장의 떡볶이 식기에 음식이 묻어 있지 않았다는 기록이 인정되면서 애쉬의 살인 혐의는 취소됐다. 다만 중독을 일으키는 조살과 과육을 심사 음식에 넣은 책임으로 왕실 요리사 자격이 정지됐다.",
-      "징계가 끝난 뒤 애쉬는 복귀 시험을 치렀다. 재료의 이름과 사용량을 모두 신고하고 심사 음식에 중독성 재료를 쓰지 않아 합격했다. 왕실 주방으로 돌아온 뒤에는 견습 요리사들에게 조살과 과육과 씨앗의 작용을 구분해 가르쳤다."
+      "애쉬는 사건 수사에 협조한 공로를 인정받았다. 중단된 승강전 때문에 기존 자격도 잃지 않았고, 사건 조사가 끝난 뒤 왕실 주방으로 돌아갔다.",
+      "애쉬는 대회 날을 마지막으로 조살과를 요리에 쓰지 않았다. 왕실 주방으로 돌아간 뒤에는 조살과를 제외한 동방 식재료만 사용했다.",
+      "4년 뒤에도 애쉬는 현직 왕실 요리사였다. 왕실 주방에서 동방 요리와 이방 식재료를 맡았고, 조살과를 쓰지 않은 요리로 자리를 지켰다."
     ]
   };
 
-  const candyDisciplined = {
-    label: "후속 징계",
+  const ashUnaccused = {
+    label: "왕실 주방",
+    name: "애쉬",
+    tone: "future",
+    paragraphs: [
+      "애쉬는 살인 혐의로 조사받지 않은 채 왕실 주방으로 돌아갔다. 승강전이 무효가 됐으므로 현직 왕실 요리사 자격도 유지됐다.",
+      "애쉬가 조살과 과육을 사용한 사실은 수사 대상이 되지 않았다. 애쉬는 2차 요리를 만들며 스스로 정했던 대로 그날 이후 조살과를 다시 쓰지 않았다.",
+      "4년 뒤에도 애쉬는 현직 왕실 요리사였다. 왕실 주방에서 동방 요리와 이방 식재료를 맡으며 자격을 지켰다."
+    ]
+  };
+
+  const ashAfterRyuAccused = {
+    label: "왕실 주방",
+    name: "애쉬",
+    tone: "future",
+    paragraphs: [
+      "류진환을 조사하는 과정에서 그가 까마귀 요원이었다는 사실이 공개됐다. 애쉬는 6년 전 그가 말했던 까마귀가 자신을 밀어내기 위한 핑계만은 아니었다는 것을 알게 됐다.",
+      "애쉬가 까마귀의 임무에 가담했다는 증거는 나오지 않았다. 그녀는 살인 혐의 없이 왕실 주방으로 돌아갔고, 현직 왕실 요리사 자격을 유지했다.",
+      "애쉬는 그날 이후 조살과를 요리에 쓰지 않았다. 4년 뒤에는 왕실 주방에서 동방 요리와 이방 식재료를 맡고 있었다."
+    ]
+  };
+
+  const ryuAfterCorrectAccusation = {
+    label: "사라진 도전자",
+    name: "류진환",
+    tone: "future",
+    paragraphs: [
+      "류진환은 사건 수사에 협조한 대가로 다음 승강전 본선 참가 자격을 받았다. 그러나 접선 상대였던 왕실 요리장이 죽으면서 왕궁 잠입 계획을 그대로 이어가기 어려워졌다.",
+      "왕궁에서 나온 류진환은 자신이 운영하던 식당을 정리했다. 그는 다음 승강전을 기다리지 않고 서방 왕국을 떠났다.",
+      "까마귀는 류진환을 다른 지역의 제조소로 옮겼다. 4년 뒤에도 그는 새 신분으로 조살과를 이용한 약물을 만들고 있었다. 서방 왕국으로는 돌아오지 않았다."
+    ]
+  };
+
+  const ryuUnaccused = {
+    label: "사라진 도전자",
+    name: "류진환",
+    tone: "future",
+    paragraphs: [
+      "류진환은 살인 혐의로 조사받지 않은 채 왕궁을 나왔다. 접선 상대였던 왕실 요리장이 죽었고, 그가 전달한 흑진주가 왕궁 안에 남은 상황에서 같은 신분으로 머무는 것은 위험했다.",
+      "류진환은 자신이 운영하던 식당을 정리하고 서방 왕국을 떠났다. 왕실 요리사 선발전에도 다시 참가하지 않았다.",
+      "까마귀는 그를 다른 지역의 제조소로 옮겼다. 4년 뒤에도 류진환은 새 신분으로 조살과를 이용한 약물을 만들고 있었다. 서방 왕국으로는 돌아오지 않았다."
+    ]
+  };
+
+  const candyAfterCorrectAccusation = {
+    label: "아버지의 뒤를 이어",
     name: "캔디",
     tone: "future",
     paragraphs: [
-      "캔디는 애쉬의 준비대에 허락 없이 손댄 사실을 인정했다. 왕실은 살인 사건과 별도로 캔디의 직무를 정지했고, 복귀 시험을 통과한 뒤에만 다시 왕실 주방에서 일하게 했다.",
-      "캔디가 복귀한 뒤 승강전 규정에는 다른 참가자의 재료와 조리대에 손댈 수 없다는 조항이 추가됐다."
+      "다니엘의 재판에서 2차 스테이크의 붉은 소스가 1차 독을 중화할 수 있었다는 사실이 밝혀졌다. 캔디는 다니엘을 탈락시키려고 아버지에게 붉은 요리를 먹지 말라고 부탁했다. 그 부탁 때문에 아버지가 붉은 소스를 먹지 않았다는 사실도 알게 됐다.",
+      "왕실 요리장을 죽인 사람은 복어국에 조살과 씨앗을 넣은 다니엘이었다. 캔디는 살인죄를 받지 않았지만, 자신이 심사에 개입하지 않았다면 아버지가 붉은 소스를 먹었을 가능성이 있었다는 사실을 알게 됐다.",
+      "캔디는 사건 수사에 협조한 공로를 인정받아 왕실 요리사 자격을 유지했다. 왕실 주방으로 돌아간 뒤에는 다른 참가자의 재료를 건드리지 않았고, 심사위원에게 미리 부탁하는 일도 하지 않았다.",
+      "12년 동안 왕실 주방에서 경력을 쌓은 캔디는 왕실 요리장으로 임명됐다. 그해 아버지의 생일에도 녹색 케이크를 만들었다. 촛불을 켠 캔디는 빈 조리실에서 말했다. “아빠, 나 이제 요리장이야. 내 실력으로 됐어.”"
     ]
   };
 
-  const data = {
-    daniel: {
-      title: "다니엘이 구금된 뒤, 왕실은 나머지 세 사람의 행동을 따로 조사했다.",
-      cards: [
-        {
-          label: "징계 이후",
-          name: "애쉬",
-          tone: "future",
-          paragraphs: [
-            "왕실 요리장은 애쉬의 떡볶이를 먹지 않았다. 애쉬에게 살인 혐의는 적용되지 않았지만, 중독을 일으키는 조살과 과육을 심사 음식에 넣은 책임으로 왕실 요리사 자격이 정지됐다.",
-            "징계가 끝난 뒤 애쉬는 복귀 시험을 치렀다. 모든 재료의 이름과 사용량을 신고하고 심사 음식에 중독성 재료를 쓰지 않아 합격했다. 왕실 주방으로 돌아온 뒤에는 견습 요리사들에게 조살과 과육과 씨앗의 작용을 구분해 가르쳤다."
-          ]
-        },
-        {
-          label: "4년 뒤",
-          name: "캔디",
-          tone: "future",
-          paragraphs: [
-            "캔디는 부녀 관계를 숨기고 아버지에게 다니엘의 붉은 요리를 피하라고 부탁한 사실을 인정했다. 살인 혐의에서는 제외됐고, 심사 개입에 대한 징계를 마친 뒤 왕실 주방으로 돌아왔다.",
-            "4년 뒤 열린 새 승강전에서 캔디는 예선부터 다시 치렀다. 최종 점수 1위를 차지한 캔디는 아버지의 뒤를 이어 왕실 요리장에 임명됐다.",
-            "캔디가 처음 바꾼 규정은 두 가지였다. 참가자와 심사위원의 가족 관계를 대회 전에 신고하게 했고, 모든 시식 접시를 최종 발표가 끝날 때까지 보관하게 했다."
-          ]
-        },
-        {
-          label: "별도 재판",
-          name: "류진환",
-          tone: "lost",
-          paragraphs: [
-            "검은 단약은 함 안에 남아 있었고 왕실 요리장은 류진환의 쌀국수를 먹지 않았다. 류진환에게 왕실 요리장 살인 혐의는 적용되지 않았다.",
-            "대신 왕궁의 호수와 우물에 흑진주를 풀기 위해 단약을 반입한 혐의로 별도 재판을 받았다. 류진환은 까마귀의 지시와 단약의 용도를 진술했고, 애쉬는 그 계획과 관계없다고 밝혔다."
-          ]
-        }
-      ]
+  const candyAfterUnresolvedCase = {
+    label: "왕실 제과실",
+    name: "캔디",
+    tone: "future",
+    paragraphs: [
+      "캔디는 살인 혐의로 조사받지 않은 채 왕실 주방으로 돌아갔다. 승강전이 무효가 됐으므로 현직 왕실 요리사 자격도 유지됐다.",
+      "다니엘의 붉은 소스에 해독제가 있었다는 사실은 수사에서 밝혀지지 않았다. 캔디는 자신이 아버지에게 한 부탁이 죽음에 영향을 주었다는 사실을 알지 못했다.",
+      "캔디는 왕실 주방에서 케이크와 과자를 계속 만들었다. 4년 뒤에는 제과 작업을 책임지는 왕실 요리사가 됐다.",
+      "아버지의 생일이 돌아올 때마다 캔디는 대회 날 만들었던 녹색 케이크를 다시 구웠다. 네 번째 케이크에 촛불을 꽂은 뒤에는 짧게 말했다. “아빠, 생일 축하해. 올해도 내가 만들었어.”"
+    ]
+  };
+
+  const endings = {
+    "daniel-accused": {
+      title: "진범을 잡은 뒤",
+      intro: "다니엘이 구속된 뒤 애쉬와 류진환, 캔디는 수사에 협조한 공로를 인정받았다.",
+      cards: [ashAfterCorrectAccusation, ryuAfterCorrectAccusation, candyAfterCorrectAccusation]
     },
-    "ash-cleared": {
-      title: "애쉬의 떡볶이는 사망 원인에서 제외됐지만, 다니엘은 살인 혐의를 받지 않았다.",
-      cards: [ashCleared, danielChampion]
+    "ash-accused": {
+      title: "지목되지 않은 세 사람",
+      intro: "애쉬가 구속된 뒤 다니엘과 류진환, 캔디는 살인 혐의 없이 왕궁을 나왔다.",
+      cards: [ryuUnaccused, candyAfterUnresolvedCase, danielEscaped]
     },
-    "ash-candy-cleared": {
-      title: "후속 조사에서 애쉬와 캔디의 행동은 왕실 요리장 살인과 따로 처리됐다.",
-      cards: [ashCleared, candyDisciplined, danielChampion]
+    "ryu-accused": {
+      title: "지목되지 않은 세 사람",
+      intro: "류진환이 구속된 뒤 애쉬와 캔디, 다니엘은 살인 혐의 없이 왕궁을 나왔다.",
+      cards: [ashAfterRyuAccused, candyAfterUnresolvedCase, danielEscaped]
     },
-    "ryu-silent": {
-      title: "검은 단약이 사용되지 않았다는 사실이 확인되자 류진환의 살인 혐의는 취소됐다.",
-      cards: [
-        {
-          label: "별도 조사",
-          name: "류진환",
-          tone: "lost",
-          paragraphs: [
-            "왕실 요리장은 검은 단약을 삼키지 않았고 류진환의 쌀국수도 먹지 않았다. 왕실은 살인 혐의를 취소했지만, 단약을 왕궁에 들여온 경위에 대한 조사는 계속했다.",
-            "류진환은 까마귀에 관해 진술하지 않았다. 압수된 단약과 명령서가 별도 재판에 넘겨졌고, 그는 재판이 끝날 때까지 수도를 떠날 수 없었다."
-          ]
-        },
-        danielChampion
-      ]
+    "candy-accused": {
+      title: "지목되지 않은 세 사람",
+      intro: "캔디가 구속된 뒤 애쉬와 류진환, 다니엘은 살인 혐의 없이 왕궁을 나왔다.",
+      cards: [ashUnaccused, ryuUnaccused, danielEscaped]
     },
-    "ryu-confess": {
-      title: "류진환은 살인 혐의에서는 벗어났지만, 흑진주 반입 혐의로 재판을 받았다.",
-      cards: [
-        {
-          label: "까마귀의 계획",
-          name: "류진환",
-          tone: "lost",
-          paragraphs: [
-            "류진환의 진술에 따라 검은 단약은 압수됐고 왕궁의 호수와 우물에는 경비가 배치됐다. 왕실 요리장이 단약을 삼키지 않았다는 사실도 확인돼 살인 혐의는 취소됐다.",
-            "류진환은 왕궁의 물에 흑진주를 풀기 위해 단약을 반입한 혐의로 유죄 판결을 받았다. 그의 진술 덕분에 까마귀가 준비한 단약은 어느 곳에도 사용되지 않았다."
-          ]
-        },
-        danielChampion
-      ]
-    },
-    "ryu-protect": {
-      title: "류진환은 살인 혐의와 애쉬의 혐의를 분리한 뒤 까마귀에 관해 진술했다.",
-      cards: [
-        {
-          label: "조사실에서",
-          name: "류진환과 애쉬",
-          tone: "future",
-          paragraphs: [
-            "왕실 요리장이 단약과 쌀국수를 먹지 않았다는 사실이 확인돼 류진환의 살인 혐의는 취소됐다. 류진환은 별도 조사에서 까마귀가 애쉬를 조직에 끌어들이지 못하게 하려고 6년 전 애쉬를 내보냈다고 설명했다.",
-            "애쉬는 그때 이유를 말했어야 했다고 답했다. 류진환은 사과한 뒤 까마귀의 지시와 단약의 반입 경로를 진술했다. 애쉬는 조사를 마치고 먼저 방을 나갔다."
-          ]
-        },
-        danielChampion
-      ]
-    },
-    "candy-hide": {
-      title: "편지는 부녀 관계를 밝혔지만 캔디가 아버지를 죽였다는 증거는 되지 못했다.",
-      cards: [
-        {
-          label: "왕궁 밖에서",
-          name: "캔디",
-          tone: "future",
-          paragraphs: [
-            "왕실은 캔디가 만든 케이크에서 사망 원인을 찾지 못했다. 살인 혐의는 취소됐지만, 부녀 관계와 단독 만남을 숨긴 책임을 묻는 징계가 시작됐다. 캔디는 징계 결정이 나오기 전에 왕실 요리사 자리에서 물러났다.",
-            "캔디는 수도에 자신의 이름을 건 식당을 열었다. 메뉴를 정하고 재료를 주문하고 하루 매상을 계산하는 일까지 직접 맡았다. 아버지의 생일이 돌아온 날에는 대회에서 전하지 못한 케이크를 다시 만들어 손님들에게 한 조각씩 내놓았다."
-          ]
-        },
-        danielChampion
-      ]
-    },
-    "candy-confess": {
-      title: "캔디의 부탁은 심사를 방해했지만, 아버지를 독살했다는 증거는 나오지 않았다.",
-      cards: [
-        {
-          label: "징계 이후",
-          name: "캔디",
-          tone: "future",
-          paragraphs: [
-            "왕실은 캔디의 살인 혐의를 취소하고 부녀 관계 은폐와 심사 개입만 징계했다. 자격 정지 기간이 끝난 뒤 캔디는 복귀 시험을 치러 왕실 주방으로 돌아왔다.",
-            "복귀 후 캔디는 참가자와 심사위원의 가족 관계를 사전에 신고하게 했다. 가족이 승강전에 참가하면 해당 심사위원은 그 참가자의 점수를 매길 수 없게 됐다."
-          ]
-        },
-        danielChampion
-      ]
-    },
-    "candy-steak": {
-      title: "캔디의 지적에도 붉은 소스는 살인 증거로 채택되지 않았다.",
-      cards: [
-        {
-          label: "복귀 이후",
-          name: "캔디",
-          tone: "future",
-          paragraphs: [
-            "왕실은 캔디가 만든 케이크와 왕실 요리장의 사망을 연결하지 못해 살인 혐의를 취소했다. 캔디는 심사 개입에 대한 징계를 받은 뒤 왕실 주방으로 돌아왔다.",
-            "캔디는 다음 승강전부터 먹지 않은 음식도 조사 종료 전까지 버리지 못하게 했다. 시식 순서와 남은 음식의 양도 심사표에 함께 기록하게 했다."
-          ]
-        },
-        danielChampion
-      ]
-    },
-    "daniel-victory": {
-      title: "왕실은 살인범을 특정하지 못한 채 이번 승강전을 끝냈다.",
-      cards: [danielChampion]
+    "other-accused": {
+      title: "네 참가자의 이후",
+      intro: "다른 인물이 구속된 뒤 네 참가자는 살인 혐의 없이 왕궁을 나왔다.",
+      cards: [ashUnaccused, ryuUnaccused, candyAfterUnresolvedCase, danielEscaped]
     }
   };
 
-  const copy = data[outcome];
+  const copy = endings[outcome];
   const article = document.querySelector(".ending-script");
   if (!copy || !article) return;
 
@@ -184,34 +133,38 @@
   ];
 
   function portraitMarkup(name) {
-    const matches = portraits.filter(([character]) => name.includes(character));
-    if (!matches.length) return "";
-    return `<div class="epilogue-portraits">${matches.map(([character, src]) => `<img src="${src}" alt="${character}">`).join("")}</div>`;
+    const portrait = portraits.find(([character]) => name.includes(character));
+    if (!portrait) return "";
+    const [character, src] = portrait;
+    return `<div class="epilogue-portraits"><img src="${src}" alt="${character}"></div>`;
   }
 
   const section = document.createElement("section");
-  section.className = "chapter gourmet-epilogue";
-  section.innerHTML = [
-    '<p class="script-kicker">에필로그</p>',
-    `<h2>${copy.title}</h2>`,
-    '<div class="epilogue-scenes">',
-    copy.cards.map((card) => {
-      const paragraphs = card.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("");
-      return [
-        `<article class="epilogue-scene epilogue-${card.tone}">`,
-        '<div class="epilogue-scene-heading">',
-        portraitMarkup(card.name),
-        '<div>',
-        `<span>${card.label}</span>`,
-        `<h3>${card.name}</h3>`,
-        '</div>',
-        '</div>',
-        paragraphs,
-        "</article>"
-      ].join("");
-    }).join(""),
-    "</div>"
-  ].join("");
+  const titleId = `epilogue-${outcome}`;
+  const scenes = copy.cards.map((card, index) => {
+    const sceneId = `${titleId}-${index + 1}`;
+    const paragraphs = card.paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("");
+    return [
+      `<div class="epilogue-scene epilogue-${card.tone}" aria-labelledby="${sceneId}">`,
+      '<div class="epilogue-scene-heading">',
+      portraitMarkup(card.name),
+      '<div>',
+      `<span>${card.label}</span>`,
+      `<h3 id="${sceneId}">${card.name}</h3>`,
+      '</div>',
+      '</div>',
+      paragraphs,
+      '</div>'
+    ].join("");
+  }).join("");
 
+  section.className = "chapter gourmet-epilogue";
+  section.setAttribute("aria-labelledby", titleId);
+  section.innerHTML = [
+    '<p class="script-kicker">후일담</p>',
+    `<h2 id="${titleId}">${copy.title}</h2>`,
+    `<p class="epilogue-intro">${copy.intro}</p>`,
+    `<div class="epilogue-scenes">${scenes}</div>`
+  ].join("");
   article.appendChild(section);
 }());

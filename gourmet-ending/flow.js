@@ -1,9 +1,7 @@
 (() => {
   const filename = window.location.pathname.split('/').pop() || 'index.html';
   const header = document.querySelector('.header');
-  const stages = ['지목 결과', '인물의 대응', '선택의 결과', '후일담', '사건의 전말'];
-  const choicePages = new Set(['ending-a.html', 'ending-b.html', 'ending-c.html', 'ending-d.html']);
-  const branchResultPattern = /^ending-[a-d]-[1-3]\.html$/;
+  const stages = ['지목 결과', '조사 결과', '후일담', '사건의 전말'];
 
   function loadIcons() {
     const render = () => window.lucide?.createIcons();
@@ -28,11 +26,7 @@
 
   document.body.classList.add('gourmet-flow-page');
 
-  const initialStage = filename === 'story.html'
-    ? 5
-    : branchResultPattern.test(filename)
-      ? 3
-      : 1;
+  const initialStage = filename === 'story.html' ? 4 : 1;
 
   const progress = document.createElement('aside');
   progress.className = 'flow-progress';
@@ -79,6 +73,7 @@
   }
 
   const afterStory = Array.from(document.querySelectorAll('main > .next-step-btn, main > .nav-links, main > .footer'));
+  const indexBack = document.querySelector('.ending-index-back');
   const controls = document.createElement('nav');
   controls.className = 'story-pager-controls';
   controls.setAttribute('aria-label', '엔딩 장면 이동');
@@ -109,15 +104,13 @@
   });
 
   function stageForPage(page, index) {
-    if (filename === 'story.html') return 5;
-    if (page.classList.contains('gourmet-epilogue')) return 4;
+    if (filename === 'story.html') return 4;
+    if (page.classList.contains('gourmet-epilogue')) return 3;
     const kicker = page.querySelector('.script-kicker')?.textContent.trim() || '';
-    if (/후일담/i.test(kicker)) return 4;
-    if (/인물의 선택|인물의 대응/i.test(kicker)) return 2;
-    if (/선택의 결과|사건 직후/i.test(kicker)) return 3;
+    if (/후일담|에필로그/i.test(kicker)) return 3;
+    if (/조사 결과|왕실의 조치|후속 조사|사건 직후/i.test(kicker)) return 2;
     if (/지목 결과/i.test(kicker)) return 1;
-    if (choicePages.has(filename) && index > 0) return 2;
-    if (branchResultPattern.test(filename)) return 3;
+    if (index > 0) return 2;
     return 1;
   }
 
@@ -138,6 +131,7 @@
     afterStory.forEach((element) => {
       element.hidden = currentPage !== pages.length - 1;
     });
+    if (indexBack) indexBack.hidden = currentPage !== 0;
     setStage(stageForPage(pages[currentPage], currentPage));
     if (move) {
       const top = pager.getBoundingClientRect().top + window.scrollY - 18;
