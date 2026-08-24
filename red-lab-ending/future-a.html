@@ -7,9 +7,9 @@
   <meta name="description" content="레드가 죽은 연구소 · 블랙의 처분 선택">
   <title>[Red Lab] 블랙을 어떻게 할 것인가</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=45">
+  <link rel="stylesheet" href="style.css?v=61">
 </head>
-<body>
+<body class="is-decision-page">
   <main class="container" style="--card-color:var(--black);--card-glow:var(--black-soft)">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
@@ -18,16 +18,10 @@
       <p class="subtitle">블랙의 범행이 밝혀진 뒤</p>
     </header>
 
-    <section class="ending-context" aria-label="논의 및 선택 담당">
-      <span><strong>논의</strong> 블랙을 제외한 플레이어</span>
-      <span><strong>선택</strong> 모두의 합의</span>
-    </section>
-
     <article class="story-panel">
-      <p>블랙의 머스킷과 변신 장치는 박사 앞에 놓여 있었다. 박사는 블랙에게 작전실에 남아 있으라고 한 뒤, 블루와 옐로, 핑크를 옆방으로 불렀다.</p>
-      <p>박사는 블랙을 내보낼 경우 연구소로 오는 길과 대원들의 신원을 기억에서 지워야 한다고 설명했다.</p>
-      <p class="dialogue" data-speaker="박사">“레드는 돌아오지 않아용. 블랙이 한 일을 없던 일로 만들 수도 없어용.”</p>
-      <p class="dialogue" data-speaker="박사">“블랙을 어떻게 할지는 세 사람에게 맡길게용. 충분히 이야기하고 돌아와용.”</p>
+      <p>블랙의 머스킷과 변신 장치는 박사 앞에 놓여 있었다. 박사는 블랙에게 작전실에 남아 있으라고 한 뒤 블루와 옐로, 핑크를 옆방으로 불렀다.</p>
+      <p>박사는 블랙을 내보낼 경우 연구소의 위치와 변신 시스템, 대원들의 신원을 기억에서 지우겠다고 설명했다. 연구소에 남기더라도 머스킷은 보관하고, 블랙이 작전 명령을 내릴 수 없게 하겠다고 했다.</p>
+      <p class="dialogue dialogue--impact" data-speaker="박사">“블랙을 내보낼지, 연구소에 남겨 조사와 구조를 돕게 할지 결정해용. 어느 쪽이든 범행 기록은 보관해용.”</p>
       <p>이야기를 마친 세 사람이 작전실로 돌아왔다. 블랙은 자리에서 일어나지 않은 채 대답을 기다렸다.</p>
     </article>
 
@@ -36,10 +30,10 @@
       <h2 id="decision-black">블랙을 어떻게 할 것인가.</h2>
       <div class="ending-list future-choice">
         <a href="future-a-leave.html?v=42" class="choice-btn stop-choice">
-          <span class="choice-num">FINAL A</span><span class="choice-content"><strong class="choice-title">블랙을 떠나보낸다</strong><span class="choice-desc">레인저 자격을 박탈하고 연구소에 관한 기억을 지운 뒤 내보냅니다.</span></span><span class="choice-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
+          <span class="choice-num">FINAL A</span><span class="choice-content"><strong class="choice-title">블랙을 떠나보낸다</strong><span class="choice-desc">연구소의 위치와 변신 시스템, 대원들의 신원을 지운 뒤 내보냅니다.</span></span><span class="choice-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
         </a>
         <a href="future-a-stay.html?v=42" class="choice-btn continue-choice">
-          <span class="choice-num">FINAL B</span><span class="choice-content"><strong class="choice-title">블랙을 연구소에 남긴다</strong><span class="choice-desc">장비와 지휘권을 회수하고, 카오스에서 본 길을 기록하게 합니다.</span></span><span class="choice-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
+          <span class="choice-num">FINAL B</span><span class="choice-content"><strong class="choice-title">블랙을 연구소에 남긴다</strong><span class="choice-desc">머스킷을 보관하고, 연구소 안에서 조사와 구조 지원을 맡깁니다.</span></span><span class="choice-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
         </a>
       </div>
     </section>

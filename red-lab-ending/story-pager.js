@@ -1,4 +1,91 @@
 (() => {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setupTruthReader() {
+    const truthFlow = document.querySelector('.truth-flow');
+    if (!truthFlow) return;
+
+    const chapters = Array.from(truthFlow.querySelectorAll('.script-block[id]'));
+    if (chapters.length < 2) return;
+
+    const controls = document.createElement('nav');
+    controls.className = 'truth-reader-controls';
+    controls.setAttribute('aria-label', '사건의 전말 장 이동');
+    controls.innerHTML = `
+      <button type="button" class="truth-reader-btn truth-reader-prev" aria-label="이전 장">
+        <i data-lucide="arrow-left" aria-hidden="true"></i>
+      </button>
+      <div class="truth-reader-status" aria-live="polite">
+        <span class="truth-reader-track" aria-hidden="true"><span></span></span>
+        <span class="truth-reader-title" data-truth-title></span>
+        <span class="truth-reader-count"><span data-truth-current>1</span> / ${chapters.length}</span>
+      </div>
+      <button type="button" class="truth-reader-btn truth-reader-next" aria-label="다음 장">
+        <i data-lucide="arrow-right" aria-hidden="true"></i>
+      </button>
+      <a href="index.html" class="truth-reader-hub" aria-label="엔딩 허브로 돌아가기">
+        <i data-lucide="layout-grid" aria-hidden="true"></i>
+      </a>
+    `;
+    document.querySelector('main')?.appendChild(controls);
+
+    const previousButton = controls.querySelector('.truth-reader-prev');
+    const nextButton = controls.querySelector('.truth-reader-next');
+    const title = controls.querySelector('[data-truth-title]');
+    const current = controls.querySelector('[data-truth-current]');
+    const progress = controls.querySelector('.truth-reader-track span');
+    let currentChapter = 0;
+    let ticking = false;
+
+    function chapterTitle(chapter, index) {
+      return chapter.querySelector('.script-kicker')?.textContent?.trim() || `${index + 1}장`;
+    }
+
+    function update() {
+      const marker = window.scrollY + window.innerHeight * .28;
+      currentChapter = 0;
+      chapters.forEach((chapter, index) => {
+        if (chapter.offsetTop <= marker) currentChapter = index;
+      });
+
+      const start = truthFlow.offsetTop;
+      const total = Math.max(truthFlow.offsetHeight - window.innerHeight * .55, 1);
+      const read = Math.min(Math.max((window.scrollY - start + window.innerHeight * .2) / total, 0), 1);
+
+      title.textContent = chapterTitle(chapters[currentChapter], currentChapter);
+      current.textContent = String(currentChapter + 1);
+      progress.style.width = `${read * 100}%`;
+      previousButton.disabled = currentChapter === 0;
+      nextButton.disabled = currentChapter === chapters.length - 1;
+      ticking = false;
+    }
+
+    function scheduleUpdate() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    function moveTo(index) {
+      const chapter = chapters[index];
+      if (!chapter) return;
+      const offset = window.innerWidth <= 640 ? 72 : 18;
+      const top = chapter.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+      const url = new URL(window.location.href);
+      url.hash = chapter.id;
+      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+
+    previousButton.addEventListener('click', () => moveTo(currentChapter - 1));
+    nextButton.addEventListener('click', () => moveTo(currentChapter + 1));
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    requestAnimationFrame(update);
+  }
+
+  setupTruthReader();
+
   const pager = document.querySelector('[data-story-pager]');
 
   if (!pager) return;
@@ -20,6 +107,7 @@
       <span class="story-page-steps" aria-hidden="true">
         ${pages.map(() => '<span class="story-page-step"></span>').join('')}
       </span>
+      <span class="story-page-scene" data-story-scene></span>
       <span class="story-page-count"><span data-story-current>1</span><span aria-hidden="true"> / </span><span>${pages.length}</span></span>
     </div>
     <button type="button" class="story-page-btn story-page-next" aria-label="다음 장면">
@@ -36,8 +124,8 @@
   const previousButton = controls.querySelector('.story-page-prev');
   const nextButton = controls.querySelector('.story-page-next');
   const currentLabel = controls.querySelector('[data-story-current]');
+  const sceneLabel = controls.querySelector('[data-story-scene]');
   const steps = Array.from(controls.querySelectorAll('.story-page-step'));
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const hadInitialHash = Boolean(window.location.hash);
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -65,7 +153,8 @@
   let currentPage = pageFromHash() ?? 0;
 
   function moveViewport() {
-    const top = pager.getBoundingClientRect().top + window.scrollY - 18;
+    const offset = window.innerWidth <= 640 ? 72 : 18;
+    const top = pager.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
   }
 
@@ -90,6 +179,25 @@
     });
 
     currentLabel.textContent = String(currentPage + 1);
+    sceneLabel.textContent = pages[currentPage].dataset.storyLabel || `${currentPage + 1}번째 장면`;
+
+    const current = pages[currentPage];
+    const tone = current.classList.contains('story-page--child')
+      ? 'child'
+      : current.classList.contains('story-page--secret')
+        ? 'secret'
+        : current.classList.contains('story-page--shutdown')
+          ? 'shutdown'
+          : current.classList.contains('story-page--return')
+            ? 'return'
+            : current.classList.contains('story-page--doctor')
+              ? 'doctor'
+              : current.classList.contains('story-page--danger')
+                ? 'danger'
+                : current.classList.contains('story-page--memory')
+                  ? 'memory'
+                  : 'default';
+    document.body.dataset.storyTone = tone;
     steps.forEach((step, index) => {
       step.classList.toggle('is-current', index === currentPage);
       step.classList.toggle('is-read', index < currentPage);
