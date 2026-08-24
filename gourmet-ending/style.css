@@ -38,6 +38,11 @@
 
 html { scroll-behavior: smooth; }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   min-height: 100vh;
   background: var(--bg);
@@ -55,6 +60,13 @@ body.landing-page {
 }
 
 a { color: inherit; }
+
+a,
+button,
+summary {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(212, 168, 85, .14);
+}
 
 .container {
   max-width: 720px;
@@ -134,6 +146,7 @@ h1 {
   margin-bottom: 12px;
   text-shadow: 0 0 30px rgba(255, 255, 255, .1);
   overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .subtitle {
@@ -575,6 +588,7 @@ h1 {
   padding-bottom: 16px;
   border-bottom: 1px solid var(--line);
   overflow-wrap: anywhere;
+  text-wrap: pretty;
 }
 
 .chapter p {
@@ -1478,6 +1492,106 @@ body {
   outline-offset: 3px;
 }
 
+.truth-page {
+  padding-bottom: calc(120px + env(safe-area-inset-bottom));
+}
+
+.truth-reader-controls {
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
+  gap: 6px;
+  align-items: center;
+  width: min(680px, calc(100% - 32px));
+  min-height: 62px;
+  padding: 8px;
+  border: 1px solid rgba(212, 168, 85, .28);
+  border-radius: 8px;
+  background: rgba(12, 12, 16, .94);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  transform: translateX(-50%);
+  backdrop-filter: blur(12px);
+}
+
+.truth-reader-btn,
+.truth-reader-hub {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  color: #ededf1;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .035);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.truth-reader-btn:hover:not(:disabled),
+.truth-reader-hub:hover {
+  border-color: var(--gold);
+  background: rgba(212, 168, 85, .08);
+}
+
+.truth-reader-btn:disabled {
+  opacity: .28;
+  cursor: default;
+}
+
+.truth-reader-btn svg,
+.truth-reader-hub svg {
+  width: 18px;
+  height: 18px;
+}
+
+.truth-reader-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 10px;
+  min-width: 0;
+  padding: 0 7px;
+  line-height: 1.3;
+}
+
+.truth-reader-track {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .13);
+}
+
+.truth-reader-track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--gold);
+  transition: width .18s linear;
+}
+
+.truth-reader-title {
+  overflow: hidden;
+  color: #e5e5e9;
+  font-size: .78rem;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.truth-reader-count {
+  color: var(--dim);
+  font-size: .7rem;
+  white-space: nowrap;
+}
+
+.truth-reader-count strong {
+  color: var(--gold);
+}
+
 .ending-script.is-paged > .story-page {
   margin: 0;
   padding: 0;
@@ -1571,6 +1685,31 @@ body {
   text-align: center;
 }
 
+.story-page-meta {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.story-page-scene {
+  overflow: hidden;
+  color: #e5e5e9;
+  font-weight: 760;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.story-page-count {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.story-page-count strong {
+  color: var(--card-text, var(--gold));
+}
+
 .story-page-steps {
   display: grid;
   grid-auto-columns: 1fr;
@@ -1607,8 +1746,32 @@ body {
 }
 
 .gourmet-epilogue .epilogue-scene {
+  position: relative;
   padding: 4px 0 30px 20px;
   border-bottom: 1px solid var(--line);
+}
+
+.gourmet-epilogue .epilogue-scene::before {
+  position: absolute;
+  top: 18px;
+  left: -5px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px var(--gold-soft);
+  content: '';
+}
+
+.gourmet-epilogue .epilogue-lost::before {
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.gourmet-epilogue .epilogue-danger::before {
+  background: var(--blue);
+  box-shadow: 0 0 12px var(--blue-soft);
 }
 
 .gourmet-epilogue .epilogue-scene + .epilogue-scene {
@@ -1618,6 +1781,24 @@ body {
 .gourmet-epilogue .epilogue-scene:last-child {
   padding-bottom: 0;
   border-bottom: 0;
+}
+
+.gourmet-epilogue .epilogue-coda {
+  margin-right: -12px;
+  margin-left: -12px;
+  padding: 24px 12px 2px 32px;
+  border-top: 1px solid rgba(212, 168, 85, .2);
+  border-left-color: var(--gold);
+  background: rgba(212, 168, 85, .045);
+}
+
+.gourmet-epilogue .epilogue-coda::before {
+  top: 38px;
+}
+
+.gourmet-epilogue .epilogue-coda .epilogue-dialogue {
+  border-left-color: var(--gold);
+  font-size: 1.04rem;
 }
 
 .epilogue-scene-heading {
@@ -1662,6 +1843,23 @@ body {
 }
 
 @media (max-width: 600px) {
+  body,
+  body.landing-page {
+    padding-top: calc(24px + env(safe-area-inset-top));
+    padding-right: calc(16px + env(safe-area-inset-right));
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
+    padding-left: calc(16px + env(safe-area-inset-left));
+  }
+
+  .header,
+  .guide-box,
+  .branch-toolbar,
+  .section-desc,
+  .ending-card,
+  .ending-script {
+    animation-duration: .55s;
+  }
+
   .landing-page .hero-header {
     margin-bottom: 24px;
   }
@@ -1677,33 +1875,52 @@ body {
 
   .ending-card {
     display: grid;
-    grid-template-columns: 48px 1fr auto;
-    gap: 10px 13px;
-    min-height: 106px;
-    padding: 16px;
+    grid-template-columns: 48px minmax(0, 1fr) 24px;
+    grid-template-rows: auto auto;
+    gap: 5px 13px;
+    min-height: 118px;
+    padding: 15px 16px;
   }
 
   .ending-card--no-avatar {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) 24px;
   }
 
   .ending-badge {
-    grid-column: 1 / -1;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
     width: fit-content;
-    padding: 7px 10px;
+    padding: 5px 8px;
   }
 
   .ending-avatar {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: center;
     width: 48px;
     height: 48px;
   }
 
   .ending-info {
+    grid-column: 2;
+    grid-row: 2;
     align-self: center;
   }
 
   .ending-arrow {
+    grid-column: 3;
+    grid-row: 1 / 3;
     align-self: center;
+  }
+
+  .ending-card--no-avatar .ending-badge,
+  .ending-card--no-avatar .ending-info {
+    grid-column: 1;
+  }
+
+  .ending-card--no-avatar .ending-arrow {
+    grid-column: 2;
   }
 
   .gourmet-flow-page {
@@ -1726,20 +1943,31 @@ body {
 
   .gourmet-flow-page .ending-script {
     padding: 22px 20px;
+    border-radius: 8px;
+  }
+
+  .gourmet-flow-page .ending-script.is-paged {
+    min-height: min(64vh, 640px);
   }
 
   .gourmet-flow-page .chapter p {
-    line-height: 1.95;
-    margin-bottom: 20px;
+    line-height: 1.88;
+    margin-bottom: 18px;
   }
 
   .gourmet-epilogue .epilogue-intro {
     margin-bottom: 25px;
     padding-bottom: 22px;
+    line-height: 1.88;
   }
 
   .gourmet-epilogue .epilogue-scene {
     padding: 2px 0 25px 15px;
+  }
+
+  .gourmet-epilogue .epilogue-scene::before {
+    top: 15px;
+    left: -5px;
   }
 
   .gourmet-epilogue .epilogue-scene + .epilogue-scene {
@@ -1748,7 +1976,17 @@ body {
 
   .gourmet-epilogue .epilogue-scene p {
     margin-bottom: 16px;
-    line-height: 1.95;
+    line-height: 1.88;
+  }
+
+  .gourmet-epilogue .epilogue-coda {
+    margin-right: -8px;
+    margin-left: -8px;
+    padding: 22px 8px 2px 23px;
+  }
+
+  .gourmet-epilogue .epilogue-coda::before {
+    top: 35px;
   }
 
   .story-pager-controls {
@@ -1757,9 +1995,226 @@ body {
   }
 
   .story-page-btn {
-    min-height: 44px;
+    min-height: 48px;
     padding: 9px 11px;
     font-size: .8rem;
+  }
+
+  body.story-pager-fixed {
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .gourmet-flow-page .story-pager-controls.is-fixed {
+    position: fixed;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 60;
+    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    gap: 6px;
+    width: calc(100% - 16px);
+    max-width: 584px;
+    margin: 0;
+    padding: 7px;
+    border: 1px solid rgba(212, 168, 85, .28);
+    border-radius: 8px;
+    background: rgba(12, 12, 16, .95);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
+    transform: translateX(-50%);
+    backdrop-filter: blur(12px);
+  }
+
+  .gourmet-flow-page .story-pager-controls.is-fixed .story-page-btn {
+    width: 48px;
+    min-height: 48px;
+    padding: 0;
+    justify-self: center;
+  }
+
+  .gourmet-flow-page .story-pager-controls.is-fixed .story-page-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .gourmet-flow-page .story-pager-controls.is-fixed .story-page-status {
+    min-width: 0;
+    padding: 0 4px;
+  }
+
+  .ending-index-back {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+
+  .next-step-btn {
+    min-height: 72px;
+    padding: 17px 18px;
+    border-radius: 8px;
+  }
+
+  .truth-page .header {
+    margin-bottom: 32px;
+  }
+
+  .truth-flow-page .flow-progress {
+    margin-bottom: 22px;
+  }
+
+  .truth-flow-page .ending-index-back {
+    margin-bottom: 14px;
+  }
+
+  .truth-page .ending-script {
+    border-radius: 8px;
+  }
+
+  .truth-flow .truth-intro {
+    margin-bottom: 29px;
+    padding-bottom: 22px;
+    line-height: 1.88;
+  }
+
+  .truth-flow .chapter {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+  }
+
+  .truth-flow .chapter h2 {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+
+  .truth-flow .chapter p {
+    margin-bottom: 17px;
+    line-height: 1.88;
+  }
+
+  .truth-subheading {
+    margin-top: 24px;
+  }
+
+  .truth-reader-controls {
+    bottom: max(10px, env(safe-area-inset-bottom));
+    grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
+    gap: 4px;
+    width: calc(100% - 24px);
+    padding: 7px;
+  }
+
+  .truth-reader-status {
+    gap: 4px 7px;
+    padding: 0 5px;
+  }
+}
+
+@media (max-width: 420px) {
+  .gourmet-flow-page .header,
+  .gourmet-flow-page .ending-script,
+  .story-page:not([hidden]) {
+    animation-duration: .45s;
+  }
+
+  .gourmet-flow-page .ending-script {
+    margin-right: -2px;
+    margin-left: -2px;
+    padding: 22px 18px;
+  }
+
+  body,
+  body.landing-page {
+    padding-right: calc(12px + env(safe-area-inset-right));
+    padding-left: calc(12px + env(safe-area-inset-left));
+  }
+
+  .flow-progress {
+    margin-bottom: 20px;
+  }
+
+  .story-pager-controls {
+    grid-template-columns: minmax(76px, 1fr) auto minmax(76px, 1fr);
+    margin-top: 24px;
+    padding-top: 18px;
+  }
+
+  .story-page-btn {
+    gap: 5px;
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .epilogue-scene-heading {
+    align-items: flex-start;
+  }
+
+  .epilogue-portraits img {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+@media (min-width: 360px) and (max-width: 600px) {
+  .truth-flow .clue-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 12px;
+  }
+}
+
+@media (max-width: 340px) {
+  .truth-flow .clue-gallery {
+    display: flex;
+    gap: 12px;
+    margin-right: -18px;
+    margin-left: -18px;
+    padding-right: 18px;
+    padding-bottom: 8px;
+    padding-left: 18px;
+    overflow-x: auto;
+    scroll-padding-left: 18px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+  }
+
+  .truth-flow .clue-visual {
+    flex: 0 0 min(78vw, 220px);
+    scroll-snap-align: start;
+  }
+
+  .story-pager-controls {
+    grid-template-columns: 52px minmax(64px, auto) 52px;
+  }
+
+  .story-page-btn {
+    width: 48px;
+    padding: 8px;
+  }
+
+  .story-page-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (hover: none) {
+  .ending-card:hover,
+  .story-link:hover,
+  .next-step-btn:hover,
+  .ending-index-back:hover,
+  #bgm-btn:hover {
+    transform: none;
+  }
+
+  .ending-card:active,
+  .story-page-btn:active,
+  .ending-index-back:active,
+  .next-step-btn:active {
+    transform: scale(.99);
   }
 }
 
