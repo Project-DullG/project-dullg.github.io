@@ -98,6 +98,8 @@
         <p data-when-purify="avert">사제는 성수를 집어 <strong>제 품에 넣었습니다.</strong> 그 물을 들 수 있는 사람은 이제 이 방에 없습니다.</p>
         <p data-when-purify="unable">남은 것은 자기 손뿐이었습니다. 사제는 <strong>끝내 그 손을 내밀지 못했습니다.</strong> 생사는 오직 신의 영역이라던 신조가 마지막 순간에 그의 팔을 붙들었습니다.</p>
         <p data-when-purify="allow">사제는 들지 않았습니다. 그러나 병을 치우지도 않았습니다. <strong>그는 물러섰고, 성수는 탁자에 남았습니다.</strong></p>
+        <p data-when-purify="bypassed">사제가 무엇을 할지 답하기도 전에, <strong>양의사가 먼저 병을 집었습니다.</strong> 뿌려진 물이 왕에게 닿자 불이 붙습니다. 검은 것이 타 사라지고, 왕은 숨을 내쉬며 눈을 떴습니다. 사일러스는 육체를 되찾으며 주저앉았습니다.</p>
+        <p data-when-purify="bypassed">방 안의 누구도, <strong>그 자신조차</strong> 왜 그 손이 나갔는지 설명하지 못합니다. 사제는 성수병이 있던 자리를 오래 보고 있습니다.</p>
         <p data-when-purify="absent">맨손에서 불을 피울 수 있는 사람은 묶여 있었고, 그에게 뜻을 물을 수도 없었습니다. 다만 <strong>그의 성물은 그대로 남아 있었습니다.</strong></p>
 
         <p data-when-hands="western">그 물을 집어 든 것은 <strong>양의사</strong>였습니다. 뿌려진 물이 왕에게 닿자 불이 붙습니다. 검은 것이 타 사라지고, 왕은 숨을 내쉬며 눈을 떴습니다. 사일러스는 육체를 되찾으며 주저앉았습니다. <strong>그 자신도 왜 손이 나갔는지 설명하지 못합니다.</strong></p>
@@ -159,7 +161,7 @@
     DE.reveal('data-when-needle', failStep === 3 ? 'fail' : (st.needle || 'full'));
     DE.reveal('data-when-choice', st.choice);
     DE.reveal('data-when-purify', st.priest);
-    DE.reveal('data-when-hands', st.hands);
+    DE.reveal('data-when-hands', st.priest === 'bypassed' ? 'x' : st.hands);
     DE.reveal('data-when-fire', DE.purified(st) ? 'kept' : 'lost');
 
     // ── 결말로
