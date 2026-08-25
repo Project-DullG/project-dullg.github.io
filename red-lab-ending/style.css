@@ -1323,106 +1323,168 @@ h1 {
   line-height: 1.5;
 }
 
-.timeline-intro {
+.movement-intro {
   color: var(--muted) !important;
 }
 
-.truth-timeline-shell {
-  margin-top: 25px;
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  background: rgba(8, 8, 11, .4);
-}
-
-.truth-timeline {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-.truth-timeline caption {
-  padding: 12px 14px;
-  color: var(--muted);
+.incident-snapshot {
+  margin: 25px 0 8px;
+  padding: 18px 0 5px;
+  border-top: 1px solid var(--line-strong);
   border-bottom: 1px solid var(--line-strong);
-  background: rgba(255, 255, 255, .025);
-  font-size: .78rem;
-  font-weight: 680;
-  line-height: 1.5;
-  text-align: left;
 }
 
-.truth-timeline th,
-.truth-timeline td {
-  padding: 13px 12px;
-  vertical-align: top;
+.incident-snapshot h3 {
+  margin: 0 0 12px;
+  color: var(--ink-strong);
+  font-size: .92rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.incident-position-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  margin: 0;
+}
+
+.incident-position {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  min-width: 0;
+  padding: 11px 0;
   border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+}
+
+.incident-position dt,
+.incident-position dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.incident-position dt {
+  color: var(--ink-strong);
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.incident-position dd {
+  color: #d2d2da;
+  font-size: .82rem;
+  line-height: 1.6;
   overflow-wrap: anywhere;
   word-break: keep-all;
 }
 
-.truth-timeline thead th {
+.movement-heading {
+  margin-top: 30px;
+}
+
+.movement-list {
+  border-top: 1px solid var(--line-strong);
+}
+
+.movement-row {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 18px;
+  min-width: 0;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.movement-row h4 {
+  min-width: 0;
+  margin: 2px 0 0;
   color: var(--ink-strong);
-  border-top: 0;
-  background: rgba(255, 255, 255, .045);
-  font-size: .75rem;
-  font-weight: 790;
-  line-height: 1.45;
-  text-align: left;
+  font-size: .84rem;
+  font-weight: 820;
+  line-height: 1.5;
 }
 
-.truth-timeline thead th:nth-child(3) {
-  color: #f08a8e;
+.movement-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.truth-timeline th:first-child,
-.truth-timeline td:first-child {
-  width: 76px;
+.movement-step {
+  min-width: 0;
+  padding: 0 15px;
+  border-left: 1px solid var(--line);
+}
+
+.movement-step:first-child {
+  padding-left: 0;
   border-left: 0;
 }
 
-.truth-timeline tbody th {
+.movement-step:last-child {
+  padding-right: 0;
+}
+
+.movement-step.is-incident {
+  border-left-color: rgba(224, 74, 79, .42);
+}
+
+.movement-phase {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--dim);
+  font-size: .69rem;
+  font-weight: 820;
+  line-height: 1.35;
+}
+
+.movement-step.is-incident .movement-phase {
+  color: #f08a8e;
+}
+
+.movement-step strong {
+  display: block;
   color: var(--ink-strong);
-  background: rgba(255, 255, 255, .025);
-  font-size: .8rem;
-  font-weight: 800;
-  line-height: 1.5;
-  text-align: left;
+  font-size: .82rem;
+  font-weight: 760;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
 }
 
-.truth-timeline tbody td {
-  color: #c9c9d2;
-  font-size: .79rem;
-  line-height: 1.67;
+.truth-flow .movement-step p {
+  margin: 7px 0 0 !important;
+  color: #c8c8d0;
+  font-size: .78rem;
+  line-height: 1.68;
 }
 
-.truth-timeline tbody td:nth-child(3) {
-  background: rgba(224, 74, 79, .035);
-}
-
-.timeline-person {
+.movement-person {
   display: inline-flex;
   align-items: center;
   gap: 7px;
 }
 
-.timeline-person::before {
+.movement-person::before {
   flex: 0 0 auto;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--timeline-color, var(--ink));
-  box-shadow: 0 0 10px color-mix(in srgb, var(--timeline-color, var(--ink)) 56%, transparent);
+  background: var(--movement-color, var(--ink));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--movement-color, var(--ink)) 56%, transparent);
   content: "";
 }
 
-.timeline-row--red { --timeline-color: var(--red); }
-.timeline-row--black { --timeline-color: var(--black); }
-.timeline-row--blue { --timeline-color: var(--blue); }
-.timeline-row--yellow { --timeline-color: var(--yellow); }
-.timeline-row--pink { --timeline-color: var(--pink); }
-.timeline-row--doctor { --timeline-color: var(--ink-strong); }
+.movement-row--red { --movement-color: var(--red); }
+.movement-row--black { --movement-color: var(--black); }
+.movement-row--blue { --movement-color: var(--blue); }
+.movement-row--yellow { --movement-color: var(--yellow); }
+.movement-row--pink { --movement-color: var(--pink); }
+.movement-row--doctor { --movement-color: var(--ink-strong); }
 
 .script-block h2 + .truth-subheading {
   margin-top: 24px;
@@ -2118,91 +2180,79 @@ h1 {
     scroll-margin-top: 72px;
   }
 
-  .truth-timeline-shell {
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
+  .incident-snapshot {
+    margin-top: 22px;
+    padding-top: 16px;
   }
 
-  .truth-timeline {
+  .incident-position-list {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  .incident-position {
+    grid-template-columns: 74px minmax(0, 1fr);
+  }
+
+  .movement-row {
     display: block;
+    padding: 21px 0;
   }
 
-  .truth-timeline caption {
-    display: block;
-    padding: 11px 0 13px;
-    border-top: 1px solid var(--line-strong);
-    border-bottom: 1px solid var(--line-strong);
-    background: transparent;
+  .movement-row h4 {
+    margin: 0 0 15px;
+    font-size: .9rem;
   }
 
-  .truth-timeline thead {
+  .movement-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .movement-step,
+  .movement-step:first-child,
+  .movement-step:last-child {
+    position: relative;
+    padding: 0 0 21px 23px;
+    border-left: 1px solid var(--line-strong);
+  }
+
+  .movement-step:last-child {
+    padding-bottom: 0;
+  }
+
+  .movement-step::before {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
+    top: 4px;
+    left: -5px;
+    width: 9px;
+    height: 9px;
+    border: 2px solid #17171d;
+    border-radius: 50%;
+    background: #6d6d78;
+    content: "";
   }
 
-  .truth-timeline tbody {
-    display: grid;
-    gap: 12px;
-    margin-top: 13px;
+  .movement-step.is-incident {
+    border-left-color: rgba(224, 74, 79, .55);
   }
 
-  .truth-timeline tbody tr {
-    display: grid;
-    overflow: hidden;
-    border: 1px solid var(--line-strong);
-    border-left: 3px solid var(--timeline-color, var(--ink));
-    border-radius: 6px;
-    background: rgba(11, 11, 15, .58);
+  .movement-step.is-incident::before {
+    background: var(--red);
+    box-shadow: 0 0 12px rgba(224, 74, 79, .5);
   }
 
-  .truth-timeline th:first-child,
-  .truth-timeline td:first-child {
-    width: auto;
+  .movement-phase {
+    margin-bottom: 5px;
   }
 
-  .truth-timeline tbody th {
-    display: flex;
-    align-items: center;
-    min-height: 45px;
-    padding: 11px 13px;
-    border: 0;
-    background: rgba(255, 255, 255, .035);
+  .movement-step strong {
+    font-size: .86rem;
+  }
+
+  .truth-flow .movement-step p {
+    margin-top: 6px !important;
     font-size: .84rem;
-  }
-
-  .truth-timeline tbody td {
-    display: grid;
-    grid-template-columns: 62px minmax(0, 1fr);
-    gap: 11px;
-    padding: 12px 13px;
-    border-top: 1px solid var(--line);
-    border-left: 0;
-    background: transparent;
-    font-size: .83rem;
-    line-height: 1.7;
-  }
-
-  .truth-timeline tbody td:nth-child(3) {
-    background: rgba(224, 74, 79, .04);
-  }
-
-  .truth-timeline tbody td::before {
-    color: var(--dim);
-    font-size: .7rem;
-    font-weight: 800;
-    line-height: 1.7;
-    content: attr(data-label);
-  }
-
-  .truth-timeline tbody td[data-label="T 무렵"]::before {
-    color: #f08a8e;
+    line-height: 1.72;
   }
 
   .ending-script > .story-page:not([hidden]) {

@@ -7,7 +7,7 @@
   <meta name="description" content="레드가 죽은 연구소 · 사건의 전말">
   <title>[Red Lab] 사건의 전말</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=63">
+  <link rel="stylesheet" href="style.css?v=64">
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--red);--card-glow:var(--red-soft)">
@@ -95,60 +95,167 @@
       </section>
 
       <section class="script-block timeline-block" id="truth-timeline">
-        <p class="script-kicker">T 기준 행적표</p>
-        <h2>6. T는 블랙이 소화기로 레드를 내리친 순간이다.</h2>
-        <p class="timeline-intro">최종 자료에는 정확한 시각이나 초 단위 순서가 적혀 있지 않다. 아래 표는 저녁 식사 이후의 행동을 T 이전, T 무렵, T 이후로 나눴다.</p>
+        <p class="script-kicker">여섯 사람의 행적</p>
+        <h2>6. 살인은 위기감지 알림이 울리는 동안 벌어졌다.</h2>
+        <p class="movement-intro">단서에는 정확한 시각이 남아 있지 않았다. 다만 위기감지 알림이 울리기 전과 울리는 동안, 멎은 뒤의 행적은 서로의 증언과 현장 단서로 구분할 수 있었다.</p>
 
-        <div class="truth-timeline-shell" role="region" aria-label="T를 기준으로 정리한 인물별 행적표" tabindex="0">
-          <table class="truth-timeline">
-            <caption>저녁 식사 이후부터 다음 날 아침까지</caption>
-            <thead>
-              <tr>
-                <th scope="col">인물</th>
-                <th scope="col">T 이전</th>
-                <th scope="col">T 무렵</th>
-                <th scope="col">T 이후</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="timeline-row timeline-row--red">
-                <th scope="row"><span class="timeline-person">레드</span></th>
-                <td data-label="T 이전">박사의 연구실에 보고서를 두고 자기 방으로 돌아갔다. 찾아온 옐로와 대화를 나눈 뒤 침대에서 잠들었다.</td>
-                <td data-label="T 무렵">알림으로 방문 잠금이 풀렸다. 잠든 채 블랙이 휘두른 소화기에 머리를 맞았다.</td>
-                <td data-label="T 이후">블랙이 나간 뒤에도 침대에 남아 있었다. 알림이 끝나자 방문이 다시 잠겼다.</td>
-              </tr>
-              <tr class="timeline-row timeline-row--black">
-                <th scope="row"><span class="timeline-person">블랙</span></th>
-                <td data-label="T 이전">레드가 연구실에서 나오는 모습을 본 뒤 흡연장에 머물렀다. 핑크가 연구소 안으로 돌아간 뒤 훈련장에서 사진을 태워 알림을 울렸다.</td>
-                <td data-label="T 무렵">복도의 소화기를 들고 레드의 방에 들어가 잠든 레드를 내리쳤다.</td>
-                <td data-label="T 이후">소화기를 침대 옆에 두고 방을 나왔다. 자기 방으로 돌아가 코트를 걸었다.</td>
-              </tr>
-              <tr class="timeline-row timeline-row--blue">
-                <th scope="row"><span class="timeline-person">블루</span></th>
-                <td data-label="T 이전">옐로에게 다음 날 아침까지 돈을 구해 주겠다고 약속했다. 작전실 금고에서 금열쇠를 꺼냈다.</td>
-                <td data-label="T 무렵">알림이 울리자 인기척을 느끼고 작전실 캐비닛에 숨었다. 그 안에서 핑크를 보았다.</td>
-                <td data-label="T 이후">핑크가 나간 뒤 캐비닛에서 나왔다. 옐로의 방 앞에서 울음소리를 듣고 자기 방으로 돌아갔다.</td>
-              </tr>
-              <tr class="timeline-row timeline-row--yellow">
-                <th scope="row"><span class="timeline-person">옐로</span></th>
-                <td data-label="T 이전">레드에게 다시 만나 달라고 부탁했다가 거절당했다. 복도에서 블루를 만난 뒤 자기 방으로 돌아가 울었다.</td>
-                <td data-label="T 무렵">자기 방에 있었다. 알림이 울리자 방문을 조금 열었다.</td>
-                <td data-label="T 이후">복도에서 문이 닫히는 소리를 들었다. 다시 방문을 닫았고, 이후 블루가 방 밖에서 옐로의 울음소리를 들었다.</td>
-              </tr>
-              <tr class="timeline-row timeline-row--pink">
-                <th scope="row"><span class="timeline-person">핑크</span></th>
-                <td data-label="T 이전">훔친 마스터키로 박사의 연구실에서 장비를 살펴봤다. 흡연장에서 블랙을 본 뒤 연구소 안으로 돌아왔다.</td>
-                <td data-label="T 무렵">알림이 울릴 때 작전실에 들어갔다. 대원들의 자리에 차례로 앉았고, 캐비닛에 숨은 블루가 그 모습을 보았다.</td>
-                <td data-label="T 이후">흡연장으로 돌아가 블랙이 사라진 것을 확인했다. 재떨이의 꽁초를 챙긴 뒤 자기 방으로 돌아갔다.</td>
-              </tr>
-              <tr class="timeline-row timeline-row--doctor">
-                <th scope="row"><span class="timeline-person">박사</span></th>
-                <td data-label="T 이전">저녁 식사 자리에서 다음 날 아침 돌아오겠다고 말하고 출장을 떠났다. 레드에게 마스터키 한 장을 맡겼다.</td>
-                <td data-label="T 무렵">출장으로 연구소를 비운 상태였다.</td>
-                <td data-label="T 이후">다음 날 아침 연구소로 돌아왔다. 잠긴 레드의 방문을 열고 시신을 발견했다.</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="incident-snapshot" aria-labelledby="incident-snapshot-title">
+          <h3 id="incident-snapshot-title">살인 당시 위치</h3>
+          <dl class="incident-position-list">
+            <div class="incident-position movement-row--red">
+              <dt><span class="movement-person">레드</span></dt>
+              <dd>자기 방 · 잠든 상태</dd>
+            </div>
+            <div class="incident-position movement-row--black">
+              <dt><span class="movement-person">블랙</span></dt>
+              <dd>레드의 방</dd>
+            </div>
+            <div class="incident-position movement-row--blue">
+              <dt><span class="movement-person">블루</span></dt>
+              <dd>작전실 캐비닛</dd>
+            </div>
+            <div class="incident-position movement-row--yellow">
+              <dt><span class="movement-person">옐로</span></dt>
+              <dd>자기 방</dd>
+            </div>
+            <div class="incident-position movement-row--pink">
+              <dt><span class="movement-person">핑크</span></dt>
+              <dd>작전실</dd>
+            </div>
+            <div class="incident-position movement-row--doctor">
+              <dt><span class="movement-person">박사</span></dt>
+              <dd>연구소 밖</dd>
+            </div>
+          </dl>
+        </div>
+
+        <h3 class="truth-subheading movement-heading">알림 전후 이동</h3>
+        <div class="movement-list">
+          <article class="movement-row movement-row--red">
+            <h4><span class="movement-person">레드</span></h4>
+            <ol class="movement-steps">
+              <li class="movement-step">
+                <span class="movement-phase">알림 전</span>
+                <strong>박사 연구실 → 자기 방</strong>
+                <p>보고서를 두고 돌아왔다. 찾아온 옐로와 대화를 나눈 뒤 잠들었다.</p>
+              </li>
+              <li class="movement-step is-incident">
+                <span class="movement-phase">알림 중</span>
+                <strong>자기 방</strong>
+                <p>방문 잠금이 풀렸고, 잠든 채 블랙에게 소화기로 머리를 맞았다.</p>
+              </li>
+              <li class="movement-step">
+                <span class="movement-phase">알림 후</span>
+                <strong>자기 방</strong>
+                <p>알림이 멎자 방문이 다시 잠겼다.</p>
+              </li>
+            </ol>
+          </article>
+
+          <article class="movement-row movement-row--black">
+            <h4><span class="movement-person">블랙</span></h4>
+            <ol class="movement-steps">
+              <li class="movement-step">
+                <span class="movement-phase">알림 전</span>
+                <strong>흡연장 → 훈련장</strong>
+                <p>레드가 연구실에서 나오는 모습을 보았다. 훈련장에서 사진을 태워 알림을 울렸다.</p>
+              </li>
+              <li class="movement-step is-incident">
+                <span class="movement-phase">알림 중</span>
+                <strong>레드의 방</strong>
+                <p>복도의 소화기를 들고 들어가 잠든 레드를 내리쳤다.</p>
+              </li>
+              <li class="movement-step">
+                <span class="movement-phase">알림 후</span>
+                <strong>자기 방</strong>
+                <p>소화기를 침대 옆에 두고 나왔다. 방으로 돌아가 코트를 걸었다.</p>
+              </li>
+            </ol>
+          </article>
+
+          <article class="movement-row movement-row--blue">
+            <h4><span class="movement-person">블루</span></h4>
+            <ol class="movement-steps">
+              <li class="movement-step">
+                <span class="movement-phase">알림 전</span>
+                <strong>복도 → 작전실</strong>
+                <p>옐로에게 돈을 구해 주겠다고 약속한 뒤 금고에서 금열쇠를 꺼냈다.</p>
+              </li>
+              <li class="movement-step is-incident">
+                <span class="movement-phase">알림 중</span>
+                <strong>작전실 캐비닛</strong>
+                <p>인기척을 느끼고 숨었다. 캐비닛 안에서 핑크를 보았다.</p>
+              </li>
+              <li class="movement-step">
+                <span class="movement-phase">알림 후</span>
+                <strong>옐로의 방 앞 → 자기 방</strong>
+                <p>핑크가 나간 뒤 작전실을 나왔다. 옐로의 울음소리를 듣고 방으로 돌아갔다.</p>
+              </li>
+            </ol>
+          </article>
+
+          <article class="movement-row movement-row--yellow">
+            <h4><span class="movement-person">옐로</span></h4>
+            <ol class="movement-steps">
+              <li class="movement-step">
+                <span class="movement-phase">알림 전</span>
+                <strong>레드의 방 → 자기 방</strong>
+                <p>레드에게 다시 만나 달라고 부탁했다가 거절당했다. 복도에서 블루를 만난 뒤 돌아가 울었다.</p>
+              </li>
+              <li class="movement-step is-incident">
+                <span class="movement-phase">알림 중</span>
+                <strong>자기 방</strong>
+                <p>알림이 울리자 방문을 조금 열었다.</p>
+              </li>
+              <li class="movement-step">
+                <span class="movement-phase">알림 후</span>
+                <strong>자기 방</strong>
+                <p>복도에서 문이 닫히는 소리를 듣고 방문을 닫았다. 이후 블루가 방 밖에서 울음소리를 들었다.</p>
+              </li>
+            </ol>
+          </article>
+
+          <article class="movement-row movement-row--pink">
+            <h4><span class="movement-person">핑크</span></h4>
+            <ol class="movement-steps">
+              <li class="movement-step">
+                <span class="movement-phase">알림 전</span>
+                <strong>박사 연구실 → 흡연장</strong>
+                <p>마스터키로 연구실에 들어가 장비를 살펴봤다. 흡연장에서 블랙을 본 뒤 안으로 돌아왔다.</p>
+              </li>
+              <li class="movement-step is-incident">
+                <span class="movement-phase">알림 중</span>
+                <strong>작전실</strong>
+                <p>대원들의 자리에 차례로 앉았다. 캐비닛에 숨은 블루가 그 모습을 보았다.</p>
+              </li>
+              <li class="movement-step">
+                <span class="movement-phase">알림 후</span>
+                <strong>흡연장 → 자기 방</strong>
+                <p>블랙이 사라진 흡연장에서 꽁초를 챙긴 뒤 방으로 돌아갔다.</p>
+              </li>
+            </ol>
+          </article>
+
+          <article class="movement-row movement-row--doctor">
+            <h4><span class="movement-person">박사</span></h4>
+            <ol class="movement-steps">
+              <li class="movement-step">
+                <span class="movement-phase">알림 전</span>
+                <strong>연구소 밖</strong>
+                <p>레드에게 마스터키를 맡기고 출장을 떠났다.</p>
+              </li>
+              <li class="movement-step is-incident">
+                <span class="movement-phase">알림 중</span>
+                <strong>연구소 밖</strong>
+                <p>출장으로 연구소를 비우고 있었다.</p>
+              </li>
+              <li class="movement-step">
+                <span class="movement-phase">알림 후</span>
+                <strong>다음 날 연구소</strong>
+                <p>아침에 돌아와 잠긴 레드의 방문을 열고 시신을 발견했다.</p>
+              </li>
+            </ol>
+          </article>
         </div>
       </section>
 
