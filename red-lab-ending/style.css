@@ -338,6 +338,13 @@ h1 {
   border-top: 1px solid var(--line);
 }
 
+.score-intro {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.65;
+}
+
 .guide-title {
   margin-bottom: 10px;
   color: var(--card-color, var(--red));
@@ -389,8 +396,16 @@ h1 {
   line-height: 1.58;
 }
 
+.score-card span strong {
+  color: var(--ink);
+}
+
 .culprit-card p strong {
   color: #ff8e91;
+}
+
+.nomination-card p strong {
+  color: var(--blue);
 }
 
 .secret-card p strong {

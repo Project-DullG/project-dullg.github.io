@@ -7,7 +7,7 @@
   <meta name="description" content="레드가 죽은 연구소 · 엔딩 선택">
   <title>[Red Lab] 레드가 죽은 연구소 - 엔딩 선택</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=61">
+  <link rel="stylesheet" href="style.css?v=62">
 </head>
 <body>
   <main class="container">
@@ -19,19 +19,29 @@
 
     <details class="guide-box compact-guide hub-guide score-disclosure">
       <summary>
-        <span><small>1. 점수 계산</small><strong>점수 계산 기준</strong></span>
+        <span><small>1. 점수 계산</small><strong>개인 목표 점수 확인</strong></span>
         <span class="summary-action">기준 보기 <i data-lucide="chevron-down" aria-hidden="true"></i></span>
       </summary>
       <div class="score-disclosure-body">
+        <p class="score-intro">캐릭터 시트의 목적과 최종 투표 결과를 대조해 각자의 점수를 합산해 주세요.</p>
         <div class="score-stack">
           <div class="score-card culprit-card">
-            <p>범인은 <strong>블랙</strong>입니다.</p>
-            <span>블랙을 지목한 플레이어는 범인 지목 점수를 획득합니다.</span>
-            <span>블랙은 지목당한 수만큼 은폐 점수를 잃습니다.</span>
+            <p>레드를 살해한 범인은 <strong>블랙</strong>입니다.</p>
+            <span>블루·옐로·핑크가 블랙을 지목했다면 각자 범인 지목 목표 <strong>+3점</strong>을 얻습니다.</span>
+            <span>블랙이 블루를 지목했다면 <strong>+1점</strong>을 얻습니다.</span>
+          </div>
+          <div class="score-card nomination-card">
+            <p><strong>지목 결과 점수</strong></p>
+            <span>블랙은 자신을 지목하지 않은 플레이어 한 명마다 <strong>+3점</strong>을 얻습니다.</span>
+            <span>블루·옐로·핑크는 최다 지목을 받지 않았다면 각각 <strong>+3점</strong>을 얻습니다.</span>
           </div>
           <div class="score-card secret-card">
-            <p><strong>비밀 점수</strong> 유지 조건</p>
-            <span>비밀이 다른 플레이어에게 들키거나 지적당했더라도, 본인이 직접 자백하거나 인정하지 않았다면 비밀 점수는 유지됩니다.</span>
+            <p><strong>비밀 유지 점수</strong></p>
+            <span>블랙은 자신이 카오스에 잠입 중이라는 사실을 말하지 않았다면 <strong>+2점</strong>을 얻습니다.</span>
+            <span>블루는 금열쇠를 훔친 사실을 말하지 않았다면 <strong>+4점</strong>, 옐로와의 연애를 말하지 않았다면 <strong>+1점</strong>을 얻습니다.</span>
+            <span>옐로는 레드와의 연애를 말하지 않았다면 <strong>+4점</strong>, 블루와의 연애를 말하지 않았다면 <strong>+1점</strong>을 얻습니다.</span>
+            <span>핑크는 동료들의 물건을 모은 이유를 말하지 않았다면 <strong>+3점</strong>, 박사가 친할아버지라는 사실을 말하지 않았다면 <strong>+2점</strong>을 얻습니다.</span>
+            <span>다른 플레이어가 비밀을 밝혔더라도 본인이 인정하지 않았다면 점수를 얻습니다. 엔딩에서 공개되는 내용은 이미 계산한 점수에 영향을 주지 않습니다.</span>
           </div>
         </div>
         <p class="bgm-guide"><strong>BGM</strong> 화면 오른쪽 위 버튼으로 켜고 끌 수 있습니다.</p>
