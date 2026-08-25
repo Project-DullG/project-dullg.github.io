@@ -48,6 +48,14 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
+        <button type="button" class="pick" style="--card-color:var(--gold)" data-choice="spray">
+          <span class="pick-key">&#9315;</span>
+          <span class="pick-copy">
+            <span class="pick-title">집어 들어 왕에게 뿌린다</span>
+            <span class="pick-desc">사제가 답하기도 전에 그가 먼저 병을 집습니다. 그 자신도 왜 손이 나갔는지 설명하지 못합니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
         <button type="button" class="pick" style="--card-color:var(--red)" data-choice="3">
           <span class="pick-key">&#9314;</span>
           <span class="pick-copy">
@@ -70,7 +78,9 @@
   (function () {
     var DE = window.DoctorEnding;
     DE.onPick('picks', 'data-choice', function (c) {
-      DE.go('flask', { choice: Number(c) });
+      // 그가 먼저 뿌리면 정화는 그 자리에서 성립하고, 사제의 차례는 오지 않는다.
+      if (c === 'spray') DE.go('flaskspray', { priest: 'bypassed', hands: 'western' });
+      else DE.go('flask', { choice: Number(c) });
     });
   })();
   </script>

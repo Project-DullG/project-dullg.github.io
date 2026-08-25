@@ -10,7 +10,8 @@
  *   k  확보한 물건   note,talis,card1,water
  *   m  약의 조달     join 양의사가 함께 감 / deny 등을 돌림 / shut 약고가 닫힘
  *   p  사제의 답     agree 성수를 뿌린다 / barehand 맨손으로 피운다 (→엔딩1)
- *                   allow 막지 않는다 / absent 포박 (→ 성수가 테이블로 열린다)
+ *                   allow 막지 않는다 / absent 포박 / bypassed 양의사가 먼저 뿌림
+ *                   (→ 성수를 든 손이 결말을 정한다)
  *                   avert 거둔다 / unable 맨손을 못 낸다 (→엔딩2)
  *   h  누가 들었나   western 양의사 / other 다른 사람 (→엔딩1) / none 아무도 (→엔딩2)
  *   c  양의사의 성수병 1 가만히 둔다 | 2 떨어뜨린다 | 3 던진다
@@ -41,7 +42,7 @@
    * 막지 않았거나 사제가 묶여 있으면 성수는 테이블로 열리고, 누가 드는지를 따로 정한다.
    */
   var PRIEST_FIRE = ['agree', 'barehand'];   // 사제가 제 손으로 불을 들었다
-  var PRIEST_OPEN = ['allow', 'absent'];     // 성수가 남의 손에 열린다 (허용 / 포박)
+  var PRIEST_OPEN = ['allow', 'absent', 'bypassed']; // 성수가 남의 손에 열린다 (허용 / 포박 / 선수를 빼앗김)
   var PRIEST_NO = ['avert', 'unable'];       // 그 자리에서 끝난다
   var PRIEST_ALL = PRIEST_FIRE.concat(PRIEST_OPEN, PRIEST_NO);
 
@@ -288,6 +289,8 @@
       case 'flask':
         if (held('priest')) return st.choice === 1 ? PAGES.hands : PAGES.nofire;
         return PAGES.priest;
+      // 양의사가 먼저 뿌린 판은 사제가 답할 차례 자체가 오지 않는다.
+      case 'flaskspray': return PAGES.account;
       // 사제가 막지 않았거나 묶여 있으면 성수는 테이블로 넘어간다.
       case 'priest':
         return PRIEST_OPEN.indexOf(st.priest) !== -1 ? PAGES.hands : PAGES.account;
@@ -421,6 +424,7 @@
         agree: '사제가 <strong>성수로 불살랐다</strong>',
         barehand: '사제가 <strong>맨손으로 불을 피웠다</strong>',
         allow: '사제는 <strong>들지 않았고, 막지도 않았다</strong>',
+        bypassed: '<strong>사제가 답하기 전에 끝났다</strong>',
         absent: '사제 <strong>부재</strong> (포박)',
         avert: '사제가 <strong>성수를 거두었다</strong>',
         unable: '사제가 <strong>맨손을 내주지 못했다</strong>'
