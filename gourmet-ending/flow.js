@@ -108,7 +108,7 @@
     if (page.classList.contains('gourmet-epilogue')) return 3;
     const kicker = page.querySelector('.script-kicker')?.textContent.trim() || '';
     if (/후일담|에필로그/i.test(kicker)) return 3;
-    if (/조사 결과|심층 조사|왕실의 조치|후속 조사|사건 직후/i.test(kicker)) return 2;
+    if (/조사 결과|수사 결과|심층 조사|왕실의 조치|후속 조사|사건 직후/i.test(kicker)) return 2;
     if (/지목 결과/i.test(kicker)) return 1;
     if (index > 0) return 2;
     return 1;
