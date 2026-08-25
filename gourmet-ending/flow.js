@@ -87,13 +87,6 @@
     <button type="button" class="story-page-btn story-page-prev" aria-label="이전 장면" title="이전 장면">
       <i data-lucide="arrow-left" aria-hidden="true"></i><span>이전 장면</span>
     </button>
-    <div class="story-page-status" aria-live="polite">
-      <span class="story-page-steps" aria-hidden="true">${pages.map(() => '<span class="story-page-step"></span>').join('')}</span>
-      <span class="story-page-meta">
-        <span class="story-page-scene" data-story-scene></span>
-        <span class="story-page-count"><strong data-story-current>1</strong> / ${pages.length}</span>
-      </span>
-    </div>
     <button type="button" class="story-page-btn story-page-next" aria-label="다음 장면" title="다음 장면">
       <span>다음 장면</span><i data-lucide="arrow-right" aria-hidden="true"></i>
     </button>
@@ -102,9 +95,6 @@
 
   const previousButton = controls.querySelector('.story-page-prev');
   const nextButton = controls.querySelector('.story-page-next');
-  const currentLabel = controls.querySelector('[data-story-current]');
-  const sceneLabel = controls.querySelector('[data-story-scene]');
-  const stepIndicators = Array.from(controls.querySelectorAll('.story-page-step'));
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let currentPage = 0;
 
@@ -118,7 +108,7 @@
     if (page.classList.contains('gourmet-epilogue')) return 3;
     const kicker = page.querySelector('.script-kicker')?.textContent.trim() || '';
     if (/후일담|에필로그/i.test(kicker)) return 3;
-    if (/조사 결과|왕실의 조치|후속 조사|사건 직후/i.test(kicker)) return 2;
+    if (/조사 결과|심층 조사|왕실의 조치|후속 조사|사건 직후/i.test(kicker)) return 2;
     if (/지목 결과/i.test(kicker)) return 1;
     if (index > 0) return 2;
     return 1;
@@ -134,18 +124,11 @@
     });
     previousButton.disabled = currentPage === 0;
     nextButton.hidden = isFinalPage;
-    currentLabel.textContent = String(currentPage + 1);
-    sceneLabel.textContent = pages[currentPage].querySelector('.script-kicker')?.textContent.trim() || `장면 ${currentPage + 1}`;
-    stepIndicators.forEach((step, index) => {
-      step.classList.toggle('is-read', index < currentPage);
-      step.classList.toggle('is-current', index === currentPage);
-    });
     afterStory.forEach((element) => {
       element.hidden = currentPage !== pages.length - 1;
     });
     if (indexBack) indexBack.hidden = currentPage !== 0;
-    controls.classList.toggle('is-fixed', !isFinalPage);
-    document.body.classList.toggle('story-pager-fixed', !isFinalPage);
+    controls.classList.toggle('is-final', isFinalPage);
     setStage(stageForPage(pages[currentPage], currentPage));
     if (move) {
       const top = pager.getBoundingClientRect().top + window.scrollY - 18;

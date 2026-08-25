@@ -28,8 +28,15 @@
   --green-soft: rgba(34, 197, 94, .24);
   --violet: #8b5cf6;
   --violet-soft: rgba(139, 92, 246, .3);
-  --ash: var(--brown);
-  --ash-soft: var(--brown-soft);
+  --daniel: var(--blue);
+  --daniel-text: #79aaff;
+  --ash: var(--slate);
+  --ash-text: #c3cad6;
+  --ash-soft: var(--slate-soft);
+  --ryu: var(--brown);
+  --ryu-text: #d4a855;
+  --candy: var(--gold);
+  --candy-text: #f1cf87;
   --earth: var(--brown);
   --earth-soft: var(--brown-soft);
 }
@@ -448,10 +455,10 @@ h1 {
   transform: translateX(5px);
 }
 
-.ending-a { --card-color: var(--blue); --card-text: #79aaff; --card-glow: rgba(59, 130, 246, .3); }
-.ending-b { --card-color: var(--brown); --card-text: #d4a855; --card-glow: rgba(161, 98, 7, .3); }
-.ending-c { --card-color: var(--accent); --card-text: var(--accent-text); --card-glow: rgba(196, 30, 58, .3); }
-.ending-d { --card-color: var(--pink); --card-text: #f472b6; --card-glow: rgba(236, 72, 153, .3); }
+.ending-a { --card-color: var(--daniel); --card-text: var(--daniel-text); --card-glow: var(--blue-soft); }
+.ending-b { --card-color: var(--ash); --card-text: var(--ash-text); --card-glow: var(--ash-soft); }
+.ending-c { --card-color: var(--ryu); --card-text: var(--ryu-text); --card-glow: var(--brown-soft); }
+.ending-d { --card-color: var(--candy); --card-text: var(--candy-text); --card-glow: var(--gold-soft); }
 .ending-e { --card-color: var(--slate); --card-text: #b5c0d2; --card-glow: rgba(111, 126, 152, .3); }
 .ending-f { --card-color: var(--violet); --card-text: #b09aff; --card-glow: rgba(139, 92, 246, .3); }
 .ending-truth { --card-color: var(--gold); --card-text: #e4bd71; --card-glow: var(--gold-glow); }
@@ -1418,8 +1425,8 @@ body {
 }
 
 .gourmet-flow-page .chapter p {
-  line-height: 2.05;
-  margin-bottom: 23px;
+  line-height: 2.06;
+  margin-bottom: 26px;
 }
 
 .ending-index-back {
@@ -1512,25 +1519,52 @@ body {
 }
 
 .dialogue {
-  margin: 24px 0;
+  --speaker-color: var(--card-color, var(--gold));
+  --speaker-text: var(--card-text, var(--gold));
+  margin: 29px 0;
   padding: 13px 0 13px 17px;
   color: #f4f4f6 !important;
-  border-left: 2px solid var(--card-color, var(--gold));
+  border-left: 2px solid var(--speaker-color);
   font-weight: 650;
 }
 
 .dialogue[data-speaker]::before {
   display: block;
   margin-bottom: 5px;
-  color: var(--card-text, var(--gold));
+  color: var(--speaker-text);
   content: attr(data-speaker);
   font-size: .72rem;
   font-weight: 850;
 }
 
+.dialogue[data-speaker="다니엘"] {
+  --speaker-color: var(--daniel);
+  --speaker-text: var(--daniel-text);
+}
+
+.dialogue[data-speaker="애쉬"] {
+  --speaker-color: var(--ash);
+  --speaker-text: var(--ash-text);
+}
+
+.dialogue[data-speaker="류진환"] {
+  --speaker-color: var(--ryu);
+  --speaker-text: var(--ryu-text);
+}
+
+.dialogue[data-speaker="캔디"] {
+  --speaker-color: var(--candy);
+  --speaker-text: var(--candy-text);
+}
+
+.dialogue[data-speaker="국왕"] {
+  --speaker-color: var(--gold);
+  --speaker-text: var(--candy-text);
+}
+
 .story-pager-controls {
   display: grid;
-  grid-template-columns: minmax(96px, 1fr) auto minmax(96px, 1fr);
+  grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr);
   gap: 12px;
   align-items: center;
   margin-top: 28px;
@@ -1571,65 +1605,9 @@ body {
 
 .story-page-prev { justify-self: start; }
 .story-page-next {
-  grid-column: 3;
+  grid-column: 2;
   justify-self: end;
   border-color: var(--card-color, var(--gold));
-}
-
-.story-page-status {
-  grid-column: 2;
-  display: grid;
-  gap: 7px;
-  min-width: 76px;
-  color: var(--dim);
-  font-size: .77rem;
-  text-align: center;
-}
-
-.story-page-meta {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  justify-content: space-between;
-  min-width: 0;
-}
-
-.story-page-scene {
-  overflow: hidden;
-  color: #e5e5e9;
-  font-weight: 760;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.story-page-count {
-  flex: 0 0 auto;
-  white-space: nowrap;
-}
-
-.story-page-count strong {
-  color: var(--card-text, var(--gold));
-}
-
-.story-page-steps {
-  display: grid;
-  grid-auto-columns: 1fr;
-  grid-auto-flow: column;
-  gap: 4px;
-}
-
-.story-page-step {
-  width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, .14);
-}
-
-.story-page-step.is-read {
-  background: rgba(255, 255, 255, .34);
-}
-
-.story-page-step.is-current {
-  background: var(--card-color, var(--gold));
 }
 
 .gourmet-epilogue .epilogue-intro {
@@ -1643,6 +1621,10 @@ body {
 
 .gourmet-epilogue .epilogue-scenes {
   display: block;
+  margin-top: 28px;
+}
+
+.gourmet-epilogue .epilogue-intro + .epilogue-scenes {
   margin-top: 0;
 }
 
@@ -1676,7 +1658,7 @@ body {
 }
 
 .gourmet-epilogue .epilogue-scene + .epilogue-scene {
-  margin-top: 30px;
+  margin-top: 34px;
 }
 
 .gourmet-epilogue .epilogue-scene:last-child {
@@ -1698,7 +1680,7 @@ body {
 }
 
 .gourmet-epilogue .epilogue-coda .epilogue-dialogue {
-  border-left-color: var(--gold);
+  border-left-color: var(--speaker-color, var(--gold));
   font-size: 1.04rem;
 }
 
@@ -1721,8 +1703,8 @@ body {
 }
 
 .gourmet-epilogue .epilogue-scene p {
-  margin-bottom: 18px;
-  line-height: 2.02;
+  margin-bottom: 22px;
+  line-height: 2.06;
 }
 
 .epilogue-portraits {
@@ -1852,8 +1834,8 @@ body {
   }
 
   .gourmet-flow-page .chapter p {
-    line-height: 1.88;
-    margin-bottom: 18px;
+    line-height: 1.98;
+    margin-bottom: 22px;
   }
 
   .gourmet-epilogue .epilogue-intro {
@@ -1872,12 +1854,12 @@ body {
   }
 
   .gourmet-epilogue .epilogue-scene + .epilogue-scene {
-    margin-top: 25px;
+    margin-top: 28px;
   }
 
   .gourmet-epilogue .epilogue-scene p {
-    margin-bottom: 16px;
-    line-height: 1.88;
+    margin-bottom: 20px;
+    line-height: 1.98;
   }
 
   .gourmet-epilogue .epilogue-coda {
@@ -1891,58 +1873,14 @@ body {
   }
 
   .story-pager-controls {
-    grid-template-columns: minmax(82px, 1fr) auto minmax(82px, 1fr);
-    gap: 7px;
+    grid-template-columns: minmax(112px, 1fr) minmax(112px, 1fr);
+    gap: 10px;
   }
 
   .story-page-btn {
     min-height: 48px;
     padding: 9px 11px;
     font-size: .8rem;
-  }
-
-  body.story-pager-fixed {
-    padding-bottom: calc(100px + env(safe-area-inset-bottom));
-  }
-
-  .gourmet-flow-page .story-pager-controls.is-fixed {
-    position: fixed;
-    bottom: max(8px, env(safe-area-inset-bottom));
-    left: 50%;
-    z-index: 60;
-    grid-template-columns: 48px minmax(0, 1fr) 48px;
-    gap: 6px;
-    width: calc(100% - 16px);
-    max-width: 584px;
-    margin: 0;
-    padding: 7px;
-    border: 1px solid rgba(212, 168, 85, .28);
-    border-radius: 8px;
-    background: rgba(12, 12, 16, .95);
-    box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
-    transform: translateX(-50%);
-    backdrop-filter: blur(12px);
-  }
-
-  .gourmet-flow-page .story-pager-controls.is-fixed .story-page-btn {
-    width: 48px;
-    min-height: 48px;
-    padding: 0;
-    justify-self: center;
-  }
-
-  .gourmet-flow-page .story-pager-controls.is-fixed .story-page-btn span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  .gourmet-flow-page .story-pager-controls.is-fixed .story-page-status {
-    min-width: 0;
-    padding: 0 4px;
   }
 
   .ending-index-back {
@@ -2023,7 +1961,7 @@ body {
   }
 
   .story-pager-controls {
-    grid-template-columns: minmax(76px, 1fr) auto minmax(76px, 1fr);
+    grid-template-columns: minmax(76px, 1fr) minmax(76px, 1fr);
     margin-top: 24px;
     padding-top: 18px;
   }
@@ -2072,7 +2010,8 @@ body {
   }
 
   .story-pager-controls {
-    grid-template-columns: 52px minmax(64px, auto) 52px;
+    grid-template-columns: 52px 52px;
+    justify-content: space-between;
   }
 
   .story-page-btn {
