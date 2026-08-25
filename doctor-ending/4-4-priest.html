@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! 엔딩 — 사제의 결단">
+  <title>의사가 너무 많아! · 사제의 결단</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container" style="--card-color:var(--priest);--card-glow:var(--priest-soft)">
+    <header class="header">
+      <a href="4-4-descent.html" class="tag" data-keep-query>STEP 04</a>
+      <h1>사제의 결단</h1>
+      <p class="subtitle">사제 담당 플레이어가 답합니다.</p>
+    </header>
+    <div class="progress" aria-label="진행 상황">
+      <span class="progress-dots" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-current"></i><i></i></span>
+      <span class="progress-label"><strong>4</strong> / 5 · 부활 판정</span>
+    </div>
+
+    <div data-session-recap hidden></div>
+
+    <!-- ─────────── 성수가 남아 있는 판 : 셋 중 하나 ─────────── -->
+    <div data-when-flask="intact">
+      <section class="verdict is-open" style="--card-color:var(--priest)">
+        <p class="verdict-kicker">4단계 · 정화</p>
+        <h2>성수는 그대로 있습니다</h2>
+        <p>사제의 손이 닿는 곳에 병이 놓여 있습니다. 왕에게 내려오는 것을 태울 수 있는 것은 이 물, 그리고 그의 맨손입니다.</p>
+      </section>
+
+      <div class="ending-decision" style="--card-color:var(--priest)">
+        <h2>사제는 어떻게 하겠습니까?</h2>
+        <div class="pick-list" id="picks-intact">
+          <button type="button" class="pick" style="--card-color:var(--priest)" data-priest="agree">
+            <span class="pick-key">&#9312;</span>
+            <span class="pick-copy">
+              <span class="pick-title">내가 불사른다</span>
+              <span class="pick-desc">성수를 집어 왕에게 뿌립니다. 하늘에서 내려오는 것을 제 손으로 태웁니다.</span>
+            </span>
+            <span class="pick-arrow">&#10095;</span>
+          </button>
+          <button type="button" class="pick" style="--card-color:var(--gold)" data-priest="allow">
+            <span class="pick-key">&#9313;</span>
+            <span class="pick-copy">
+              <span class="pick-title">나는 들지 않는다. 다만 막지도 않겠다</span>
+              <span class="pick-desc">성수를 탁자에 그대로 둔 채 물러섭니다. 그 물을 누가 들든 손대지 않겠다는 뜻입니다.</span>
+            </span>
+            <span class="pick-arrow">&#10095;</span>
+          </button>
+          <button type="button" class="pick" style="--card-color:var(--ash)" data-priest="avert">
+            <span class="pick-key">&#9314;</span>
+            <span class="pick-copy">
+              <span class="pick-title">성수를 거둔다</span>
+              <span class="pick-desc">병을 집어 품에 넣습니다. 이제 이 방에서 그 물을 들 수 있는 사람은 없습니다.</span>
+            </span>
+            <span class="pick-arrow">&#10095;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── 성수병이 깨진 판 : 자기 손뿐이다 ─────────── -->
+    <div data-when-flask="broken">
+      <section class="verdict is-blocked">
+        <p class="verdict-kicker">4단계 · 정화</p>
+        <h2 data-when-choice="2">성수병이 바닥에 떨어져 산산조각 납니다</h2>
+        <h2 data-when-choice="3">양의사가 던진 병이 사제의 팔에 부딪혀 깨집니다</h2>
+        <p data-when-choice="2">의식의 절정 속에서, 그것이 실수였는지 고의였는지는 누구도 확신하지 못합니다.</p>
+        <p data-when-choice="3">병이 왕에게 닿기 직전 사제가 몸을 날려 막아섰습니다. 파편과 성수가 바닥에 흩어지고, 피가 흐르는 팔이 남습니다.</p>
+        <p>물이 사라졌으므로 남은 것은 <strong>사제의 맨손</strong>뿐입니다. 그것만은 누구도 대신할 수 없습니다.</p>
+      </section>
+
+      <div class="ending-decision" style="--card-color:var(--priest)">
+        <h2>맨손으로 불을 피우겠습니까?</h2>
+        <div class="pick-list" id="picks-broken">
+          <button type="button" class="pick" style="--card-color:var(--priest)" data-priest="barehand">
+            <span class="pick-key">피운다</span>
+            <span class="pick-copy">
+              <span class="pick-title">맨손에서 정화의 불을 피워 올린다</span>
+              <span class="pick-desc">제 손바닥을 제단 삼아, 성물 없이 불을 피웁니다.</span>
+            </span>
+            <span class="pick-arrow">&#10095;</span>
+          </button>
+          <button type="button" class="pick" style="--card-color:var(--ash)" data-priest="unable">
+            <span class="pick-key">피우지 못한다</span>
+            <span class="pick-copy">
+              <span class="pick-title">끝내 손을 내밀지 못한다</span>
+              <span class="pick-desc">성물 없이 역천의 기운에 손을 대는 것까지는 할 수 없었습니다.</span>
+            </span>
+            <span class="pick-arrow">&#10095;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="4-4-descent.html" data-keep-query>이전 장면으로</a>
+      <a href="index.html">처음부터 다시</a>
+    </div>
+    <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
+  </main>
+  <script src="state.js?v=6"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    var st = DE.read();
+
+    // 양의사가 묶여 있던 판은 방해가 없었으므로 성수가 온전하다.
+    var intact = !st.choice || st.choice === 1;
+    DE.reveal('data-when-flask', intact ? 'intact' : 'broken');
+    DE.reveal('data-when-choice', st.choice);
+
+    DE.onPick('picks-intact', 'data-priest', function (v) { DE.go('priest', { priest: v }); });
+    DE.onPick('picks-broken', 'data-priest', function (v) { DE.go('priest', { priest: v }); });
+  })();
+  </script>
+</body>
+</html>

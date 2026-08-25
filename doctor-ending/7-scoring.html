@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! — 채점 안내: ?점 목표 판정 기준과 총점 합산">
+  <title>의사가 너무 많아! · 채점 안내</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container reading-simple" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+    <header class="header">
+      <a href="index.html" data-keep-query class="tag">채점 안내</a>
+      <h1>목표 정산과 승패</h1>
+      <p class="subtitle">엔딩과 진상이 모두 공개되면, 각 플레이어는 자기 시트의 목표를 하나씩 짚어 달성한 목표의 승점을 합산합니다.</p>
+    </header>
+
+    <div data-session-recap hidden></div>
+
+    <section class="guide-box">
+      <div class="guide-title">먼저 확인할 것</div>
+      <p>대부분의 목표(체포 회피, 진범 지목, 특정 문양 발견, RP 보너스 등)는 <strong>시트에 적힌 조건</strong>으로 그 자리에서 판정합니다.</p>
+      <p>시트의 <strong>'?점' 목표</strong>는 엔딩 시점에만 판정하는 마무리 목표입니다. <strong style="color:var(--ink-strong)">그 값은 모두 5점이며, 판정은 이 화면이 합니다.</strong></p>
+      <p>다섯의 ?점은 전부 <strong>이 방을 나간 뒤의 일</strong>을 다룹니다. 양의사에게만 ?점이 없고, 그 자리에는 확정값 3점(왕자파 계획)이 놓여 있습니다. <strong style="color:var(--ink-strong)">잃을 미래가 없고 지킬 자리만 있는 사람입니다.</strong></p>
+      <p class="reading-order-note">이 게임은 각자의 총점을 서로 비교해 승패를 가리되, 모두가 제 목표를 다 이루면 대개 동점에 수렴하도록 균형을 맞춘 개인전입니다. 승부는 누군가 자기 목표를 놓치거나, 진범이 이를 역이용하는 지점에서 갈립니다.</p>
+    </section>
+
+    <div class="branch-toolbar">
+      <div>
+        <span>?점 목표</span>
+        <strong>엔딩별 판정 기준</strong>
+      </div>
+      <p>해당 엔딩에 맞춰<br>달성 여부를 가립니다.</p>
+    </div>
+
+    <div class="table-scroll">
+      <table class="score-table">
+        <thead>
+          <tr><th>인물</th><th>달성</th><th>절반</th><th>미달</th></tr>
+        </thead>
+        <tbody>
+      <tr><td style="color:var(--plague)">역병의사</td><td><span class="ok">&#9675; 달성</span> 왕의 부활 &mdash; 엔딩 1 &middot; 2</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 엔딩 3 &middot; 4 &middot; 5 &middot; 6</td></tr>
+      <tr><td style="color:var(--talisman)">부적술사</td><td><span class="ok">&#9675; 달성</span> 부활이 성공해 활명술이 실제로 사람을 되살렸거나(엔딩 1 &middot; 2), 정체를 지켜 소명파가 존속한 경우</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 소명파가 사교로 낙인찍히거나(엔딩 3 &middot; 5), 정체가 파멸적으로 드러난 경우. 엔딩 6은 자동 미달</td></tr>
+      <tr><td style="color:var(--acupunct)">침술사</td><td><span class="ok">&#9675; 달성</span> <strong>부활 성공(엔딩 1 &middot; 2) + 본인 미체포</strong>인 경우에만</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 그 외 전부. <strong>지령서 폭로 여부는 무관합니다</strong> &mdash; 시트가 이미 못 박고 있습니다. "내가 잡히지 않고 도망치더라도 소명파는 재상가에게 처리당하겠지." 그가 사는 길은 <strong>왕을 되살린 어의의 스승</strong>이라는 자리 하나뿐입니다</td></tr>
+      <tr><td style="color:var(--herbal)">한의사</td><td><span class="ok">&#9675; 달성</span> 형의 약재로 부활에 기여(엔딩 1 &middot; 2)했거나 진범 검거에 기여(엔딩 4)한 경우. <strong>포박 여부 &middot; 정체 노출과 무관</strong> &mdash; 정체는 2점 목표가 이미 담당합니다</td><td>&mdash;</td><td><span class="no">&#10007; 미달</span> 엔딩 3 &middot; 5 &middot; 6</td></tr>
+      <tr><td style="color:var(--priest)">사제</td>
+        <td><span class="ok">&#9675; 달성</span> 무고한 자를 지키고 진범이 심판받거나(엔딩 4), <strong>본인이 직접 불을 들어</strong> 왕과 사일러스를 함께 구원한 경우(엔딩 1). 성수를 뿌렸든 맨손으로 피웠든 같습니다</td>
+        <td><span class="half">&#9651; 절반</span> <strong>막지 않은 경우</strong> &mdash; 제 손으로 들지는 않았으나 성수를 탁자에 남겨 두었고, 남의 손이 그것을 들어 왕이 살아난 판(엔딩 1). 구한 것은 맞으나 그의 손은 아닙니다</td>
+        <td><span class="no">&#10007; 미달</span> <strong>성수를 거둔 경우</strong>(남이 들 가능성까지 닫았습니다) &middot; 맨손을 끝내 내밀지 못한 경우 &middot; 막지 않았으나 아무도 들지 않은 경우 &middot; 본인이 포박된 모든 판 &middot; 엔딩 3 &middot; 5 &middot; 6. 목표가 "구해야 할 것이다"라는 능동형이므로, 압수된 성물이 대신 쓰인 것은 그가 구한 것이 아닙니다</td></tr>
+      <tr><td style="color:var(--western)">양의사</td><td colspan="3"><strong>?점이 없습니다.</strong> 5점(체포 회피) &middot; 2점(약품 절도 부인) &middot; 1점(한의사 최다득표) &middot; 5점(RP)은 시트 조건으로 판정하고, 3점 <strong>왕자파의 계획 완수</strong>는 왕이 죽은 채로 남은 판(엔딩 3 &middot; 4 &middot; 5 &middot; 6)에서 달성, 왕이 되살아난 판(엔딩 1 &middot; 2)에서 미달입니다. <span style="color:var(--red)">단, 중앙의원회로 함께 갔다가 의식이 깨진 판에서는 가담자로 함께 끌려가 체포 회피 5점을 잃습니다.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <article class="ending-script" style="margin-top:34px">
+      <section class="script-block final-block">
+        <p class="script-kicker">TOTAL</p>
+        <h2>총점 합산과 승패</h2>
+        <p>다섯은 <strong style="color:var(--ink-strong)">4+3+2+1+5 = 15점 만점</strong>, 양의사만 <strong style="color:var(--western)">5+2+1+5+3 = 16점</strong>입니다. 이 비대칭은 의도된 것입니다. 진범은 애초에 '모두가 만점인 판'에 함께 설 수 없는 사람이지만, 정체를 숨긴 채 판을 지배했다면 다섯의 만점을 홀로 넘어설 수 있도록 상한을 열어 두었습니다.</p>
+        <p>각자 달성한 목표 점수를 모두 더해, 총점이 가장 높은 플레이어가 승리합니다. 동점이 나오면 그 자체로 '모두가 제 몫을 해낸 판'이니, 굳이 한 명을 가리기보다 공동 승리로 두어도 좋습니다. 양의사가 끝까지 정체를 숨긴 채 높은 점수를 냈다면 <strong style="color:var(--western)">'악의 승리'</strong>로서 따로 기립니다.</p>
+        <p><strong style="color:var(--ash)">엔딩 6</strong>에서는 ?점을 가진 다섯 명이 모두 그것을 놓치고, ?점이 없는 양의사도 체포 회피가 무너지므로, 승자 없이 판이 끝납니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--western)">
+        <p class="script-kicker">FOR THE CULPRIT</p>
+        <h2>진범에게는 만점의 길이 있었습니다</h2>
+        <p><strong style="color:var(--ink-strong)">한의사를 최다 득표자로 만들면</strong> 왕께 올릴 약을 지을 사람이 사라지고, 부활은 시작조차 되지 못합니다. 그 판에서 율리시스는 체포를 피하고, 죄를 숨기고, 원수를 처단하고, 왕자파의 계획까지 완수하여 <strong style="color:var(--ink-strong)">다섯의 만점을 홀로 넘어섭니다.</strong></p>
+        <p>이번 판에서 그 길이 닫혔다면, 그것은 <strong>나머지 다섯이 제 몫을 해냈다는 뜻</strong>입니다.</p>
+        <p>그리고 반대편도 사실입니다. 다섯은 서로 묻고 맞춰 보며 같은 방향으로 나아가지만, <strong style="color:var(--western)">진범은 혼자 반대 방향으로 걷습니다.</strong> 아는 것을 말하지 못하고, 몰리는 순간에도 혼자 답을 만들어 내야 합니다. 이 게임에서 가장 외롭고 가장 품이 많이 드는 자리입니다.</p>
+        <p>그러니 <strong style="color:var(--ink-strong)">점수판이 어떻게 끝났든</strong>, 오늘 이 판이 재미있었다면 그 몫의 상당 부분은 율리시스를 맡은 사람에게 돌아갑니다. 그가 끝까지 버텨 주었기에 나머지 다섯의 추리가 성립했습니다. 일찍 잡혀 점수를 잃었더라도 마찬가지입니다. <strong>잡히는 것까지가 그 역할이기 때문입니다.</strong></p>
+        <p class="reading-order-note">테이블에서 한 번 소리 내어 읽어 주면 좋습니다.</p>
+      </section>
+    </article>
+
+    <div class="gm-note">
+      <p class="gm-note-title">각 목표의 요지</p>
+      <ul>
+        <li><strong style="color:var(--plague)">역병의사</strong> — 풍수사의 유지를 이어 <strong>왕의 부활</strong>을 이뤄낸다.</li>
+        <li><strong style="color:var(--acupunct)">침술사</strong> — 재상가 음모에서 살아남을 <strong>탈출 방도</strong>를 마련한다.</li>
+        <li><strong style="color:var(--talisman)">부적술사</strong> — 풍수사의 의지를 잇는다.</li>
+        <li><strong style="color:var(--herbal)">한의사</strong> — 아버지와 형을 깜짝 놀라게 할 <strong>훌륭한 실적</strong>을 낸다.</li>
+        <li><strong style="color:var(--priest)">사제</strong> — 선한 자들을 구한다. 악인들 가운데 선인이 있다면 그들을 구해야 한다.</li>
+      </ul>
+    </div>
+
+    <a href="8-design.html" data-keep-query class="next-step-btn" style="--card-color:var(--ash);--card-glow:var(--ash)">
+      <span class="next-kicker">더 읽을거리</span>설계 노트 &#10095;
+      <span class="next-sub">각자가 왜 그렇게 움직였고, 이 판이 어떻게 짜여 있었는지를 봅니다.</span>
+    </a>
+
+
+    <div class="branch-toolbar" style="margin-top:42px">
+      <div>
+        <span>정산이 끝났다면</span>
+
+        <strong>다른 결말 둘러보기</strong>
+      </div>
+      <p>가지 않은 길의 결말을<br>자유롭게 열어 봅니다.</p>
+    </div>
+    <p class="section-desc">아래 결말은 열람용으로 열립니다. 이번 판의 기록 없이 열리므로, 비밀 공개 여부 등으로 갈리는 문단은 모든 갈래가 함께 표시됩니다.</p>
+
+    <div class="ending-list">
+      <a class="ending-card ending-1" href="5-ending-1.html?view=1">
+        <span class="ending-badge">ENDING 01</span>
+        <span class="ending-info"><span class="ending-title">완벽한 부활</span><span class="ending-desc">의식 성공 · 누군가 불을 들었다</span></span>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a class="ending-card ending-2" href="5-ending-2.html?view=1">
+        <span class="ending-badge">ENDING 02</span>
+        <span class="ending-info"><span class="ending-title">대가성 부활</span><span class="ending-desc">의식 성공 · 아무도 불을 들지 않았다</span></span>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a class="ending-card ending-3" href="5-ending-3.html?view=1">
+        <span class="ending-badge">ENDING 03</span>
+        <span class="ending-info"><span class="ending-title">파멸의 이단 심문</span><span class="ending-desc">혼을 부르는 단계 또는 침 단계에서 깨어짐</span></span>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a class="ending-card ending-4" href="5-ending-4.html?view=1">
+        <span class="ending-badge">ENDING 04</span>
+        <span class="ending-info"><span class="ending-title">심판과 상실</span><span class="ending-desc">부활 없이 · 진범 검거</span></span>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a class="ending-card ending-5" href="5-ending-5.html?view=1">
+        <span class="ending-badge">ENDING 05</span>
+        <span class="ending-info"><span class="ending-title">승리한 악</span><span class="ending-desc">부활 없이 · 무고한 인물 검거</span></span>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+      <a class="ending-card ending-6" href="5-ending-6.html?view=1">
+        <span class="ending-badge">ENDING 06</span>
+        <span class="ending-info"><span class="ending-title">고할 것이 없는 밤</span><span class="ending-desc">부활을 시도조차 하지 않음</span></span>
+        <span class="ending-arrow">&#10095;</span>
+      </a>
+    </div>
+
+    <a href="/" class="story-link" style="margin-top:34px">
+      <span class="story-link-copy"><strong>플레이해 주셔서 감사합니다</strong><span>Project DullG의 다른 작품을 보러 갑니다.</span></span>
+      <span class="ending-arrow">&#10095;</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="6-truth.html" data-keep-query>진상 해설로</a>
+      <a href="index.html" data-keep-query>엔딩 첫 페이지</a>
+    </div>
+    <footer class="footer">의사가 너무 많아! &middot; 채점 안내</footer>
+  </main>
+  <script src="state.js?v=6"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    // 이번 판이 도달한 결말 카드에 표식을 남긴다. 기록이 없으면 아무것도 하지 않는다.
+    var n = DE.ending(DE.read());
+    if (!n) return;
+    var card = document.querySelector('.ending-card.ending-' + n);
+    if (!card) return;
+    card.style.borderColor = 'var(--card-color)';
+    card.querySelector('.ending-badge').textContent = '이번 판의 결말';
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 판정 3단계">
+  <title>의사가 너무 많아! · 부활 판정 3</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container" style="--card-color:var(--acupunct);--card-glow:var(--acupunct-soft)">
+    <header class="header">
+      <a href="4-2-spirit.html" class="tag" data-keep-query>STEP 04</a>
+      <h1>부활 판정</h1>
+      <p class="subtitle">세 번째 단계를 진행합니다.</p>
+    </header>
+    <div class="progress" aria-label="진행 상황">
+      <span class="progress-dots" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-current"></i><i></i></span>
+      <span class="progress-label"><strong>4</strong> / 5 · 부활 판정</span>
+    </div>
+
+    <div data-session-recap hidden></div>
+
+    <!-- 2단계 통과 브리지 낭독 -->
+    <article class="story-panel">
+      <p>부적술사가 부적의 방향을 거꾸로 세우고, 밀짚인형을 그 선 위에 놓습니다. 진언이 이어지고 대못이 인형에 박히는 순간 &mdash; <strong>방 안에 강한 바람이 입니다.</strong> 촛불이 한꺼번에 눕고, 왕의 몸이 한 번 크게 들썩입니다.</p>
+      <p>붉은 부적은 가장자리가 아니라 <strong>가운데부터</strong> 타들어가더니 재도 남기지 않고 사라집니다.</p>
+      <p class="reading-order-note">※ 〈조건 달성 카드 2〉가 테이블에 나와 있다면 함께 읽으십시오 &mdash; <em>"이런 부적이 발동했다면 그 힘을 소화하느라 중심부부터 불타 사라졌을 거예요."</em> 방금 그 일이 눈앞에서 벌어졌습니다.</p>
+      <p>왕의 눈동자는 아직 비어 있습니다. 그러나 몸은 조금씩 떨리고 있습니다. 이제 아홉 개의 침으로 혼을 육체에 봉할 차례입니다.</p>
+    </article>
+
+    <div class="branch-toolbar">
+      <div><span>부활 판정 3 / 4</span><strong>· 아홉 번째 침으로 봉한다</strong></div>
+      <p>테이블에 나와 있는 것만<br>인정합니다.</p>
+    </div>
+
+    <div class="ending-decision" style="--card-color:var(--acupunct)">
+      <h2>돌아온 혼을 육체에 봉하려면 침술사가 여덟 구멍을 막고 아홉 번째 침으로 봉해야 합니다.</h2>
+      <p class="reading-order-note">※ 〈한 칸이 빈 세침통〉과 〈무언가 묻은 침〉이 모두 테이블에 나와 있다면, 두 장을 조합해 〈조건 달성 카드 1〉을 만든 뒤 답하십시오.</p>
+      <p><strong>침술사가 자리에 있고, 아홉 번째 침이 갖추어져 있습니까?</strong></p>
+      <div class="pick-list" id="picks">
+        <button type="button" class="pick" style="--card-color:var(--acupunct)" data-answer="full">
+          <span class="pick-key">&#9312;</span>
+          <span class="pick-copy">
+            <span class="pick-title">&#12296;조건 달성 카드 1&#12297;이 나와 있습니다</span>
+            <span class="pick-desc">침술사가 세침통을 열자 아홉 자리가 모두 채워져 있습니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+        <button type="button" class="pick" style="--card-color:var(--ash)" data-answer="lent">
+          <span class="pick-key">&#9313;</span>
+          <span class="pick-copy">
+            <span class="pick-title">침술사는 있지만, 카드가 나와 있지 않습니다</span>
+            <span class="pick-desc">한 자리가 빈 채로 통이 열립니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+        <button type="button" class="pick" style="--card-color:var(--red)" data-answer="held">
+          <span class="pick-key">&#9314;</span>
+          <span class="pick-copy">
+            <span class="pick-title">침술사는 포박되어 있습니다</span>
+            <span class="pick-desc">침을 놓을 수 있는 사람이 이 방에 없습니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="4-2-spirit.html" data-keep-query>이전 단계로</a>
+      <a href="index.html">처음부터 다시</a>
+    </div>
+    <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
+  </main>
+  <script src="state.js?v=6"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    DE.onPick('picks', 'data-answer', function (a) {
+      if (a === 'held') DE.go('step3fail');
+      else DE.go('step3', { addKey: 'card1', needle: a });
+    });
+  })();
+  </script>
+</body>
+</html>

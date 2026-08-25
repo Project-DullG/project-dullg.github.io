@@ -1823,6 +1823,20 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
   font-size: 1.1rem;
 }
 
+/* 불이 꺼진 선택지 — 자리는 남기되 고를 수 없다 */
+.pick.is-off,
+.pick.is-off:hover {
+  border-color: rgba(255, 255, 255, .05);
+  background: rgba(255, 255, 255, .008);
+  transform: none;
+  cursor: not-allowed;
+}
+
+.pick.is-off .pick-key,
+.pick.is-off .pick-arrow { color: var(--ash); opacity: .55; }
+.pick.is-off .pick-title { color: var(--dim); }
+.pick.is-off .pick-desc { color: var(--ash); opacity: .8; }
+
 /* 확정 버튼 */
 .confirm-btn {
   position: relative;

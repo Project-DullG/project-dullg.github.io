@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! 엔딩 — 탁자 끝의 성수병">
+  <title>의사가 너무 많아! · 성수병</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container" style="--card-color:var(--western);--card-glow:var(--western-soft)">
+    <header class="header">
+      <a href="4-4-descent.html" class="tag" data-keep-query>STEP 04</a>
+      <h1>탁자 끝의 성수병</h1>
+      <p class="subtitle">양의사 담당 플레이어가 혼자 답합니다.</p>
+    </header>
+    <div class="progress" aria-label="진행 상황">
+      <span class="progress-dots" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-current"></i><i></i></span>
+      <span class="progress-label"><strong>4</strong> / 5 · 부활 판정</span>
+    </div>
+
+    <div data-session-recap hidden></div>
+
+    <article class="story-panel">
+      <p>모두의 시선이 왕의 몸에 모입니다. 그 순간 양의사는 탁자 끝에 아슬아슬하게 놓인 성수병을 봅니다.</p>
+      <p>조금 전 낭독된 노트의 마지막 구절이 방 안에 남아 있습니다 &mdash; <strong>"안 그러면 나 같이 되는 거야. 알겠어?"</strong></p>
+      <p class="reading-order-note">그 물은 사제가 아니어도 들 수 있습니다. 그러나 <strong>맨손에서 불을 피우는 것은 사제만 할 수 있습니다.</strong> 병이 깨진다면, 이 방에서 불을 피울 수 있는 사람은 하나로 줄어듭니다.</p>
+    </article>
+
+    <div class="ending-decision" style="--card-color:var(--western)">
+      <h2>양의사는 어떻게 합니까?</h2>
+      <div class="pick-list" id="picks">
+        <button type="button" class="pick" style="--card-color:var(--plague)" data-choice="1">
+          <span class="pick-key">&#9312;</span>
+          <span class="pick-copy">
+            <span class="pick-title">가만히 둔다</span>
+            <span class="pick-desc">성수가 남습니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+        <button type="button" class="pick" style="--card-color:var(--western)" data-choice="2">
+          <span class="pick-key">&#9313;</span>
+          <span class="pick-copy">
+            <span class="pick-title">모른 척 몸을 돌리며 슬쩍 떨어뜨린다</span>
+            <span class="pick-desc">병이 산산조각 납니다. 그것이 실수였는지 고의였는지 누구도 확신하지 못합니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+        <button type="button" class="pick" style="--card-color:var(--red)" data-choice="3">
+          <span class="pick-key">&#9314;</span>
+          <span class="pick-copy">
+            <span class="pick-title">집어 던진다</span>
+            <span class="pick-desc">명백한 방해입니다. 좌중이 그를 봅니다.</span>
+          </span>
+          <span class="pick-arrow">&#10095;</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="4-4-descent.html" data-keep-query>이전 장면으로</a>
+      <a href="index.html">처음부터 다시</a>
+    </div>
+    <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
+  </main>
+  <script src="state.js?v=6"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    DE.onPick('picks', 'data-choice', function (c) {
+      DE.go('flask', { choice: Number(c) });
+    });
+  })();
+  </script>
+</body>
+</html>

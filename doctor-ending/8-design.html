@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! — 설계 노트: 이 게임이 어떻게 짜여 있었는가">
+  <title>의사가 너무 많아! · 설계 노트</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container reading-simple" style="--card-color:var(--ash);--card-glow:var(--ash)">
+    <header class="header">
+      <a href="7-scoring.html" data-keep-query class="tag">설계 노트</a>
+      <h1>이 게임은<br>이렇게 짜여 있었습니다</h1>
+      <p class="subtitle">정산까지 끝난 뒤에 읽는 해설입니다. 오늘 무엇이 보였고 무엇이 끝내 안 보였는지를 맞춰 보는 자리입니다.</p>
+    </header>
+
+    <div data-session-recap hidden></div>
+
+    <section class="guide-box ending-guide-panel">
+      <div class="guide-title">읽는 방법</div>
+      <p>순서대로 읽어도 되고, 궁금한 곳만 펼쳐 봐도 됩니다. 낭독용이 아니라 <strong>돌아보기용</strong>입니다.</p>
+      <p>"우리 판에서는 이게 안 나왔네" 하는 항목이 있다면, 그것이 다음 판에서 열어 볼 문입니다.</p>
+    </section>
+
+    <article class="ending-script">
+
+      <!-- ══════════ 1. 풀려면 알아야 했던 것 ══════════ -->
+      <section class="script-block">
+        <p class="script-kicker">PART 1</p>
+        <h2>이 사건을 풀려면 알아야 했던 것</h2>
+        <p>여섯 사람이 각자 한 조각씩 들고 있었고, 넷이 모여야 그림이 됩니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--plague)">
+        <p class="script-kicker">ㄱ</p>
+        <h2>풍수사에 대하여</h2>
+        <p>20년 전, 전쟁이 끝나고 왕궁 터를 잡은 사람입니다. 그는 그 자리를 고르면서 왕에게만 예언을 남겼습니다. <strong style="color:var(--ink-strong)">공주는 10년 후, 왕은 20년 후에 '죽는다'.</strong>는 예언이었지만, 자신이 10년, 20년 후에 왕을 살리겠다는 약속을 합니다.</p>
+        <p>사건으로부터 10년 전 공주가 쓰러지자 그는 약속대로 돌아와 <strong>부활의 비술</strong>으로 공주를 되살렸습니다. 그러나, 현장에 있는 사제들이 타사칼의 사제들이 부활에 반대해 자리를 피했기 때문에 공주를 대신해 '하늘의 기운'을 맞았습니다. 공주를 살린 대가로 그의 몸은 투명해졌고, 일주일 뒤 소멸할 운명이 되었습니다.</p>
+        <p>왕궁에서 벗어난 풍수사는 자신을 뒤쫓는 사제를 피해 역병의사의 집으로 숨어들었고, 역병의사에게 활명술을 가르치고 부활의 비술을 받아 적게 했습니다.</p>
+        <p class="reading-order-note">※ <strong>게임 안의 누구도 모르는 층위</strong> — 그 땅의 기운이 너무 강해, 공주와 왕이 한 번씩 죽었다 되살아나는 것을 대가로 후손이 강건해집니다. 풍수사는 그 둘을 되살리겠다고 약속하고 자리를 잡았습니다. 즉 <strong>왕의 부활이 성공한다면 그것은 금기를 어긴 것이 아니라 예언의 완성입니다.</strong> 이단 심문의 전제 자체가 처음부터 틀려 있었던 셈입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--talisman)">
+        <p class="script-kicker">ㄴ</p>
+        <h2>소명파에 대하여</h2>
+        <p>활명술 &mdash; 생명의 순환과 기의 운행을 다루는 의술 &mdash; 을 잇는 유파입니다. 풍수사가 전 당주였고, <strong>부적술사가 현 당주</strong>이며, <strong>침술사</strong>도 이 유파 출신입니다. 오늘 밤 한 방에 소명파가 셋이나 있었던 것은 우연이 아닙니다.</p>
+        <p>9년 전 활명술은 악마술로 규정되어 금지되었고, 소명파 마을은 불탔습니다. <strong style="color:var(--red)">그 방화의 선봉에 선 것이 사제입니다.</strong> 부적술사에게 오늘 밤의 사제는 스승을 죽인 자들의 얼굴이고, 사제에게 부적술사는 아직 잡지 못한 이단입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--western)">
+        <p class="script-kicker">ㄷ</p>
+        <h2>중앙의원회에 대하여</h2>
+        <p>20년 전 종전과 함께 세워진 왕국 의료의 중심입니다. 의술을 전혀 모르는 <strong>양의사 율리시스</strong>가 말과 정치만으로 의원장까지 오른 곳이기도 합니다.</p>
+        <p>4년 전, 역병의사의 활명술 노트가 그에게 발각됩니다. 그 처분에 반발한 <strong>호준</strong>이 사표를 던지며 남긴 말이 <em>"당신은 의사가 아닙니다"</em>였고, 이 일로 신진 의사들이 줄줄이 사직했습니다. 그 빈자리가 <strong>의원 부족</strong>으로 이어지고, 왕이 <em>"이 궁엔 의사가 너무 많아"</em>라며 예산 삭감을 예고하게 되는 배경이 됩니다.</p>
+        <p>그러니 오늘 밤 왕의 침소에 모인 여섯은 <strong style="color:var(--ink-strong)">그 붕괴가 만들어 낸 명단</strong>입니다. 왕이 부른 둘, 재상가가 민 둘, 그리고 중앙의원회 몫 둘 &mdash; 그 둘을 양의사가 자신과 사제로 바꿔치기했습니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--red)">
+        <p class="script-kicker">ㄹ</p>
+        <h2>소명파에 대한 소문은 어디에서, 왜 나왔는가</h2>
+        <p>10년 전 풍수사가 공주를 되살리자, 중앙의원회의 위상이 흔들릴 것을 두려워한 양의사는 사제에게 한 가지를 지어냅니다 &mdash; <strong style="color:var(--red)">"풍수사가 100명을 인신공양하는 악마술을 썼다."</strong></p>
+        <p>거짓말은 하나였고, 결과는 셋이었습니다. 활명술 금지법, 소명파 마을의 학살, 그리고 <strong>오늘 밤 이 방을 지배한 이단 프레임</strong>입니다. 사제가 평생 쫓아온 악마술의 정체는, 실은 그가 은사로 섬긴 사람의 입에서 나온 말이었습니다.</p>
+        <p class="reading-order-note">추적선 &mdash; 〈9년 전 · 활명술 금지〉의 <em>"최초 제보자는 기록에 없다"</em> + 〈당직 의원〉(사제와 양의사가 10년 넘게 알던 사이) + 〈중앙의원회 의사〉(난리통엔 보이지 않다가 물러난 자리를 차지) 세 장이 한 사람을 가리킵니다. 부적술사의 3점이 걸린 길입니다.</p>
+        <p>진짜 대가는 부적술사가 치렀습니다. 그는 <strong>왕이 소문을 방치했다</strong>고 믿고 왕을 저주했습니다. 원흉이 다른 사람이라는 것을 끝내 모른 채로.</p>
+      </section>
+
+      <!-- ══════════ 2. 게임의 설계 ══════════ -->
+      <section class="script-block">
+        <p class="script-kicker">PART 2</p>
+        <h2>게임의 설계</h2>
+        <p>이 게임은 단서를 <strong>찾는</strong> 게임이 아니라, 각자가 쥔 것을 <strong>말할 수 있게 되는</strong> 게임입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--gold)">
+        <p class="script-kicker">ㄱ</p>
+        <h2>각자가 안고 시작한 비밀</h2>
+        <div class="epilogue-list">
+          <div class="epilogue c-western">
+            <div class="epilogue-name">양의사</div>
+            <p>인신공양 소문을 지어냈다 &middot; 한의사의 약을 훔쳐 사흘치를 한 번에 먹였다 &middot; 의술을 모르며 왕자파와 손잡았다</p>
+          </div>
+          <div class="epilogue c-acupunct">
+            <div class="epilogue-name">침술사</div>
+            <p>청부 암살자이며 왕에게 독침을 놓았다 &middot; 침소 바닥에 독병을 두고 왔다 &middot; 소명파를 인질로 잡힌 왕자파의 손발이다</p>
+          </div>
+          <div class="epilogue c-talisman">
+            <div class="epilogue-name">부적술사</div>
+            <p>궁에 부적을 붙이고 저주를 걸었다 &middot; 소명파 당주이자 풍수사의 수제자다 &middot; 왕자파와 결탁했다</p>
+          </div>
+          <div class="epilogue c-plague">
+            <div class="epilogue-name">역병의사</div>
+            <p>침술사의 독침을 뽑아 숨겼다 &middot; 모두를, 특히 사제를 설득하면 왕을 되살릴 수 있다</p>
+          </div>
+          <div class="epilogue c-priest">
+            <div class="epilogue-name">사제</div>
+            <p>치유 능력도 의학 지식도 없다(정화의 불뿐이다) &middot; 거짓말을 하지 못한다</p>
+          </div>
+          <div class="epilogue c-herbal">
+            <div class="epilogue-name">한의사</div>
+            <p>나는 호준이 아니라 동생 호정이다 &middot; 탕약과 향밖에 다루지 못한다</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--priest)">
+        <p class="script-kicker">ㄴ</p>
+        <h2>비밀이 '말해도 되는 것'이 되는 순간</h2>
+        <p>비밀은 전부 <strong>승점이 걸린 약점</strong>입니다. 동시에 <strong style="color:var(--ink-strong)">진범에게 닿는 유일한 통로</strong>이기도 합니다. 그래서 이 게임의 긴장은 "누가 범인인가"가 아니라 <strong>"내가 먼저 말해야 하는가"</strong>에 걸려 있습니다. 밀담이 금지된 것도 같은 이유입니다 &mdash; 고백은 반드시 전원 앞에서 이루어져야 합니다.</p>
+        <div class="evidence-grid">
+          <div class="evidence-card"><strong>사제가 부적을 내놓으면</strong><span>4시에 부적을 떼었다는 사실이 드러나며 <strong>저주 무효</strong>가 증명됩니다. 대신 그가 밀어붙인 이단 심문의 근거가 무너집니다.</span></div>
+          <div class="evidence-card"><strong>역병의사가 침을 내놓으면</strong><span>독을 뽑았다는 사실로 <strong>독살 무효</strong>가 증명됩니다. 대신 스승인 침술사를 파는 셈이 됩니다.</span></div>
+          <div class="evidence-card"><strong>침술사가 자백하면</strong><span>사인이 독이 아님을 앞당겨 확정합니다. 대신 체포 회피 4점이 날아갑니다.</span></div>
+          <div class="evidence-card"><strong>한의사가 대리 진료를 밝히면</strong><span>약봉투가 손대어진 흔적을 본 목격자로서 신뢰를 얻습니다. 대신 정체 은폐 2점을 잃습니다.</span></div>
+        </div>
+        <p>저주도 독도 아니라면 남는 것은 <strong>약</strong>뿐입니다. 양의사의 〈약통과 조제 메모〉와 한의사의 〈형의 당부 수첩〉이 맞물리는 순간 훔친 약과 사인이 직결됩니다.</p>
+        <p class="reading-order-note">※ 마지막 열쇠는 물증이 아니라 사람입니다. <strong>거짓을 말할 수 없는 사제</strong>가 은사에 대한 맹신을 거두고 "나는 양의사가 약을 받는 것을 보았다"를 인정하는 순간, 마지막 진료자의 알리바이가 무너집니다. 침소에 더 결정적인 증거를 심어 두지 않은 것은 의도입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--acupunct)">
+        <p class="script-kicker">ㄷ</p>
+        <h2>RP 보너스는 왜 그것들이었나</h2>
+        <p>연기 점수처럼 보이지만, 실제 역할은 <strong style="color:var(--ink-strong)">정보를 테이블 위로 끌어올리는 펌프</strong>입니다. 각 보너스는 그 인물이 숨기고 싶어 하는 화제를 스스로 꺼내게 만듭니다.</p>
+        <div class="epilogue-list">
+          <div class="epilogue c-western">
+            <div class="epilogue-name">양의사 &middot; 사제 외 전원에게 반말</div>
+            <p>예외가 한 사람뿐이라는 사실 자체가 단서입니다. <strong>왜 사제에게만 존대인가</strong>가 두 사람의 오랜 관계를 드러냅니다.</p>
+          </div>
+          <div class="epilogue c-priest">
+            <div class="epilogue-name">사제 &middot; '이단 놈' 5회</div>
+            <p>이단 프레임을 계속 테이블에 던지게 합니다. 반박이 나올수록 활명술과 소명파의 실체가 논의 대상이 됩니다.</p>
+          </div>
+          <div class="epilogue c-plague">
+            <div class="epilogue-name">역병의사 &middot; 한의사에게 진심 어린 사과 2회</div>
+            <p>사과할 이유를 설명하려면 <strong>4년 전 사표 사건</strong>을 꺼내야 합니다. 중앙의원회 붕괴의 내막이 그렇게 열립니다.</p>
+          </div>
+          <div class="epilogue c-acupunct">
+            <div class="epilogue-name">침술사 &middot; '호정'이라 잘못 부르기 2회</div>
+            <p>침술사가 <strong>한의사의 본명을 안다</strong>는 사실이 새어 나갑니다. 대리 진료 의혹의 첫 실마리가 됩니다.</p>
+          </div>
+          <div class="epilogue c-talisman">
+            <div class="epilogue-name">부적술사 &middot; 풍수사를 욕하는 자에게 분노 2회</div>
+            <p>풍수사라는 화제를 계속 살려 둡니다. 10년 전과 9년 전이 잊히지 않게 하는 장치입니다.</p>
+          </div>
+          <div class="epilogue c-herbal">
+            <div class="epilogue-name">한의사 &middot; 거짓말할 때 안경을 고쳐 쓰거나 귀 만지기</div>
+            <p>거짓말 탐지 신호를 본인이 켜게 합니다. <strong>의심을 자초하도록 설계된 함정</strong>이며, 무고한 사람이 가장 수상해 보이는 구도를 만듭니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--gold)">
+        <p class="script-kicker">ㄹ</p>
+        <h2>판이 갈라지는 순서 &mdash; 2:2:2 → 3:3 → 2:4 → 5:1</h2>
+        <div class="case-board">
+          <div class="case-row"><div class="case-tag">2 : 2 : 2</div><div><strong>세 쌍의 인연, 모두 금이 가 있음.</strong> 중앙의원회(양의사↔사제) / 왕이 부른 둘(역병의사↔한의사, 그런데 온 것은 호준이 아니라 호정) / 재상가 추천(침술사↔부적술사, 부적술사는 배신을 의심).</div></div>
+          <div class="case-row"><div class="case-tag">3 : 3</div><div><strong>사제의 심문</strong>으로 역병의사·침술사·부적술사가 이단 혐의자로 한데 묶입니다. 소명파 셋이 자동으로 한편이 되는 구도입니다.</div></div>
+          <div class="case-row"><div class="case-tag" style="color:var(--red)">2 : 4</div><div><strong>진범의 승리 구도.</strong> 양의사가 한의사까지 이단 쪽으로 밀어 넣으면 판이 넘어갑니다. 엔딩 3과 엔딩 5의 형태가 바로 이것입니다.</div></div>
+          <div class="case-row"><div class="case-tag" style="color:var(--gold)">5 : 1</div><div><strong>저주 실패와 독 제거가 증명되는 순간</strong> 사제가 생각을 바꿉니다. 거짓말을 못 하는 사람이 맹신을 거두면 양의사는 고립되고, 부활 국면에서 끝까지 반대하는 사람은 그 하나만 남습니다.</div></div>
+        </div>
+        <p>즉 이 게임의 승부처는 <strong style="color:var(--ink-strong)">사제를 어느 쪽이 먼저 설득하는가</strong>입니다. 양의사에게 사제는 방패이고, 나머지 다섯에게는 열쇠입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--priest)">
+        <p class="script-kicker">&#12609;</p>
+        <h2>4단계는 왜 점수가 아니라 성격을 묻나</h2>
+        <p>1~3단계를 통과한 순간 <strong style="color:var(--ink-strong)">왕은 이미 살아납니다.</strong> 엔딩 1이든 2든 그렇습니다. 그래서 역병의사의 ?점은 그 시점에 확정되고, 양의사의 왕자파 3점도 그 시점에 사라집니다. <strong>4단계에서 점수가 걸린 사람은 사제 하나뿐입니다.</strong></p>
+        <p>남은 다섯에게는 잃을 것도 얻을 것도 없습니다. 그러니 이 자리의 선택은 <strong style="color:var(--ink-strong)">계산이 아니라 사람</strong>을 묻습니다. 이 게임에서 점수가 잠긴 뒤에 오는 선택은 여기뿐입니다.</p>
+        <div class="evidence-grid">
+          <div class="evidence-card"><strong>성수는 물건이다</strong><span>누구의 손에서도 한 번은 반응합니다. 〈성수〉 카드를 마셔 보면 사제는 <em>"짭짤하지만, 균형이 느껴집니다"</em>라고 답합니다 &mdash; 타사칼은 균형의 신이고, 그 물에는 신의 몫이 담겨 있습니다.</span></div>
+          <div class="evidence-card"><strong>맨손의 불은 능력이다</strong><span>성물 없이 불을 피우는 것은 사제만 할 수 있습니다. 대신할 사람이 없습니다.</span></div>
+        </div>
+        <p>이 둘이 갈라져 있기 때문에 <strong>양의사의 방해가 실제로 작동합니다.</strong> 병을 깨면 물이 사라지고, 이 방에서 불을 피울 수 있는 사람이 <strong style="color:var(--ink-strong)">사제 하나로 줄어듭니다.</strong> 사제까지 묶인 판이라면 그것으로 끝입니다.</p>
+        <p>그리고 사제의 답은 셋입니다 &mdash; <strong>내가 든다 / 들지 않되 막지도 않는다 / 거둔다.</strong> 가운데 것이 있어야 그의 거부가 무효가 되지 않습니다. 남의 손으로 왕이 살아나도 그것은 <strong style="color:var(--ink-strong)">그가 연 문</strong>이기 때문입니다. 제 손을 대고 싶지 않지만 사람이 죽는 것도 보기 싫은 사람에게, 그것은 거짓을 말할 수 없는 자가 쓸 수 있는 유일한 회피이기도 합니다.</p>
+        <p class="reading-order-note">10년 전 공주의 곁에서는 타사칼의 사제들이 자리를 비웠고, 아무도 불을 들지 않았으므로 풍수사는 그대로 맞았습니다. 오늘 밤 <strong>누가 손을 들었는가</strong>는 그때 비어 있던 자리에 대한 대답입니다. 그 손이 사제의 것이 아니어도 상관없습니다.</p>
+      </section>
+
+      <!-- ══════════ 3. 캐릭터별 노트 ══════════ -->
+      <section class="script-block">
+        <p class="script-kicker">PART 3</p>
+        <h2>캐릭터별 노트</h2>
+        <p>무엇을 원했고, 왕에게 무엇을 했으며, 어떻게 의심을 피하고, 무엇을 열도록 놓여 있었는가.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--western)">
+        <h2>양의사 &middot; 율리시스</h2>
+        <p><strong>원하는 것</strong> &mdash; 자리. 왕의 예산 삭감 예고는 그에게 파멸 통보였고, 왕자파는 의료 총책임자 자리를 약속했습니다.</p>
+        <p><strong>왕에게 한 일</strong> &mdash; <strong style="color:var(--red)">훔친 한약에 증폭약을 섞어 사흘치를 한 번에 먹였습니다.</strong> 이 방에서 왕을 죽인 손은 이것 하나뿐입니다. 동시에 4년 전 자신을 모욕한 호준에게 죄를 씌우려 했습니다.</p>
+        <p><strong>의심을 피하는 법</strong> &mdash; 자기를 변호하지 않고 <strong>남을 가리킵니다.</strong> 이단이라는 이미 존재하는 프레임에 올라타면 그가 할 말은 많지 않아도 됩니다.</p>
+        <p><strong>이 인물이 여는 것</strong> &mdash; 〈약통과 조제 메모〉. 그가 끝까지 감추려 하는 카드가 사인의 마지막 고리입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--priest)">
+        <h2>사제 &middot; 클라크</h2>
+        <p><strong>원하는 것</strong> &mdash; 선한 자를 구하고 악한 자를 가려내는 것. 진심입니다.</p>
+        <p><strong>왕에게 한 일</strong> &mdash; 화로를 끄고 창을 열었습니다. <strong>왕을 지키려는 처치였습니다.</strong> 살의는 없습니다.</p>
+        <p><strong>의심을 피하는 법</strong> &mdash; 피하지 않습니다. 거짓을 말할 수 없으니 <strong>묻지 않으면 답하지 않는</strong> 것이 그의 유일한 방어입니다. 그래서 이 인물에게는 질문을 던지는 쪽이 이깁니다.</p>
+        <p><strong>이 인물이 여는 것</strong> &mdash; 〈붉은 부적〉과 저주 무효, 그리고 마지막에는 진범의 알리바이. 판을 뒤집는 열쇠이자, 그의 확신은 <strong>물증으로 깨지라고 일부러 단단하게 만든 미끼</strong>입니다.</p>
+        <p><strong>마지막 자리</strong> &mdash; 부활이 여기까지 왔다면 4단계는 그의 몫입니다. 성수를 들든, 맨손에서 불을 피우든, <strong>들지 않되 남의 손을 막지 않든.</strong> 이 게임에서 유일하게 그의 ?점이 걸린 지점이며, 평생 이단이라 불러 온 것 앞에서 무엇을 할지를 스스로 정해야 합니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--plague)">
+        <h2>역병의사 &middot; 사일러스</h2>
+        <p><strong>원하는 것</strong> &mdash; 왕의 부활. 두 은혜(왕과 스승)를 갚는 유일한 길입니다.</p>
+        <p><strong>왕에게 한 일</strong> &mdash; 독침을 뽑고 독혈을 빨아냈습니다. <strong>살렸습니다.</strong></p>
+        <p><strong>의심을 피하는 법</strong> &mdash; 피할 수단이 거의 없습니다. 활명술을 아는 것 자체가 이단의 증거로 쓰이기 때문입니다.</p>
+        <p><strong>이 인물이 여는 것</strong> &mdash; <em>"독은 확실히 뺐는데 왕은 폭맥증으로 죽었다."</em> 이 한마디가 사인을 독과 저주 밖으로 밀어냅니다. 사인을 아는 유일한 사람이 진범이라면, <strong>사인이 아님을 아는 유일한 사람이 이 인물입니다.</strong></p>
+        <p class="reading-order-note">※ 그가 부르는 '스승님'은 두 사람입니다 &mdash; 어릴 적 목숨을 구해 준 <strong>침술사</strong>와, 활명술을 전수한 <strong>풍수사</strong>. 사제가 앞의 것을 듣고 뒤의 것으로 오해하는 지점이 3 대 3 전선의 방아쇠입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--acupunct)">
+        <h2>침술사</h2>
+        <p><strong>원하는 것</strong> &mdash; 인질로 잡힌 소명파와, 지켜야 할 두 아이(부적술사와 호정)의 안전. 그리고 재상가에서 빠져나갈 활로.</p>
+        <p><strong>왕에게 한 일</strong> &mdash; <strong style="color:var(--red)">독침과 혈류 차단침을 놓았습니다.</strong> 살의는 있었으나, 그 독은 뽑혔습니다. 한의사의 수면향에 졸아 독침과 독병을 두고 나온 것이 그의 실수입니다.</p>
+        <p><strong>의심을 피하는 법</strong> &mdash; 침묵과 은폐. 〈한 칸이 빈 세침통〉을 내놓지 않는 것이 최선이지만, <strong>그 카드가 없으면 부활도 완성되지 않습니다.</strong></p>
+        <p><strong>이 인물이 여는 것</strong> &mdash; 자백. 4년 전 연쇄 의문사와 왕자파의 존재가 그 입에서만 나옵니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--talisman)">
+        <h2>부적술사</h2>
+        <p><strong>원하는 것</strong> &mdash; 스승의 복수와 소명파의 명예 회복.</p>
+        <p><strong>왕에게 한 일</strong> &mdash; <strong style="color:var(--red)">저주를 걸었습니다.</strong> 저무는 해·왕궁 입구·침소·머리맡 부적·저주 인형이 일렬을 이뤄야 발동하는데, 사제가 4시에 부적을 떼어 <strong>실패했습니다.</strong> 본인은 성공했다고 확신합니다.</p>
+        <p><strong>의심을 피하는 법</strong> &mdash; 신분을 감춘 채 부적술 가게 주인으로 행세합니다. 다만 스승 이야기가 나오면 참지 못합니다.</p>
+        <p><strong>이 인물이 여는 것</strong> &mdash; 소명파 음해의 추적선. 원흉이 왕이 아니라 <strong>양의사</strong>였음을 밝히는 길이 그의 3점입니다. 원수를 잘못 짚은 채 시작하는 인물입니다.</p>
+      </section>
+
+      <section class="script-block" style="--section-color:var(--herbal)">
+        <h2>한의사 &middot; 호정</h2>
+        <p><strong>원하는 것</strong> &mdash; 아버지와 형에게 가져갈 실적. 형 호준의 쌍둥이 동생이며, 형과 아버지가 율리시스를 두려워해 앓아누운 탓에 대신 왔습니다.</p>
+        <p><strong>왕에게 한 일</strong> &mdash; 탕약과 수면향. <strong>왕을 잠시 호전시킨 선의의 처방이었습니다.</strong> 살의는 없고, 오히려 자기가 약을 잘못 달인 것은 아닌지 혼자 두려워합니다.</p>
+        <p><strong>의심을 피하는 법</strong> &mdash; 거의 없습니다. 의학 지식이 없어 말이 막히고, RP 보너스까지 그를 수상하게 만듭니다. <strong style="color:var(--ink-strong)">이 게임에서 가장 무고하면서 가장 의심받도록 설계된 자리입니다.</strong></p>
+        <p><strong>이 인물이 여는 것</strong> &mdash; 목격. 벽의 부적, 다르게 접힌 약봉투, 양의사의 궁 복귀와 비명. 그리고 형의 수첩은 <strong>부활 1단계의 유일한 처방</strong>입니다.</p>
+        <p class="reading-order-note">※ 그래서 진범에게 최적의 수는 <strong>한의사를 최다 득표자로 만드는 것</strong>이었습니다. 무고한 사람을 묶으면 왕께 올릴 약이 사라지고, 부활은 시작조차 되지 못합니다.</p>
+      </section>
+
+      <section class="script-block final-block">
+        <p class="script-kicker">CLOSING</p>
+        <h2>안개의 정체</h2>
+        <p>세 갈래의 살의가 한 침소에서 겹쳤습니다. 그래서 저마다 <em>"내가, 혹은 내 탓에 왕을 죽였다"</em>고 오해하거나 확신했고, <strong style="color:var(--ink-strong)">그 오해가 진실을 가리는 안개가 되었습니다.</strong></p>
+        <p>부적술사는 자기 저주가 죽였다고 믿었고, 침술사는 자기 독이 죽였다고 믿었고, 한의사는 자기 약을 의심했습니다. 셋 다 아니었습니다. 정작 아무것도 착각하지 않은 사람은 <strong>진실을 아는 진범</strong>과, <strong>사인이 딴 데 있음을 아는 역병의사</strong> 둘뿐이었습니다.</p>
+        <p>이 게임이 어려웠다면, 단서가 부족해서가 아니라 <strong>여섯이 각자 다른 죄책감을 안고 말을 아꼈기 때문</strong>입니다. 그것이 설계의 전부입니다.</p>
+      </section>
+    </article>
+
+    <a href="/" class="story-link" style="margin-top:34px">
+      <span class="story-link-copy"><strong>플레이해 주셔서 감사합니다</strong><span>Project DullG의 다른 작품을 보러 갑니다.</span></span>
+      <span class="ending-arrow">&#10095;</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="7-scoring.html" data-keep-query>채점 안내로</a>
+      <a href="6-truth.html" data-keep-query>진상 해설로</a>
+      <a href="index.html" data-keep-query>엔딩 첫 페이지</a>
+    </div>
+    <footer class="footer">의사가 너무 많아! &middot; 설계 노트</footer>
+  </main>
+  <script src="state.js?v=6"></script>
+</body>
+</html>

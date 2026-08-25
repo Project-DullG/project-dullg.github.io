@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 북 — 투표 결과에 따른 최종 결말">
   <title>의사가 너무 많아! · 엔딩</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -24,7 +24,8 @@
 
     <section class="vote-form">
       <div class="guide-title">최다 득표자 선택</div>
-      <p style="color:#cec5b8;font-size:.96rem;line-height:1.72;margin-top:8px">가장 많은 표를 받아 <strong style="color:var(--ink-strong)">구속된 인물</strong>을 고릅니다. 두 번째 지목에서도 표가 갈렸다면 규칙에 따라 <strong style="color:var(--ink-strong)">해당 후보 전원이 구속</strong>되므로, 그 인물을 모두 선택합니다.</p>
+      <p style="color:#cec5b8;font-size:.96rem;line-height:1.72;margin-top:8px">가장 많은 표를 받아 <strong style="color:var(--ink-strong)">구속된 인물</strong>을 고릅니다. 인물끼리 표가 같아 두 번째 지목에서도 갈렸다면 규칙에 따라 <strong style="color:var(--ink-strong)">해당 후보 전원이 구속</strong>되므로, 그 인물을 모두 선택합니다.</p>
+      <p class="reading-order-note">※ <strong>하늘이 최다 득표라면, 인물과 표가 같더라도 아무도 구속하지 않습니다.</strong> 하늘 표는 구속할 필요가 있어 보이는 자가 없다는 뜻이므로, 인물 표와 같은 수라면 구속해야 한다는 확신이 절반에 못 미치는 것입니다. 이 경우 재투표하지 않고 아래 &lsquo;아무도 구속하지 않음&rsquo;을 고릅니다.</p>
 
       <div class="vote-grid" id="vote-grid">
         <label class="vote-option c-talisman"><input type="checkbox" value="talisman"><span><span class="vote-name">부적술사</span><span class="vote-role">1시 진료</span></span></label>
@@ -53,7 +54,7 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=2"></script>
+  <script src="state.js?v=6"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
@@ -86,7 +87,12 @@
 
     function confirm() {
       var arrested = noneBox.checked ? [] : picked();
-      nextHref = 'declare.html' + DE.query({ arrested: arrested });
+      var v = DE.judge(arrested);
+      // 역병의사 구속 판은 추가 입력 없이 엔딩이 확정되므로 진실의 문을 거치지 않는다.
+      // 역병의사가 묶인 판은 선언할 사람 자체가 없으므로 곧바로 경과 낭독으로 간다.
+      nextHref = v.reviveBlocked
+        ? '5-account.html' + DE.query({ arrested: arrested, revive: false })
+        : '1-declare.html' + DE.query({ arrested: arrested });
       modalQ.innerHTML = arrested.length
         ? '<strong>' + DE.names(arrested).join(', ') + '</strong>가 지목된 것이 맞습니까?'
         : '아무도 지목하지 않은 것이 맞습니까?';

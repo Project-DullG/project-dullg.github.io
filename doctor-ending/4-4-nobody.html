@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! 엔딩 — 불을 피울 손이 없다">
+  <title>의사가 너무 많아! · 불을 피울 손</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container" style="--card-color:var(--ash);--card-glow:var(--ash)">
+    <header class="header">
+      <a href="4-4-descent.html" class="tag" data-keep-query>STEP 04</a>
+      <h1>불을 피울 손이 없습니다</h1>
+      <p class="subtitle">아래 본문을 소리 내어 읽습니다.</p>
+    </header>
+    <div class="progress" aria-label="진행 상황">
+      <span class="progress-dots" aria-hidden="true"><i class="is-done"></i><i class="is-done"></i><i class="is-done"></i><i class="is-current"></i><i></i></span>
+      <span class="progress-label"><strong>4</strong> / 5 · 부활 판정</span>
+    </div>
+
+    <div data-session-recap hidden></div>
+
+    <section class="verdict is-blocked">
+      <p class="verdict-kicker">4단계 · 정화</p>
+      <h2>불을 피울 손이 없습니다</h2>
+      <p>탁자 끝에 있던 성수는 조금 전 깨졌습니다. 맨손에서 불을 피울 수 있는 유일한 사람은 포승줄에 묶여 있습니다. <strong>물도, 손도 남지 않았습니다.</strong></p>
+      <p>남은 자들이 바닥에 흩어진 물기를 보지만, 그것으로 할 수 있는 일은 없습니다. 사일러스의 몸에서 빛이 계속 빠져나갑니다.</p>
+      <p class="reading-order-note">포박된 <strong>사제</strong> 담당 플레이어는 선언하십시오 &mdash; <strong>"제 차례지만, 포박되어 불을 피울 수 없습니다."</strong></p>
+    </section>
+
+    <a href="#" id="go" class="next-step-btn" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
+      <span class="next-kicker">다음 장면</span>선언을 마쳤다면 &#10095;
+      <span class="next-sub">마지막 장면이 남아 있습니다.</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="4-4-descent.html" data-keep-query>이전 장면으로</a>
+      <a href="index.html">처음부터 다시</a>
+    </div>
+    <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
+  </main>
+  <script src="state.js?v=6"></script>
+  <script>
+  (function () {
+    var DE = window.DoctorEnding;
+    document.getElementById('go').addEventListener('click', function (e) {
+      e.preventDefault();
+      DE.go('hands', { priest: 'absent', hands: 'none' });
+    });
+  })();
+  </script>
+</body>
+</html>
