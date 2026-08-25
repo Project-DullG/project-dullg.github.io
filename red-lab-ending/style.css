@@ -1379,8 +1379,57 @@ h1 {
   word-break: keep-all;
 }
 
-.movement-heading {
+.movement-details {
   margin-top: 30px;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.movement-details > summary {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 58px;
+  padding: 14px 0;
+  color: var(--ink-strong);
+  font-size: .92rem;
+  font-weight: 800;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+}
+
+.movement-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.movement-details > summary::after {
+  display: grid;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  color: var(--ink-strong);
+  content: "+";
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.movement-details[open] > summary::after {
+  content: "-";
+}
+
+.movement-details > summary:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 4px;
+}
+
+.movement-details .movement-list {
+  border-top: 1px solid var(--line);
 }
 
 .movement-list {
