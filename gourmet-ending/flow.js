@@ -15,90 +15,6 @@
     document.head.appendChild(script);
   }
 
-  function setupTruthReader() {
-    const truthFlow = document.querySelector('.truth-flow');
-    if (!truthFlow) return;
-
-    const chapters = Array.from(truthFlow.querySelectorAll(':scope > .chapter[id]'));
-    if (chapters.length < 2) return;
-
-    const controls = document.createElement('nav');
-    controls.className = 'truth-reader-controls';
-    controls.setAttribute('aria-label', '사건의 전말 항목 이동');
-    controls.innerHTML = `
-      <button type="button" class="truth-reader-btn truth-reader-prev" aria-label="이전 항목" title="이전 항목">
-        <i data-lucide="arrow-left" aria-hidden="true"></i>
-      </button>
-      <div class="truth-reader-status" aria-live="polite">
-        <span class="truth-reader-track" aria-hidden="true"><span></span></span>
-        <span class="truth-reader-title" data-truth-title></span>
-        <span class="truth-reader-count"><strong data-truth-current>1</strong> / ${chapters.length}</span>
-      </div>
-      <button type="button" class="truth-reader-btn truth-reader-next" aria-label="다음 항목" title="다음 항목">
-        <i data-lucide="arrow-right" aria-hidden="true"></i>
-      </button>
-      <a href="index.html" class="truth-reader-hub" aria-label="엔딩 목록" title="엔딩 목록">
-        <i data-lucide="layout-grid" aria-hidden="true"></i>
-      </a>
-    `;
-    document.querySelector('main')?.appendChild(controls);
-
-    const previousButton = controls.querySelector('.truth-reader-prev');
-    const nextButton = controls.querySelector('.truth-reader-next');
-    const title = controls.querySelector('[data-truth-title]');
-    const current = controls.querySelector('[data-truth-current]');
-    const track = controls.querySelector('.truth-reader-track span');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let currentChapter = 0;
-    let ticking = false;
-
-    function chapterTitle(chapter) {
-      return chapter.querySelector('.script-kicker')?.textContent.trim() || '';
-    }
-
-    function update() {
-      const marker = window.scrollY + window.innerHeight * .3;
-      currentChapter = 0;
-      chapters.forEach((chapter, index) => {
-        if (chapter.offsetTop <= marker) currentChapter = index;
-      });
-
-      const start = truthFlow.offsetTop;
-      const total = Math.max(truthFlow.offsetHeight - window.innerHeight * .55, 1);
-      const read = Math.min(Math.max((window.scrollY - start + window.innerHeight * .2) / total, 0), 1);
-
-      title.textContent = chapterTitle(chapters[currentChapter]);
-      current.textContent = String(currentChapter + 1);
-      track.style.width = `${read * 100}%`;
-      previousButton.disabled = currentChapter === 0;
-      nextButton.disabled = currentChapter === chapters.length - 1;
-      ticking = false;
-    }
-
-    function scheduleUpdate() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    }
-
-    function moveTo(index) {
-      const chapter = chapters[index];
-      if (!chapter) return;
-      const offset = window.innerWidth <= 600 ? 76 : 20;
-      const top = chapter.getBoundingClientRect().top + window.scrollY - offset;
-      window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
-      const url = new URL(window.location.href);
-      url.hash = chapter.id;
-      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
-    }
-
-    previousButton.addEventListener('click', () => moveTo(currentChapter - 1));
-    nextButton.addEventListener('click', () => moveTo(currentChapter + 1));
-    window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', scheduleUpdate);
-    requestAnimationFrame(update);
-  }
-
   document.querySelectorAll('.ending-arrow').forEach((arrow) => {
     arrow.innerHTML = '<i data-lucide="chevron-right" aria-hidden="true"></i>';
   });
@@ -143,7 +59,6 @@
   setStage(initialStage);
 
   if (isTruthPage) {
-    setupTruthReader();
     loadIcons();
     return;
   }

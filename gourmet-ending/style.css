@@ -1492,106 +1492,6 @@ body {
   outline-offset: 3px;
 }
 
-.truth-page {
-  padding-bottom: calc(120px + env(safe-area-inset-bottom));
-}
-
-.truth-reader-controls {
-  position: fixed;
-  bottom: max(16px, env(safe-area-inset-bottom));
-  left: 50%;
-  z-index: 60;
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
-  gap: 6px;
-  align-items: center;
-  width: min(680px, calc(100% - 32px));
-  min-height: 62px;
-  padding: 8px;
-  border: 1px solid rgba(212, 168, 85, .28);
-  border-radius: 8px;
-  background: rgba(12, 12, 16, .94);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
-  transform: translateX(-50%);
-  backdrop-filter: blur(12px);
-}
-
-.truth-reader-btn,
-.truth-reader-hub {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  padding: 0;
-  color: #ededf1;
-  border: 1px solid rgba(255, 255, 255, .13);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, .035);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.truth-reader-btn:hover:not(:disabled),
-.truth-reader-hub:hover {
-  border-color: var(--gold);
-  background: rgba(212, 168, 85, .08);
-}
-
-.truth-reader-btn:disabled {
-  opacity: .28;
-  cursor: default;
-}
-
-.truth-reader-btn svg,
-.truth-reader-hub svg {
-  width: 18px;
-  height: 18px;
-}
-
-.truth-reader-status {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 5px 10px;
-  min-width: 0;
-  padding: 0 7px;
-  line-height: 1.3;
-}
-
-.truth-reader-track {
-  grid-column: 1 / -1;
-  width: 100%;
-  height: 2px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, .13);
-}
-
-.truth-reader-track span {
-  display: block;
-  width: 0;
-  height: 100%;
-  background: var(--gold);
-  transition: width .18s linear;
-}
-
-.truth-reader-title {
-  overflow: hidden;
-  color: #e5e5e9;
-  font-size: .78rem;
-  font-weight: 760;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.truth-reader-count {
-  color: var(--dim);
-  font-size: .7rem;
-  white-space: nowrap;
-}
-
-.truth-reader-count strong {
-  color: var(--gold);
-}
-
 .ending-script.is-paged > .story-page {
   margin: 0;
   padding: 0;
@@ -2096,18 +1996,6 @@ body {
     margin-top: 24px;
   }
 
-  .truth-reader-controls {
-    bottom: max(10px, env(safe-area-inset-bottom));
-    grid-template-columns: 44px minmax(0, 1fr) 44px 44px;
-    gap: 4px;
-    width: calc(100% - 24px);
-    padding: 7px;
-  }
-
-  .truth-reader-status {
-    gap: 4px 7px;
-    padding: 0 5px;
-  }
 }
 
 @media (max-width: 420px) {
