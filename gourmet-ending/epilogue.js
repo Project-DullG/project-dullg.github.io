@@ -124,27 +124,27 @@
             "캔디는 촛불을 껐다."
           ]
         },
-        {
-          label: "사건 12년 뒤 · 애쉬의 기록",
-          title: "애쉬의 독백",
-          people: ["애쉬"],
-          tone: "monologue",
-          blocks: [
-            "왕실 요리사 승강전에서 왕실 요리장이 죽은 지도 12년이 지났다.",
-            "다니엘은 왕실 요리장을 살해하고 국왕에게 독이 든 복어국을 먹인 죄로 사형을 선고받았다. 그는 재판이 끝날 때까지 범행을 인정하지 않았고, 형은 그대로 집행됐다.",
-            "나는 지금도 캔디와 함께 왕실 주방에서 일한다. 내가 떡볶이에 조살과 과육을 넣은 일은 다니엘의 독살과는 별도로 조사됐다. 왕실 요리장은 내 떡볶이를 먹지 않았고, 과육은 사망 원인도 아니었다. 나는 살인 혐의로 기소되지 않았고 왕실 요리사 자격도 유지했다.",
-            "왕실은 허가 없이 조살과를 사용한 일에 대해, 내가 4년 동안 새로운 동방 식재료의 이름과 사용량, 가열 시간을 기록해 제출하도록 했다. 조살과는 다시 사용하지 않았다. 지금은 다른 요리사들이 올린 동방 식재료 기록을 내가 확인한다.",
-            "한동안은 4년 전 승강전에서 내가 합격하고 다니엘이 탈락한 일을 떠올렸다. 내가 아니라 다니엘이 왕실 요리사가 됐다면 왕실 요리장은 죽지 않았을지도 모른다고 생각한 적도 있었다.",
-            "하지만 승강전에서 떨어진 사람은 다니엘만이 아니었다. 복어국에 조살과 씨앗을 넣은 사람은 다니엘뿐이었다. 자신의 두 번째 요리를 먹지 않았다는 이유로 왕실 요리장을 죽게 만든 것도 다니엘이었다. 내가 합격했다는 사실로 그의 범행을 설명할 수는 없었다.",
-            "다니엘의 재판이 끝난 날, 캔디는 내 해파리를 설탕물에 담근 사람이 자신이라고 말했다. 나는 곧바로 용서하지 않았다. 캔디도 다시는 내 재료에 손대지 않았다.",
-            "캔디가 왕실 요리장을 아버지라고 내게 직접 말한 것은 사건이 일어난 지 1년 뒤였다. 그전까지 둘은 왕실 주방에서 서로 아는 척조차 하지 않았다. 캔디는 아버지의 도움을 받아 왕실 요리사가 됐다는 사실도 숨기지 않았다.",
-            "아버지의 도움으로 시작한 자리였지만, 그 뒤의 평가는 캔디가 직접 받았다. 사건 4년 뒤 캔디는 제과 부문 최고점을 받았고, 오늘은 왕실 요리장으로 임명됐다.",
-            "사건 뒤 류진환을 다시 본 것은 4년 뒤 열린 승강전이었다. 그는 고수 쌀국수로 합격했고, 왕실 주방에 들어온 첫날부터 동방 식재료 기록을 내게 제출해야 했다. 나는 조살과를 함께 연구하던 이유도, 6년 전 나를 내보낸 이유도 그날은 묻지 않았다.",
-            "류진환은 내가 고수를 싫어한다는 것을 기억하고 있었다. 그는 시식용 쌀국수에서 고수를 따로 덜어 냈고, 나는 검수표에 서명한 뒤 그를 다시 아저씨라고 불렀다.",
-            "오늘 캔디는 다음 연회 메뉴를 검토했고, 류진환은 새 국수의 조리 기록을 가져왔다. 나는 재료 이름과 사용량, 가열 시간을 마지막 줄까지 확인한 뒤 검수표에 서명했다. 오늘 왕실 수라에는 기록되지 않은 재료가 하나도 들어가지 않았다."
-          ]
-        }
-      ]
+      ],
+      postscript: {
+        label: "사건 12년 뒤",
+        title: "왕실 주방에서",
+        people: ["애쉬"],
+        tone: "monologue",
+        blocks: [
+          "왕실 요리사 승강전에서 왕실 요리장이 죽은 지도 12년이 지났다.",
+          "다니엘은 왕실 요리장을 살해하고 국왕에게 독이 든 복어국을 먹인 죄로 사형을 선고받았다. 그는 재판이 끝날 때까지 범행을 인정하지 않았고, 형은 그대로 집행됐다.",
+          "나는 지금도 캔디와 함께 왕실 주방에서 일한다. 내가 떡볶이에 조살과 과육을 넣은 일은 다니엘의 독살과는 별도로 조사됐다. 왕실 요리장은 내 떡볶이를 먹지 않았고, 과육은 사망 원인도 아니었다. 나는 살인 혐의로 기소되지 않았고 왕실 요리사 자격도 유지했다.",
+          "왕실은 허가 없이 조살과를 사용한 일에 대해, 내가 4년 동안 새로운 동방 식재료의 이름과 사용량, 가열 시간을 기록해 제출하도록 했다. 조살과는 다시 사용하지 않았다. 지금은 다른 요리사들이 올린 동방 식재료 기록을 내가 확인한다.",
+          "한동안은 4년 전 승강전에서 내가 합격하고 다니엘이 탈락한 일을 떠올렸다. 내가 아니라 다니엘이 왕실 요리사가 됐다면 왕실 요리장은 죽지 않았을지도 모른다고 생각한 적도 있었다.",
+          "하지만 승강전에서 떨어진 사람은 다니엘만이 아니었다. 복어국에 조살과 씨앗을 넣은 사람은 다니엘뿐이었다. 자신의 두 번째 요리를 먹지 않았다는 이유로 왕실 요리장을 죽게 만든 것도 다니엘이었다. 내가 합격했다는 사실로 그의 범행을 설명할 수는 없었다.",
+          "다니엘의 재판이 끝난 날, 캔디는 내 해파리를 설탕물에 담근 사람이 자신이라고 말했다. 나는 곧바로 용서하지 않았다. 캔디도 다시는 내 재료에 손대지 않았다.",
+          "캔디가 왕실 요리장을 아버지라고 내게 직접 말한 것은 사건이 일어난 지 1년 뒤였다. 그전까지 둘은 왕실 주방에서 서로 아는 척조차 하지 않았다. 캔디는 아버지의 도움을 받아 왕실 요리사가 됐다는 사실도 숨기지 않았다.",
+          "아버지의 도움으로 시작한 자리였지만, 그 뒤의 평가는 캔디가 직접 받았다. 사건 4년 뒤 캔디는 제과 부문 최고점을 받았고, 오늘은 왕실 요리장으로 임명됐다.",
+          "사건 뒤 류진환을 다시 본 것은 4년 뒤 열린 승강전이었다. 그는 고수 쌀국수로 합격했고, 왕실 주방에 들어온 첫날부터 동방 식재료 기록을 내게 제출해야 했다. 나는 조살과를 함께 연구하던 이유도, 6년 전 나를 내보낸 이유도 그날은 묻지 않았다.",
+          "류진환은 내가 고수를 싫어한다는 것을 기억하고 있었다. 그는 시식용 쌀국수에서 고수를 따로 덜어 냈고, 나는 검수표에 서명한 뒤 그를 다시 아저씨라고 불렀다.",
+          "오늘 캔디는 다음 연회 메뉴를 검토했고, 류진환은 새 국수의 조리 기록을 가져왔다. 나는 재료 이름과 사용량, 가열 시간을 마지막 줄까지 확인한 뒤 검수표에 서명했다. 오늘 왕실 수라에는 기록되지 않은 재료가 하나도 들어가지 않았다."
+        ]
+      }
     },
     "ash-accused": {
       title: "애쉬가 왕실 요리사 자격을 잃은 뒤",
@@ -366,9 +366,7 @@
     return `<p class="dialogue epilogue-dialogue" data-speaker="${block.speaker}">${block.text}</p>`;
   }
 
-  const section = document.createElement("section");
-  const titleId = `epilogue-${outcome}`;
-  const scenes = copy.scenes.map((scene, index) => {
+  function sceneMarkup(scene, index, titleId) {
     const sceneId = `${titleId}-${index + 1}`;
     const blocks = scene.blocks.map(blockMarkup).join("");
     return [
@@ -383,15 +381,37 @@
       blocks,
       '</div>'
     ].join("");
-  }).join("");
+  }
 
-  section.className = "chapter gourmet-epilogue";
-  section.setAttribute("aria-labelledby", titleId);
-  section.innerHTML = [
-    '<p class="script-kicker">후일담</p>',
-    `<h2 id="${titleId}">${copy.title}</h2>`,
-    copy.intro ? `<p class="epilogue-intro">${copy.intro}</p>` : "",
-    `<div class="epilogue-scenes">${scenes}</div>`
-  ].join("");
-  article.appendChild(section);
+  function appendPage({ kicker, title, intro = "", scenes, modifier = "" }, pageIndex) {
+    const section = document.createElement("section");
+    const titleId = `epilogue-${outcome}-${pageIndex + 1}`;
+    const sceneHtml = scenes.map((scene, index) => sceneMarkup(scene, index, titleId)).join("");
+
+    section.className = `chapter gourmet-epilogue${modifier ? ` ${modifier}` : ""}`;
+    section.setAttribute("aria-labelledby", titleId);
+    section.innerHTML = [
+      `<p class="script-kicker">${kicker}</p>`,
+      `<h2 id="${titleId}">${title}</h2>`,
+      intro ? `<p class="epilogue-intro">${intro}</p>` : "",
+      `<div class="epilogue-scenes">${sceneHtml}</div>`
+    ].join("");
+    article.appendChild(section);
+  }
+
+  appendPage({
+    kicker: "후일담",
+    title: copy.title,
+    intro: copy.intro,
+    scenes: copy.scenes
+  }, 0);
+
+  if (copy.postscript) {
+    appendPage({
+      kicker: "애쉬의 기록",
+      title: "애쉬의 독백",
+      scenes: [copy.postscript],
+      modifier: "gourmet-epilogue-postscript"
+    }, 1);
+  }
 }());
