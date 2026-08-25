@@ -454,6 +454,7 @@ h1 {
 .ending-d { --card-color: var(--pink); --card-text: #f472b6; --card-glow: rgba(236, 72, 153, .3); }
 .ending-e { --card-color: var(--slate); --card-text: #b5c0d2; --card-glow: rgba(111, 126, 152, .3); }
 .ending-f { --card-color: var(--violet); --card-text: #b09aff; --card-glow: rgba(139, 92, 246, .3); }
+.ending-truth { --card-color: var(--gold); --card-text: #e4bd71; --card-glow: var(--gold-glow); }
 
 .story-link {
   display: block;
