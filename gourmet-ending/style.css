@@ -34,7 +34,7 @@
   --ash-text: #c3cad6;
   --ash-soft: var(--slate-soft);
   --ryu: var(--brown);
-  --ryu-text: #d4a855;
+  --ryu-text: #c99a62;
   --candy: var(--gold);
   --candy-text: #f1cf87;
   --earth: var(--brown);
@@ -1523,7 +1523,7 @@ body {
   --speaker-text: var(--card-text, var(--gold));
   margin: 29px 0;
   padding: 13px 0 13px 17px;
-  color: #f4f4f6 !important;
+  color: var(--speaker-text) !important;
   border-left: 2px solid var(--speaker-color);
   font-weight: 650;
 }
