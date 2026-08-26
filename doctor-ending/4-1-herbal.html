@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 판정 1단계">
   <title>의사가 너무 많아! · 부활 판정 1</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--herbal);--card-glow:var(--herbal-soft)">
@@ -35,18 +35,18 @@
     <div class="ending-decision" style="--card-color:var(--herbal)">
       <h2>폭맥증으로 파열된 혈관을 닫으려면, 수첩에 적힌 처방대로 약을 지어야 합니다.</h2>
       <p class="reading-order-note">※ <strong>한의사</strong>는 〈형의 당부 수첩〉을 테이블에 내놓으십시오.</p>
-      <p><strong>한의사가 구속되어 있습니까?</strong></p>
+      <p class="decision-ask">한의사가 구속되어 있지 않은 상태입니까?</p>
       <div class="pick-list" id="picks">
-        <button type="button" class="pick" style="--card-color:var(--herbal)" data-held="no">
-          <span class="pick-key">아니오</span>
+        <button type="button" class="pick is-go" data-held="no">
+          <span class="pick-key">예</span>
           <span class="pick-copy">
             <span class="pick-title">한의사가 자리에 있습니다</span>
-            <span class="pick-desc">수첩을 펼치고, 무엇이 얼마나 남았는지 아는 사람이 그 자리에 있습니다.</span>
+            <span class="pick-desc">〈형의 당부 수첩〉을 펼치고, 처방대로 약재를 고릅니다.</span>
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--red)" data-held="yes">
-          <span class="pick-key">예</span>
+        <button type="button" class="pick is-detour" data-held="yes">
+          <span class="pick-key">아니오</span>
           <span class="pick-copy">
             <span class="pick-title">한의사는 포박되어 있습니다</span>
             <span class="pick-desc">압수된 짐에서 수첩은 나왔지만, 남은 약재를 가늠할 사람이 없습니다.</span>
@@ -57,12 +57,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="3-ritual.html" data-keep-query>의식 준비 화면으로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="3-ritual.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

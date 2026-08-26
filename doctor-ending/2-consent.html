@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 의사들은 역천의 의식을 시작합니까?">
   <title>의사가 너무 많아! · 역천의 의식</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -27,15 +27,15 @@
     <section class="verdict is-open" style="--card-color:var(--plague)">
       <p class="verdict-kicker">역병의사 담당 플레이어가 소리 내어 읽습니다</p>
       <p>역병의사는 앞으로 나서며 이야기합니다.</p>
-      <p style="color:var(--ink-strong);font-style:italic">"저는 10년 전 공주를 살리고 실종된 풍수사가 소멸하기 전 마지막으로 그에게 기술을 직접 전수받은 사람입니다. <span id="speech-lead"></span>, 여기에 있는 최고의 의원들과 함께라면 우리가 힘을 합쳐 왕을 살릴 수 있을 겁니다. 이 노트에 적힌 단계를 따라 왕을 부활시켜야 합니다. 저 혼자서는 모든 일을 할 수 없으니, 의원 여러분들의 도움이 절실합니다."</p>
+      <p style="color:var(--ink-strong);font-style:italic">"저는 10년 전 공주를 살리고 사라진 풍수사에게, 그가 소멸하기 전 마지막으로 기술을 직접 전수받은 사람입니다. <span id="speech-lead"></span>, 여기에 있는 최고의 의원들과 함께라면 우리가 힘을 합쳐 왕을 살릴 수 있을 겁니다. 이 노트에 적힌 단계를 따라 왕을 부활시켜야 합니다. 저 혼자서는 모든 일을 할 수 없으니, 의원 여러분의 도움이 절실합니다."</p>
     </section>
 
     <article class="story-panel">
       <p>왕비는 왕이 다시 눈을 뜬다면 의혹이나 왕궁에서 품은 살의는 묻지 않겠다고 했지만, 이 자리에 있는 의사들은 주저할 수밖에 없습니다. 
-        왕의 시신에 손을 대고 부활에 실패한다면, 국교인 타사칼 교단이 왕의 시신을 모독하고 이단 주술을 부린 여러분을 고발할 것이 분명하기 때문입니다. 왕의 죽음이라는 혼란 속에서 왕비가 여러분을 감싸준다는 것을 기대하기는 어렵겠죠.</p>
+        왕의 시신에 손을 대고 부활에 실패한다면, 국교인 타사칼 교단이 왕의 시신을 모독하고 이단 주술을 부린 여러분을 고발할 것이 분명하기 때문입니다. 왕의 죽음이라는 혼란 속에서 왕비가 여러분을 감싸준다는 것을 기대하기는 어렵습니다.</p>
       <p>한편, 왕을 되살려 큰 업적을 세우는 것은 누군가에게는 '자신이 살아남는 유일한 수단'일 수도 있고, '누군가를 구하는' 일이기도 할 것입니다.</p>
       <p>지금부터 최대 5분간, 의사들은 이 위험을 감수할지 논의합니다.</p>
-      <p class="reading-order-note" id="bound-note">※ 포박된 <span id="bound-names"></span>는 몸과 입이 결박되어 있으므로 <strong>이 논의와 결정에 참여하지 않습니다.</strong></p>
+      <p class="reading-order-note" id="bound-note">※ 포박된 <span id="bound-names"></span>는 재갈이 물린 채 결박되어 있으므로 <strong>이 논의와 결정에 참여하지 않습니다.</strong></p>
     </article>
 
     <div class="ending-decision">
@@ -44,7 +44,7 @@
       <p>논의를 마친 의사들의 뜻을 그대로 고릅니다. <strong style="color:var(--ink-strong)">끝까지 결론이 나지 않으면 포박되지 않은 사람들끼리, 역병의사를 포함한 다수결로 정합니다.</strong></p>
 
       <div class="pick-list" id="picks">
-        <button type="button" class="pick" style="--card-color:var(--plague)" data-vote="1">
+        <button type="button" class="pick is-go" data-vote="1">
           <span class="pick-key">시작한다</span>
           <span class="pick-copy">
             <span class="pick-title">의식을 시작한다</span>
@@ -52,7 +52,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--red)" data-vote="0">
+        <button type="button" class="pick is-halt" data-vote="0">
           <span class="pick-key">포기한다</span>
           <span class="pick-copy">
             <span class="pick-title">의식을 포기한다</span>
@@ -74,12 +74,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="1-declare.html" data-keep-query>부활 선언으로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="1-declare.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

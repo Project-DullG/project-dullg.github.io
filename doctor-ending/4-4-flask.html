@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 탁자 끝의 성수병">
   <title>의사가 너무 많아! · 성수병</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--western);--card-glow:var(--western-soft)">
@@ -24,8 +24,9 @@
     <div data-session-recap hidden></div>
 
     <article class="story-panel">
-      <p>모두의 시선이 왕의 몸에 모이던 그 순간 양의사는 탁자 끝에 아슬아슬하게 놓인 성수병을 봅니다.</p>
-      <p>조금 전 낭독된 노트의 마지막 구절이 방 안에 남아 있습니다 &mdash; <strong>"안 그러면 나 같이 되는 거야. 알겠어?"</strong></p>
+      <p data-when-priest="free">모두의 시선이 왕의 몸에 모이던 그 순간 양의사는 탁자 끝에 아슬아슬하게 놓인 성수병을 봅니다.</p>
+      <p data-when-priest="held">모두의 시선이 왕의 몸에 모이던 그 순간 양의사는 압수된 짐 위에 놓인 사제의 성수병을 봅니다.</p>
+      <p>조금 전 낭독된 노트의 마지막 구절이 방 안에 남아 있습니다 &mdash; <strong>"안 그러면 나처럼 되는 거야. 알겠어?"</strong></p>
       <p class="reading-order-note">양의사는 풍수사가 어떻게 사라졌는지를 대강 알고 있습니다. 10년 전에는 저 성수가 없어서 왕을 살리는 대신 풍수사가 희생되었을 것입니다.</p>
       <p class="reading-order-note">모두의 관심이 왕의 시신에 꽂힌 지금이라면, 기회가 있습니다.</p>
     </article>
@@ -33,7 +34,7 @@
     <div class="ending-decision" style="--card-color:var(--western)">
       <h2>양의사는 어떻게 합니까?</h2>
       <div class="pick-list" id="picks">
-        <button type="button" class="pick" style="--card-color:var(--plague)" data-choice="1">
+        <button type="button" class="pick" data-choice="1">
           <span class="pick-key">&#9312;</span>
           <span class="pick-copy">
             <span class="pick-title">가만히 둔다</span>
@@ -41,7 +42,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--western)" data-choice="2">
+        <button type="button" class="pick" data-choice="2">
           <span class="pick-key">&#9313;</span>
           <span class="pick-copy">
             <span class="pick-title">모른 척 몸을 돌리며 슬쩍 떨어뜨린다</span>
@@ -49,16 +50,16 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--gold)" data-choice="spray">
-          <span class="pick-key">&#9315;</span>
+        <button type="button" class="pick" data-choice="spray">
+          <span class="pick-key">&#9314;</span>
           <span class="pick-copy">
             <span class="pick-title">집어 들어 왕에게 뿌린다</span>
-            <span class="pick-desc">사제가 답하기도 전에 그가 먼저 병을 집습니다. 그 자신도 왜 손이 나갔는지 설명하지 못합니다.</span>
+            <span class="pick-desc"><span data-when-priest="free">사제가 답하기도 전에 그가 먼저 병을 집습니다.</span><span data-when-priest="held">묶인 주인 대신 그가 병을 집습니다.</span> 그 자신도 왜 손이 나갔는지 설명하지 못합니다.</span>
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--red)" data-choice="3">
-          <span class="pick-key">&#9314;</span>
+        <button type="button" class="pick" data-choice="3">
+          <span class="pick-key">&#9315;</span>
           <span class="pick-copy">
             <span class="pick-title">집어 던진다</span>
             <span class="pick-desc">명백한 방해입니다. 의사들이 그를 봅니다.</span>
@@ -69,18 +70,23 @@
     </div>
 
     <div class="nav-links">
-      <a href="4-4-descent.html" data-keep-query>이전 장면으로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="4-4-descent.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
+    var priestHeld = (DE.read().arrested || []).indexOf('priest') !== -1;
+    DE.reveal('data-when-priest', priestHeld ? 'held' : 'free');
     DE.onPick('picks', 'data-choice', function (c) {
-      // 그가 먼저 뿌리면 정화는 그 자리에서 성립하고, 사제의 차례는 오지 않는다.
-      if (c === 'spray') DE.go('flaskspray', { priest: 'bypassed', hands: 'western' });
+      // 그가 먼저 뿌리면 정화는 그 자리에서 성립한다. 사제가 자유로우면 그 차례를
+      // 빼앗은 것이고(bypassed), 묶여 있으면 애초에 차례가 없던 판이다(absent).
+      if (c === 'spray') DE.go('flaskspray', priestHeld
+        ? { priest: 'absent', hands: 'western' }
+        : { priest: 'bypassed', hands: 'western' });
       else DE.go('flask', { choice: Number(c) });
     });
   })();

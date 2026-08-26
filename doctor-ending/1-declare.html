@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 역병의사는 부활을 선언합니까?">
   <title>의사가 너무 많아! · 부활 선언</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
@@ -27,7 +27,7 @@
     <article class="story-panel" id="arrest-scene" hidden>
       <p>의사들이 <span id="arrest-target"></span>를 가리키자, 왕비는 즉시 군사를 들여보내 지목된 <span id="arrest-target2"></span>를 붙잡아 그 자리에 묶었습니다.</p>
       <div id="arrest-lines"></div>
-      <p>그 말을 끝으로 <span id="arrest-bound"></span>는 <strong>결박당해 말할수도, 움직일 수도 없게 됩니다.</strong> </p>
+      <p>그 말을 끝으로 <span id="arrest-bound"></span>는 <strong>결박당해 말할 수도, 움직일 수도 없게 됩니다.</strong> </p>
     </article>
 
     <!-- 하늘 지목 판 — 붙잡힌 사람이 없다는 사실 자체에 대한 왕비의 반응. 구속 장면과 배타적으로 열린다. -->
@@ -51,7 +51,7 @@
       <p class="reading-order-note">부활 의식에 실패한다면, 부활에 참가한 자들은, 특히 부활을 주도한 당신은 왕의 시신을 모독한 죄를 지게 될지도 모릅니다. 부활의 조건을 고려하여 신중하게 선택해 주세요.</p>
 
       <div class="pick-list" id="picks">
-        <button type="button" class="pick" style="--card-color:var(--plague)" data-declare="1">
+        <button type="button" class="pick is-go" data-declare="1">
           <span class="pick-key">선언한다</span>
           <span class="pick-copy">
             <span class="pick-title">부활의 비술을 꺼낸다</span>
@@ -59,7 +59,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--red)" data-declare="0">
+        <button type="button" class="pick is-halt" data-declare="0">
           <span class="pick-key">선언하지 않는다</span>
           <span class="pick-copy">
             <span class="pick-title">비술을 꺼내지 않는다</span>
@@ -81,12 +81,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="index.html" data-keep-query>지목 - 구속 결과 다시 입력</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="index.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
@@ -99,11 +99,11 @@
     // 구속 장면 — 지목된 인물의 대사만 골라 채운다. 아무도 묶이지 않은 판은 장면을 통째로 숨긴다.
     var ARREST_LINES = {
       talisman: '혀를 차고는 순순히 포박에 응합니다.',
-      herbal: '"안돼! 내가 대체 뭘 했다고! 왜 나를 잡아가는거야!" 라고 말하며 몸부림치지만, 이내 저항은 잠잠해집니다.',
+      herbal: '"안돼! 내가 대체 뭘 했다고! 왜 나를 잡아가는 거야!" 라고 말하며 몸부림치지만, 이내 저항은 잠잠해집니다.',
       acupunct: '자포자기한 얼굴로 순순히 포박에 응합니다.',
       priest: '한숨지으며 망연자실한 표정으로 속삭입니다. "타사칼이시어, 이 나라에 정녕 희망은 없는 것입니까?"',
       plague: '"왕에게 직접 은혜를 받은 제가 왜 왕을 해치겠습니까..." 라고 이야기하며, 순순히 포박에 응합니다.',
-      western: '"이 무엄한 놈들! 감히 누구 몸에 손을 대는거야!" 라고 이야기하지만, 왕비의 눈치를 보고 순순히 포박에 응합니다.'
+      western: '"이 무엄한 놈들! 감히 누구 몸에 손을 대는 거야!" 라고 이야기하지만, 왕비의 눈치를 보고 순순히 포박에 응합니다.'
     };
 
     function coloredName(id) {

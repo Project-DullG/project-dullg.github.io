@@ -179,8 +179,16 @@ h1 {
 
 .guide-lead strong,
 .guide-box strong {
-  color: var(--ink-strong);
-  font-weight: 800;
+  color: #e4dccf;
+  font-weight: 720;
+}
+
+/* 왕비·NPC의 육성 대사 — 지시문보다 한 단계 크게, 인용부호 그대로 */
+.guide-speech {
+  margin-bottom: 14px !important;
+  color: #ddd4c6 !important;
+  font-size: 1.06rem !important;
+  line-height: 1.88 !important;
 }
 
 .score-stack {
@@ -579,6 +587,32 @@ h1 {
   line-height: 1.55;
 }
 
+/* 다음 순서 버튼 아래 딸리는 곁가지 — 본 흐름은 아니지만 그 자리에서 열 수 있는 것. */
+.next-aside {
+  margin: 2px 0 0;
+  text-align: center;
+}
+
+.next-aside a {
+  color: var(--dim);
+  font-size: .86rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+  transition: color .2s ease, border-color .2s ease;
+}
+
+.next-aside a:hover {
+  color: var(--ink-strong);
+  border-bottom-color: var(--card-color, var(--red));
+}
+
+.next-aside a:focus-visible {
+  outline: 2px solid var(--ink-strong);
+  outline-offset: 3px;
+}
+
 .ending-script {
   display: grid;
   gap: 22px;
@@ -755,6 +789,16 @@ h1 {
   color: var(--dim);
   font-size: .91rem;
   line-height: 1.65;
+}
+
+/* 버튼 바로 위에서 실제로 답할 질문 — 상황 서술(h2)보다 작지만,
+   카드 준비 지시(※)보다는 밝다. 볼드 대신 색·크기로 무게를 준다. */
+.ending-decision > p.decision-ask {
+  margin: 16px 0 12px;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.7;
 }
 
 .continue-choice { --card-color: var(--green); }
@@ -1779,7 +1823,6 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
 }
 
 .pick {
-  --card-color: var(--gold);
   display: flex;
   align-items: center;
   gap: 15px;
@@ -1796,13 +1839,13 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
 
 .pick:hover {
   transform: translateX(3px);
-  border-color: var(--card-color);
+  border-color: var(--card-color, var(--gold));
   background: rgba(255, 255, 255, .045);
 }
 
 .pick-key {
   flex: 0 0 76px;
-  color: var(--card-color);
+  color: var(--card-color, var(--gold));
   font-size: .73rem;
   font-weight: 820;
   line-height: 1.35;
@@ -1828,12 +1871,20 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
 
 .pick-arrow {
   flex: 0 0 auto;
-  color: var(--card-color);
+  color: var(--card-color, var(--gold));
   font-size: 1.1rem;
 }
 
-/* 나아가는 선택지 — 담당자 상징색이 --red와 겹쳐 차단 선택지와 구분되지 않을 때 쓴다 */
-.pick.continue-choice { --card-color: var(--green); }
+/* 선택지 강조색 — 「의식이 어디로 가는가」만 말한다.
+ *
+ * 색을 칠하는 것은 부활의 성패가 갈리는 선택뿐이다(선언·개시·판정 1~3단계).
+ * 강림 이후의 처신 선택은 어느 쪽에도 우열이 없으므로 아무 클래스도 붙이지 않고
+ * 화면색을 그대로 물려받게 둔다 — 색으로 좋고 나쁨을 미리 알려주지 않기 위해서다.
+ * 캐릭터 상징색은 화면·결말 레벨에만 남는다. 선택지에 쓰면 「초록=진행」과 충돌한다.
+ */
+.pick.is-go     { --card-color: var(--plague); }   /* 간다     — 다음 단계로 넘어간다 */
+.pick.is-detour { --card-color: var(--gold); }     /* 돌아간다 — 우회하지만 끝나지 않는다 */
+.pick.is-halt   { --card-color: var(--red); }      /* 끝난다   — 여기서 의식이 멈춘다 */
 
 /* --- 채점판 — 구속자와 결말로 갈리는 목표만 화면이 판정한다 --- */
 .tally {

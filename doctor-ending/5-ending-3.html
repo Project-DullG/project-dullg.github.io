@@ -7,14 +7,14 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 3 — 배드 엔딩: 파멸의 이단 심문">
   <title>의사가 너무 많아! · 엔딩 3 파멸의 이단 심문</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--talisman);--card-glow:var(--talisman-soft)">
     <header class="header">
       <a href="index.html" data-keep-query class="tag">엔딩 3</a>
       <h1>파멸의 이단 심문</h1>
-      <p class="subtitle">의식은 끔찍한 연기와 함께 깨어지고, 양의사의 모함과 사제의 이단 고발이 불을 뿜습니다.</p>
+      <p class="subtitle">의식은 끔찍한 연기와 함께 깨어지고, 이단을 묻는 불길이 그 방을 덮칩니다.</p>
     </header>
 
     <div data-session-recap hidden></div>
@@ -23,7 +23,7 @@
 
     <section class="guide-box ending-guide-panel">
       <div class="guide-title">낭독 안내</div>
-      <p data-when-reader="western">의식이 깨진 그 순간, 방의 주도권은 양의사에게 넘어갔습니다. 아래 본문은 <strong>양의사 담당 플레이어</strong>가 소리 내어 읽습니다.</p>
+      <p data-when-reader="western">의식이 깨진 그 순간, 양의사가 방의 주도권을 잡았습니다. 아래 본문은 <strong>양의사 담당 플레이어</strong>가 소리 내어 읽습니다.</p>
       <p data-when-reader="other">대표 한 명이 아래 본문을 소리 내어 읽습니다.</p>
       <p>캐릭터별 에필로그는 <strong>해당 인물의 담당 플레이어</strong>가 직접 읽어도 좋습니다.</p>
     </section>
@@ -36,8 +36,10 @@
         <p data-when-failstep="3"><strong style="color:var(--ink-strong)">모두가 부활이 가능하다는 것을 눈으로 보아 버렸습니다.</strong> 사제도 마찬가지입니다. 평생 부정해 온 것이 진짜였음을 본 그의 고발은 확신이 아니라 <strong style="color:var(--ink-strong)">공포</strong>입니다.</p>
         <p data-when-failstep="none">부활 의식은 참혹한 대실패로 끝났고, 왕의 시신은 검게 변해 부패하기 시작했습니다.</p>
 
-        <p data-when-priest-held="no">그 찰나의 순간을 놓치지 않고, 양의사 율리시스의 모함과 사제의 이단 고발이 불을 뿜습니다.</p>
-        <p data-when-priest-held="yes">사제는 묶여 있어 고발할 수 없었습니다. 그 자리를 대신한 것은 왕궁의 관리였습니다 &mdash; 그가 본 것을 그대로 옮겨 적는 것만으로 충분했습니다.</p>
+        <p data-when-priest-held="no" data-when-western="free">그 찰나의 순간을 놓치지 않고, 양의사 율리시스의 모함과 사제의 이단 고발이 불을 뿜습니다.</p>
+        <p data-when-priest-held="no" data-when-western="joined">그 찰나의 순간을 놓치지 않고, 사제의 이단 고발이 불을 뿜습니다. 불길은 가리지 않습니다 &mdash; 의식에 쓸 약을 내준 이름도 그 명단에서 빠지지 않습니다.</p>
+        <p data-when-priest-held="no" data-when-western="held">양의사는 이미 묶여 있어 혀를 놀릴 수 없었습니다. 모함은 필요하지도 않았습니다 &mdash; 사제의 이단 고발 하나로 충분했습니다.</p>
+        <p data-when-priest-held="yes">사제는 묶여 있어 고발할 수 없었습니다. 그럴 것도 없었습니다 &mdash; 왕비의 곁에서 방을 지켜보던 군사들이 본 것이 그대로 왕궁의 기록에 오르고, 교단은 그 기록 한 장이면 충분했습니다.</p>
         <p>왕궁의 군사들이 들이닥쳐 주술을 부리던 의사들을 잔인하게 짓밟고 쇠사슬로 묶어 끌고 갑니다.</p>
       </section>
 
@@ -55,7 +57,7 @@
     </div>
     <div class="epilogue c-acupunct">
       <div class="epilogue-name">침술사</div>
-      <p>제자 사일러스와 소명파를 함께 파멸로 끌어들였다는 자책 속에 형장에 오릅니다. 재상가의 지령서는 그가 죽은 뒤 조용히 소각되어, 왕자파는 아무런 흔적도 남기지 않습니다.</p>
+      <p>제자 사일러스와 소명파를 함께 파멸로 끌어들였다는 자책 속에 형장에 오릅니다. 침술사가 죽은 뒤 재상가는 지령서를 조용히 불태워, 왕자파의 흔적을 지웁니다.</p>
       <p data-when-failstep="3">돌아온 혼을 육체에 묶을 손은 그의 것이었고, <strong>그 손은 묶여 있었습니다.</strong> 예순 해 동안 익힌 것을 정작 필요한 한순간에 쓰지 못한 채, 그는 자기 대신 끌려가는 아이들을 봅니다.</p>
     </div>
     <div class="epilogue c-talisman">
@@ -71,13 +73,13 @@
     <div class="epilogue c-priest">
       <div class="epilogue-name">사제</div>
       <p data-when-priest-held="no">이단들의 사악한 왕실 전복 음모를 현장에서 간파하고 진압한 위대한 공로를 인정받아, 타사칼 교단의 최고 권력자인 대심문관의 자리에 오르며 부와 권력을 움켜쥡니다.</p>
-      <p data-when-priest-held="yes">고발은 왕궁의 관리가 대신했습니다. 사제는 이단 주술의 현장에 함께 있었다는 이유로 교단의 신임을 잃고 지위를 박탈당합니다. 평생 이단을 쫓던 자가, 이단의 방에 묶여 있었다는 사실 하나로 끝난 것입니다.</p>
+      <p data-when-priest-held="yes">고발은 군사들의 기록이 대신했습니다. 사제는 이단 주술의 현장에 함께 있었다는 이유로 교단의 신임을 잃고 지위를 박탈당합니다. 평생 이단을 쫓던 자가, 이단의 방에 묶여 있었다는 사실 하나로 끝난 것입니다.</p>
     </div>
     <div class="epilogue c-western">
       <div class="epilogue-name">양의사</div>
       <p data-when-western="free">자신의 모든 범행과 무능을 이단 의사들에게 뒤집어씌우는 데 성공합니다. 정적들이 모두 처형당하자, 양의사는 아무런 방해 없이 중앙의원회를 장악하여 왕국 의료계의 절대 독재자로 영원히 군림합니다.</p>
       <p data-when-western="joined">그는 이단 의식에 쓸 약을 <strong>직접 조달한 당사자</strong>입니다. 의식에 가담한 자들 안에 그의 이름이 있고, 이번에는 어떤 혀도 그를 빼내지 못합니다. <strong style="color:var(--red)">'체포당하지 않는다' 5점을 잃습니다.</strong> 방금 전까지 그를 의심하던 자들과 같은 쇠사슬에 묶인 채, 그는 제 인생에서 처음으로 남을 팔지 못합니다. <strong>팔 것이 자기밖에 남지 않았기 때문입니다.</strong></p>
-      <p data-when-western="held">이미 포승줄에 묶인 채 벽에 기대어, 그는 자기 대신 끌려가는 자들을 지켜봅니다. 테이블 위에는 압수된 〈약통과 조제 메모〉가 그대로 펼쳐져 있습니다. <strong>물증은 이미 모두의 눈앞에 나와 있었습니다.</strong> 다만 그것을 읽어 낼 수 있었던 사람들이 같은 밤에 이단으로 끌려갔을 뿐입니다.</p>
+      <p data-when-western="held">이미 포승줄에 묶인 채 벽에 기대어, 그는 자기 대신 끌려가는 자들을 지켜봅니다. 탁자 위에는 압수된 〈약통과 조제 메모〉가 그대로 펼쳐져 있습니다. <strong>물증은 이미 모두의 눈앞에 나와 있었습니다.</strong> 다만 그것을 읽어 낼 수 있었던 사람들이 같은 밤에 이단으로 끌려갔을 뿐입니다.</p>
       <p data-when-western="held">이단 소동이 가라앉은 뒤 그 종이를 다시 들여다볼 사람은 남지 않았고, 대역죄의 현장에 함께 있었다는 이유로 그 역시 의원장의 자리를 잃고 옥에 갇힙니다. 그는 죽는 날까지 그 메모를 생각합니다. <strong>자기를 끝낼 수 있었던 종이 한 장이 탁자 위에 놓인 채로 아무에게도 읽히지 않았다는 것을.</strong> 그것이 그가 이겼다는 뜻인지 졌다는 뜻인지는 그 자신도 정하지 못합니다.</p>
     </div>
         </div>
@@ -113,15 +115,16 @@
 
     <a href="6-truth.html" data-keep-query class="next-step-btn"><span class="next-kicker">다음 순서</span>진상 해설 확인하기 &#10095;<span class="next-sub">그날 왕의 침소에서 실제로 일어난 일을 확인합니다.</span></a>
 
+    <p class="next-aside"><a href="5-account.html" data-keep-query>이 판의 경과 다시 듣기</a></p>
+
     <div class="nav-links">
-      <a href="5-account.html" data-keep-query>이 판의 경과 다시 듣기</a>
-      <a href="index.html" data-keep-query>엔딩 첫 페이지</a>
-      <a href="7-scoring.html" data-keep-query>채점 안내</a>
-      <a href="/">메인 페이지</a>
+      <a href="index.html">처음부터 다시</a>
+      <a href="#" data-back>뒤로 가기</a>
+      <a href="9-flow.html" data-keep-query>엔딩 목록</a>
     </div>
     <footer class="footer">의사가 너무 많아! &middot; 엔딩 3 · 파멸의 이단 심문</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

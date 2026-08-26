@@ -10,7 +10,7 @@
  *   k  확보한 물건   note,talis,card1,water
  *   m  약의 조달     join 양의사가 함께 감 / deny 등을 돌림 / shut 약고가 닫힘
  *   p  사제의 답     agree 성수를 뿌린다 / barehand 맨손으로 피운다 (→엔딩1)
- *                   allow 막지 않는다 / absent 포박 / bypassed 양의사가 먼저 뿌림
+ *                   allow 막지 않는다 / absent 포박 / bypassed 양의사가 먼저 뿌림(사제가 자유로운 판)
  *                   (→ 성수를 든 손이 결말을 정한다)
  *                   avert 거둔다 / unable 맨손을 못 낸다 (→엔딩2)
  *   h  누가 들었나   western 양의사 / other 다른 사람 (→엔딩1) / none 아무도 (→엔딩2)
@@ -38,8 +38,10 @@
    * 4단계. 태워야 할 것은 왕에게 내려오는 기운이다.
    *
    * 성수는 누가 들어도 한 번은 반응한다 — 맨손의 불만이 사제의 것이다.
-   * 그래서 사제의 답은 셋으로 갈린다: 내가 든다 / 들지 않되 막지도 않는다 / 거둔다.
-   * 막지 않았거나 사제가 묶여 있으면 성수는 테이블로 열리고, 누가 드는지를 따로 정한다.
+   * 그래서 성수가 온전한 판에서 사제의 답은 넷으로 갈린다:
+   * 성수를 뿌린다 / 손에서 화염을 불러낸다 / 관망한다 / 거둔다.
+   * 병이 깨진 판에는 맨손밖에 남지 않으므로 피운다 / 못 피운다 둘이다.
+   * 관망했거나 사제가 묶여 있으면 성수는 테이블로 열리고, 누가 드는지를 따로 정한다.
    */
   var PRIEST_FIRE = ['agree', 'barehand'];   // 사제가 제 손으로 불을 들었다
   var PRIEST_OPEN = ['allow', 'absent', 'bypassed']; // 성수가 남의 손에 열린다 (허용 / 포박 / 선수를 빼앗김)
@@ -463,9 +465,13 @@
       { id: 'keep', label: '가만히 둔다', desc: '성수가 남는다', go: 'flask', patch: { choice: 1 } },
       { id: 'drop', label: '슬쩍 떨어뜨린다', desc: '병이 산산조각 난다',
         go: 'flask', patch: { choice: 2 } },
-      { id: 'throw', label: '집어 던진다', desc: '명백한 방해다', go: 'flask', patch: { choice: 3 } },
-      { id: 'spray', label: '집어 들어 왕에게 뿌린다', desc: '사제의 차례가 오지 않는다',
-        go: 'flaskspray', patch: { priest: 'bypassed', hands: 'western' } }
+      // 사제가 자유로우면 그 차례를 빼앗은 것(bypassed), 묶여 있으면 차례가 없던 판(absent).
+      { id: 'spray', label: '집어 들어 왕에게 뿌린다', desc: '다른 답을 기다리지 않는다',
+        go: 'flaskspray', patch: function (st) {
+          var held = (st.arrested || []).indexOf('priest') !== -1;
+          return { priest: held ? 'absent' : 'bypassed', hands: 'western' };
+        } },
+      { id: 'throw', label: '집어 던진다', desc: '명백한 방해다', go: 'flask', patch: { choice: 3 } }
     ]},
 
     { id: 'nofire', page: 'nofire', title: '불은 피지 않다', kicker: '물도 손도 남지 않았다', depth: 1, picks: [
@@ -474,12 +480,13 @@
     ]},
 
     { id: 'priest', page: 'priest', title: '사제의 결단', kicker: '성수를 든 손', picks: [
-      { id: 'agree', label: '내가 불사른다', go: 'priest', patch: { priest: 'agree' }, when: intact },
-      { id: 'allow', label: '들지 않되 막지도 않는다', desc: '성수가 탁자로 열린다',
+      { id: 'agree', label: '성수를 뿌린다', go: 'priest', patch: { priest: 'agree' }, when: intact },
+      // 맨손의 불은 사제 고유 능력이므로 성수가 온전한 판에서도 고를 수 있다.
+      { id: 'barehand', label: '손에서 화염을 불러낸다', go: 'priest',
+        patch: { priest: 'barehand' } },
+      { id: 'allow', label: '관망한다', desc: '성수가 탁자로 열린다',
         go: 'priest', patch: { priest: 'allow' }, when: intact },
       { id: 'avert', label: '성수를 거둔다', go: 'priest', patch: { priest: 'avert' }, when: intact },
-      { id: 'barehand', label: '맨손으로 불을 피운다', go: 'priest',
-        patch: { priest: 'barehand' }, when: smashed },
       { id: 'unable', label: '끝내 손을 내밀지 못한다', go: 'priest',
         patch: { priest: 'unable' }, when: smashed }
     ]},
@@ -741,6 +748,32 @@
     );
   }
 
+  /**
+   * [data-back] 은 실제로 지나온 길로 되돌린다.
+   *
+   * 결말·해설 화면은 들어오는 갈래가 여럿이라 '뒤로'를 미리 적을 수 없다.
+   * 그래서 히스토리가 있으면 그것을 따르고, 없을 때만 화면이 적어 둔 자리로 간다.
+   * 적어 둔 자리도 없는 화면(href="#")은 되돌아갈 곳이 없는 판이므로 링크를 지운다 —
+   * 눌러도 아무 데도 가지 않는 버튼을 남겨 두지 않기 위해서다.
+   */
+  function backLinks() {
+    var nodes = global.document.querySelectorAll('a[data-back]');
+    if (!nodes.length) return;
+    // referrer 로는 판단하지 않는다 — 새 탭으로 열린 화면은 referrer 가 있어도
+    // 돌아갈 항목이 없어서 back() 이 아무 일도 하지 않는다.
+    var canGoBack = global.history.length > 1;
+    Array.prototype.forEach.call(nodes, function (a) {
+      if (!canGoBack) {
+        if ((a.getAttribute('href') || '#') === '#') a.remove();
+        return;
+      }
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        global.history.back();
+      });
+    });
+  }
+
   global.DoctorEnding = {
     DOCTORS: DOCTORS,
     KEYS: KEYS,
@@ -804,7 +837,7 @@
     main.insertBefore(tag, main.firstChild);
   }
 
-  function boot() { markBrowsing(); renderRecap(); keepQuery(); }
+  function boot() { markBrowsing(); renderRecap(); keepQuery(); backLinks(); }
 
   if (global.document.readyState === 'loading') {
     global.document.addEventListener('DOMContentLoaded', boot);

@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 판정 4단계 · 강림">
   <title>의사가 너무 많아! · 부활 판정 4</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
@@ -26,7 +26,7 @@
     <!-- 3단계 통과 브리지 낭독 — 아홉 번째 침이 어디서 왔는지에 따라 갈린다 -->
     <article class="story-panel">
       <p data-when-needle="full">침술사가 세침통을 엽니다. 빈 자리 없이 아홉 개가 가지런합니다. 유려한 손놀림으로, 침술사는 여덟 곳에 침을 놓습니다. 이윽고, 마지막 침이 아랫입술 아래에 놓이며 <strong>혼이 육체에 묶입니다.</strong></p>
-      <p data-when-needle="lent">침술사가 세침통을 엽니다. 아홉 칸 중 여덟. 마지막 자리가 비어 있습니다. 나머지 사람들이 마지막 침을 찾아 바닥과 서로의 짐을 훑는 동안, 역병의사가 침 하나를 조심스럽게 집어 내밉니다. <em>"스승님, 여기 침입니다. 닦아 두었으니 그대로 쓰십시오."</em> 의사들은 그 바늘이 무엇인지, 왜 역병의사의 손에 있는지 일순 의심하지만, 상황이 급박하다 보니 어영부영 넘어갑니다. 침술사는 여덟 구멍을 어찌저찌 막은 후, 입술 밑에 아홉 번째 침을 놓아 <strong>혼이 육체에 묶입니다.</strong></p>
+      <p data-when-needle="lent">침술사가 세침통을 엽니다. 아홉 칸 중 여덟. 마지막 자리가 비어 있습니다. 나머지 사람들이 마지막 침을 찾아 바닥과 서로의 짐을 훑는 동안, 역병의사가 침 하나를 조심스럽게 집어 내밉니다. <em>"스승님, 여기 침입니다. 닦아 두었으니 그대로 쓰십시오."</em> 의사들은 그 바늘이 무엇인지, 왜 역병의사의 손에 있는지 일순 의심하지만, 상황이 급박해 더 따지지 못한 채 넘어갑니다. 침술사는 여덟 구멍을 막은 후, 입술 밑에 아홉 번째 침을 놓아 <strong>혼이 육체에 묶입니다.</strong></p>
     </article>
 
     <div class="branch-toolbar">
@@ -38,14 +38,16 @@
       <p class="verdict-kicker">4단계 · 강림</p>
       <h2>하늘에서 검은 것이 내려옵니다</h2>
       <p>왕이 숨을 되찾으려는 그 순간, 하늘이 움직입니다.</p>
-      <p>한밤보다도 검고 으슥한 기운이 불길하게 나풀대며 천장을 지나 내려옵니다.</p>
-      <p>역병의사는 그 기운이 무엇인지 단번에 알아봅니다. 스승조차 별 수를 쓰지 못하고 몸을 빼앗긴, '하늘의 기운'이 바로 그것이었습니다. 기운이 훔쳐 간 왕의 혼을 찾아 왕을 덮치려 하자, <strong>역병의사가 왕의 몸을 감쌉니다.</strong></p>
+      <p>한밤보다도 검고 으스스한 기운이 불길하게 나풀대며 천장을 지나 내려옵니다.</p>
+      <p>역병의사는 그 기운이 무엇인지 단번에 알아봅니다. 스승의 몸까지 빼앗은 '하늘의 기운'이 바로 그것이었습니다. 기운이 훔쳐 간 왕의 혼을 찾아 왕을 덮치려 하자, <strong>역병의사가 왕의 몸을 감쌉니다.</strong></p>
       <p>분명히 10년 전에도, 그의 스승은 같은 일을 했겠지요.</p>
-      <p>방 안의 모두가 왕과, 왕을 덮으려는 검은 기운에서 눈을 떼지 못합니다. 그동안 탁자 끝에는 사제의 성수가 그대로 놓여 있습니다.</p>
+      <p data-when-priest="free">방 안의 모두가 왕과, 왕을 덮으려는 검은 기운에서 눈을 떼지 못합니다. 그동안 탁자 끝에는 사제의 성수가 그대로 놓여 있습니다.</p>
+      <p data-when-priest="held">방 안의 모두가 왕과, 왕을 덮으려는 검은 기운에서 눈을 떼지 못합니다. 그동안 압수된 짐 위에는 사제의 성수가 그대로 놓여 있습니다.</p>
     </section>
 
     <section class="guide-box">
-      <p class="reading-order-note">※ <strong>사제</strong>는 〈성수〉를 테이블에 내놓으십시오. 포박되어 있다면 압수된 짐에서 이미 나와 있습니다.</p>
+      <p class="reading-order-note" data-when-priest="free">※ <strong>사제</strong>는 〈성수〉를 테이블에 내놓으십시오.</p>
+      <p class="reading-order-note" data-when-priest="held">※ 포박된 사제의 〈성수〉는 압수된 짐 위에 이미 공개되어 있습니다. 그대로 둡니다.</p>
     </section>
 
     <a href="#" id="go" class="next-step-btn" style="--card-color:var(--priest);--card-glow:var(--priest-soft)">
@@ -54,16 +56,18 @@
     </a>
 
     <div class="nav-links">
-      <a href="4-3-needle.html" data-keep-query>이전 단계로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="4-3-needle.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
-    DE.reveal('data-when-needle', DE.read().needle || 'full');
+    var st = DE.read();
+    DE.reveal('data-when-needle', st.needle || 'full');
+    DE.reveal('data-when-priest', (st.arrested || []).indexOf('priest') !== -1 ? 'held' : 'free');
     document.getElementById('go').addEventListener('click', function (e) {
       e.preventDefault();
       DE.go('descent');

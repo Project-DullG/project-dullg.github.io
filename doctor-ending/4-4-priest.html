@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 사제의 결단">
   <title>의사가 너무 많아! · 사제의 결단</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--priest);--card-glow:var(--priest-soft)">
@@ -23,7 +23,7 @@
 
     <div data-session-recap hidden></div>
 
-    <!-- ─────────── 성수가 남아 있는 판 : 셋 중 하나 ─────────── -->
+    <!-- ─────────── 성수가 남아 있는 판 : 넷 중 하나 ─────────── -->
     <div data-when-flask="intact">
       <section class="verdict is-open" style="--card-color:var(--priest)">
         <p class="verdict-kicker">4단계 · 정화</p>
@@ -34,27 +34,35 @@
       <div class="ending-decision" style="--card-color:var(--priest)">
         <h2>사제는 어떻게 하겠습니까?</h2>
         <div class="pick-list" id="picks-intact">
-          <button type="button" class="pick" style="--card-color:var(--priest)" data-priest="agree">
+          <button type="button" class="pick" data-priest="agree">
             <span class="pick-key">&#9312;</span>
             <span class="pick-copy">
-              <span class="pick-title">내가 불사른다</span>
-              <span class="pick-desc">성수를 집어 왕에게 뿌립니다. 하늘에서 내려오는 것을 제 손으로 태웁니다.</span>
+              <span class="pick-title">성수를 뿌린다</span>
+              <span class="pick-desc">타사칼의 성수를 왕에게 뿌립니다. 평생 이단이라 불러 온 것 앞에서, 교단의 물건을 꺼내 듭니다.</span>
             </span>
             <span class="pick-arrow">&#10095;</span>
           </button>
-          <button type="button" class="pick" style="--card-color:var(--gold)" data-priest="allow">
+          <button type="button" class="pick" data-priest="barehand">
             <span class="pick-key">&#9313;</span>
             <span class="pick-copy">
-              <span class="pick-title">나는 들지 않는다. 다만 막지도 않겠다</span>
-              <span class="pick-desc">성수를 탁자에 그대로 둔 채 물러섭니다. 그 물을 누가 들든 손대지 않겠다는 뜻입니다.</span>
+              <span class="pick-title">손에서 화염을 불러낸다</span>
+              <span class="pick-desc">타사칼에게 받아 여태 사람들에게 고통만을 가져다주었던 이 능력을, 사람을 살리는 데 씁니다.</span>
             </span>
             <span class="pick-arrow">&#10095;</span>
           </button>
-          <button type="button" class="pick" style="--card-color:var(--ash)" data-priest="avert">
+          <button type="button" class="pick" data-priest="allow">
             <span class="pick-key">&#9314;</span>
             <span class="pick-copy">
+              <span class="pick-title">관망한다</span>
+              <span class="pick-desc">성수를 탁자에 둔 채 물러섭니다. 타사칼의 뜻이, 항상 그런 방식이었으니까요.</span>
+            </span>
+            <span class="pick-arrow">&#10095;</span>
+          </button>
+          <button type="button" class="pick" data-priest="avert">
+            <span class="pick-key">&#9315;</span>
+            <span class="pick-copy">
               <span class="pick-title">성수를 거둔다</span>
-              <span class="pick-desc">병을 집어 품에 넣습니다. 이제 이 방에서 그 물을 들 수 있는 사람은 없습니다.</span>
+              <span class="pick-desc">병을 집어 품에 넣습니다. 내가 평생 찾아 나선 이단 주술을 도울 수는 없습니다.</span>
             </span>
             <span class="pick-arrow">&#10095;</span>
           </button>
@@ -66,7 +74,7 @@
     <div data-when-flask="broken">
       <section class="verdict is-blocked">
         <p class="verdict-kicker">4단계 · 정화</p>
-        <h2 data-when-choice="2">성수병이 바닥에 떨어져 산산조각 납니다</h2>
+        <h2 data-when-choice="2">양의사가 떨어뜨린 성수병이 산산조각 납니다</h2>
         <h2 data-when-choice="3">양의사가 던진 병이 사제의 팔에 부딪혀 깨집니다</h2>
         <p data-when-choice="2">의식의 절정 속에서, 그것이 실수였는지 고의였는지는 누구도 확신하지 못합니다.</p>
         <p data-when-choice="3">병이 왕에게 닿기 직전 사제가 몸을 날려 막아섰습니다. 파편과 성수가 바닥에 흩어지고, 팔에는 피가 흐릅니다.</p>
@@ -76,7 +84,7 @@
       <div class="ending-decision" style="--card-color:var(--priest)">
         <h2>맨손으로 불을 피우겠습니까?</h2>
         <div class="pick-list" id="picks-broken">
-          <button type="button" class="pick" style="--card-color:var(--priest)" data-priest="barehand">
+          <button type="button" class="pick" data-priest="barehand">
             <span class="pick-key">피운다</span>
             <span class="pick-copy">
               <span class="pick-title">맨손에서 정화의 불을 피워 올린다</span>
@@ -84,11 +92,11 @@
             </span>
             <span class="pick-arrow">&#10095;</span>
           </button>
-          <button type="button" class="pick" style="--card-color:var(--ash)" data-priest="unable">
+          <button type="button" class="pick" data-priest="unable">
             <span class="pick-key">피우지 못한다</span>
             <span class="pick-copy">
               <span class="pick-title">끝내 손을 내밀지 못한다</span>
-              <span class="pick-desc">성물 없이 역천의 기운에 손을 대는 것까지는 할 수 없었습니다.</span>
+              <span class="pick-desc">성물 없이 역천의 기운에 손까지 대지는 못했습니다.</span>
             </span>
             <span class="pick-arrow">&#10095;</span>
           </button>
@@ -97,12 +105,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="4-4-descent.html" data-keep-query>이전 장면으로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="4-4-descent.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

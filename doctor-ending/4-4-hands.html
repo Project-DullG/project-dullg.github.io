@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 탁자에 남은 성수, 누가 드는가">
   <title>의사가 너무 많아! · 남은 성수</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -44,7 +44,7 @@
       <h2>그 물을 드는 사람이 있습니까?</h2>
       <p class="reading-order-note"><strong>묶이지 않은</strong> 담당 플레이어들이 논의해 정합니다. 포박된 사람은 손을 쓸 수 없으므로 후보가 아닙니다. 끝까지 결론이 나지 않으면 아무도 들지 않은 것으로 합니다.</p>
       <div class="pick-list" id="picks">
-        <button type="button" class="pick" style="--card-color:var(--western)" data-hands="western" data-when-western="free">
+        <button type="button" class="pick" data-hands="western" data-when-western="free">
           <span class="pick-key">&#9312;</span>
           <span class="pick-copy">
             <span class="pick-title">양의사가 든다</span>
@@ -52,7 +52,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--plague)" data-hands="other">
+        <button type="button" class="pick" data-hands="other">
           <span class="pick-key">&#9313;</span>
           <span class="pick-copy">
             <span class="pick-title">다른 사람이 든다</span>
@@ -60,7 +60,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--ash)" data-hands="none">
+        <button type="button" class="pick" data-hands="none">
           <span class="pick-key">&#9314;</span>
           <span class="pick-copy">
             <span class="pick-title">아무도 들지 않는다</span>
@@ -72,12 +72,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="4-4-descent.html" data-keep-query>이전 장면으로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="4-4-descent.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

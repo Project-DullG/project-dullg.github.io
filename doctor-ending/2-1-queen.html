@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 왕비가 한 번 더 묻습니다">
   <title>의사가 너무 많아! · 왕비의 되물음</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -38,7 +38,7 @@
       <p>다시 논의해도 좋습니다. <strong style="color:var(--ink-strong)">끝까지 결론이 나지 않으면 포박되지 않은 사람들끼리, 역병의사를 포함한 다수결로 정합니다.</strong></p>
 
       <div class="pick-list" id="picks">
-        <button type="button" class="pick" style="--card-color:var(--plague)" data-turn="1">
+        <button type="button" class="pick is-go" data-turn="1">
           <span class="pick-key">시작한다</span>
           <span class="pick-copy">
             <span class="pick-title">접었던 노트를 다시 펼친다</span>
@@ -46,7 +46,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--red)" data-turn="0">
+        <button type="button" class="pick is-halt" data-turn="0">
           <span class="pick-key">뜻이 없다</span>
           <span class="pick-copy">
             <span class="pick-title">왕비의 물음에 답하지 않는다</span>
@@ -68,12 +68,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="2-consent.html" data-keep-query>의식 개시로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="2-consent.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

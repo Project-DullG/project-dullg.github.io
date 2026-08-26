@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 판정 2단계">
   <title>의사가 너무 많아! · 부활 판정 2</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <main class="container" style="--card-color:var(--talisman);--card-glow:var(--talisman-soft)">
@@ -25,8 +25,8 @@
 
     <!-- 1단계 통과 브리지 낭독 — 약이 어디서 왔는지에 따라 갈린다 -->
     <article class="story-panel">
-      <p data-when-med="none">한의사가 자신의 수첩을 펼칩니다. 증상에 따른 처리가 적혀 있고, 한의사가 직접 처방대로 약재를 달입니다. 약 봉투와 나무조각이 함께 끓고, 달여진 물이 왕의 목을 넘어갑니다. <em>"직접 못 가게 되어 미안, 은혜는 갚을게"</em>라는 문장에 의문을 표하는 의사도 있지만, 약은 효과를 발휘합니다. <strong>파열된 혈관이 하나씩 닫히고, 왕의 육체가 혼을 받을 준비를 마칩니다.</strong></p>
-      <p data-when-med="join">돌아온 약이 수첩의 처방대로 달여집니다. 의원장이 직접 가서 받아 온 것이고, 그중 무엇이 쓸 만한지 아는 사람은 역병의사뿐입니다. <em>"직접 못 가게 되어 미안, 은혜는 갚을게"</em>라는 문장을 보고, 양의사는 한번 더 혀를 찹니다. 달여진 물이 왕의 목을 넘어가고, 터진 혈관이 하나씩 닫힙니다.</p>
+      <p data-when-med="none">한의사가 자신의 수첩을 펼칩니다. 증상에 따른 처방이 적혀 있고, 한의사가 그 처방대로 직접 약재를 달입니다. 약 봉투와 나무조각이 함께 끓고, 달여진 물이 왕의 목을 넘어갑니다. <em>"직접 못 가게 되어 미안, 은혜는 갚을게"</em>라는 문장에 의문을 표하는 의사도 있지만, 약은 효과를 발휘합니다. <strong>파열된 혈관이 하나씩 닫히고, 왕의 육체가 혼을 받을 준비를 마칩니다.</strong></p>
+      <p data-when-med="join">돌아온 약이 수첩의 처방대로 달여집니다. 의원장이 직접 가서 받아 온 것이고, 그중 무엇이 쓸 만한지 아는 사람은 역병의사뿐입니다. <em>"직접 못 가게 되어 미안, 은혜는 갚을게"</em>라는 문장을 보고, 양의사는 한 번 더 혀를 찹니다. 달여진 물이 왕의 목을 넘어가고, 터진 혈관이 하나씩 닫힙니다.</p>
       <p>영혼을 담을 그릇이 완성되었습니다. 이제는 하늘로부터 흩어진 혼을 불러올 차례입니다.</p>
     </article>
 
@@ -35,11 +35,11 @@
     </div>
 
     <div class="ending-decision" style="--card-color:var(--talisman)">
-      <h2>흩어진 혼을 다시 훔쳐오는 방법을 찾자, 부적술사에게 자연스럽게 눈길이 쏠립니다.</h2>
+      <h2>흩어진 혼을 다시 훔쳐올 방법을 찾으며, 의사들은 자연스럽게 부적술사를 바라봅니다.</h2>
       <p class="reading-order-note">※ <strong>사제</strong>는 〈붉은 부적〉을, <strong>부적술사</strong>는 〈대못과 밀짚인형〉을 테이블에 내놓으십시오.</p>
-      <p><strong>부적술사가 구속되어 있지 않은 상태입니까?</strong></p>
+      <p class="decision-ask">부적술사가 구속되어 있지 않은 상태입니까?</p>
       <div class="pick-list" id="picks">
-        <button type="button" class="pick continue-choice" data-held="no">
+        <button type="button" class="pick is-go" data-held="no">
           <span class="pick-key">예</span>
           <span class="pick-copy">
             <span class="pick-title">부적술사가 자리에 있습니다</span>
@@ -47,7 +47,7 @@
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
-        <button type="button" class="pick" style="--card-color:var(--red)" data-held="yes">
+        <button type="button" class="pick is-halt" data-held="yes">
           <span class="pick-key">아니오</span>
           <span class="pick-copy">
             <span class="pick-title">부적술사는 포박되어 있습니다</span>
@@ -59,12 +59,12 @@
     </div>
 
     <div class="nav-links">
-      <a href="3-ritual.html" data-keep-query>의식 준비 화면으로</a>
       <a href="index.html">처음부터 다시</a>
+      <a href="3-ritual.html" data-keep-query data-back>뒤로 가기</a>
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=6"></script>
+  <script src="state.js?v=8"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
