@@ -64,7 +64,8 @@ function renderFlowProgress() {
     'future-d-stop.html': 3,
     'future-e-doctor-hide.html': 3,
     'future-e-outside-hide.html': 3,
-    'future-f-hide.html': 3
+    'future-f-hide.html': 3,
+    'story.html': 4
   };
   const currentStage = stageByPage[filename];
   const header = document.querySelector('.header');
