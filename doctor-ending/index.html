@@ -22,6 +22,12 @@
     </div>
 
 
+    <section class="guide-box">
+      <div class="guide-title">넘어가기 전에</div>
+      <p>지금부터 결말까지는 <strong>낭독과 판정만</strong> 진행합니다. 아직 답해야 할 선택이 남아 있으므로, <strong style="color:var(--ink-strong)">누가 진범이었는지, 실제로 무슨 일이 있었는지는 아직 말하지 마십시오.</strong> 사건의 전말은 결말을 모두 읽은 뒤 〈진상 해설〉에서 공개됩니다.</p>
+      <p class="reading-order-note">본문은 대표 한 명이 소리 내어 읽습니다. 서두르지 말고 한 화면씩 차분히 넘어가십시오.</p>
+    </section>
+
     <section class="vote-form">
       <div class="guide-title">최다 득표자 선택</div>
       <p style="color:#cec5b8;font-size:.96rem;line-height:1.72;margin-top:8px">가장 많은 표를 받아 <strong style="color:var(--ink-strong)">구속된 인물</strong>을 고릅니다. 가장 많은 표를 받은 인물이 여러 명이라 두 번째 지목에서도 갈렸다면 규칙에 따라 <strong style="color:var(--ink-strong)">표가 갈린 최다 득표자 전원이 구속</strong>되므로, 그 인물을 모두 선택합니다.</p>
@@ -89,9 +95,10 @@
       var arrested = noneBox.checked ? [] : picked();
       var v = DE.judge(arrested);
       // 역병의사 구속 판은 추가 입력 없이 엔딩이 확정되므로 진실의 문을 거치지 않는다.
-      // 역병의사가 묶인 판은 선언할 사람 자체가 없으므로 곧바로 경과 낭독으로 간다.
+      // 역병의사가 묶인 판은 선언할 사람 자체가 없으므로 곧바로 결말로 간다.
+      var blocked = { arrested: arrested, revive: false };
       nextHref = v.reviveBlocked
-        ? '5-account.html' + DE.query({ arrested: arrested, revive: false })
+        ? DE.endingPage(blocked) + DE.query(blocked)
         : '1-declare.html' + DE.query({ arrested: arrested });
       modalQ.innerHTML = arrested.length
         ? '<strong>' + DE.names(arrested).join(', ') + '</strong>가 지목된 것이 맞습니까?'

@@ -54,7 +54,108 @@
       </table>
     </div>
 
+    <div class="branch-toolbar" style="margin-top:42px">
+      <div>
+        <span>채점판</span>
+        <strong>이번 판이 정해 준 것</strong>
+      </div>
+      <p>나머지는 테이블에서<br>직접 가립니다.</p>
+    </div>
+
+    <p class="section-desc">아래는 <strong>누가 구속되었는지</strong>와 <strong>어떤 결말에 닿았는지</strong>만으로 갈리는 목표입니다. 화면이 대신 판정해 두었으니 그대로 옮겨 적으면 됩니다. <span style="color:var(--ash)">&#9671; 테이블</span> 표시가 붙은 것은 그 자리에 있던 사람들만 알 수 있는 목표이므로, 각자 확인해 더합니다.</p>
+
+    <p class="reading-order-note" id="tally-none" hidden>※ 이번 판의 기록 없이 열린 화면입니다. 지목 결과가 없으므로 모든 목표가 테이블 판정으로 표시됩니다. <a href="index.html">지목 결과부터 입력</a>하면 채점판이 채워집니다.</p>
+
+    <div class="tally" id="tally">
+
+      <article class="tally-card c-plague" data-doctor="plague">
+        <div class="tally-head"><span class="tally-name">역병의사</span><span class="tally-sum" data-sum></span></div>
+        <ul class="tally-list">
+          <li class="tally-row" data-goal="plague-arrest"><span class="tally-mark"></span><span class="tally-goal">최다 투표자로 체포당하지 않는다</span><span class="tally-pt">4점</span></li>
+          <li class="tally-row" data-goal="plague-needle"><span class="tally-mark"></span><span class="tally-goal">침술사의 독침을 들키지 않고 돌려준다</span><span class="tally-pt">3점</span></li>
+          <li class="tally-row" data-goal="plague-culprit"><span class="tally-mark"></span><span class="tally-goal">진범을 최다 득표자로 만든다 <em>&middot; &#9827; 카드를 발견했다면 지목과 무관하게 달성</em></span><span class="tally-pt">2점</span></li>
+          <li class="tally-row" data-goal="plague-rp"><span class="tally-mark"></span><span class="tally-goal">RP &mdash; 한의사에게 두 번 진심으로 사과하기</span><span class="tally-pt">1점</span></li>
+          <li class="tally-row" data-goal="plague-final"><span class="tally-mark"></span><span class="tally-goal">?점 &mdash; 풍수사의 유지를 이어 왕의 부활을 이뤄낸다</span><span class="tally-pt">5점</span></li>
+        </ul>
+      </article>
+
+      <article class="tally-card c-talisman" data-doctor="talisman">
+        <div class="tally-head"><span class="tally-name">부적술사</span><span class="tally-sum" data-sum></span></div>
+        <ul class="tally-list">
+          <li class="tally-row" data-goal="talisman-arrest"><span class="tally-mark"></span><span class="tally-goal">최다 투표자로 체포당하지 않는다</span><span class="tally-pt">4점</span></li>
+          <li class="tally-row" data-goal="talisman-origin"><span class="tally-mark"></span><span class="tally-goal">소명파 붕괴의 원흉을 최다 득표자로 만든다 <em>&middot; 모함하고 소문을 퍼뜨린 자, 곧 양의사입니다</em></span><span class="tally-pt">3점</span></li>
+          <li class="tally-row" data-goal="talisman-hide"><span class="tally-mark"></span><span class="tally-goal">정체가 드러나 소명파의 존속을 위협하게 두지 않는다 <em>&middot; &#9829; 카드를 발견했다면 달성</em></span><span class="tally-pt">2점</span></li>
+          <li class="tally-row" data-goal="talisman-rp"><span class="tally-mark"></span><span class="tally-goal">RP &mdash; 풍수사를 욕하는 사람에게 두 번 화내기 <em>&middot; 욕한 사람이 없었다면 달성</em></span><span class="tally-pt">1점</span></li>
+          <li class="tally-row" data-goal="talisman-final"><span class="tally-mark"></span><span class="tally-goal">?점 &mdash; 풍수사의 의지를 잇는다</span><span class="tally-pt">5점</span></li>
+        </ul>
+      </article>
+
+      <article class="tally-card c-acupunct" data-doctor="acupunct">
+        <div class="tally-head"><span class="tally-name">침술사</span><span class="tally-sum" data-sum></span></div>
+        <ul class="tally-list">
+          <li class="tally-row" data-goal="acupunct-arrest"><span class="tally-mark"></span><span class="tally-goal">최다 투표자로 체포당하지 않는다</span><span class="tally-pt">4점</span></li>
+          <li class="tally-row" data-goal="acupunct-protect"><span class="tally-mark"></span><span class="tally-goal">역병의사와 한의사가 범인으로 지목당하지 않는다</span><span class="tally-pt">3점</span></li>
+          <li class="tally-row" data-goal="acupunct-needle"><span class="tally-mark"></span><span class="tally-goal">독침을 무사히 회수해 살인의 흔적을 감춘다 <em>&middot; &#9829; 카드를 발견했다면 달성</em></span><span class="tally-pt">2점</span></li>
+          <li class="tally-row" data-goal="acupunct-rp"><span class="tally-mark"></span><span class="tally-goal">RP &mdash; 호정이라는 본명을 최소 두 번 잘못 부르기</span><span class="tally-pt">1점</span></li>
+          <li class="tally-row" data-goal="acupunct-final"><span class="tally-mark"></span><span class="tally-goal">?점 &mdash; 재상가 음모에서 살아남을 탈출 방도를 마련한다</span><span class="tally-pt">5점</span></li>
+        </ul>
+      </article>
+
+      <article class="tally-card c-herbal" data-doctor="herbal">
+        <div class="tally-head"><span class="tally-name">한의사</span><span class="tally-sum" data-sum></span></div>
+        <ul class="tally-list">
+          <li class="tally-row" data-goal="herbal-arrest"><span class="tally-mark"></span><span class="tally-goal">최다 투표자로 체포당하지 않는다</span><span class="tally-pt">4점</span></li>
+          <li class="tally-row" data-goal="herbal-culprit"><span class="tally-mark"></span><span class="tally-goal">실제로 왕을 죽게 만든 범인을 지목하여 최다 득표자로 만든다</span><span class="tally-pt">3점</span></li>
+          <li class="tally-row" data-goal="herbal-hide"><span class="tally-mark"></span><span class="tally-goal">정체가 들켜 호련당에 화가 미치게 두지 않는다 <em>&middot; &#9829; 카드를 발견했다면 달성</em></span><span class="tally-pt">2점</span></li>
+          <li class="tally-row" data-goal="herbal-rp"><span class="tally-mark"></span><span class="tally-goal">RP &mdash; 거짓말할 때 안경을 고쳐 쓰거나 귀를 만지기</span><span class="tally-pt">1점</span></li>
+          <li class="tally-row" data-goal="herbal-final"><span class="tally-mark"></span><span class="tally-goal">?점 &mdash; 아버지와 형을 깜짝 놀라게 할 훌륭한 실적을 낸다</span><span class="tally-pt">5점</span></li>
+        </ul>
+      </article>
+
+      <article class="tally-card c-priest" data-doctor="priest">
+        <div class="tally-head"><span class="tally-name">사제</span><span class="tally-sum" data-sum></span></div>
+        <ul class="tally-list">
+          <li class="tally-row" data-goal="priest-arrest"><span class="tally-mark"></span><span class="tally-goal">최다 투표자로 체포당하지 않는다</span><span class="tally-pt">4점</span></li>
+          <li class="tally-row" data-goal="priest-truth"><span class="tally-mark"></span><span class="tally-goal">아는 사실에 대해 거짓으로 대답하지 않는다 <em>&middot; 아래 〈주요 질문 평가〉에서 가립니다</em></span><span class="tally-pt">3점</span></li>
+          <li class="tally-row" data-goal="priest-culprit"><span class="tally-mark"></span><span class="tally-goal">왕을 살해한 진범을 최다 득표자로 만든다 <em>&middot; &#9827; 카드를 발견했다면 지목과 무관하게 달성</em></span><span class="tally-pt">2점</span></li>
+          <li class="tally-row" data-goal="priest-rp"><span class="tally-mark"></span><span class="tally-goal">RP &mdash; 타인에게 '이단 놈' 최소 다섯 번 사용하기</span><span class="tally-pt">1점</span></li>
+          <li class="tally-row" data-goal="priest-final"><span class="tally-mark"></span><span class="tally-goal">?점 &mdash; 선한 자들을 구한다</span><span class="tally-pt">5점</span></li>
+        </ul>
+      </article>
+
+      <article class="tally-card c-western" data-doctor="western">
+        <div class="tally-head"><span class="tally-name">양의사</span><span class="tally-sum" data-sum></span></div>
+        <ul class="tally-list">
+          <li class="tally-row" data-goal="western-arrest"><span class="tally-mark"></span><span class="tally-goal">어떤 경우에도 체포당하지 않는다</span><span class="tally-pt">5점</span></li>
+          <li class="tally-row" data-goal="western-steal"><span class="tally-mark"></span><span class="tally-goal">한의사의 약품을 훔쳤다는 사실을 끝까지 인정하지 않는다 <em>&middot; &#9829; 카드를 발견했다면 달성</em></span><span class="tally-pt">2점</span></li>
+          <li class="tally-row" data-goal="western-herbal"><span class="tally-mark"></span><span class="tally-goal">불경한 한의사 호준을 최다 득표자로 만든다</span><span class="tally-pt">1점</span></li>
+          <li class="tally-row" data-goal="western-rp"><span class="tally-mark"></span><span class="tally-goal">RP &mdash; 사제를 제외한 모두에게 반말하기</span><span class="tally-pt">5점</span></li>
+          <li class="tally-row" data-goal="western-plan"><span class="tally-mark"></span><span class="tally-goal">왕자파의 계획을 차질 없이 완수한다</span><span class="tally-pt">3점</span></li>
+        </ul>
+      </article>
+
+    </div>
+
     <article class="ending-script" style="margin-top:34px">
+      <section class="script-block" style="--section-color:var(--priest)">
+        <p class="script-kicker">사제 &middot; 3점</p>
+        <h2>주요 질문 평가</h2>
+        <p>사제의 3점 &mdash; <em>"명예로운 타사칼의 사제로서, 내가 아는 사실에 대해 거짓으로 대답하지 않는다"</em> &mdash; 는 게임이 끝난 뒤 <strong>주요 질문을 되짚어</strong> 판정합니다. 사제 담당 플레이어가 판 중에 받은 질문을 떠올리고, 나머지가 기억나는 대로 보탭니다.</p>
+        <p>판정의 축은 하나입니다 &mdash; <strong style="color:var(--ink-strong)">캐릭터 시트에 적힌 것을 거짓으로 말했는가.</strong> 침묵과 회피는 거짓이 아니고, 판 안에서 알게 되거나 추측한 것은 <strong>틀렸더라도</strong> 거짓이 아닙니다.</p>
+
+        <a href="7-1-priest.html" data-keep-query class="story-link" style="margin-top:16px;--card-color:var(--priest);--card-glow:var(--priest-soft)">
+          <span class="story-link-copy"><strong>주요 질문과 정답 열기</strong><span>4시 침소에서 그가 본 것, 자기 능력에 대한 답, 소명파 정보의 출처까지 &mdash; 질문마다의 정답을 모았습니다. 짧게 답한 것은 거짓이 아닙니다.</span></span>
+          <span class="ending-arrow">&#10095;</span>
+        </a>
+
+        <div class="verdict-pick c-priest" id="truth-pick">
+          <button type="button" data-truth="ok">거짓은 없었다 &middot; 3점 달성</button>
+          <button type="button" data-truth="no">거짓이 있었다 &middot; 미달</button>
+        </div>
+        <p class="reading-order-note">고르면 위 채점판의 사제 항목에 반영됩니다.</p>
+      </section>
+
+
       <section class="script-block final-block">
         <p class="script-kicker">TOTAL</p>
         <h2>총점 합산과 승패</h2>
@@ -70,7 +171,6 @@
         <p>이번 판에서 그 길이 닫혔다면, 그것은 <strong>나머지 다섯이 제 몫을 해냈다는 뜻</strong>입니다.</p>
         <p>그리고 반대편도 사실입니다. 다섯은 서로 묻고 맞춰 보며 같은 방향으로 나아가지만, <strong style="color:var(--western)">진범은 혼자 반대 방향으로 걷습니다.</strong> 아는 것을 말하지 못하고, 몰리는 순간에도 혼자 답을 만들어 내야 합니다. 이 게임에서 가장 외롭고 가장 품이 많이 드는 자리입니다.</p>
         <p>그러니 <strong style="color:var(--ink-strong)">점수판이 어떻게 끝났든</strong>, 오늘 이 판이 재미있었다면 그 몫의 상당 부분은 율리시스를 맡은 사람에게 돌아갑니다. 그가 끝까지 버텨 주었기에 나머지 다섯의 추리가 성립했습니다. 일찍 잡혀 점수를 잃었더라도 마찬가지입니다. <strong>잡히는 것까지가 그 역할이기 때문입니다.</strong></p>
-        <p class="reading-order-note">테이블에서 한 번 소리 내어 읽어 주면 좋습니다.</p>
       </section>
     </article>
 
@@ -100,6 +200,11 @@
       <p>가지 않은 길의 결말을<br>자유롭게 열어 봅니다.</p>
     </div>
     <p class="section-desc">아래 결말은 열람용으로 열립니다. 이번 판의 기록 없이 열리므로, 비밀 공개 여부 등으로 갈리는 문단은 모든 갈래가 함께 표시됩니다.</p>
+
+    <a href="9-flow.html" data-keep-query class="story-link" style="margin-top:18px;--card-color:var(--gold);--card-glow:var(--gold-soft)">
+      <span class="story-link-copy"><strong>부활의 갈림길 &mdash; 흐름도로 보기</strong><span>오늘 밤 지나온 길과, 지나지 않은 길을 한 장으로 봅니다. 누가 구속되었느냐에 따라 어떤 결말이 닫히는지도 여기서 확인할 수 있습니다.</span></span>
+      <span class="ending-arrow">&#10095;</span>
+    </a>
 
     <div class="ending-list">
       <a class="ending-card ending-1" href="5-ending-1.html?view=1">
@@ -134,10 +239,6 @@
       </a>
     </div>
 
-    <a href="/" class="story-link" style="margin-top:34px">
-      <span class="story-link-copy"><strong>플레이해 주셔서 감사합니다</strong><span>Project DullG의 다른 작품을 보러 갑니다.</span></span>
-      <span class="ending-arrow">&#10095;</span>
-    </a>
 
     <div class="nav-links">
       <a href="6-truth.html" data-keep-query>진상 해설로</a>
@@ -149,13 +250,111 @@
   <script>
   (function () {
     var DE = window.DoctorEnding;
-    // 이번 판이 도달한 결말 카드에 표식을 남긴다. 기록이 없으면 아무것도 하지 않는다.
-    var n = DE.ending(DE.read());
-    if (!n) return;
-    var card = document.querySelector('.ending-card.ending-' + n);
-    if (!card) return;
-    card.style.borderColor = 'var(--card-color)';
-    card.querySelector('.ending-badge').textContent = '이번 판의 결말';
+    var st = DE.read();
+    var A = st.arrested || [];
+    var n = DE.ending(st);
+    var has = function (id) { return A.indexOf(id) !== -1; };
+
+    // ── 이번 판이 도달한 결말 카드에 표식을 남긴다.
+    if (n) {
+      var card = document.querySelector('.ending-card.ending-' + n);
+      if (card) {
+        card.style.borderColor = 'var(--card-color)';
+        card.querySelector('.ending-badge').textContent = '이번 판의 결말';
+      }
+    }
+
+    // ── 채점판. 구속자 명단과 결말만으로 갈리는 목표만 여기서 판정하고,
+    //    그 자리에 있던 사람만 알 수 있는 것은 손대지 않는다.
+    var M = 'manual';
+    var V = {};
+
+    /** 사제의 ?점 — 무고한 자를 지켰거나, 제 손으로 불을 들었는가. */
+    function priestFinal() {
+      if (n === 4) return 'ok';
+      if (n !== 1) return 'no';
+      if (st.priest === 'agree' || st.priest === 'barehand') return 'ok';
+      // 막지 않았고 남의 손이 그 물을 들어 왕이 살아난 판 — 구한 것은 맞으나 그의 손은 아니다.
+      if (st.priest === 'allow' && (st.hands === 'western' || st.hands === 'other')) return 'half';
+      return 'no';
+    }
+
+    if (st.arrested && n) {
+      var revived = n === 1 || n === 2;
+
+      // 다섯의 4점은 시트 문구 그대로 '최다 투표자로' 체포되었는가만 본다.
+      // 양의사만 "어떤 경우에도"라 판 전체를 본다 — 엔딩 6은 전원이 갇히고,
+      // 중앙의원회로 함께 갔다가 의식이 깨진 판은 가담자로 함께 끌려간다.
+      var westernFree = !has('western') && n !== 6 && !(st.med === 'join' && n === 3);
+
+      // 문양 조항이 붙은 목표는 카드 발견으로 뒤집히므로, 조건을 채웠을 때만 확정한다.
+      var bySymbol = function (met) { return met ? 'ok' : M; };
+
+      V = {
+        'plague-arrest':    has('plague') ? 'no' : 'ok',
+        'plague-culprit':   bySymbol(has('western')),
+        'plague-final':     revived ? 'ok' : 'no',
+
+        'talisman-arrest':  has('talisman') ? 'no' : 'ok',
+        // 소명파를 무너뜨린 원흉은 모함하고 소문을 퍼뜨린 자 — 양의사다.
+        'talisman-origin':  has('western') ? 'ok' : 'no',
+        // 부활이 활명술을 증명한 판은 달성, 사교로 낙인찍힌 판은 미달.
+        // 엔딩 4는 정체를 지켰는지에 달려 있어 테이블이 가린다.
+        'talisman-final':   revived ? 'ok' : (n === 4 ? M : 'no'),
+
+        'acupunct-arrest':  has('acupunct') ? 'no' : 'ok',
+        'acupunct-protect': (has('plague') || has('herbal')) ? 'no' : 'ok',
+        'acupunct-final':   (revived && !has('acupunct')) ? 'ok' : 'no',
+
+        'herbal-arrest':    has('herbal') ? 'no' : 'ok',
+        'herbal-culprit':   has('western') ? 'ok' : 'no',
+        'herbal-final':     (revived || n === 4) ? 'ok' : 'no',
+
+        'priest-arrest':    has('priest') ? 'no' : 'ok',
+        'priest-culprit':   bySymbol(has('western')),
+        'priest-final':     priestFinal(),
+
+        'western-arrest':   westernFree ? 'ok' : 'no',
+        'western-herbal':   has('herbal') ? 'ok' : 'no',
+        'western-plan':     revived ? 'no' : 'ok'
+      };
+    } else {
+      document.getElementById('tally-none').hidden = false;
+    }
+
+    var LABEL = { ok: '\u25CB 달성', half: '\u25B3 절반', no: '\u2717 미달', manual: '\u25C7 테이블' };
+
+    function paint() {
+      Array.prototype.forEach.call(document.querySelectorAll('.tally-card'), function (card) {
+        var fixed = 0, open = 0;
+        Array.prototype.forEach.call(card.querySelectorAll('.tally-row'), function (row) {
+          var v = V[row.getAttribute('data-goal')] || M;
+          var pt = parseFloat(row.querySelector('.tally-pt').textContent) || 0;
+          row.className = 'tally-row is-' + v;
+          row.querySelector('.tally-mark').textContent = LABEL[v];
+          if (v === 'ok') fixed += pt;
+          else if (v === 'half') fixed += pt / 2;
+          else if (v === M) open += pt;
+        });
+        card.querySelector('[data-sum]').innerHTML = open
+          ? '확정 <strong>' + fixed + '점</strong> · 테이블 판정 최대 +' + open + '점'
+          : '<strong>' + fixed + '점</strong> · 확정';
+      });
+    }
+    paint();
+
+    // ── 사제의 3점은 테이블이 내린 판정을 그대로 받아 적는다.
+    var pick = document.getElementById('truth-pick');
+    pick.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-truth]');
+      if (!b) return;
+      Array.prototype.forEach.call(pick.querySelectorAll('button'), function (x) {
+        x.classList.remove('is-picked');
+      });
+      b.classList.add('is-picked');
+      V['priest-truth'] = b.getAttribute('data-truth');
+      paint();
+    });
   })();
   </script>
 </body>

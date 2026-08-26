@@ -184,6 +184,11 @@
   /**
    * 1~3단계 판정. 담당자가 포박되었거나 물건이 나오지 않은 단계를 돌려준다.
    * keys가 null이면 물건 판정은 건너뛰고 담당자 포박만 본다 (단계 화면 진입 전).
+   *
+   * ※ 판이 끝난 뒤에만 부른다. 물건은 단계를 통과할 때마다 하나씩 붙으므로,
+   *   진행 중에 부르면 아직 이르지 않은 단계가 전부 '물건 없음'으로 잡힌다 —
+   *   2단계 화면에서 "2단계 실패"가 되는 식이다. 진행 중인 화면은 이 값을
+   *   쓰지 말고, 지금 서 있는 자리를 화면이 스스로 말하게 둔다.
    */
   function failedSteps(arrested, keys) {
     var out = arrested || [];
@@ -248,6 +253,11 @@
    * 아래 nextPage 한 곳에서만 정한다 — 각 화면의 HTML에는 조건 분기를 두지 않는다.
    */
   var PAGES = {
+    arrest: 'index.html',           // 지목 결과 입력
+    declare: '1-declare.html',      // 부활 선언
+    consent: '2-consent.html',      // 찬반 투표
+    queen: '2-1-queen.html',        // 왕비의 되물음 (무구속 판에서 물러섰을 때)
+    ritual: '3-ritual.html',        // 의식 준비
     step1Free: '4-1-herbal.html',   // 한의사가 자리에 있다
     step1Held: '4-1-central.html',  // 한의사가 묶여 있다 → 중앙의원회
     step1Halt: '4-1-halt.html',     // 약이 끝내 오지 않았다
@@ -260,12 +270,56 @@
     priest: '4-4-priest.html',      // 사제의 결단
     hands: '4-4-hands.html',        // 성수가 테이블로 열린 판 · 누가 드는가
     nofire: '4-4-nobody.html',      // 성수도 깨졌고 사제도 없다
-    account: '5-account.html'       // 오늘의 부활 — 경과 낭독
+    after: '4-5-after.html',        // 불이 지나간 자리 — 그 밤이 정리되는 장면
+    account: '5-account.html'       // 오늘의 부활 — 경과 낭독 (결말을 읽은 뒤 되짚는 페이지)
   };
+
+  /**
+   * 4단계까지 간 판이 결말 직전에 모이는 자리. 불이 지나갔든 오지 않았든
+   * 여기로 합류한다. 그 자리의 장면을 갈아끼울 때 고칠 곳은 이 한 줄뿐이다.
+   */
+  var AFTER_FIRE = PAGES.after;
+
+  /**
+   * 이 판이 도착할 결말 페이지.
+   * 판정이 끝나지 않은 상태로 불릴 일은 없지만, 불리면 포기 경로로 읽는다.
+   */
+  function endingNo(st) {
+    return ending(st) || judge((st && st.arrested) || []).giveUpEnding;
+  }
+
+  /** 결말 번호로 그 결말의 파일을 짚는다. 결말 파일 이름을 아는 곳은 여기뿐이다. */
+  function endingFile(n) {
+    return '5-ending-' + n + '.html';
+  }
+
+  function endingPage(st) {
+    return endingFile(endingNo(st));
+  }
+
+  /**
+   * [다음 순서] 버튼 하나를 이 판의 결말로 향하게 한다.
+   * 결말의 이름과 색까지 함께 맞추므로, 낭독 화면은 파일명을 알 필요가 없다.
+   */
+  function endingLink(st) {
+    var go = global.document.getElementById('go');
+    var label = global.document.getElementById('go-label');
+    if (!go) return;
+    var n = endingNo(st);
+    go.href = endingPage(st) + query(st);
+    go.style.setProperty('--card-color', 'var(--' + ENDING_COLORS[n] + ')');
+    go.style.setProperty('--card-glow', 'var(--' + ENDING_COLORS[n] + '-soft)');
+    if (label) label.textContent = '엔딩 ' + n + ' · ' + ENDING_TITLES[n];
+  }
 
   /**
    * 지금 화면 다음에 열릴 페이지.
    * from 은 화면이 스스로를 부르는 이름이고, 판단 재료는 구속자 명단뿐이다.
+   *
+   * 낭독은 겹치지 않는다 — 방금 테이블에서 읽은 장면을 결말 직전에 다시
+   * 요약하지 않는다. 그래서 모든 갈래가 결말로 직행하고, 4단계까지 간 판만
+   * 아직 낭독되지 않은 '불이 지나간 자리'를 한 번 거친다.
+   * 경과 낭독(5-account)은 결말을 읽은 뒤 되짚고 싶을 때 여는 페이지다.
    */
   function nextPage(from, st) {
     var A = (st && st.arrested) || [];
@@ -290,31 +344,304 @@
         if (held('priest')) return st.choice === 1 ? PAGES.hands : PAGES.nofire;
         return PAGES.priest;
       // 양의사가 먼저 뿌린 판은 사제가 답할 차례 자체가 오지 않는다.
-      case 'flaskspray': return PAGES.account;
+      case 'flaskspray': return AFTER_FIRE;
       // 사제가 막지 않았거나 묶여 있으면 성수는 테이블로 넘어간다.
       case 'priest':
-        return PRIEST_OPEN.indexOf(st.priest) !== -1 ? PAGES.hands : PAGES.account;
-      case 'hands': return PAGES.account;
-      default: return PAGES.account;   // 처분 이후와 모든 실패 낭독은 경과로 모인다
+        return PRIEST_OPEN.indexOf(st.priest) !== -1 ? PAGES.hands : AFTER_FIRE;
+      case 'hands': return AFTER_FIRE;
+      // 물도 손도 남지 않은 판. hands와 목적지는 같지만 전이는 따로 둔다 —
+      // 한쪽을 고칠 때 다른 쪽이 말없이 딸려 가지 않도록.
+      case 'nofire': return AFTER_FIRE;
+      // 합류점(4-5-after)에서 결말로 가는 길은 endingLink 가 잡는다.
+      default: return endingPage(st);   // 실패·포기 낭독은 그 자리에서 끝나고 결말로 간다
     }
   }
 
   /**
-   * 이번 판의 기록을 patch만큼 갱신하고 다음 페이지로 넘어간다.
+   * ─── 갈래 지도 ───────────────────────────────────────────────
+   *
+   * 화면 하나가 마디 하나이고, 그 아래 달린 것이 그 자리에서 고를 수 있는 길이다.
+   * 여기에 목적지는 적지 않는다 — 어디로 가는지는 위의 nextPage 한 곳에서만 정하고,
+   * 이 표는 '무엇을 고를 수 있는가'와 '그 선택이 판에 무엇을 남기는가'만 안다.
+   * 목적지를 두 곳에 적으면 언젠가 한쪽만 고쳐져 조용히 어긋난다.
+   *
+   * when 은 그 갈래가 아예 나타나지 않는 판을 걸러낸다. 화면이 스스로
+   * [data-when-*] 로 숨기는 것과 같은 조건이므로, 한쪽을 고치면 다른 쪽도 고친다.
+   */
+  function free(id) { return function (A) { return A.indexOf(id) === -1; }; }
+  function bound(id) { return function (A) { return A.indexOf(id) !== -1; }; }
+  function noneBound(A) { return !A.length; }
+  function someBound(A) { return !!A.length; }
+
+  // 성수병은 양의사가 건드린 판에서만 깨진다. 양의사가 묶여 있었으면 온전하다.
+  function intact(A, st) { return !st.choice || st.choice === 1; }
+  function smashed(A, st) { return st.choice === 2 || st.choice === 3; }
+
+  var FLOW = [
+    { id: 'arrest', page: 'arrest', title: '지목', kicker: '누가 구속되었는가', picks: [
+      { id: 'blocked', label: '역병의사가 구속되었다', desc: '부활을 선포할 사람이 남지 않는다',
+        to: '@end', patch: { revive: false }, when: bound('plague') },
+      { id: 'open', label: '역병의사는 자리에 있다',
+        to: 'declare', patch: {}, when: free('plague') }
+    ]},
+
+    { id: 'declare', page: 'declare', title: '부활 선언', kicker: '노트를 꺼내는가', picks: [
+      { id: 'no', label: '비술을 꺼내지 않는다', desc: '왕의 시신에 손대지 않는다',
+        to: '@end', patch: { revive: false } },
+      { id: 'yes', label: '노트를 펼친다', to: 'consent', patch: { revive: true } }
+    ]},
+
+    { id: 'consent', page: 'consent', title: '의식 개시', kicker: '찬반 투표', picks: [
+      { id: 'no', label: '물러선다', desc: '대역죄를 감당할 수 없다',
+        to: '@end', patch: { revive: true, vote: false }, when: someBound },
+      // 아무도 지목하지 않은 판에서만 왕비가 한 번 더 묻는다 — 고할 것도 없고
+      // 되살릴 뜻도 없다는 답을 그대로 받지 않기 때문이다.
+      { id: 'asked', label: '물러선다', desc: '왕비가 한 번 더 묻는다',
+        to: 'queen', patch: { revive: true, vote: false }, when: noneBound },
+      { id: 'yes', label: '위험을 감수한다', to: 'ritual', patch: { revive: true, vote: true } }
+    ]},
+
+    { id: 'queen', page: 'queen', title: '왕비의 되물음', kicker: '한 번 더 묻는다', depth: 1, picks: [
+      { id: 'silent', label: '그래도 답하지 않는다', desc: '두 번째 물음에도 조용하다',
+        to: '@end', patch: { revive: true, vote: false } },
+      { id: 'turn', label: '노트를 다시 펼친다', to: 'ritual', patch: { revive: true, vote: true } }
+    ]},
+
+    { id: 'ritual', page: 'ritual', title: '부활의 비술', kicker: '의식 준비', picks: [
+      { id: 'begin', label: '가져온 것을 서로에게 돌려준다', go: 'ritual', patch: {} }
+    ]},
+
+    { id: 'step1', page: 'step1Free', title: '약을 짓다', kicker: '부활 판정 1 / 4', picks: [
+      { id: 'free', label: '한의사가 자리에 있다', go: 'step1', patch: { addKey: 'note' },
+        when: free('herbal') },
+      { id: 'held', label: '한의사는 포박되어 있다', desc: '남은 약재를 가늠할 사람이 없다',
+        go: 'step1held', patch: {}, when: bound('herbal') }
+    ]},
+
+    { id: 'central', page: 'step1Held', title: '중앙의원회', kicker: '약을 청하다', depth: 1, picks: [
+      { id: 'join', label: '의원장이 함께 약을 타온다', go: 'step1',
+        patch: { med: 'join', addKey: 'note' }, when: free('western') },
+      { id: 'deny', label: '의원장이 등을 돌린다', go: 'step1halt',
+        patch: { med: 'deny' }, when: free('western') },
+      { id: 'shut', label: '약을 청할 곳이 없다', desc: '의원장도 묶여 있다',
+        go: 'step1halt', patch: { med: 'shut' }, when: bound('western') }
+    ]},
+
+    { id: 'halt', page: 'step1Halt', title: '약이 오지 않다', kicker: '1단계에서 멈춤', depth: 2, picks: [
+      { id: 'end', label: '시신에 손대기 전에 끝났다', go: 'halt', patch: {} }
+    ]},
+
+    { id: 'step2', page: 'step2', title: '혼을 훔치다', kicker: '부활 판정 2 / 4', picks: [
+      { id: 'free', label: '부적술사가 자리에 있다', go: 'step2', patch: { addKey: 'talis' },
+        when: free('talisman') },
+      { id: 'held', label: '부적술사는 포박되어 있다', desc: '부적을 쓸 줄 아는 사람이 없다',
+        go: 'step2fail', patch: {}, when: bound('talisman') }
+    ]},
+
+    { id: 'broken', page: 'step2Fail', title: '부적이 타지 않다', kicker: '2단계에서 실패', depth: 1, picks: [
+      { id: 'end', label: '이미 왕의 시신에 손을 댄 뒤였다', go: 'fail', patch: {} }
+    ]},
+
+    { id: 'step3', page: 'step3', title: '혼을 봉하다', kicker: '부활 판정 3 / 4', picks: [
+      { id: 'full', label: '세침통이 갖추어져 있다', go: 'step3',
+        patch: { addKey: 'card1', needle: 'full' }, when: free('acupunct') },
+      { id: 'lent', label: '역병의사가 제 침을 내준다', desc: '마지막 한 자리가 비어 있었다',
+        go: 'step3', patch: { addKey: 'card1', needle: 'lent' }, when: free('acupunct') },
+      { id: 'held', label: '침술사는 포박되어 있다', desc: '침을 놓을 수 있는 사람이 없다',
+        go: 'step3fail', patch: {}, when: bound('acupunct') }
+    ]},
+
+    { id: 'slipped', page: 'step3Fail', title: '혼이 다시 빠져나가다', kicker: '3단계에서 실패', depth: 1, picks: [
+      { id: 'end', label: '봉할 손이 없었다', go: 'fail', patch: {} }
+    ]},
+
+    { id: 'descent', page: 'descent', title: '강림', kicker: '부활 판정 4 / 4', picks: [
+      { id: 'go', label: '하늘에서 검은 것이 내려온다', go: 'descent', patch: {} }
+    ]},
+
+    { id: 'flask', page: 'flask', title: '탁자 끝의 성수병', kicker: '양의사의 선택', picks: [
+      { id: 'keep', label: '가만히 둔다', desc: '성수가 남는다', go: 'flask', patch: { choice: 1 } },
+      { id: 'drop', label: '슬쩍 떨어뜨린다', desc: '병이 산산조각 난다',
+        go: 'flask', patch: { choice: 2 } },
+      { id: 'throw', label: '집어 던진다', desc: '명백한 방해다', go: 'flask', patch: { choice: 3 } },
+      { id: 'spray', label: '집어 들어 왕에게 뿌린다', desc: '사제의 차례가 오지 않는다',
+        go: 'flaskspray', patch: { priest: 'bypassed', hands: 'western' } }
+    ]},
+
+    { id: 'nofire', page: 'nofire', title: '불은 피지 않다', kicker: '물도 손도 남지 않았다', depth: 1, picks: [
+      { id: 'go', label: '검은 것이 그대로 내려온다', go: 'nofire',
+        patch: { priest: 'absent', hands: 'none' } }
+    ]},
+
+    { id: 'priest', page: 'priest', title: '사제의 결단', kicker: '성수를 든 손', picks: [
+      { id: 'agree', label: '내가 불사른다', go: 'priest', patch: { priest: 'agree' }, when: intact },
+      { id: 'allow', label: '들지 않되 막지도 않는다', desc: '성수가 탁자로 열린다',
+        go: 'priest', patch: { priest: 'allow' }, when: intact },
+      { id: 'avert', label: '성수를 거둔다', go: 'priest', patch: { priest: 'avert' }, when: intact },
+      { id: 'barehand', label: '맨손으로 불을 피운다', go: 'priest',
+        patch: { priest: 'barehand' }, when: smashed },
+      { id: 'unable', label: '끝내 손을 내밀지 못한다', go: 'priest',
+        patch: { priest: 'unable' }, when: smashed }
+    ]},
+
+    { id: 'hands', page: 'hands', title: '탁자에 남은 성수', kicker: '그 물을 드는 사람', picks: [
+      { id: 'western', label: '양의사가 든다', go: 'hands', when: free('western'),
+        patch: function (st) { return { hands: 'western', priest: st.priest || 'absent' }; } },
+      { id: 'other', label: '다른 사람이 든다', go: 'hands',
+        patch: function (st) { return { hands: 'other', priest: st.priest || 'absent' }; } },
+      { id: 'none', label: '아무도 들지 않는다', go: 'hands',
+        patch: function (st) { return { hands: 'none', priest: st.priest || 'absent' }; } }
+    ]},
+
+    // 이 화면은 nextPage 를 거치지 않는다 — endingLink 가 결말로 곧장 잇는다.
+    { id: 'after', page: 'after', title: '불이 지나간 자리', kicker: '그 밤이 정리된다', picks: [
+      { id: 'end', label: '결말로', to: '@end', patch: {} }
+    ]}
+  ];
+
+  /** 지도에서 마디 하나를 꺼낸다. */
+  function scene(id) {
+    for (var i = 0; i < FLOW.length; i++) {
+      if (FLOW[i].id === id) return FLOW[i];
+    }
+    return null;
+  }
+
+  /** nextPage 가 돌려준 파일이 지도의 어느 마디인지 되짚는다. */
+  function sceneOfFile(file) {
+    if (/^5-ending-/.test(file)) return '@end';
+    for (var i = 0; i < FLOW.length; i++) {
+      if (PAGES[FLOW[i].page] === file) return FLOW[i].id;
+    }
+    return '@end';
+  }
+
+  /** 이 갈래가 남기는 기록. 앞선 기록을 봐야 정해지는 것은 함수로 적혀 있다. */
+  function pickPatch(pick, st) {
+    return typeof pick.patch === 'function' ? pick.patch(st) : (pick.patch || {});
+  }
+
+  /**
+   * 구속자 명단이 이러할 때 갈 수 있는 모든 길을 한 번씩 훑는다.
+   * 흐름도의 지도도, '가정해 보기'의 도달 판정도 모두 이 순회 하나에서 나온다.
+   *
+   * visit(scene, pick, stAfter, toId) 로 갈래마다 불린다.
+   * toId 가 '@end' 면 그 갈래는 그대로 결말로 빠진다.
+   */
+  function walk(arrested, visit) {
+    var A = arrested || [];
+    var seen = {};
+
+    step('arrest', { arrested: A, revive: null, vote: null, keys: null,
+                     med: null, priest: null, hands: null, choice: null, needle: null });
+
+    function step(id, st) {
+      var sig = id + query(st);
+      if (seen[sig]) return;
+      seen[sig] = true;
+
+      var sc = scene(id);
+      if (!sc) return;
+
+      sc.picks.forEach(function (p) {
+        if (p.when && !p.when(A, st)) return;
+        var next = applyPatch(st, pickPatch(p, st));
+        var to = p.to || sceneOfFile(nextPage(p.go, next));
+        visit(sc, p, next, to);
+        if (to !== '@end') step(to, next);
+      });
+    }
+  }
+
+  /**
+   * 이 판이 실제로 밟은 마디들. 흐름도에서 금색으로 잇는 길이다.
+   * 아직 답하지 않은 화면에 이르면 거기서 멈춘다 — 판이 끝나지 않았다는 뜻이다.
+   */
+  function path(st) {
+    var A = (st && st.arrested) || [];
+    var out = [];
+    var id = 'arrest';
+    var guard = 0;
+
+    while (id && id !== '@end' && guard++ < 64) {
+      var sc = scene(id);
+      if (!sc) break;
+      out.push(sc.id);
+
+      var taken = null;
+      for (var i = 0; i < sc.picks.length && !taken; i++) {
+        var p = sc.picks[i];
+        if (p.when && !p.when(A, st)) continue;
+        if (recorded(p, st)) taken = p;
+      }
+      if (!taken) break;
+
+      out.push(sc.id + '/' + taken.id);
+      var next = applyPatch(st, pickPatch(taken, st));
+      id = taken.to || sceneOfFile(nextPage(taken.go, next));
+    }
+
+    if (id === '@end') out.push('@end');
+    return out;
+  }
+
+  /** 이 갈래가 남겼어야 할 것이 판의 기록에 그대로 있는가. */
+  function recorded(pick, st) {
+    var p = pickPatch(pick, st);
+    for (var k in p) {
+      if (k === 'addKey') {
+        if (!st.keys || st.keys.indexOf(p[k]) === -1) return false;
+      } else if (st[k] !== p[k]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * 이 구속자 명단으로 닿을 수 있는 것들.
+   * nodes 는 흐름도에서 살아남는 마디, endings 는 도달 가능한 결말 번호다.
+   * 부적술사·침술사·역병의사 중 하나라도 묶이면 revived 는 거짓이 된다.
+   */
+  function reachable(arrested) {
+    var nodes = {}, ends = {};
+
+    walk(arrested, function (sc, pick, next, to) {
+      nodes[sc.id] = true;
+      nodes[sc.id + '/' + pick.id] = true;
+      if (to === '@end') ends['e' + endingNo(next)] = true;
+    });
+
+    var list = [];
+    for (var k in ends) list.push(Number(k.slice(1)));
+    list.sort();
+
+    return { nodes: nodes, endings: list, revived: !!(ends.e1 || ends.e2) };
+  }
+
+  /**
+   * 판의 기록에 patch 만큼 덧쓴 새 기록을 돌려준다. 원본은 건드리지 않는다.
    * addKey 는 확보한 물건을 하나 더한다는 뜻이다.
    */
-  function go(from, patch) {
-    var st = read();
-    var p = {}, k;
+  function applyPatch(st, patch) {
+    var out = {}, p = {}, k;
+    for (k in st) out[k] = st[k];
     for (k in (patch || {})) p[k] = patch[k];
 
     if (p.addKey) {
-      st.keys = (st.keys || []).filter(function (x) { return x !== p.addKey; }).concat(p.addKey);
+      out.keys = (out.keys || []).filter(function (x) { return x !== p.addKey; }).concat(p.addKey);
       delete p.addKey;
     }
-    for (k in p) st[k] = p[k];
+    for (k in p) out[k] = p[k];
+    return out;
+  }
 
-    global.location.href = nextPage(from, st) + query(st);
+  /** 이번 판의 기록을 patch만큼 갱신하고 다음 페이지로 넘어간다. */
+  function go(from, patch) {
+    var st = applyPatch(read(), patch);
+    var q = query(st);
+    if (browsing()) q += (q ? '&' : '?') + 'view=1';
+    global.location.href = nextPage(from, st) + q;
   }
 
   /**
@@ -322,7 +649,10 @@
    * 열람 모드에서는 갈래를 전부 펼쳐 둔다.
    */
   function reveal(attr, value, matchAll) {
-    if (browsing()) return;
+    // 열람 모드 — 구속자 명단조차 없이 열렸으면 갈래를 전부 펼쳐 둔다.
+    // 흐름도에서 조합을 지정해 열었다면 그 명단에서 갈리는 자리만 골라내고,
+    // 아직 아무도 고르지 않은 선택으로 갈리는 자리는 그대로 펼쳐 둔다.
+    if (browsing() && (!read().arrested || value === null || value === undefined)) return;
     var nodes = global.document.querySelectorAll('[' + attr + ']');
     Array.prototype.forEach.call(nodes, function (el) {
       var want = (el.getAttribute(attr) || '').split(/\s+/).filter(Boolean);
@@ -370,7 +700,15 @@
 
   var ENDING_COLORS = { 1: 'gold', 2: 'plague', 3: 'talisman', 4: 'priest', 5: 'western', 6: 'ash' };
 
-  /** [data-session-recap] 자리에 이 판의 결과 요약을 채운다. */
+  /**
+   * [data-session-recap] 자리에 이 판이 누구를 묶었는지만 적는다.
+   *
+   * 갈래마다의 결과는 화면 본문이 [data-when-*] 로 이미 말하고, 판 전체를
+   * 되짚는 일은 5-account 가 맡는다. 여기서 한 번 더 표로 옮기면 방금 읽은
+   * 문장이 겹칠 뿐 아니라, 아직 묻지 않은 단계의 답까지 미리 새어 나간다.
+   * 그래서 남기는 것은 구속자 명단 한 줄뿐이다 — 화면마다 "○○가 구속되어
+   * 있습니까?"로 계속 되묻는 값이라, 이것만은 판 내내 눈에 보여야 한다.
+   */
   function renderRecap() {
     var host = global.document.querySelector('[data-session-recap]');
     if (!host) return;
@@ -378,80 +716,15 @@
     var st = read();
     if (!st.arrested) { host.hidden = true; return; }
 
-    var rows = [];
-    rows.push(['구속', st.arrested.length
-      ? '<strong>' + names(st.arrested).join(', ') + '</strong>'
-      : '<strong>없음</strong> (하늘 지목)']);
-
-    if (st.revive !== null) {
-      rows.push(['부활 선언', st.revive ? '<strong>선언했다</strong>' : '<strong>선언하지 않았다</strong>']);
-    }
-
-    if (st.revive && st.vote !== null) {
-      rows.push(['의식 개시', st.vote
-        ? '<strong>시작</strong> · 위험을 감수하기로 함'
-        : '<strong>포기</strong> · 물러서기로 함']);
-    }
-
-    if (st.med) {
-      var mt = {
-        join: '양의사가 <strong>함께 약을 가지러 갔다</strong>',
-        deny: '양의사가 <strong>등을 돌렸다</strong>',
-        shut: '<strong>중앙의원회의 문이 닫혔다</strong>'
-      };
-      rows.push(['약의 조달', mt[st.med]]);
-    }
-
-    if (st.revive && st.vote && st.keys) {
-      // 의식은 첫 실패 지점에서 깨지므로, 요약에는 그 단계만 적는다.
-      var fails = failedSteps(st.arrested, st.keys);
-      var f = fails[0];
-      var why = '';
-      if (f) {
-        // 1단계가 중앙의원회로 넘어간 판은 '물건 없음'이 아니라 약 자체가 원인이다.
-        if (f.step === 1 && st.med === 'deny') why = '양의사가 등을 돌림';
-        else if (f.step === 1 && st.med === 'shut') why = '약고가 열리지 않음';
-        else if (f.actorGone) why = doctor(f.actor).name + ' 포박';
-        else why = f.name + ' 없음';
-      }
-      rows.push(['의식 판정', f
-        ? '<strong>' + f.step + '단계에서 실패</strong> (' + why + ')'
-        : '<strong>1~3단계 성공</strong>']);
-    }
-
-    if (st.priest) {
-      var pt = {
-        agree: '사제가 <strong>성수로 불살랐다</strong>',
-        barehand: '사제가 <strong>맨손으로 불을 피웠다</strong>',
-        allow: '사제는 <strong>들지 않았고, 막지도 않았다</strong>',
-        bypassed: '<strong>사제가 답하기 전에 끝났다</strong>',
-        absent: '사제 <strong>부재</strong> (포박)',
-        avert: '사제가 <strong>성수를 거두었다</strong>',
-        unable: '사제가 <strong>맨손을 내주지 못했다</strong>'
-      };
-      rows.push(['정화', pt[st.priest]]);
-    }
-
-    if (st.hands) {
-      var ht = {
-        western: '<strong>양의사가 성수를 들었다</strong>',
-        other: '<strong>다른 누군가가 성수를 들었다</strong>',
-        none: '<strong>아무도 성수를 들지 않았다</strong>'
-      };
-      rows.push(['성수를 든 손', ht[st.hands]]);
-    }
-
-    if (st.choice) {
-      var ct = { 1: '<strong>가만히 두었다</strong>', 2: '<strong>성수병을 떨어뜨렸다</strong>', 3: '<strong>성수병을 던졌다</strong>' };
-      rows.push(['양의사', ct[st.choice]]);
-    }
-
+    var who = st.arrested.length
+      ? st.arrested.map(function (id) {
+          return '<strong style="color:var(--' + id + ')">' + doctor(id).name + '</strong>';
+        }).join(', ')
+      : '<strong>없음</strong> (하늘 지목)';
 
     host.hidden = false;
     host.className = 'session-recap';
-    host.innerHTML = rows.map(function (r) {
-      return '<div><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
-    }).join('');
+    host.innerHTML = '<div><span class="k">구속</span><span class="v">' + who + '</span></div>';
   }
 
   /** [data-keep-query] 링크에 현재 쿼리를 그대로 물려준다. */
@@ -479,6 +752,15 @@
     browsing: browsing,
     PAGES: PAGES,
     nextPage: nextPage,
+    endingPage: endingPage,
+    endingNo: endingNo,
+    endingFile: endingFile,
+    endingLink: endingLink,
+    FLOW: FLOW,
+    scene: scene,
+    walk: walk,
+    path: path,
+    reachable: reachable,
     go: go,
     reveal: reveal,
     onPick: onPick,
@@ -504,7 +786,25 @@
     if (e.persisted) global.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   });
 
-  function boot() { renderRecap(); keepQuery(); }
+  /**
+   * 열람으로 열린 화면 맨 위에 그 사실을 적는다.
+   * 오늘의 판을 진행하는 중인지, 가지 않은 길을 구경하는 중인지 헷갈리지 않도록.
+   */
+  function markBrowsing() {
+    if (!browsing()) return;
+    var main = global.document.querySelector('.container');
+    if (!main || main.querySelector('.browse-tag')) return;
+
+    var st = read();
+    var tag = global.document.createElement('p');
+    tag.className = 'browse-tag';
+    tag.textContent = st.arrested && st.arrested.length
+      ? '열람 중 · ' + names(st.arrested).join(', ') + '가 구속된 판으로 보고 있습니다'
+      : '열람 중 · 오늘의 판 기록에는 영향을 주지 않습니다';
+    main.insertBefore(tag, main.firstChild);
+  }
+
+  function boot() { markBrowsing(); renderRecap(); keepQuery(); }
 
   if (global.document.readyState === 'loading') {
     global.document.addEventListener('DOMContentLoaded', boot);

@@ -30,15 +30,23 @@
       <p>그 말을 끝으로 <span id="arrest-bound"></span>는 <strong>결박당해 말할수도, 움직일 수도 없게 됩니다.</strong> </p>
     </article>
 
+    <!-- 하늘 지목 판 — 붙잡힌 사람이 없다는 사실 자체에 대한 왕비의 반응. 구속 장면과 배타적으로 열린다. -->
+    <article class="story-panel" id="none-scene" hidden>
+      <p>군사들은 문 앞에 선 채 들어오지 않습니다. 가리켜진 자가 없었으므로, 붙잡아 묶을 사람도 없습니다.</p>
+      <p>왕비는 여섯을 하나씩 눈에 담습니다.</p>
+      <p style="color:var(--ink-strong);font-style:italic">"...아무도 잡지 않겠다는 것이냐. 신기한 일이군."</p>
+      <p style="color:var(--ink-strong);font-style:italic">"여섯이 모여 밤을 지새웠는데, 왕은 여기 누워 있고, 이 방에 구속해야 할 자는 하나도 없다니. 전부 예언대로라는 말인가..."</p>
+    </article>
+
     <article class="story-panel">
-      <p id="queen-lead">하지만, 왕비는 다시 군사를 물리고, 나지막히 말을 꺼냅니다.</p>
+      <p id="queen-lead">하지만, 왕비는 다시 군사를 물리고, 나지막이 말을 꺼냅니다.</p>
       <p style="color:var(--ink-strong);font-style:italic">"...만약 왕이 다시 눈을 뜬다면, 그를 살리는 데 손을 보탠 자들에 대한 의혹이나 왕궁에서 품은 살의는 묻지 않겠다고 했었지. 그 말은 지금도 유효하다."</p>
       <p style="color:var(--ink-strong);font-style:italic">"묻겠다. 이 자리에서, 죽은 왕을 되살릴 수단이 있는 자가 있느냐?"</p>
       <p><strong style="color:var(--plague)">역병의사 담당 플레이어가 답합니다</strong></p>
     </article>
 
     <div class="ending-decision">
-      <p class="decision-kicker"><strong>역병의사</strong>는 부활의 비술 노트를 다른 의사들에게 공개하고, 죽은 왕을 살리는 의식을 제안하시겠습니까?</p>
+      <p class="decision-kicker"><strong>역병의사</strong>가 답합니다</p>
       <h2>비술을 꺼내겠습니까?</h2>
       <p class="reading-order-note">부활 의식에 실패한다면, 부활에 참가한 자들은, 특히 부활을 주도한 당신은 왕의 시신을 모독한 죄를 지게 될지도 모릅니다. 부활의 조건을 고려하여 신중하게 선택해 주세요.</p>
 
@@ -113,7 +121,9 @@
       document.getElementById('arrest-scene').hidden = false;
     } else {
       // 하늘 지목 판 — 아무도 묶이지 않았으므로 물릴 군사도 없다.
-      document.getElementById('queen-lead').textContent = '왕비는 좌중을 천천히 둘러보고, 나지막히 말을 꺼냅니다.';
+      // 왕비가 먼저 그 사실에 답하고, 사면의 약속은 그 말끝에 이어진다.
+      document.getElementById('none-scene').hidden = false;
+      document.getElementById('queen-lead').textContent = '왕비는 잠시 말을 멈추었다가, 나지막이 잇습니다.';
     }
 
     document.getElementById('modal-ok').addEventListener('click', function () {
@@ -135,7 +145,8 @@
         pendingHref = '2-consent.html' + DE.query({ arrested: st.arrested, revive: true });
       } else {
         modalQ.innerHTML = '부활의 비술을 <strong>꺼내지 않는 것</strong>이 맞습니까?';
-        pendingHref = '5-account.html' + DE.query({ arrested: st.arrested, revive: false });
+        var quiet = { arrested: st.arrested, revive: false };
+        pendingHref = DE.endingPage(quiet) + DE.query(quiet);
       }
       modal.hidden = false;
     });

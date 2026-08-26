@@ -1555,6 +1555,15 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
   white-space: nowrap;
 }
 
+/* 정답 칸의 덧붙임 — 말해도 되고 말하지 않아도 되는 부분 */
+.score-table .ans-more {
+  display: block;
+  margin-top: 5px;
+  color: var(--dim);
+  font-size: .88em;
+  line-height: 1.55;
+}
+
 .score-table .ok { color: var(--plague); font-weight: 800; }
 .score-table .half { color: var(--western); font-weight: 800; }
 .score-table .no { color: var(--red); font-weight: 800; }
@@ -1821,6 +1830,101 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
   flex: 0 0 auto;
   color: var(--card-color);
   font-size: 1.1rem;
+}
+
+/* 나아가는 선택지 — 담당자 상징색이 --red와 겹쳐 차단 선택지와 구분되지 않을 때 쓴다 */
+.pick.continue-choice { --card-color: var(--green); }
+
+/* --- 채점판 — 구속자와 결말로 갈리는 목표만 화면이 판정한다 --- */
+.tally {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+}
+
+.tally-card {
+  padding: 15px 18px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--card-color, var(--gold));
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .015);
+}
+
+.tally-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tally-name {
+  color: var(--card-color, var(--ink-strong));
+  font-size: 1.02rem;
+  font-weight: 820;
+}
+
+.tally-sum { color: var(--dim); font-size: .82rem; font-weight: 700; white-space: nowrap; }
+.tally-sum strong { color: var(--ink-strong); font-size: .96rem; }
+
+.tally-list { display: grid; gap: 7px; list-style: none; }
+
+.tally-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: .89rem;
+  line-height: 1.55;
+}
+
+.tally-mark {
+  flex: 0 0 58px;
+  color: var(--ash);
+  font-size: .75rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.tally-row.is-ok .tally-mark { color: var(--plague); }
+.tally-row.is-half .tally-mark { color: var(--western); }
+.tally-row.is-no .tally-mark { color: var(--red); }
+
+.tally-goal { flex: 1; min-width: 0; color: var(--muted); }
+.tally-row.is-ok .tally-goal { color: var(--ink); }
+.tally-row.is-no .tally-goal { color: var(--dim); }
+.tally-goal em { color: var(--dim); font-size: .84rem; font-style: normal; }
+
+.tally-pt { flex: 0 0 auto; color: var(--dim); font-size: .79rem; font-weight: 700; }
+
+/* 사제 3점 — 테이블이 내리는 판정을 채점판에 되돌려 준다 */
+.verdict-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.verdict-pick button {
+  flex: 1 1 200px;
+  padding: 12px 14px;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .015);
+  cursor: pointer;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 760;
+  transition: border-color .2s ease, background .2s ease;
+}
+
+.verdict-pick button:hover { border-color: var(--card-color, var(--gold)); }
+.verdict-pick button.is-picked {
+  color: var(--ink-strong);
+  border-color: var(--card-color, var(--gold));
+  background: var(--card-glow, rgba(255, 255, 255, .06));
 }
 
 /* 불이 꺼진 선택지 — 자리는 남기되 고를 수 없다 */
@@ -2129,4 +2233,386 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
 .modal-btn.is-primary:hover {
   color: #14100c;
   background: #d7b76b;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   부활의 갈림길 (9-flow.html)
+   세로로 내려가는 지도. 마디 아래 그 자리에서 고를 수 있는 길이 달린다.
+   ══════════════════════════════════════════════════════════════ */
+
+.flow {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+}
+
+.flow-scene {
+  position: relative;
+  padding: 0 0 16px;
+}
+
+/* 마디에서 다음 마디로 내려가는 줄 */
+.flow-scene::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+
+.flow-scene:last-child::before,
+.flow-scene.is-last-visible::before { display: none; }
+
+.flow-scene[data-depth="1"] { margin-left: 24px; }
+.flow-scene[data-depth="2"] { margin-left: 48px; }
+
+.flow-head {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.flow-index {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 23px;
+  height: 23px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--dim);
+  font-size: .7rem;
+  font-weight: 820;
+  align-self: center;
+}
+
+.flow-branch-mark {
+  flex: 0 0 23px;
+  text-align: center;
+  color: var(--dim);
+  font-size: .82rem;
+}
+
+.flow-title {
+  color: var(--ink-strong);
+  font-size: 1.02rem;
+  font-weight: 760;
+  letter-spacing: -.01em;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .18s ease;
+}
+
+.flow-title:hover { border-bottom-color: var(--gold); }
+
+.flow-kicker {
+  color: var(--dim);
+  font-size: .76rem;
+}
+
+.flow-picks {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0 0 0 32px;
+  display: grid;
+  gap: 5px;
+}
+
+.flow-pick {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, .012);
+  font-size: .87rem;
+}
+
+/* 줄기에서 갈래로 뻗는 가지 */
+.flow-pick::before {
+  content: '';
+  position: absolute;
+  left: -15px;
+  top: 18px;
+  width: 12px;
+  height: 1px;
+  background: var(--line);
+}
+
+.flow-copy { min-width: 0; }
+
+.flow-label {
+  display: block;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.flow-desc {
+  display: block;
+  margin-top: 2px;
+  color: var(--dim);
+  font-size: .76rem;
+  line-height: 1.5;
+}
+
+.flow-to {
+  flex: 0 0 auto;
+  max-width: 46%;
+  text-align: right;
+  color: var(--dim);
+  font-size: .76rem;
+  line-height: 1.5;
+}
+
+.flow-to.is-end {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.flow-next::before { content: '↓ '; }
+
+.flow-end {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--card-color);
+  border-radius: 999px;
+  color: var(--card-color);
+  font-size: .72rem;
+  font-weight: 720;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background .18s ease;
+}
+
+.flow-end:hover { background: rgba(255, 255, 255, .06); }
+
+.flow-or { color: var(--dim); font-size: .72rem; }
+
+/* ── 오늘 지나온 길 ─────────────────────────────────────── */
+
+.flow-scene.is-taken > .flow-head .flow-index {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #1a1511;
+}
+
+.flow-scene.is-taken::before { background: var(--gold-soft); }
+
+.flow-pick.is-taken {
+  border-color: var(--gold);
+  background: linear-gradient(90deg, var(--gold-soft), rgba(255, 255, 255, .02));
+}
+
+.flow-pick.is-taken .flow-label {
+  color: var(--ink-strong);
+  font-weight: 700;
+}
+
+.flow-pick.is-taken::before { background: var(--gold); }
+
+/* ── 이 판에서는 닫힌 길 ───────────────────────────────── */
+
+.flow-scene.is-dead { opacity: .32; }
+.flow-pick.is-dead { opacity: .32; border-style: dashed; }
+.flow-scene.is-dead .flow-pick.is-dead { opacity: 1; }
+.flow-pick.is-dead .flow-to { font-style: italic; }
+
+/* 접힌 상태 — 이 판에서 갈 수 없는 마디와 갈래를 감춘다 */
+.flow.is-folded > .flow-scene.is-dead,
+.flow.is-folded .flow-pick.is-dead { display: none; }
+
+/* ── 범례 ──────────────────────────────────────────────── */
+
+.flow-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 20px;
+  color: var(--dim);
+  font-size: .75rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-item i {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line-strong);
+}
+
+.legend-item.is-taken i { background: var(--gold); }
+.legend-item.is-dead i { background: var(--line); }
+.flow-legend.is-assuming .legend-item.is-taken { display: none; }
+
+/* 닫힌 길을 펼치는 꺽쇠. 범례 줄 오른쪽 끝에 붙는다. */
+.flow-dead-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  padding: 5px 11px;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 720;
+  transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.flow-dead-toggle:hover {
+  color: var(--ink);
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, .05);
+}
+
+.dead-chev {
+  display: inline-block;
+  font-size: .95em;
+  line-height: 1;
+  transition: transform .18s ease;
+}
+
+.flow-dead-toggle[aria-expanded="true"] .dead-chev { transform: rotate(180deg); }
+
+/* ══════════════════════════════════════════════════════════════
+   만약 이 사람들이 구속되었다면
+   ══════════════════════════════════════════════════════════════ */
+
+.assume { margin-top: 22px; }
+
+.assume-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.assume-chip {
+  --card-color: var(--gold);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-left: 3px solid transparent;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .015);
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .18s ease, background .18s ease;
+}
+
+.assume-chip:hover { border-color: var(--card-color); }
+
+.assume-chip.is-on {
+  border-color: var(--card-color);
+  border-left-color: var(--card-color);
+  background: rgba(255, 255, 255, .05);
+}
+
+.assume-name { font-size: .9rem; font-weight: 740; }
+.assume-role { color: var(--dim); font-size: .72rem; }
+.assume-chip.is-on .assume-name { color: var(--card-color); }
+
+.assume-result {
+  margin-top: 15px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, .22);
+}
+
+.assume-result.is-open { border-color: var(--gold-soft); }
+.assume-result.is-shut { border-color: var(--red-soft); }
+
+.assume-who { color: var(--muted); font-size: .87rem; }
+
+.assume-line {
+  margin-top: 5px;
+  color: var(--ink-strong);
+  font-size: .96rem;
+  font-weight: 740;
+}
+
+.assume-result.is-shut .assume-line { color: var(--red); }
+
+.assume-ends {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.assume-ends-label {
+  margin-right: 2px;
+  color: var(--dim);
+  font-size: .74rem;
+}
+
+.assume-today {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-size: .8rem;
+}
+
+.assume-reset {
+  margin-top: 13px;
+  padding: 9px 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: border-color .18s ease, color .18s ease;
+}
+
+.assume-reset:hover { border-color: var(--gold); color: var(--ink-strong); }
+
+@media (max-width: 560px) {
+  .flow-scene[data-depth="1"] { margin-left: 14px; }
+  .flow-scene[data-depth="2"] { margin-left: 28px; }
+  .flow-picks { padding-left: 26px; }
+  .flow-pick { flex-direction: column; align-items: stretch; gap: 7px; }
+  .flow-to { max-width: none; text-align: left; }
+  .flow-to.is-end { flex-direction: row; flex-wrap: wrap; align-items: center; }
+}
+
+/* 열람으로 열린 화면임을 위에 적어 둔다 (state.js 가 넣는다) */
+.browse-tag {
+  margin: 0 0 18px;
+  padding: 9px 14px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, .2);
+  color: var(--dim);
+  font-size: .78rem;
+  text-align: center;
+  letter-spacing: -.01em;
 }

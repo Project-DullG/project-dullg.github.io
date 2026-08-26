@@ -86,6 +86,7 @@
     <a href="6-truth.html" data-keep-query class="next-step-btn"><span class="next-kicker">다음 순서</span>진상 해설 확인하기 &#10095;<span class="next-sub">그날 왕의 침소에서 실제로 일어난 일을 확인합니다.</span></a>
 
     <div class="nav-links">
+      <a href="5-account.html" data-keep-query>이 판의 경과 다시 듣기</a>
       <a href="index.html" data-keep-query>엔딩 첫 페이지</a>
       <a href="7-scoring.html" data-keep-query>채점 안내</a>
       <a href="/">메인 페이지</a>
@@ -101,8 +102,9 @@
     // data-when-purify="avert" / data-when-western="held" 처럼
     // 조건이 붙은 요소는 이 판의 상태와 맞을 때만 남긴다.
     function apply(attr, value, matchAll) {
-      // 열람 모드에서는 이 판의 기록으로 문단을 골라내지 않고 갈래를 전부 펼쳐 둔다.
-      if (DE.browsing()) return;
+      // 열람 모드 — 구속자 명단 없이 열렸으면 갈래를 전부 펼쳐 둔다.
+      // 흐름도에서 조합을 지정해 열었다면 그 명단에서 갈리는 문단만 골라낸다.
+      if (DE.browsing() && !st.arrested) return;
       Array.prototype.forEach.call(document.querySelectorAll('[' + attr + ']'), function (el) {
         var want = (el.getAttribute(attr) || '').split(/\s+/).filter(Boolean);
         if (value === null || value === undefined) return;   // 정보가 없으면 손대지 않는다

@@ -33,16 +33,17 @@
 
     <div class="ending-decision" style="--card-color:var(--herbal)">
       <h2>폭맥증으로 파열된 혈관을 닫으려면, 수첩에 적힌 처방대로 약을 지어야 합니다.</h2>
-      <p>한의사는 포박되어 있습니다. 압수된 짐에서 〈형의 당부 수첩〉은 나왔지만, 봉투와 가루와 나무조각이 뒤섞인 꾸러미에서 <strong>무엇이 유용한지 아는 사람이 없을뿐더러, 구속된 한의사의 약을 믿을 수도 없는 노릇입니다.</strong></p>
-      <p>약을 구할 수 있는 곳은 중앙의원회뿐이지만, 중앙의원회 당직 의사들에게 수차례 약을 요청해도, 돌아오는 것은 거절뿐입니다.</p>
-      <p class="reading-order-note"><strong>왕을 치료할 만한 약이 없어</strong> 부활 절차를 그만둘 수밖에 없습니다.</p>
+      <p>한의사는 포박되어 있습니다. 압수된 짐에서 〈형의 당부 수첩〉은 나왔지만, 봉투와 가루와 나무조각이 뒤섞인 꾸러미에서 <strong>무엇이 유용한지 아는 사람이 없습니다.</strong></p>
+      <p>약을 구할 수 있는 곳은 중앙의원회뿐이지만, 당직 의사들에게 수차례 약을 요청해도 돌아오는 것은 거절뿐입니다.</p>
+      <p class="reading-order-note">이 방에서 <strong>그들을 움직일 수 있는 사람은 의원장 하나뿐입니다.</strong></p>
     </div>
 
     <!-- ─────────── 양의사도 묶여 있는 판 : 의원장이 없으므로 물을 것이 없다 ─────────── -->
     <section class="verdict is-blocked" data-when-western="held">
       <p class="verdict-kicker">1단계 · 중앙의원회</p>
-      <h2>중앙의원회를 움직일 사람도 묶여 있습니다</h2>
-      <p>의원장인 양의사는 포승줄에 묶인 채 벽에 기대어 있습니다. 당직 의사들은 이미 거절했고, 그들을 움직일 수 있는 유일한 사람은 지금 말을 할 수 없습니다.</p>
+      <h2>그 의원장도 묶여 있습니다</h2>
+      <p>의원장인 양의사는 포승줄에 묶인 채 벽에 기대어 있습니다. 사람을 보낸들 문 앞에서 돌아설 뿐입니다.</p>
+      <p><strong>이대로라면 왕을 치료할 만한 약이 없어, 부활 절차를 그만둘 수밖에 없습니다.</strong></p>
     </section>
     <a href="#" data-when-western="held" data-halt="shut" class="next-step-btn" style="--card-color:var(--ash);--card-glow:var(--ash)">
       <span class="next-kicker">1단계</span>약을 청할 곳이 없습니다 &#10095;
@@ -51,19 +52,18 @@
 
     <!-- ─────────── 양의사가 자유로운 판 : 의원장에게 청한다 ─────────── -->
     <div data-when-western="free">
+      <article class="story-panel">
+        <p>의사들은 의원장인 양의사에게 함께 가 줄 것을 청합니다.</p>
+      </article>
       <section class="verdict is-open" style="--card-color:var(--western)">
         <p class="verdict-kicker">1단계 · 중앙의원회</p>
         <h2>"여러분이 방금 범인으로 지목한 자의 약을, 왕께 다시 올리겠다는 겁니까?"</h2>
-        <p>양의사가 의사들을 천천히 둘러봅니다. 남은 약재는, 방금 범인으로 지목되어 묶인 한의사의 짐에서 나온 것입니다.</p>
-        <div data-when-priest="free">
-          <p>그리고 양의사는 사제를 돌아봅니다. "사제님. 저를 오래 보아 오셨지요. 제가 왕께 해를 끼칠 사람입니까?"</p>
-          <p class="reading-order-note">&rarr; <strong>사제</strong> 담당 플레이어가 여기서 직접 답하십시오.</p>
-        </div>
+        <p>양의사가 의사들을 천천히 둘러봅니다.</p>
       </section>
 
       <div class="ending-decision" style="--card-color:var(--western)">
         <p class="decision-kicker">양의사 담당 플레이어가 혼자 답합니다</p>
-        <h2>의원장은 어떤 선택을 하겠습니까?</h2>
+        <h2>의원장은 이 부탁에 어떻게 답하겠습니까?</h2>
         <div class="pick-list" id="picks">
           <button type="button" class="pick" style="--card-color:var(--red)" data-med="deny">
             <span class="pick-key">&#9312;</span>

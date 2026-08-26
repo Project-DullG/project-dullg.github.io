@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! — 부활의 갈림길: 지나온 길과 지나지 않은 길">
+  <title>의사가 너무 많아! · 부활의 갈림길</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+  <main class="container reading-simple" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
+    <header class="header">
+      <a href="7-scoring.html" data-keep-query class="tag">채점 안내</a>
+      <h1>부활의 갈림길</h1>
+      <p class="subtitle" id="lede">오늘 밤 지나온 길과, 지나지 않은 길입니다.</p>
+    </header>
+
+    <div data-session-recap hidden></div>
+
+    <!-- ── 가정해 보기 ─────────────────────────────────────── -->
+    <section class="guide-box assume">
+      <div class="guide-title">만약 이 사람들이 구속되었다면</div>
+      <p>이름을 눌러 바꿔 보십시오. <strong>그 판에서 갈 수 없었던 길은 접힙니다.</strong> 최대 세 명까지 고를 수 있습니다.</p>
+      <p class="reading-order-note">※ <strong>마디 제목을 누르면 그 조합대로 실제 화면이 열립니다.</strong> 양의사와 한의사를 함께 켠 뒤 「중앙의원회」를 누르면, 의원장까지 묶였을 때 그 자리에서 무엇을 볼 수 있었는지 그대로 나옵니다.</p>
+      <p class="reading-order-note" id="no-session" hidden>※ 이번 판의 기록 없이 열렸습니다. 아래에서 구속된 사람을 골라 어떤 결말이 열리고 닫히는지 살펴보십시오.</p>
+
+      <div class="assume-grid" id="assume-grid"></div>
+
+      <div class="assume-verdict" id="assume-verdict"></div>
+
+      <button type="button" class="assume-reset" id="assume-reset" hidden>오늘의 판으로 되돌리기</button>
+    </section>
+
+    <div class="flow-legend" id="flow-legend">
+      <span class="legend-item is-taken"><i></i>오늘 지나온 길</span>
+      <span class="legend-item is-open"><i></i>갈 수 있었던 길</span>
+      <span class="legend-item is-dead"><i></i>이 판에서는 닫힌 길</span>
+      <button type="button" class="flow-dead-toggle" id="dead-toggle" aria-expanded="false" aria-controls="flow" hidden>
+        <span id="dead-label"></span>
+        <span class="dead-chev" aria-hidden="true">&#8964;</span>
+      </button>
+    </div>
+
+    <ol class="flow is-folded" id="flow"></ol>
+
+    <div class="nav-links">
+      <a href="7-scoring.html" data-keep-query>채점 안내</a>
+      <a href="index.html" data-keep-query>엔딩 첫 페이지</a>
+      <a href="/">메인 페이지</a>
+    </div>
+    <footer class="footer">의사가 너무 많아! &middot; 부활의 갈림길</footer>
+  </main>
+
+  <script src="state.js?v=6"></script>
+  <script>
+  (function () {
+    'use strict';
+    var DE = window.DoctorEnding;
+
+    /* 오늘의 판. 구속자가 없으면 빈 판으로 두고 가정만 굴린다. */
+    var TODAY = DE.read();
+    var todayArrested = TODAY.arrested || [];
+    if (!TODAY.arrested) {
+      document.getElementById('no-session').hidden = false;
+      document.getElementById('lede').textContent = '부활 의식이 어디서 갈라지고 어디서 닫히는지를 한 장에 담았습니다.';
+    }
+    var todayPath = TODAY.arrested ? DE.path(TODAY) : [];
+    var takenSet = {};
+    todayPath.forEach(function (id) { takenSet[id] = true; });
+
+    /* ── 이 구속자 명단으로 살아남는 갈래를 훑는다 ────────────── */
+    function survey(arrested) {
+      var alive = {}, dest = {}, endings = {};
+
+      DE.walk(arrested, function (sc, pick, next, to) {
+        var id = sc.id + '/' + pick.id;
+        alive[sc.id] = true;
+        alive[id] = true;
+
+        var d = dest[id] || (dest[id] = { scenes: {}, endings: {} });
+        if (to === '@end') {
+          var n = DE.endingNo(next);
+          d.endings[n] = true;
+          endings[n] = true;
+        } else {
+          d.scenes[to] = true;
+        }
+      });
+
+      return { alive: alive, dest: dest, endings: endings };
+    }
+
+    /**
+     * 지금 가정 중인 조합을 실은 열람 링크.
+     * 그 판에서 이 화면이 실제로 어떻게 보이는지 — 어떤 선택지가 나오고
+     * 어떤 문단이 뜨는지 — 그대로 열린다. 오늘의 판 기록은 건드리지 않는다.
+     */
+    function viewHref(file, arrested) {
+      var q = DE.query({ arrested: arrested || [] });
+      return file + (q ? q + '&view=1' : '?view=1');
+    }
+
+    /* ── 흐름도 그리기 ──────────────────────────────────────── */
+    var host = document.getElementById('flow');
+
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined && text !== null) n.textContent = text;
+      return n;
+    }
+
+    function build() {
+      var trunk = 0;
+
+      DE.FLOW.forEach(function (sc) {
+        var depth = sc.depth || 0;
+        var li = el('li', 'flow-scene');
+        li.setAttribute('data-node', sc.id);
+        li.setAttribute('data-depth', String(depth));
+
+        var head = el('div', 'flow-head');
+        if (!depth) {
+          trunk += 1;
+          head.appendChild(el('span', 'flow-index', String(trunk)));
+        } else {
+          head.appendChild(el('span', 'flow-branch-mark', '└'));
+        }
+
+        var a = el('a', 'flow-title', sc.title);
+        head.appendChild(a);
+        head.appendChild(el('span', 'flow-kicker', sc.kicker));
+        li.appendChild(head);
+
+        var ul = el('ul', 'flow-picks');
+        sc.picks.forEach(function (p) {
+          var id = sc.id + '/' + p.id;
+          var row = el('li', 'flow-pick');
+          row.setAttribute('data-node', id);
+
+          var copy = el('span', 'flow-copy');
+          copy.appendChild(el('span', 'flow-label', p.label));
+          if (p.desc) copy.appendChild(el('span', 'flow-desc', p.desc));
+          row.appendChild(copy);
+          row.appendChild(el('span', 'flow-to'));
+
+          ul.appendChild(row);
+        });
+        li.appendChild(ul);
+        host.appendChild(li);
+      });
+    }
+
+    /* ── 살아있는 갈래와 도착지를 칠한다 ─────────────────────── */
+    function paint(arrested, showToday) {
+      var s = survey(arrested);
+
+      DE.FLOW.forEach(function (sc) {
+        var li = host.querySelector('[data-node="' + sc.id + '"]');
+        li.classList.toggle('is-dead', !s.alive[sc.id]);
+        li.classList.toggle('is-taken', showToday && !!takenSet[sc.id]);
+
+        var link = li.querySelector('.flow-title');
+        link.href = viewHref(DE.PAGES[sc.page], arrested);
+        link.title = arrested.length
+          ? DE.names(arrested).join(', ') + '가 구속된 판으로 이 화면 열기'
+          : '아무도 구속되지 않은 판으로 이 화면 열기';
+
+        sc.picks.forEach(function (p) {
+          var id = sc.id + '/' + p.id;
+          var row = li.querySelector('[data-node="' + id + '"]');
+          var live = !!s.alive[id];
+
+          row.classList.toggle('is-dead', !live);
+          row.classList.toggle('is-taken', showToday && !!takenSet[id]);
+
+          var to = row.querySelector('.flow-to');
+          to.textContent = '';
+          to.className = 'flow-to';
+          if (!live) return;
+
+          var d = s.dest[id] || { scenes: {}, endings: {} };
+          var ends = Object.keys(d.endings).map(Number).sort();
+          var scenes = Object.keys(d.scenes);
+
+          if (ends.length) {
+            to.className = 'flow-to is-end';
+            to.appendChild(endBadges(ends, arrested));
+            if (scenes.length) to.appendChild(el('span', 'flow-or', ' 또는 ' + sceneNames(scenes)));
+          } else {
+            to.appendChild(el('span', 'flow-next', sceneNames(scenes)));
+          }
+        });
+      });
+    }
+
+    function sceneNames(ids) {
+      return ids.map(function (id) {
+        var sc = DE.scene(id);
+        return sc ? sc.title : id;
+      }).join(' · ');
+    }
+
+    function endBadges(list, arrested) {
+      var wrap = document.createDocumentFragment();
+      list.forEach(function (n) {
+        var b = el('a', 'flow-end ending-' + n, '엔딩 ' + n + ' · ' + DE.ENDING_TITLES[n]);
+        b.href = viewHref(DE.endingFile(n), arrested);
+        b.style.setProperty('--card-color', 'var(--' + DE.ENDING_COLORS[n] + ')');
+        wrap.appendChild(b);
+      });
+      return wrap;
+    }
+
+    /* ── 닫힌 길 접기 · 펼치기 ──────────────────────────────── */
+    var deadToggle = document.getElementById('dead-toggle');
+    var deadLabel = document.getElementById('dead-label');
+
+    deadToggle.addEventListener('click', function () {
+      var folded = host.classList.toggle('is-folded');
+      deadToggle.setAttribute('aria-expanded', folded ? 'false' : 'true');
+      syncFold();
+    });
+
+    /**
+     * 감춰지는 것은 통째로 닫힌 마디와, 살아 있는 마디 안의 닫힌 갈래다.
+     * 닫힌 마디 속 갈래는 이미 마디째 사라지므로 따로 세지 않는다.
+     */
+    function syncFold() {
+      var folded = host.classList.contains('is-folded');
+      var n = host.querySelectorAll('.flow-scene.is-dead').length +
+              host.querySelectorAll('.flow-scene:not(.is-dead) .flow-pick.is-dead').length;
+
+      deadToggle.hidden = !n;
+      deadLabel.textContent = folded ? '닫힌 길 ' + n + '개 펼치기' : '닫힌 길 접기';
+
+      // 꼬리 줄은 눈에 보이는 마지막 마디에서 끊는다.
+      var all = host.querySelectorAll('.flow-scene');
+      Array.prototype.forEach.call(all, function (li) { li.classList.remove('is-last-visible'); });
+      var shown = folded ? host.querySelectorAll('.flow-scene:not(.is-dead)') : all;
+      if (shown.length) shown[shown.length - 1].classList.add('is-last-visible');
+    }
+
+    /* ── 가정해 보기 ────────────────────────────────────────── */
+    var LIMIT = 3;
+    var grid = document.getElementById('assume-grid');
+    var verdict = document.getElementById('assume-verdict');
+    var reset = document.getElementById('assume-reset');
+    var assumed = todayArrested.slice(0, LIMIT);
+    var touched = false;
+
+    DE.DOCTORS.forEach(function (d) {
+      var b = el('button', 'assume-chip c-' + d.id);
+      b.type = 'button';
+      b.setAttribute('data-id', d.id);
+      b.style.setProperty('--card-color', 'var(--' + d.id + ')');
+      b.appendChild(el('span', 'assume-name', d.name));
+      b.appendChild(el('span', 'assume-role', d.role));
+      grid.appendChild(b);
+    });
+
+    grid.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-id]');
+      if (!b) return;
+      var id = b.getAttribute('data-id');
+      var at = assumed.indexOf(id);
+
+      if (at !== -1) assumed.splice(at, 1);
+      else if (assumed.length < LIMIT) assumed.push(id);
+      else return;              // 세 명을 넘기지 않는다
+
+      touched = true;
+      render();
+    });
+
+    reset.addEventListener('click', function () {
+      assumed = todayArrested.slice(0, LIMIT);
+      touched = false;
+      render();
+    });
+
+    function render() {
+      var showToday = !touched && !!TODAY.arrested;
+
+      Array.prototype.forEach.call(grid.children, function (b) {
+        b.classList.toggle('is-on', assumed.indexOf(b.getAttribute('data-id')) !== -1);
+        b.disabled = false;
+      });
+
+      paint(assumed, showToday);
+      syncFold();
+      verdict.innerHTML = '';
+      verdict.appendChild(verdictOf(assumed, showToday));
+
+      reset.hidden = !touched || !TODAY.arrested;
+      document.getElementById('flow-legend').classList.toggle('is-assuming', !showToday);
+    }
+
+    function verdictOf(arrested, showToday) {
+      var s = survey(arrested);
+      var ends = Object.keys(s.endings).map(Number).sort();
+      var revived = ends.indexOf(1) !== -1 || ends.indexOf(2) !== -1;
+
+      var box = el('div', 'assume-result' + (revived ? ' is-open' : ' is-shut'));
+
+      var who = el('p', 'assume-who');
+      who.innerHTML = arrested.length
+        ? DE.names(arrested).map(function (n, i) {
+            return '<strong style="color:var(--' + arrested[i] + ')">' + n + '</strong>';
+          }).join(' · ') + '가 구속된 판'
+        : '<strong>아무도 구속되지 않은 판</strong>';
+      box.appendChild(who);
+
+      box.appendChild(el('p', 'assume-line', revived
+        ? '부활이 성립할 수 있습니다.'
+        : '어떤 선택을 해도 부활은 성립하지 않습니다.'));
+
+      var list = el('div', 'assume-ends');
+      list.appendChild(el('span', 'assume-ends-label', '닿을 수 있는 결말'));
+      list.appendChild(endBadges(ends, arrested));
+      box.appendChild(list);
+
+      if (showToday) {
+        var n = DE.endingNo(TODAY);
+        var line = el('p', 'assume-today');
+        line.innerHTML = '오늘 이 판이 닿은 곳은 <strong>엔딩 ' + n + ' · ' +
+          DE.ENDING_TITLES[n] + '</strong> 입니다.';
+        box.appendChild(line);
+      }
+
+      return box;
+    }
+
+    build();
+    render();
+  })();
+  </script>
+</body>
+</html>
