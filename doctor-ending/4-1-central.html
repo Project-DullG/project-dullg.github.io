@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 판정 1단계 · 중앙의원회">
   <title>의사가 너무 많아! · 부활 판정 1</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <main class="container" style="--card-color:var(--western);--card-glow:var(--western-soft)">
@@ -33,7 +33,7 @@
 
     <div class="ending-decision" style="--card-color:var(--herbal)">
       <h2>폭맥증으로 파열된 혈관을 닫으려면, 수첩에 적힌 처방대로 약을 지어야 합니다.</h2>
-      <p>한의사는 포박되어 있습니다. 압수된 짐에서 〈형의 당부 수첩〉은 나왔지만, 봉투와 가루와 나무조각이 뒤섞인 꾸러미에서 <strong>무엇이 유용한지 아는 사람이 없습니다.</strong></p>
+      <p>한의사는 포박되어 있습니다. 압수된 짐에서 〈형의 당부 수첩〉은 나왔지만, 봉투와 가루와 나무조각이 뒤섞인 꾸러미에서 <strong>무엇이 유용한지 아는 사람도 없고, 그 약을 믿을 수도 없습니다.</strong></p>
       <p>약을 구할 수 있는 곳은 중앙의원회뿐이지만, 당직 의사들은 수차례 요청해도 약을 내주지 않습니다.</p>
       <p class="reading-order-note">이 방에서 <strong>그들을 움직일 수 있는 사람은 의원장 하나뿐입니다.</strong></p>
     </div>
@@ -77,7 +77,7 @@
             <span class="pick-key">&#9313;</span>
             <span class="pick-copy">
               <span class="pick-title">"역병의사와 제가 함께 약을 타오지요."</span>
-              <span class="pick-desc">이 자리에서 그나마 쓸 만한 약이 무엇인지 아는 것은 역병의사뿐입니다. 마침 역병의사와는, 그의 가족과 역모에 대해 나눌 대화가 있지요.</span>
+              <span class="pick-desc">이 자리에서 그나마 쓸 만한 약이 무엇인지 아는 것은 역병의사뿐입니다. 마침 역병의사와는 그의 가족과 역모에 대해 나눌 대화가 있지요.</span>
             </span>
             <span class="pick-arrow">&#10095;</span>
           </button>
@@ -91,11 +91,13 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
-    var A = DE.read().arrested || [];
+    var st = DE.read();
+    if (DE.guardDirectPage('central', st)) return;
+    var A = st.arrested || [];
     var held = function (id) { return A.indexOf(id) !== -1 ? 'held' : 'free'; };
 
     DE.reveal('data-when-western', held('western'));
@@ -107,10 +109,13 @@
     });
 
     var shut = document.querySelector('[data-halt="shut"]');
-    if (shut) shut.addEventListener('click', function (e) {
-      e.preventDefault();
-      DE.go('step1halt', { med: 'shut' });
-    });
+    if (shut) {
+      shut.classList.add('is-forced');
+      shut.addEventListener('click', function (e) {
+        e.preventDefault();
+        DE.go('step1halt', { med: 'shut' });
+      });
+    }
   })();
   </script>
 </body>

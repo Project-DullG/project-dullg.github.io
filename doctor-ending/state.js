@@ -360,6 +360,76 @@
   }
 
   /**
+   * 직접 링크로 들어온 화면이 현재 판의 정상 순서인지 확인한다.
+   * 열람 모드에서는 다른 갈래를 살펴볼 수 있어 이 검사를 하지 않는다.
+   * 정상 흐름에 없는 화면을 전부 비활성화해 막다른 곳으로 만들지 않고,
+   * 이 판에서 실제로 이어질 화면으로 보낸다.
+   */
+  function guardDirectPage(page, st) {
+    if (browsing() || !st || !st.arrested) return false;
+
+    var A = st.arrested;
+    var held = function (id) { return A.indexOf(id) !== -1; };
+    var target = null;
+    var targetState = st;
+    var resetPurify = function () {
+      var out = {}, key;
+      for (key in st) out[key] = st[key];
+      out.choice = null;
+      out.priest = null;
+      out.hands = null;
+      return out;
+    };
+
+    // 역병의사가 묶인 판은 부활 선언·투표·의식 준비가 열리지 않는다.
+    if (['declare', 'consent', 'ritual'].indexOf(page) !== -1 && held('plague')) {
+      targetState = { arrested: A, revive: false };
+      target = endingPage(targetState);
+    // 1단계 중앙의원회는 한의사가 묶인 판에서만 열린다.
+    } else if (page === 'central' && !held('herbal')) {
+      target = PAGES.step1Free;
+    // 성수병은 양의사가 자유로운 판에서만 양의사가 선택한다.
+    } else if (page === 'flask' && (held('western') || st.choice !== null)) {
+      if (held('western')) {
+        targetState = resetPurify();
+        target = nextPage('descent', targetState);
+      } else {
+        target = nextPage('flask', st);
+      }
+    // 사제의 결단은 사제가 자유로워야 한다. 양의사가 자유롭고
+    // 아직 성수병 선택이 없다면 먼저 성수병 화면으로 돌아간다.
+    } else if (page === 'priest' && (held('priest') || st.priest !== null
+      || (!held('western') && st.choice === null)
+      || (held('western') && st.choice !== null))) {
+      if (held('priest')) {
+        targetState = resetPurify();
+        target = nextPage('descent', targetState);
+      } else if (st.priest !== null) {
+        target = nextPage('priest', st);
+      } else {
+        targetState = resetPurify();
+        target = held('western') ? PAGES.priest : PAGES.flask;
+      }
+    // 성수 선택 화면은 사제가 관망했거나, 사제가 묶인 판에서만 열린다.
+    } else if (page === 'hands') {
+      var handsValid = st.priest === 'allow'
+        || (st.priest === 'absent' && held('priest'))
+        || (!st.priest && held('western') && held('priest') && st.choice === null)
+        || (!st.priest && !held('western') && held('priest') && st.choice === 1);
+      if (!handsValid) {
+        if (held('western') && !held('priest')) target = PAGES.priest;
+        else if (!held('western') && !held('priest') && st.choice === null) target = PAGES.flask;
+        else if (!held('western') && held('priest') && st.choice !== 1) target = PAGES.nofire;
+      }
+      if (st.hands !== null) target = nextPage('hands', st);
+    }
+
+    if (!target) return false;
+    global.location.replace(target + query(targetState));
+    return true;
+  }
+
+  /**
    * ─── 갈래 지도 ───────────────────────────────────────────────
    *
    * 화면 하나가 마디 하나이고, 그 아래 달린 것이 그 자리에서 고를 수 있는 길이다.
@@ -671,6 +741,17 @@
     });
   }
 
+  /** 후일담 카드 전체를 접기·펼치기 영역으로 사용한다. */
+  function bindEpilogueCards() {
+    var cards = global.document.querySelectorAll('details.epilogue[data-secret-step]');
+    Array.prototype.forEach.call(cards, function (card) {
+      card.addEventListener('click', function (e) {
+        if (e.target.closest('summary, button, a, input, select, textarea, label')) return;
+        card.open = !card.open;
+      });
+    });
+  }
+
   /** 픽 목록 한 벌에 클릭 처리를 붙인다. attr 값이 그대로 콜백에 온다. */
   function onPick(hostId, attr, fn) {
     var host = global.document.getElementById(hostId);
@@ -699,10 +780,10 @@
   var ENDING_TITLES = {
     1: '완벽한 부활',
     2: '대가성 부활',
-    3: '파멸의 이단 심문',
+    3: '기나긴 이단 심문',
     4: '심판과 상실',
     5: '승리한 악',
-    6: '고할 것이 없는 밤'
+    6: '고친 것이 없는 밤'
   };
 
   var ENDING_COLORS = { 1: 'gold', 2: 'plague', 3: 'talisman', 4: 'priest', 5: 'western', 6: 'ash' };
@@ -785,6 +866,7 @@
     browsing: browsing,
     PAGES: PAGES,
     nextPage: nextPage,
+    guardDirectPage: guardDirectPage,
     endingPage: endingPage,
     endingNo: endingNo,
     endingFile: endingFile,
@@ -837,7 +919,7 @@
     main.insertBefore(tag, main.firstChild);
   }
 
-  function boot() { markBrowsing(); renderRecap(); keepQuery(); backLinks(); }
+  function boot() { markBrowsing(); renderRecap(); keepQuery(); backLinks(); bindEpilogueCards(); }
 
   if (global.document.readyState === 'loading') {
     global.document.addEventListener('DOMContentLoaded', boot);

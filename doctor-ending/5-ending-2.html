@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 2 — 진 새드 엔딩: 대가성 부활">
   <title>의사가 너무 많아! · 엔딩 2 대가성 부활</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
@@ -46,8 +46,8 @@
             <p class="script-kicker">EPILOGUE</p>
             <h2>캐릭터별 후일담</h2>
             <div class="epilogue-list">
-              <section class="epilogue c-plague" data-secret-step>
-                <div class="epilogue-name">역병의사</div>
+              <details class="epilogue c-plague" data-secret-step>
+                <summary class="epilogue-name">역병의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>침술사의 독침을 숨겼다가 돌려주려 한 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 살리기 전에 증거를 숨겼다는 사실까지 알려집니다. 왕은 역병의사가 독을 제거해 자신의 목숨을 한 차례 구한 일과 스승을 지키려 했던 이유를 함께 듣고 그 죄를 사면합니다.</p></div>
@@ -60,30 +60,30 @@
                   <div data-choice-result="preserve" hidden><p>역병의사는 부활의 비술을 세계에 남기기로 합니다.</p></div>
                   <div data-choice-result="erase" hidden><p>역병의사는 부활의 비술이 담긴 기록을 모두 지우기로 합니다.</p></div>
                 </div>
-              </section>
-              <section class="epilogue c-acupunct" data-secret-step hidden>
-                <div class="epilogue-name">침술사</div>
+              </details>
+              <details class="epilogue c-acupunct" data-secret-step>
+                <summary class="epilogue-name">침술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>재상가의 명령을 받고 왕에게 독침을 놓은 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 해치려 한 침과 왕을 되살린 아홉 번째 침이 모두 그의 손에서 나왔다는 사실이 함께 기록됩니다. 왕은 약속대로 그를 용서합니다. 침술사는 남은 일주일 동안 제자의 기록 정리를 돕고, 이후에는 부적술사에게 소명파의 침술을 전합니다.</p></div>
                 <div data-secret-result="no" hidden><p>왕실 기록에는 부활 의식에서 아홉 번째 침을 놓은 공로만 남습니다. 재상가의 지령서는 세상에 나오지 않습니다. 제자가 사라진 뒤에도 그는 그 종이를 버리지 못하다가, 왕자파가 무너진 뒤에야 조용히 불태웁니다.</p></div>
-              </section>
-              <section class="epilogue c-herbal" data-secret-step hidden>
-                <div class="epilogue-name">한의사</div>
+              </details>
+              <details class="epilogue c-herbal" data-secret-step>
+                <summary class="epilogue-name">한의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>호준 대신 쌍둥이 동생 호정이 왔다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕은 한 달 전 자신이 동생이라도 직접 와 달라고 부탁했다는 사실을 확인해 줍니다. 대리 진료 혐의는 사라집니다. 호정은 왕실의 확인 문서와 역병의사가 남긴 기록을 가지고 호련당으로 돌아갑니다.</p></div>
                 <div data-secret-result="no" hidden><p>왕궁에는 한의사 호준이 왕을 되살린 영웅으로 기록됩니다. 호정은 그 이름으로 내려온 포상과 기록을 들고 집으로 돌아갑니다. 이 공을 누구의 이름으로 남길지는 한의사 담당 플레이어가 정합니다.</p></div>
-              </section>
-              <section class="epilogue c-talisman" data-secret-step hidden>
-                <div class="epilogue-name">부적술사</div>
+              </details>
+              <details class="epilogue c-talisman" data-secret-step>
+                <summary class="epilogue-name">부적술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>소명파의 당주이며 왕을 저주하려 했다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 저주하려 한 일과 왕의 혼을 되찾은 부적이 모두 그의 손에서 나왔다는 사실이 밝혀집니다. 왕은 자신을 저주하려 한 일도 사면하고 소명파의 과거를 다시 조사하라고 명합니다. 부적술사는 역병의사가 남긴 기록을 받아 소명파를 다시 세웁니다.</p></div>
                 <div data-secret-result="no" hidden><p>세상에는 한 부적술사가 왕의 혼을 되찾았고 역병의사의 마지막 기록을 이어받았다는 사실만 알려집니다. 그는 숨어 지낼 자유를 지킨 채 활명술을 다시 가르치기 시작합니다.</p></div>
-              </section>
-              <section class="epilogue c-priest" data-secret-step hidden>
-                <div class="epilogue-name">사제</div>
+              </details>
+              <details class="epilogue c-priest" data-secret-step>
+                <summary class="epilogue-name">사제</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>과거 소명파를 불태우는 데 앞장섰다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕의 부활을 눈앞에서 보았으면서 그 의술을 불태운 장본인이었다는 사실이 교단 안팎에 알려집니다. 교단은 그를 영웅으로 내세울 수도, 모든 책임을 지워 파문할 수도 없게 됩니다. 소명파에 사죄할지 교단 안에서 잘못된 심문을 막을지는 사제 담당 플레이어가 정합니다.</p></div>
@@ -94,9 +94,9 @@
                   <p data-when-purify="absent">포박되어 있었다면 선택할 기회 자체가 없었다는 사실이 남습니다.</p>
                   <p data-when-purify="allow">성수가 남아 있었지만 아무도 들지 않았다면 그 자리에 있던 모두가 왜 움직이지 않았는지를 함께 돌아봅니다.</p>
                 </div>
-              </section>
-              <section class="epilogue c-western" data-secret-step hidden>
-                <div class="epilogue-name">양의사</div>
+              </details>
+              <details class="epilogue c-western" data-secret-step>
+                <summary class="epilogue-name">양의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>한의사의 약을 훔치고 왕자파와 손잡았다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 해친 죄까지 드러났지만 왕은 사면 약속을 거두지 않습니다. 왕궁은 양의사가 넘긴 명단과 장부로 왕자파를 먼저 무너뜨립니다. 의원장 자리로 돌아갈 수는 없으며, 역병의사가 마지막으로 제시한 두 길 가운데 하나를 고릅니다.</p></div>
@@ -108,7 +108,7 @@
                   <div data-choice-result="hide" hidden><p>그는 의원장이라는 이름과 권력을 버리고 왕궁이 마련한 외딴 저택에서 살아갑니다. 살아남았지만 문밖에서 발소리가 날 때마다 재상가의 사람이 찾아온 것은 아닌지 먼저 확인합니다.</p></div>
                   <div data-choice-result="learn" hidden><p>그는 역병의사가 남긴 지시에 따라 약품 장부와 병상 정리부터 시작합니다. 역병의사가 사라진 뒤에는 남은 의사들과 왕실의 감독 아래에서 진료를 배웁니다.</p></div>
                 </div>
-              </section>
+              </details>
             </div>
           </section>
         </article>
@@ -125,7 +125,7 @@
     </div>
     <footer class="footer">의사가 너무 많아! &middot; 엔딩 2 · 대가성 부활</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=10"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

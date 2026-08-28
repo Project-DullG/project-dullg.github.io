@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 의사들은 역천의 의식을 시작합니까?">
   <title>의사가 너무 많아! · 역천의 의식</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <main class="container" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -79,11 +79,12 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
     var st = DE.read();
+    if (DE.guardDirectPage('consent', st)) return;
     var arrested = st.arrested || [];
 
     // 역병의사의 대사 — 구속자 실명은 대지 않는다(의식에 필요한 손이 묶인 판에서

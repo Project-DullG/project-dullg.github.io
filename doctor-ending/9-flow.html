@@ -7,7 +7,12 @@
   <meta name="description" content="의사가 너무 많아! — 부활의 갈림길: 지나온 길과 지나지 않은 길">
   <title>의사가 너무 많아! · 부활의 갈림길</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
+  <style>
+    .flow-copy{color:inherit;text-decoration:none}
+    .flow-copy:hover .flow-label{color:var(--gold)}
+    .flow-copy:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:3px}
+  </style>
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -23,7 +28,7 @@
     <section class="guide-box assume">
       <div class="guide-title">만약 이 사람들이 구속되었다면</div>
       <p>이름을 눌러 바꿔 보십시오. <strong>그 판에서 갈 수 없었던 길은 접힙니다.</strong> 최대 세 명까지 고를 수 있습니다.</p>
-      <p class="reading-order-note">※ <strong>마디 제목을 누르면 그 조합대로 실제 화면이 열립니다.</strong> 양의사와 한의사를 함께 켠 뒤 「중앙의원회」를 누르면, 의원장까지 묶였을 때 그 자리에서 무엇을 볼 수 있었는지 그대로 나옵니다.</p>
+      <p class="reading-order-note">※ <strong>마디 제목이나 선택지를 누르면 그 조합대로 실제 화면이 열립니다.</strong> 양의사와 한의사를 함께 켠 뒤 「중앙의원회」의 「의원장이 함께 약을 타온다」를 누르면, 그 선택이 반영된 「혼을 훔치다」 화면으로 바로 이동합니다.</p>
       <p class="reading-order-note" id="no-session" hidden>※ 이번 판의 기록 없이 열렸습니다. 아래에서 구속된 사람을 골라 어떤 결말이 열리고 닫히는지 살펴보십시오.</p>
 
       <div class="assume-grid" id="assume-grid"></div>
@@ -52,7 +57,7 @@
     <footer class="footer">의사가 너무 많아! &middot; 부활의 갈림길</footer>
   </main>
 
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     'use strict';
@@ -71,7 +76,7 @@
 
     /* ── 이 구속자 명단으로 살아남는 갈래를 훑는다 ────────────── */
     function survey(arrested) {
-      var alive = {}, dest = {}, endings = {};
+      var alive = {}, dest = {}, endings = {}, states = {}, targets = {};
 
       DE.walk(arrested, function (sc, pick, next, to) {
         var id = sc.id + '/' + pick.id;
@@ -79,6 +84,10 @@
         alive[id] = true;
 
         var d = dest[id] || (dest[id] = { scenes: {}, endings: {} });
+        if (!states[id]) {
+          states[id] = next;
+          targets[id] = to;
+        }
         if (to === '@end') {
           var n = DE.endingNo(next);
           d.endings[n] = true;
@@ -88,7 +97,7 @@
         }
       });
 
-      return { alive: alive, dest: dest, endings: endings };
+      return { alive: alive, dest: dest, endings: endings, states: states, targets: targets };
     }
 
     /**
@@ -99,6 +108,18 @@
     function viewHref(file, arrested) {
       var q = DE.query({ arrested: arrested || [] });
       return file + (q ? q + '&view=1' : '?view=1');
+    }
+
+    /* 선택 직후의 상태를 담은 일반 진행 링크. 흐름도 열람 표시는 붙이지 않는다. */
+    function choiceHref(st, to) {
+      var file;
+      if (to === '@end') {
+        file = DE.endingFile(DE.endingNo(st));
+      } else {
+        var next = DE.scene(to);
+        file = next ? DE.PAGES[next.page] : null;
+      }
+      return file ? file + DE.query(st) : '#';
     }
 
     /* ── 흐름도 그리기 ──────────────────────────────────────── */
@@ -139,7 +160,8 @@
           var row = el('li', 'flow-pick');
           row.setAttribute('data-node', id);
 
-          var copy = el('span', 'flow-copy');
+          var copy = el('a', 'flow-copy');
+          copy.href = '#';
           copy.appendChild(el('span', 'flow-label', p.label));
           if (p.desc) copy.appendChild(el('span', 'flow-desc', p.desc));
           row.appendChild(copy);
@@ -171,9 +193,20 @@
           var id = sc.id + '/' + p.id;
           var row = li.querySelector('[data-node="' + id + '"]');
           var live = !!s.alive[id];
+          var copy = row.querySelector('.flow-copy');
 
           row.classList.toggle('is-dead', !live);
           row.classList.toggle('is-taken', showToday && !!takenSet[id]);
+
+          if (live && s.states[id] && s.targets[id]) {
+            copy.href = choiceHref(s.states[id], s.targets[id]);
+            copy.title = p.label + ' 선택 후 해당 화면 열기';
+            copy.removeAttribute('aria-disabled');
+          } else {
+            copy.removeAttribute('href');
+            copy.removeAttribute('title');
+            copy.setAttribute('aria-disabled', 'true');
+          }
 
           var to = row.querySelector('.flow-to');
           to.textContent = '';

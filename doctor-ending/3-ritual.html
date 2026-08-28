@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 의식 거행">
   <title>의사가 너무 많아! · 부활 의식</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <main class="container" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
@@ -61,11 +61,12 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
     var st = DE.read();
+    if (DE.guardDirectPage('ritual', st)) return;
     var arrested = st.arrested || [];
 
     // 포박자 안내 — 구속된 인물 이름을 채우고, 아무도 없으면 문장 자체를 숨긴다.

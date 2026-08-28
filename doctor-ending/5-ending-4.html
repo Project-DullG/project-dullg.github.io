@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 4 — 노멀 엔딩: 심판과 상실">
   <title>의사가 너무 많아! · 엔딩 4 심판과 상실</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--priest);--card-glow:var(--priest-soft)">
@@ -62,41 +62,41 @@
             <p data-when-halt="yes">부활을 시도했으므로 숨긴 사실이 드러났더라도 왕가의 형벌은 면제됩니다. 교단·재상가·평판에 생긴 영향은 남습니다.</p>
             <p data-when-halt="no">부활을 시도하지 않았으므로 실제로 드러난 행위는 왕 시해와 구분해 따로 심판합니다.</p>
             <div class="epilogue-list">
-              <section class="epilogue c-plague" data-secret-step>
-                <div class="epilogue-name">역병의사</div>
+              <details class="epilogue c-plague" data-secret-step>
+                <summary class="epilogue-name">역병의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>침술사의 독침을 숨겼다가 돌려주려 한 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>독침을 숨긴 책임과 그 독을 제거해 왕의 목숨을 한 차례 구한 일이 함께 확인됩니다. 부활을 시도했다면 왕가에서 사면받고 빈민가의 진료소로 돌아갑니다. 시도하지 않았다면 증거를 숨긴 책임으로 왕이 내린 칭호를 잃지만 실제 사인을 밝히는 데 협조한 점이 참작되어 감옥에는 가지 않습니다.</p></div>
                 <div data-secret-result="no" hidden><p>독침을 숨긴 일은 드러나지 않습니다. 역병의사가 독을 제거했다는 증언과 폭맥증에 대한 판단은 양의사의 범행을 밝히는 데 쓰입니다. 그는 빈민가로 돌아가 환자를 치료하고 스승의 노트에 자신이 확인한 내용을 덧붙입니다.</p></div>
-              </section>
-              <section class="epilogue c-acupunct" data-secret-step hidden>
-                <div class="epilogue-name">침술사</div>
+              </details>
+              <details class="epilogue c-acupunct" data-secret-step>
+                <summary class="epilogue-name">침술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>재상가의 명령을 받고 왕에게 독침을 놓은 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>독침은 왕의 직접적인 사인이 아니었지만 왕을 해치려 했다는 사실은 남습니다. 부활을 시도했다면 왕비의 약속에 따라 사면받습니다. 시도하지 않았다면 재상가의 청탁을 받아 왕을 해치려 한 죄로 유배됩니다.</p></div>
                 <div data-secret-result="no" hidden><p>공식 기록에는 양의사가 한의사의 가루와 수면향용 나무조각을 훔쳐 약으로 오인하고 3일분으로 만들어 먹였다는 사실이 왕의 사인으로 남습니다. 침술사가 놓은 독침은 확인되지 않습니다. 그는 왕가의 처벌을 피하지만 재상가의 지령서를 쥔 사람들이 남아 있어 당분간 왕실의 보호를 받습니다.</p></div>
-              </section>
-              <section class="epilogue c-herbal" data-secret-step hidden>
-                <div class="epilogue-name">한의사</div>
+              </details>
+              <details class="epilogue c-herbal" data-secret-step>
+                <summary class="epilogue-name">한의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>호준 대신 쌍둥이 동생 호정이 왔다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕이 생전에 동생이라도 직접 와 달라고 부탁했다는 기록이 확인됩니다. 대리 방문은 왕을 속이기 위한 일이 아니었으므로 부활 시도 여부와 관계없이 왕 시해 혐의를 벗습니다. 호정의 목격은 양의사의 범행을 입증하는 자료가 되고, 호련당은 왕을 독살한 집안이라는 누명을 피합니다.</p></div>
                 <div data-secret-result="no" hidden><p>왕궁에는 한의사 호준이 진범을 밝히는 데 협력한 것으로 기록됩니다. 호정은 그 이름으로 집에 돌아갑니다. 가족에게 사실을 밝힐지는 한의사 담당 플레이어가 정합니다.</p></div>
-              </section>
-              <section class="epilogue c-talisman" data-secret-step hidden>
-                <div class="epilogue-name">부적술사</div>
+              </details>
+              <details class="epilogue c-talisman" data-secret-step>
+                <summary class="epilogue-name">부적술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>소명파의 당주이며 왕을 저주하려 했다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 저주하려 한 일과 소명파 당주라는 정체가 함께 드러납니다. 부활을 시도했다면 왕가에서는 사면하지만 교단의 감시는 남습니다. 시도하지 않았다면 왕궁에서 술법 사용을 금지당하고 교단의 조사를 받습니다. 어느 경우든 양의사가 퍼뜨린 인신공양 소문은 거짓으로 확인됩니다.</p></div>
                 <div data-secret-result="no" hidden><p>왕을 저주한 사실과 소명파 당주라는 정체는 드러나지 않습니다. 그는 양의사의 거짓 소문이 확인된 수사 기록을 이용해 소명파의 명예를 회복할 자료를 모읍니다.</p></div>
-              </section>
-              <section class="epilogue c-priest" data-secret-step hidden>
-                <div class="epilogue-name">사제</div>
+              </details>
+              <details class="epilogue c-priest" data-secret-step>
+                <summary class="epilogue-name">사제</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>과거 소명파를 불태우는 데 앞장섰다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>양의사가 만든 인신공양 소문을 믿고 마을을 불태웠다는 사실이 교단 안팎에 알려집니다. 교단은 그를 하급 수사사로 강등하고 과거 조사 기록을 다시 엽니다. 그는 항변하지 않고 소명파 생존자들을 찾아가 당시 일을 다시 확인합니다.</p></div>
                 <div data-secret-result="no" hidden><p>마을 방화에서 맡았던 역할은 공식 수사에 포함되지 않습니다. 사제는 지위를 유지하지만 자신이 믿었던 양의사의 거짓말 때문에 사람들이 죽었다는 사실을 알게 됩니다. 이후 이단 고발을 받을 때마다 제보자의 근거와 목적부터 확인합니다.</p></div>
-              </section>
+              </details>
             </div>
           </section>
         </article>
@@ -113,7 +113,7 @@
     </div>
     <footer class="footer">의사가 너무 많아! &middot; 엔딩 4 · 심판과 상실</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=10"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

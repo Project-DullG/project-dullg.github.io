@@ -7,9 +7,17 @@
   <meta name="description" content="의사가 너무 많아! — 작가의 의도와 설계 노트">
   <title>의사가 너무 많아! · 작가의 의도</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
   <style>
     .original-source h3{margin:28px 0 12px;color:var(--ink-strong);font-size:1.08rem}
+    .hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 34px}
+    .hub-card{position:relative;display:flex;flex-direction:column;gap:7px;min-height:126px;padding:20px 22px;border:1px solid var(--line);border-left:3px solid var(--card-color);border-radius:12px;background:rgba(255,255,255,.025);color:var(--ink);text-decoration:none;transition:transform .22s ease,border-color .22s ease,background .22s ease,box-shadow .22s ease}
+    .hub-card:hover{transform:translateY(-3px);border-color:var(--card-color);background:var(--panel-hover);box-shadow:0 14px 44px rgba(0,0,0,.3),0 0 22px var(--card-glow)}
+    .hub-card-title{color:var(--ink-strong);font-size:1.05rem;font-weight:800;line-height:1.35}
+    .hub-card-copy{color:var(--dim);font-size:.88rem;line-height:1.55}
+    .hub-card-arrow{margin-top:auto;color:var(--card-color);font-size:1.1rem;line-height:1}
+    .hub-card-wide{min-height:94px;margin-bottom:34px}
+    @media (max-width:700px){.hub-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -22,10 +30,41 @@
 
     <div data-session-recap hidden></div>
 
-    <section class="guide-box ending-guide-panel">
-      <div class="guide-title">읽는 방법</div>
-      <p>순서대로 읽어도 되고, 궁금한 곳만 펼쳐 봐도 됩니다. 낭독용이 아니라 <strong>돌아보기용</strong>입니다.</p>
-      <p>"우리 판에서는 이게 안 나왔네" 하는 항목이 있다면, 그것이 다음 판에서 열어 볼 문입니다.</p>
+    <section aria-labelledby="design-hub-title">
+      <div class="branch-toolbar" style="margin-top:34px">
+        <div>
+          <span>작품 설계 허브</span>
+          <strong id="design-hub-title">자료를 골라 읽습니다</strong>
+        </div>
+        <p>사건 · 안내 · 노트<br>· 원문 · 타임라인</p>
+      </div>
+      <div class="hub-grid">
+        <a class="hub-card" style="--card-color:var(--red);--card-glow:var(--red-soft)" href="6-truth-reference.html" data-keep-query>
+          <span class="hub-card-title">사건의 진상 다시 보기</span>
+          <span class="hub-card-copy">그날 왕의 침소에서 실제로 일어난 일과 양의사의 범행을 다시 확인합니다.</span>
+          <span class="hub-card-arrow">&#10095;</span>
+        </a>
+        <a class="hub-card" style="--card-color:var(--gold);--card-glow:var(--gold-soft)" href="7-scoring.html" data-keep-query>
+          <span class="hub-card-title">안내</span>
+          <span class="hub-card-copy">자료를 읽는 시점과 목표 정산, 특수 판정과 점수 계산을 확인합니다.</span>
+          <span class="hub-card-arrow">&#10095;</span>
+        </a>
+        <a class="hub-card" style="--card-color:var(--plague);--card-glow:var(--plague-soft)" href="#author-note">
+          <span class="hub-card-title">노트 / 해결 구조</span>
+          <span class="hub-card-copy">세계관의 배경과 단서가 연결되는 방식, 게임 설계의 의도를 읽습니다.</span>
+          <span class="hub-card-arrow">&#10095;</span>
+        </a>
+        <a class="hub-card" style="--card-color:var(--ash);--card-glow:var(--ash-soft)" href="truth-original.html" data-keep-query>
+          <span class="hub-card-title">작가 원문</span>
+          <span class="hub-card-copy">작가가 남긴 해설을 문장과 순서 그대로 보존한 페이지입니다.</span>
+          <span class="hub-card-arrow">&#10095;</span>
+        </a>
+      </div>
+      <a class="hub-card hub-card-wide" style="--card-color:var(--ash);--card-glow:var(--ash-soft)" href="activity-chart.html" data-keep-query>
+        <span class="hub-card-title">타임라인</span>
+        <span class="hub-card-copy">시간대별 여섯 캐릭터의 활동, 실제 진료, 대화 관계와 알리바이 없는 구간을 한눈에 비교합니다.</span>
+        <span class="hub-card-arrow">&#10095;</span>
+      </a>
     </section>
 
     <a href="truth-original.html" data-keep-query class="story-link" style="margin-bottom:34px">
@@ -42,7 +81,7 @@
         <p>여섯 사람이 각자 한 조각씩 들고 있었고, 넷이 모여야 그림이 됩니다.</p>
       </section>
 
-      <section class="script-block" style="--section-color:var(--plague)">
+      <section class="script-block" id="author-note" style="--section-color:var(--plague)">
         <p class="script-kicker">ㄱ</p>
         <h2>풍수사의 과거</h2>
         <p>20년 전, 전쟁이 끝나고 왕궁 터를 잡은 사람입니다. 그는 그 자리를 고르면서 왕에게만 예언을 남겼습니다. <strong style="color:var(--ink-strong)">공주는 10년 후, 왕은 20년 후에 '죽는다'</strong>는 예언이었지만, 자신이 10년, 20년 후에 왕을 살리겠다는 약속을 합니다.</p>
@@ -266,7 +305,7 @@
         <p>이 사건의 진영 구도는 게임이 진행됨에 따라 다음과 같이 재편되도록 설계되었습니다.</p>
         <p>2 대 2 대 2 — 세 쌍의 인연(시작의 구도). 여섯 의사는 추천 세력으로도, 개인적 인연으로도 두 명씩 세 쌍으로 묶여 있습니다. 중앙의원회가 보낸 양의사와 사제는 야전병동 시절부터의 인연으로, 왕이 지명한 역병의사와 한의사는 중앙의원회 시절의 옛 동료(사일러스와 호준)로, 재상가가 보낸 침술사와 부적술사는 소명파의 연으로 이어져 있습니다. 초반의 대화와 탐색은 자연스럽게 이 쌍 안에서 시작됩니다. 다만 세 쌍 모두 속에 금이 가 있습니다. 사제는 진범을 맹신하고 있고, 역병의사가 아는 '호준'은 사실 그 자리에 없으며, 부적술사는 침술사의 배신을 의심하고 있습니다.</p>
         <p>3 대 3 — 이단 전선의 형성. 사제의 심문이 시작되면 구도가 재편됩니다. 왕궁 밖에서부터 추적하던 '역병의사'와, 그가 '스승님' 이라고 부른 침술사, 그리고 '풍수사' 언급에 화를 내는 '부적술사'가 한 덩어리의 '이단 혐의자'로 묶이고, 반대편에는 심문하는 사제와 그 뒤의 양의사, 그리고 아직 혐의 밖에 있는 한의사가 남습니다. </p>
-        <p>2 대 4 — "이단 놈들!"(이단몰이의 완성). 진범 양의사는 '죽이고 싶은' 호준을 이단 전선에 집어넣고, 왕의 사인인 '약물 중독'을 한의사의 잘못으로 만드는 것을 목표로 삼도록 설계되어 있습니다. 사제 입장에서는 '한의사'가 나왔다는 호련당마저 활명술에 닿아 있으니(&lt;원로 의사&gt;, &lt;왕궁 요리장&gt;), 한의사까지 '이단' 쪽으로 밀어 넣으면 구도는 양의사·사제 대 나머지 넷이 됩니다. 이것은 [엔딩 3. 파멸의 이단 심문]과 [엔딩 5. 승리한 악]의 구도 그 자체입니다 — 넷이 이단으로 처형당하고, 사제는 대심문관이 되고, 양의사는 의료계의 독재자로 남는. 즉 2 대 4는 진범이 승리하는 구도이며, 게임 후반은 이 구도를 뒤집을 수 있는가를 묻습니다.</p>
+        <p>2 대 4 — "이단 놈들!"(이단몰이의 완성). 진범 양의사는 '죽이고 싶은' 호준을 이단 전선에 집어넣고, 왕의 사인인 '약물 중독'을 한의사의 잘못으로 만드는 것을 목표로 삼도록 설계되어 있습니다. 사제 입장에서는 '한의사'가 나왔다는 호련당마저 활명술에 닿아 있으니(&lt;원로 의사&gt;, &lt;왕궁 요리장&gt;), 한의사까지 '이단' 쪽으로 밀어 넣으면 구도는 양의사·사제 대 나머지 넷이 됩니다. 이것은 [엔딩 3. 기나긴 이단 심문]과 [엔딩 5. 승리한 악]의 구도 그 자체입니다 — 넷이 이단으로 처형당하고, 사제는 대심문관이 되고, 양의사는 의료계의 독재자로 남는. 즉 2 대 4는 진범이 승리하는 구도이며, 게임 후반은 이 구도를 뒤집을 수 있는가를 묻습니다.</p>
         <p>5 대 1 — 사제의 각성과 진범의 고립. 구도를 뒤집는 열쇠는 거짓말을 하지 못하는 사제입니다. </p>
         <p>사제는 소명파를 탄압한 장본인이자, 풍수사를 10년 이상 뒤쫓은 굳건한 신념의 소유자이지만, 그 시작은 '양의사'가 중앙의원회의 위상을 지키기 위해 지어낸 거짓 소문이었습니다. <br>저주가 발동하지 못했음이 증명되고, 독이 제거되었음이 증명되면서 사제가 소명파, 그리고 활명술에 대한 자신의 생각을 바꿀 때, 비로소 양의사가 약 봉투를 받아들고 돌아왔다는 사실과, 소명파를 음해한 소문의 시작점이 누구인지를 테이블 위로 이끌어냅니다.</p>
         <p>거짓을 말할 수 없는 사제는 맹신을 거두고 넷의 곁에 섭니다. 2 대 4가 5 대 1로 뒤집히는 이 순간이 이 게임의 클라이맥스입니다. </p>
@@ -305,6 +344,6 @@
     </div>
     <footer class="footer">의사가 너무 많아! &middot; 작가의 의도</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
 </body>
 </html>

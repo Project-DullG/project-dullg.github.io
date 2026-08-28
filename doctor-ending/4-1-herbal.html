@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 부활 판정 1단계">
   <title>의사가 너무 많아! · 부활 판정 1</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <main class="container" style="--card-color:var(--herbal);--card-glow:var(--herbal-soft)">
@@ -49,7 +49,7 @@
           <span class="pick-key">아니오</span>
           <span class="pick-copy">
             <span class="pick-title">한의사는 포박되어 있습니다</span>
-            <span class="pick-desc">압수된 짐에서 수첩은 나왔지만, 남은 약재를 가늠할 사람이 없습니다.</span>
+            <span class="pick-desc">압수된 짐에서 수첩은 나왔지만, 남은 약재를 가늠할 수도, 믿을 수도 없습니다.</span>
           </span>
           <span class="pick-arrow">&#10095;</span>
         </button>
@@ -62,10 +62,22 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
+    var arrested = DE.read().arrested || [];
+    var herbalHeld = arrested.indexOf('herbal') !== -1;
+    Array.prototype.forEach.call(document.querySelectorAll('#picks [data-held]'), function (button) {
+      var optionHeld = button.getAttribute('data-held') === 'yes';
+      if (optionHeld !== herbalHeld) {
+        button.classList.add('is-off');
+        button.disabled = true;
+        button.setAttribute('aria-disabled', 'true');
+      } else if (herbalHeld) {
+        button.classList.add('is-forced');
+      }
+    });
     DE.onPick('picks', 'data-held', function (held) {
       if (held === 'yes') DE.go('step1held');
       else DE.go('step1', { addKey: 'note' });

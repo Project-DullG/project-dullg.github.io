@@ -1466,6 +1466,26 @@ h1 {
   line-height: 1.4;
 }
 
+.epilogue[data-secret-step] > summary.epilogue-name {
+  cursor: pointer;
+  list-style: none;
+}
+
+.epilogue[data-secret-step] > summary.epilogue-name::-webkit-details-marker {
+  display: none;
+}
+
+.epilogue[data-secret-step] > summary.epilogue-name::after {
+  margin-left: auto;
+  color: var(--dim);
+  content: "펼치기";
+  font-size: .74rem;
+}
+
+.epilogue[data-secret-step][open] > summary.epilogue-name::after {
+  content: "접기";
+}
+
 .epilogue-name small {
   color: var(--dim);
   font-size: .8rem;
@@ -1515,6 +1535,17 @@ h1 {
     rgba(13, 11, 9, .72);
   box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
   counter-increment: epilogue-question;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.epilogue[data-secret-step]:not([open]) {
+  cursor: pointer;
+}
+
+.epilogue[data-secret-step]:not([open]):hover {
+  border-color: color-mix(in srgb, var(--card-color) 42%, var(--line));
+  box-shadow: 0 16px 38px rgba(0, 0, 0, .26);
+  transform: translateY(-1px);
 }
 
 .epilogue[data-secret-step]::before {
@@ -2119,6 +2150,23 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
 .pick.is-off .pick-arrow { color: var(--ash); opacity: .55; }
 .pick.is-off .pick-title { color: var(--dim); }
 .pick.is-off .pick-desc { color: var(--ash); opacity: .8; }
+
+/* 구속 때문에 배드엔드 분기만 남은 선택지 */
+.pick.is-forced,
+.pick.is-forced:hover {
+  border: 2px solid var(--red);
+  background: rgba(173, 73, 73, .08);
+  box-shadow: 0 0 0 1px rgba(173, 73, 73, .18), 0 0 18px rgba(173, 73, 73, .12);
+  transform: none;
+}
+
+.next-step-btn.is-forced,
+.next-step-btn.is-forced:hover {
+  border-color: var(--red);
+  background: linear-gradient(135deg, rgba(173, 73, 73, .18), rgba(27, 20, 16, .96));
+  box-shadow: 0 0 0 1px rgba(173, 73, 73, .18), 0 0 18px rgba(173, 73, 73, .12);
+  transform: none;
+}
 
 /* 확정 버튼 */
 .confirm-btn {

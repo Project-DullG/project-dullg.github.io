@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 역병의사는 부활을 선언합니까?">
   <title>의사가 너무 많아! · 부활 선언</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <main class="container" style="--card-color:var(--plague);--card-glow:var(--plague-soft)">
@@ -86,11 +86,12 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
     var st = DE.read();
+    if (DE.guardDirectPage('declare', st)) return;
     var arrested = st.arrested || [];
     var modal = document.getElementById('confirm-modal');
     var modalQ = document.getElementById('modal-q');

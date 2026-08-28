@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="의사가 너무 많아! — 타임라인">
+  <title>의사가 너무 많아! · 타임라인</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css?v=9">
+  <style>
+    .activity-intro{margin-bottom:28px}
+    .activity-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .activity-legend{align-items:center}
+    .activity-legend span{position:relative;padding:5px 9px 5px 22px;border:1px solid var(--line);border-radius:999px;color:var(--dim);font-size:.76rem}
+    .activity-legend span::before{position:absolute;top:50%;left:9px;width:7px;height:7px;border-radius:50%;background:var(--line-strong);content:'';transform:translateY(-50%)}
+    .activity-legend .legend-treatment::before{background:var(--gold)}
+    .activity-legend .legend-alibi::before{background:#76b9ad}
+    .activity-legend .legend-witness::before{background:#a995cf}
+    .activity-legend .legend-harm::before{background:#e87878}
+    .activity-legend .legend-heal::before{background:#79d09b}
+    .activity-legend .legend-empty::before{background:repeating-linear-gradient(135deg,#d95f67 0 2px,transparent 2px 4px)}
+    .relationship-legend span{border-color:transparent;color:var(--dim);background:var(--pair-bg)}
+    .relationship-legend span::before{background:var(--pair-color)}
+    .bookend{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start;margin:0 0 28px;padding:18px 0;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line)}
+    .bookend-time{color:var(--gold);font-size:1.05rem;font-weight:850;line-height:1.4}
+    .bookend-title{margin:0 0 6px;color:var(--ink-strong);font-size:1.05rem;line-height:1.4}
+    .bookend-copy{margin:0;color:var(--dim);font-size:.9rem;line-height:1.68}
+    .matrix-wrap{margin-top:18px;overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.01)}
+    .activity-matrix{width:100%;min-width:990px;border-collapse:collapse;table-layout:fixed}
+    .activity-matrix th,.activity-matrix td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+    .activity-matrix tr:last-child th,.activity-matrix tr:last-child td{border-bottom:0}
+    .activity-matrix th:last-child,.activity-matrix td:last-child{border-right:0}
+    .matrix-corner{width:92px;padding:14px 12px;color:var(--dim);font-size:.75rem;font-weight:800;line-height:1.45}
+    .matrix-time{width:92px;padding:14px 12px;color:var(--gold);font-size:.88rem;font-weight:850;line-height:1.35;white-space:nowrap}
+    .matrix-character{padding:13px 12px;color:var(--card-color);font-size:.82rem;font-weight:850;line-height:1.35}
+    .matrix-character.c-talisman{--card-color:var(--talisman)}
+    .matrix-character.c-herbal{--card-color:var(--herbal)}
+    .matrix-character.c-acupunct{--card-color:var(--acupunct)}
+    .matrix-character.c-priest{--card-color:var(--priest)}
+    .matrix-character.c-plague{--card-color:var(--plague)}
+    .matrix-character.c-western{--card-color:var(--western)}
+    .matrix-cell{padding:12px 11px;color:var(--dim);font-size:.77rem;line-height:1.58;background:rgba(255,255,255,.012)}
+    .matrix-cell.event{color:var(--ink)}
+    .matrix-cell.empty{color:rgba(214,205,192,.45);text-align:center}
+    .matrix-cell.empty.no-alibi::after{display:block;margin-top:4px;color:#d95f67;content:'알리바이 없음';font-size:.62rem;letter-spacing:.03em;line-height:1.35}
+    .matrix-cell.treatment{background:rgba(235,198,113,.06);border:2px solid rgba(235,198,113,.78);color:var(--ink-strong);font-weight:400}
+    .matrix-cell.treatment::before{display:block;margin-bottom:4px;color:var(--gold);content:'실제 진료';font-size:.64rem;letter-spacing:.04em}
+    .matrix-cell.alibi{background:var(--pair-bg,rgba(118,185,173,.05))}
+    .matrix-cell.interrogation{color:var(--ink);font-weight:400}
+    .matrix-cell.interrogation::before{display:block;width:max-content;margin-bottom:4px;padding:2px 5px;border-radius:4px;background:rgba(255,255,255,.11);color:var(--ink-strong);content:'연속 심문';font-size:.64rem;letter-spacing:.04em}
+    .matrix-cell.witness{background:rgba(169,149,207,.05)}
+    .matrix-cell.pair-multi{background:linear-gradient(90deg,rgba(118,185,173,.30),rgba(142,180,217,.30))}
+    .matrix-cell.no-alibi{background:repeating-linear-gradient(135deg,transparent 0 11px,rgba(217,95,103,.48) 11px 12px),rgba(217,95,103,.035);border:2px solid rgba(217,95,103,.78)}
+    .pair-tag{display:inline-block;margin:0 2px 2px 0;padding:0;color:inherit;font-size:.69rem;font-weight:400;line-height:1.35;white-space:nowrap}
+    .pair-herbal-plague{--pair-color:#76b9ad;--pair-bg:rgba(118,185,173,.30)}
+    .pair-herbal-acupunct{--pair-color:#8eb4d9;--pair-bg:rgba(142,180,217,.30)}
+    .pair-talisman-acupunct{--pair-color:#b69ad9;--pair-bg:rgba(182,154,217,.30)}
+    .pair-priest-western{--pair-color:#e7aa79;--pair-bg:rgba(231,170,121,.30)}
+    .pair-priest-plague{--pair-color:#dc839a;--pair-bg:rgba(220,131,154,.30)}
+    .pair-acupunct-plague{--pair-color:#d4b067;--pair-bg:rgba(212,176,103,.30)}
+    .pair-priest-acupunct{--pair-color:#98c77b;--pair-bg:rgba(152,199,123,.30)}
+    .action-harm{color:#f18484;font-weight:400}
+    .action-heal{color:#83d9a1;font-weight:400}
+    .matrix-cell.c-talisman{--card-color:var(--talisman)}
+    .matrix-cell.c-herbal{--card-color:var(--herbal)}
+    .matrix-cell.c-acupunct{--card-color:var(--acupunct)}
+    .matrix-cell.c-priest{--card-color:var(--priest)}
+    .matrix-cell.c-plague{--card-color:var(--plague)}
+    .matrix-cell.c-western{--card-color:var(--western)}
+    .matrix-key{display:grid;gap:4px;margin:0;color:var(--dim);font-size:.72rem;line-height:1.45;text-align:right}
+    .matrix-key-item{display:block;white-space:nowrap}
+    .matrix-key-item::before{display:inline-block;width:18px;height:10px;margin:0 6px 0 0;border-radius:2px;content:'';vertical-align:-1px}
+    .matrix-key-treatment::before{border:2px solid rgba(235,198,113,.78)}
+    .matrix-key-no-alibi::before{border:2px solid rgba(217,95,103,.78)}
+    .matrix-note{margin:14px 0 0;color:var(--dim);font-size:.81rem;line-height:1.65}
+    .column-notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px}
+    .column-note{padding:15px 16px;border:1px solid var(--line);border-left:3px solid var(--card-color);border-radius:9px;background:rgba(255,255,255,.02)}
+    .column-note-title{display:block;margin-bottom:6px;color:var(--card-color);font-size:.78rem;font-weight:850}
+    .column-note-copy{display:block;color:var(--dim);font-size:.84rem;line-height:1.62}
+    .source-note{margin-top:24px;color:var(--dim);font-size:.82rem;line-height:1.6}
+    @media (max-width:700px){
+      .bookend{grid-template-columns:60px 1fr;gap:12px}
+      .column-notes{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <main class="container reading-simple" style="--card-color:var(--ash);--card-glow:var(--ash-soft)">
+    <header class="header">
+      <a href="8-design.html" data-keep-query class="tag">작품 설계 허브</a>
+      <h1>타임라인</h1>
+    </header>
+
+    <section aria-labelledby="matrix-title">
+      <div class="branch-toolbar" style="margin-top:0">
+        <div>
+          <span>TIME × CHARACTER</span>
+          <strong id="matrix-title">시간대별 활동 매트릭스</strong>
+        </div>
+        <p class="matrix-key" aria-label="표 테두리 범례"><span class="matrix-key-item matrix-key-treatment">금색 테두리 · 실제 진료</span><span class="matrix-key-item matrix-key-no-alibi">빨간 실선 테두리 · 알리바이 없음</span></p>
+      </div>
+
+      <div class="matrix-wrap">
+        <table class="activity-matrix" aria-label="시간대별 캐릭터 활동표">
+          <thead>
+            <tr>
+              <th class="matrix-corner" scope="col">시간<br>＼ 인물</th>
+              <th class="matrix-character c-talisman" scope="col">부적술사</th>
+              <th class="matrix-character c-herbal" scope="col">한의사</th>
+              <th class="matrix-character c-acupunct" scope="col">침술사</th>
+              <th class="matrix-character c-priest" scope="col">사제</th>
+              <th class="matrix-character c-plague" scope="col">역병의사</th>
+              <th class="matrix-character c-western" scope="col">양의사</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="matrix-time" scope="row">1시</th>
+              <td class="matrix-cell event treatment c-talisman"><span class="action-harm">붉은 부적을 붙이고</span> 준비</td>
+              <td class="matrix-cell event alibi pair-multi c-herbal"><span class="pair-tag pair-herbal-plague">역병의사</span>가 말을 걸었고, 뒤뜰에서 <span class="pair-tag pair-herbal-acupunct">침술사</span>와 대화</td>
+              <td class="matrix-cell event alibi pair-herbal-acupunct c-acupunct"><span class="pair-tag pair-herbal-acupunct">한의사</span>와 대화</td>
+              <td class="matrix-cell event alibi pair-priest-western c-priest"><span class="pair-tag pair-priest-western">양의사</span>와 대화</td>
+              <td class="matrix-cell event alibi pair-herbal-plague c-plague"><span class="pair-tag pair-herbal-plague">한의사</span>와 만남</td>
+              <td class="matrix-cell event alibi pair-priest-western c-western"><span class="pair-tag pair-priest-western">사제</span>와 대화</td>
+            </tr>
+            <tr>
+              <th class="matrix-time" scope="row">2시</th>
+              <td class="matrix-cell event alibi pair-talisman-acupunct c-talisman">부적을 붙이고, <span class="pair-tag pair-talisman-acupunct">침술사</span>와 대화</td>
+              <td class="matrix-cell event treatment c-herbal">수면향을 피우고, 형에게 받은 <span class="action-heal">약을 먹임</span></td>
+              <td class="matrix-cell event alibi pair-talisman-acupunct c-acupunct"><span class="pair-tag pair-talisman-acupunct">부적술사</span>와 대화</td>
+              <td class="matrix-cell interrogation alibi pair-priest-plague c-priest" rowspan="2"><span class="pair-tag pair-priest-plague">역병의사</span> 추궁</td>
+              <td class="matrix-cell interrogation alibi pair-priest-plague c-plague" rowspan="2"><span class="pair-tag pair-priest-plague">사제</span>의 추궁</td>
+              <td class="matrix-cell event no-alibi c-western">낮잠을 핑계로 한약과 나무조각 일부를 챙김</td>
+            </tr>
+            <tr>
+              <th class="matrix-time" scope="row">3시</th>
+              <td class="matrix-cell event c-talisman">왕궁 곳곳에 기운을 약화시키는 <span class="action-harm">부적을 붙임</span></td>
+              <td class="matrix-cell event witness c-herbal">부적술사가 부적을 붙이는 것을 보고, 약봉투가 바뀐 흔적과 양의사의 부재를 인지</td>
+              <td class="matrix-cell event treatment c-acupunct">독침으로 허벅지에 독을 주입함. 독침을 남긴 채 돌아옴</td>
+              <td class="matrix-cell event no-alibi c-western">훔친 약을 들고 왕궁 밖으로 나가 부하에게 맡김</td>
+            </tr>
+            <tr>
+              <th class="matrix-time" scope="row">4시</th>
+              <td class="matrix-cell event no-alibi c-talisman">왕궁에 부적을 더 붙임</td>
+              <td class="matrix-cell event no-alibi c-herbal">사제와 역병의사의 눈을 피해 왕궁 구석에 몸을 숨김</td>
+              <td class="matrix-cell event alibi pair-acupunct-plague c-acupunct"><span class="pair-tag pair-acupunct-plague">역병의사</span>와 대화</td>
+              <td class="matrix-cell event treatment c-priest">졸려서 <span class="action-heal">부적을 떼고</span> 환기. 진료 후 양의사가 부하에게 약을 받는 모습을 봄</td>
+              <td class="matrix-cell event alibi pair-acupunct-plague c-plague"><span class="pair-tag pair-acupunct-plague">침술사</span>와 대화</td>
+              <td class="matrix-cell event witness no-alibi c-western">부하에게 3일분으로 만든 약을 받음</td>
+            </tr>
+            <tr>
+              <th class="matrix-time" scope="row">5시</th>
+              <td class="matrix-cell empty no-alibi c-talisman">—</td>
+            <td class="matrix-cell event witness no-alibi c-herbal">양의사가 무언가를 챙겨 돌아오는 모습을 보고 피함. 부적술사가 보이지 않는 것도 수상하게 여김</td>
+              <td class="matrix-cell interrogation alibi pair-priest-acupunct c-acupunct" rowspan="2"><span class="pair-tag pair-priest-acupunct">사제</span>의 추궁</td>
+              <td class="matrix-cell interrogation alibi pair-priest-acupunct c-priest" rowspan="2"><span class="pair-tag pair-priest-acupunct">침술사</span> 추궁</td>
+              <td class="matrix-cell event treatment c-plague">독침을 뽑아내고 <span class="action-heal">거머리로 독을 뽑아냄</span></td>
+              <td class="matrix-cell event c-western">왕궁으로 돌아와 대기소에서 치료 순서를 기다림</td>
+            </tr>
+            <tr>
+              <th class="matrix-time" scope="row">6시</th>
+              <td class="matrix-cell event no-alibi c-talisman">왕궁 뒤뜰에서 <span class="action-harm">저주 인형을 대못으로 찌름</span>. 부적이 떨어져 효과가 없었으나 성공한 것으로 오해함</td>
+              <td class="matrix-cell empty no-alibi c-herbal">—</td>
+              <td class="matrix-cell event witness c-plague">양의사가 거머리를 보고 비명 지르는 것을 들음</td>
+              <td class="matrix-cell event treatment c-western"><span class="action-harm">3일치의 약을 전부 투여</span>. 거머리를 보고 비명을 지름</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="matrix-note">※ 2~3시는 사제와 역병의사의 연속 심문, 5~6시는 사제와 침술사의 연속 심문입니다. 동일한 대화·추궁이 이어지는 흐름을 세로 블록으로 묶었습니다.</p>
+    </section>
+
+    <section class="guide-box activity-intro" style="margin-top:34px">
+      <div class="guide-title">타임라인 읽는 법</div>
+      <p>본표는 <strong>6개의 치료 시간 × 6명의 캐릭터</strong>로 구성했습니다. 각 행의 시간대와 각 열의 인물을 교차해 활동을 확인합니다.</p>
+      <p>금색은 실제 진료, 청록색은 서로 확인되는 대화·심문, 보랏빛은 다른 인물이 목격하거나 들은 단서입니다. 진료 칸 안에서는 빨간 글씨가 살의 시도, 초록 글씨가 치료·해독 행위입니다.</p>
+      <div class="activity-legend" aria-label="도표 범례">
+        <span>부적술사</span><span>한의사</span><span>침술사</span><span>사제</span><span>역병의사</span><span>양의사</span>
+        <span class="legend-treatment">실제 진료</span><span class="legend-alibi">서로 확인되는 대화·심문</span><span class="legend-witness">목격·청취 단서</span><span class="legend-empty">알리바이 없음</span><span class="legend-harm">살의 시도</span><span class="legend-heal">치료·해독</span>
+      </div>
+      <div class="activity-legend relationship-legend" aria-label="대화 관계 범례">
+        <span class="pair-herbal-plague">한의사 ↔ 역병의사</span><span class="pair-herbal-acupunct">한의사 ↔ 침술사</span><span class="pair-talisman-acupunct">부적술사 ↔ 침술사</span><span class="pair-priest-western">사제 ↔ 양의사</span><span class="pair-priest-plague">사제 ↔ 역병의사</span><span class="pair-acupunct-plague">침술사 ↔ 역병의사</span><span class="pair-priest-acupunct">사제 ↔ 침술사</span>
+      </div>
+    </section>
+
+    <section class="bookend" aria-label="12시 소집">
+      <div class="bookend-time">12시</div>
+      <div>
+        <h2 class="bookend-title">소집</h2>
+        <p class="bookend-copy">여섯 의사가 왕궁에 모입니다.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="event-notes-title" style="margin-top:34px">
+      <div class="branch-toolbar" style="margin-top:0">
+        <div>
+          <span>EVENT NOTES</span>
+          <strong id="event-notes-title">시간대별 핵심 사건</strong>
+        </div>
+        <p>CSV의 치료 내용<br>· 주요 발생 사건</p>
+      </div>
+      <div class="column-notes">
+        <div class="column-note" style="--card-color:var(--talisman)"><span class="column-note-title">1시 · 부적술사의 치료</span><span class="column-note-copy">방에 저주용 부적을 붙이고 성물을 넘어뜨리는 등 기운을 엮는 작업을 함.</span></div>
+        <div class="column-note" style="--card-color:var(--herbal)"><span class="column-note-title">2시 · 한의사의 치료</span><span class="column-note-copy">준비해 온 약을 먹이고, 수면향을 피움.</span></div>
+        <div class="column-note" style="--card-color:var(--acupunct)"><span class="column-note-title">3시 · 침술사의 치료</span><span class="column-note-copy">왕에게 독침과 혈류 차단 침을 찌르나, 수면향을 인지하지 못하고 졸다가 독침 하나를 두고 나옴.</span></div>
+        <div class="column-note" style="--card-color:var(--priest)"><span class="column-note-title">4시 · 사제의 치료</span><span class="column-note-copy">깊은 수면향을 알아채고 문을 열고, 붉은 부적을 주머니에 넣음. 부적술사의 살인이 무효화됨.</span></div>
+        <div class="column-note" style="--card-color:var(--plague)"><span class="column-note-title">5시 · 역병의사의 치료</span><span class="column-note-copy">거머리로 침술사가 왕에게 남긴 독을 빼냄.</span></div>
+        <div class="column-note" style="--card-color:var(--western)"><span class="column-note-title">6시 · 양의사의 치료</span><span class="column-note-copy">한의사의 가루와 나무조각을 약으로 오인해 만든 3일분을 먹임. 거머리를 보고 비명을 지름.</span></div>
+      </div>
+    </section>
+
+    <section class="bookend" aria-label="7시 왕의 죽음" style="margin-top:34px;margin-bottom:0">
+      <div class="bookend-time">7시</div>
+      <div>
+        <h2 class="bookend-title">왕의 죽음</h2>
+        <p class="bookend-copy">왕은 잠시 기운이 돌아 직접 걸어 나와 연회를 선언하지만, 침소로 돌아간 지 한 시간이 채 지나지 않아 피를 토하며 폭맥증으로 사망합니다. 왕비와 군사들이 뛰어들어오고, 의사들은 누가 왕을 죽였는지 직접 조사해 고하라는 명을 받습니다.</p>
+      </div>
+    </section>
+
+    <p class="source-note">자료 출처: 지정된 `당일 활동.csv` · 현재 설정과 맞지 않는 표현은 문맥에 맞게 정리했습니다.</p>
+
+    <div class="nav-links">
+      <a href="8-design.html" data-keep-query>작품 설계 허브</a>
+      <a href="truth-original.html" data-keep-query>작가 원문</a>
+      <a href="9-flow.html" data-keep-query>엔딩 목록</a>
+    </div>
+    <footer class="footer">의사가 너무 많아! &middot; 타임라인</footer>
+  </main>
+  <script src="state.js?v=9"></script>
+</body>
+</html>

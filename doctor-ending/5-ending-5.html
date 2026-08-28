@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 5 — 배드 엔딩: 승리한 악">
   <title>의사가 너무 많아! · 엔딩 5 승리한 악</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--western);--card-glow:var(--western-soft)">
@@ -47,8 +47,8 @@
             <p class="script-kicker">EPILOGUE</p>
             <h2>캐릭터별 후일담</h2>
             <div class="epilogue-list">
-              <section class="epilogue c-plague" data-secret-step>
-                <div class="epilogue-name">역병의사</div>
+              <details class="epilogue c-plague" data-secret-step>
+                <summary class="epilogue-name">역병의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>침술사의 독침을 숨겼다가 돌려주려 한 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden>
@@ -63,9 +63,9 @@
                   <p data-when-plague="free" data-when-attempt="yes">왕에게서 독을 제거했던 기록을 왕실 조사관에게 넘겨 재수사의 근거로 삼습니다.</p>
                   <p data-when-plague="free" data-when-attempt="no">중앙의원회의 방해를 피해 같은 기록을 왕비에게 전달합니다.</p>
                 </div>
-              </section>
-              <section class="epilogue c-acupunct" data-secret-step hidden>
-                <div class="epilogue-name">침술사</div>
+              </details>
+              <details class="epilogue c-acupunct" data-secret-step>
+                <summary class="epilogue-name">침술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>재상가의 명령을 받고 왕에게 독침을 놓은 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden>
@@ -80,9 +80,9 @@
                   <p data-when-acupunct="free" data-when-attempt="yes">왕실의 재수사를 지켜보면서도 재상가의 지령은 끝내 꺼내지 못합니다.</p>
                   <p data-when-acupunct="free" data-when-attempt="no">양의사의 범행을 의심하지만 자신이 한 일 때문에 선뜻 나서지 못합니다.</p>
                 </div>
-              </section>
-              <section class="epilogue c-herbal" data-secret-step hidden>
-                <div class="epilogue-name">한의사</div>
+              </details>
+              <details class="epilogue c-herbal" data-secret-step>
+                <summary class="epilogue-name">한의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>호준 대신 쌍둥이 동생 호정이 왔다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden>
@@ -97,9 +97,9 @@
                   <p data-when-herbal="free" data-when-attempt="yes">호준의 이름으로 풀려난 뒤 가족과 함께 양의사가 훔친 약의 흔적을 추적합니다.</p>
                   <p data-when-herbal="free" data-when-attempt="no">정체를 숨긴 채 호련당으로 돌아가 같은 흔적을 찾습니다.</p>
                 </div>
-              </section>
-              <section class="epilogue c-talisman" data-secret-step hidden>
-                <div class="epilogue-name">부적술사</div>
+              </details>
+              <details class="epilogue c-talisman" data-secret-step>
+                <summary class="epilogue-name">부적술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>소명파의 당주이며 왕을 저주하려 했다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden>
@@ -114,9 +114,9 @@
                   <p data-when-talisman="free" data-when-attempt="yes">소명파 사람들을 피신시키고 왕실 재수사에 필요한 기록을 모읍니다.</p>
                   <p data-when-talisman="free" data-when-attempt="no">교단과 중앙의원회의 눈을 피해 사람들을 피신시키고 기록을 모읍니다.</p>
                 </div>
-              </section>
-              <section class="epilogue c-priest" data-secret-step hidden>
-                <div class="epilogue-name">사제</div>
+              </details>
+              <details class="epilogue c-priest" data-secret-step>
+                <summary class="epilogue-name">사제</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>과거 소명파를 불태우는 데 앞장섰다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden>
@@ -131,9 +131,9 @@
                   <p data-when-priest-role="free" data-when-attempt="yes">지위를 이용해 붙잡힌 사람들의 처형을 늦추고 왕실 조사관 앞에서 양의사의 보고서에 반박합니다.</p>
                   <p data-when-priest-role="free" data-when-attempt="no">같은 방법으로 재판을 늦추고 교단 안에서 양의사의 보고서에 반박합니다.</p>
                 </div>
-              </section>
-              <section class="epilogue c-western" data-secret-step hidden>
-                <div class="epilogue-name">양의사</div>
+              </details>
+              <details class="epilogue c-western" data-secret-step>
+                <summary class="epilogue-name">양의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>한의사의 약을 훔치고 왕자파와 손잡았다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden>
@@ -144,7 +144,7 @@
                   <p data-when-attempt="yes">약품 절도와 왕자파의 거래는 드러나지 않습니다. 그는 재수사가 자신에게 닿기 전에 중앙의원회의 기록과 증인을 정리합니다.</p>
                   <p data-when-attempt="no">왕을 잃은 혼란을 수습한 의원장으로 행세하며 중앙의원회를 장악하고, 무고한 사람들의 재판을 서둘러 끝냅니다.</p>
                 </div>
-              </section>
+              </details>
             </div>
           </section>
         </article>
@@ -161,7 +161,7 @@
     </div>
     <footer class="footer">의사가 너무 많아! &middot; 엔딩 5 · 승리한 악</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=10"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;

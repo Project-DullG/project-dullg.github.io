@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! 엔딩 — 탁자 끝의 성수병">
   <title>의사가 너무 많아! · 성수병</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
   <main class="container" style="--card-color:var(--western);--card-glow:var(--western-soft)">
@@ -75,11 +75,13 @@
     </div>
     <footer class="footer">&copy; Project DullG &middot; 의사가 너무 많아!</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
   <script>
   (function () {
     var DE = window.DoctorEnding;
-    var priestHeld = (DE.read().arrested || []).indexOf('priest') !== -1;
+    var st = DE.read();
+    if (DE.guardDirectPage('flask', st)) return;
+    var priestHeld = (st.arrested || []).indexOf('priest') !== -1;
     DE.reveal('data-when-priest', priestHeld ? 'held' : 'free');
     DE.onPick('picks', 'data-choice', function (c) {
       // 그가 먼저 뿌리면 정화는 그 자리에서 성립한다. 사제가 자유로우면 그 차례를

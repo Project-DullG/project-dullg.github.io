@@ -7,7 +7,7 @@
   <meta name="description" content="의사가 너무 많아! — 사건의 진상">
   <title>의사가 너무 많아! · 사건의 진상</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
   <style>
     .original-source h3{margin:28px 0 12px;color:var(--ink-strong);font-size:1.08rem}
     .original-source ul{margin:14px 0;padding-left:1.35rem}
@@ -18,6 +18,17 @@
     .original-table th{color:var(--ink-strong);background:rgba(255,255,255,.04);white-space:nowrap}
     .original-table tbody tr:last-child td{border-bottom:0}
     .original-source-intro{font-size:1.03rem}
+    .spoiler-section{margin-top:18px;--section-color:var(--gold)}
+    .spoiler-section>summary{display:flex;align-items:center;justify-content:space-between;gap:18px;cursor:pointer;list-style:none}
+    .spoiler-section>summary::-webkit-details-marker{display:none}
+    .spoiler-section>summary:focus-visible{outline:2px solid var(--section-color);outline-offset:5px}
+    .spoiler-summary-copy{display:flex;flex-direction:column;gap:8px}
+    .spoiler-summary-copy .script-kicker{margin:0}
+    .spoiler-summary-title{color:var(--ink-strong);font-size:1.2rem;font-weight:800;line-height:1.45}
+    .spoiler-summary-action{flex:0 0 auto;color:var(--section-color);font-size:.88rem;font-weight:700;white-space:nowrap}
+    .spoiler-summary-action::after{margin-left:7px;content:'▸';font-size:1rem}
+    .spoiler-section[open] .spoiler-summary-action::after{content:'▾'}
+    .spoiler-content{margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
   </style>
 </head>
 <body>
@@ -33,7 +44,7 @@
     <section class="guide-box ending-guide-panel">
       <div class="guide-title">사건의 진상</div>
       <p>이 페이지는 세 번의 살해 시도와 무력화 과정을 설명하고, 특히 양의사의 절도와 그 범행을 드러내는 단서를 정리합니다.</p>
-      <p>게임 구조에 관한 작가의 설명과 맺음말은 <a href="8-design.html" data-keep-query><strong>작가의 의도</strong></a> 페이지에서 이어집니다.</p>
+      <p>아래에는 정본 문서의 원문 1장부터 5장까지를 문장과 순서 그대로 수록했습니다. 게임 구조를 다시 풀어 쓴 보충 해설은 <a href="8-design.html" data-keep-query><strong>작가의 의도</strong></a> 페이지에서 볼 수 있습니다.</p>
     </section>
 
     <article class="ending-script original-source">
@@ -77,10 +88,74 @@
         <ul><li>부적술사는 자신의 저주가 왕을 죽였다고 확신합니다. 부적이 이미 떼어진 것을 모르기 때문입니다.</li><li>침술사 역시 자신의 독이 왕을 죽였다고 확신합니다. 독침이 뽑히고 독혈이 빨려 나간 것을 모르기 때문입니다.</li><li>한의사는 형의 약을 자신이 잘못 달인 것은 아닌지 홀로 두려워합니다.</li><li>역병의사만이 '독은 분명히 제거했다'는 사실을 알기에, 사인이 다른 곳에 있음을 아는 유일한 사람입니다.</li><li>사제는 이 모든 것을 악마술의 소행이라 믿고, 진범만은 끝까지 의심하지 않으려 합니다.</li><li>그리고 양의사만이, 왕을 죽인 것이 자신의 손이라는 진실을 알고 있습니다.</li></ul>
         <p>"내가 죽였다"고 믿는 두 사람과, "내가 죽였을지도 모른다"고 두려워하는 한 사람이 저마다 입을 다물면서, 진범은 그 오해의 안개 뒤에 숨습니다. 게임의 진행은, 점차 오해를 걷어내며 더 많은 이야기를 하도록 설계되어있습니다. </p>
       </section>
+
+      <section class="script-block original-source-section">
+        <p class="script-kicker">원문 3</p>
+        <h2>3. 작가의 의도</h2>
+        <h3>◆ 구도의 변화 — 2 대 2 대 2에서 5 대 1까지</h3>
+        <p>이 사건의 진영 구도는 게임이 진행됨에 따라 다음과 같이 재편되도록 설계되었습니다.</p>
+        <p>2 대 2 대 2 — 세 쌍의 인연(시작의 구도). 여섯 의사는 추천 세력으로도, 개인적 인연으로도 두 명씩 세 쌍으로 묶여 있습니다. 중앙의원회가 보낸 양의사와 사제는 야전병동 시절부터의 인연으로, 왕이 지명한 역병의사와 한의사는 중앙의원회 시절의 옛 동료(사일러스와 호준)로, 재상가가 보낸 침술사와 부적술사는 소명파의 연으로 이어져 있습니다. 초반의 대화와 탐색은 자연스럽게 이 쌍 안에서 시작됩니다. 다만 세 쌍 모두 속에 금이 가 있습니다. 사제는 진범을 맹신하고 있고, 역병의사가 아는 '호준'은 사실 그 자리에 없으며, 부적술사는 침술사의 배신을 의심하고 있습니다.</p>
+        <p>3 대 3 — 이단 전선의 형성. 사제의 심문이 시작되면 구도가 재편됩니다. 왕궁 밖에서부터 추적하던 '역병의사'와, 그가 '스승님' 이라고 부른 침술사, 그리고 '풍수사' 언급에 화를 내는 '부적술사'가 한 덩어리의 '이단 혐의자'로 묶이고, 반대편에는 심문하는 사제와 그 뒤의 양의사, 그리고 아직 혐의 밖에 있는 한의사가 남습니다. </p>
+        <p>2 대 4 — "이단 놈들!"(이단몰이의 완성). 진범 양의사는 '죽이고 싶은' 호준을 이단 전선에 집어넣고, 왕의 사인인 '약물 중독'을 한의사의 잘못으로 만드는 것을 목표로 삼도록 설계되어 있습니다. 사제 입장에서는 '한의사'가 나왔다는 호련당마저 활명술에 닿아 있으니(&lt;원로 의사&gt;, &lt;왕궁 요리장&gt;), 한의사까지 '이단' 쪽으로 밀어 넣으면 구도는 양의사·사제 대 나머지 넷이 됩니다. 이것은 [엔딩 3. 기나긴 이단 심문]과 [엔딩 5. 승리한 악]의 구도 그 자체입니다 — 넷이 이단으로 처형당하고, 사제는 대심문관이 되고, 양의사는 의료계의 독재자로 남는. 즉 2 대 4는 진범이 승리하는 구도이며, 게임 후반은 이 구도를 뒤집을 수 있는가를 묻습니다.</p>
+        <p>5 대 1 — 사제의 각성과 진범의 고립. 구도를 뒤집는 열쇠는 거짓말을 하지 못하는 사제입니다. </p>
+        <p>사제는 소명파를 탄압한 장본인이자, 풍수사를 10년 이상 뒤쫓은 굳건한 신념의 소유자이지만, 그 시작은 '양의사'가 중앙의원회의 위상을 지키기 위해 지어낸 거짓 소문이었습니다. <br>저주가 발동하지 못했음이 증명되고, 독이 제거되었음이 증명되면서 사제가 소명파, 그리고 활명술에 대한 자신의 생각을 바꿀 때, 비로소 양의사가 약 봉투를 받아들고 돌아왔다는 사실과, 소명파를 음해한 소문의 시작점이 누구인지를 테이블 위로 이끌어냅니다.</p>
+        <p>거짓을 말할 수 없는 사제는 맹신을 거두고 넷의 곁에 섭니다. 2 대 4가 5 대 1로 뒤집히는 이 순간이 이 게임의 클라이맥스입니다. </p>
+        <p>이 구도는 부활 국면까지 이어집니다. 풍수사의 진실을 알게 되면 부활에 반대하던 부적술사가 돌아서고, '악인들 가운데 선인이 있다면 그들을 구해야' 하는 사제도 왕을 살리는 것을 목표로 하기에, 결정하는 마지막 순간 왕의 부활 의식에 찬성하지 않는 사람은 진범, 양의사 하나뿐일 것입니다.</p>
+      </section>
+
+      <section class="script-block original-source-section">
+        <p class="script-kicker">원문 4</p>
+        <h2>4. 점수와 난이도에 대하여</h2>
+        <p>설명서에는 비록 '승점을 서로 비교해 승패를 가리는 개인전'이라고 적어 두었지만, 모두가 제 목표를 이루고(?점 목표는 5점으로 계산합니다), 왕이 부활하는 엔딩으로 향한다면 대개 15점 만점을 받을 수 있도록 균형을 맞추었습니다. 동점이 나왔다면 그것은 '모두가 2인분을 한 판'입니다.</p>
+        <p>단 하나의 예외는 양의사입니다. 진범의 목표 합계는 홀로 16점으로 설계되어 있습니다. 호준을 최다 득표자로 만들고 왕자파의 계획을 완수하는 세계는 부활 엔딩과 양립할 수 없으니 진범은 애초에 '모두가 만점인 판'에 함께 설 수 없는 사람이지만, 그 대신 정체를 숨기고 판을 지배하는 데 성공했다면 다섯 명의 만점을 홀로 넘어설 수 있도록 상한을 열어 둔 것입니다. 승부는 누군가 제 목표를 놓치거나, 진범이 그 틈을 역이용하는 지점에서 갈립니다. </p>
+        <p>엔딩 중 왕의 부활은 여러가지 제약을 해소하고 서로간의 오해를 푼 다음에야 도달할 수 있는 가장 어려운 엔딩입니다. 그 엔딩에 도달했다면, 여러분 스스로가 머더 미스터리 초보는 아니라고 이야기할 수 있습니다.</p>
+        <p>이 작품은 RP를 매우 중요시했습니다. 6인 이상의 머더 미스터리에서는 드물게 밀담을 제거한 것도, 승점표에 RP 보너스가 들어 있는 것도, 단순한 추리와 정치만이 아니라 '인물에 이입하여 연기한 사람'이 보상받기를 바랐기 때문입니다. </p>
+        <p>허구한 날 '이 이단놈!' 이라 소리 지르는 사제와, 사제에게는 깍듯하면서 반말로 의사들을 깔보는 양의사가 초반 분위기를 만들고,<br>풍수사를 욕하는 말에 발끈하는 '부적술사'가 자연스러운 주제의 전환을 이끌며,<br>'우리 호정이'라고 두 번 말 실수를 하는 침술사와 '호준 선배에게 미안하다'며 사과하는 역병의사에 맞물려, 자신이 '호준'이 아니냐는 말을 들으면 귀를 만지거나 안경을 고쳐써야 하는 한의사의 RP 보너스 자체가 한의사를 의심받게 만드는 가장 곤란한 내용이 되도록 설계했습니다. 온라인으로는 이 게임을 즐길 수 없으니 당장은 괜찮지만, 나중에 온라인으로 이 게임을 낸다면 내용 수정은 불가피하겠네요.</p>
+        <p>부활이라는 기믹을 추가함으로써, 이 게임은 양의사가 한의사를 성공적으로 몰아넣기에는 조금 가혹하게 만들어진 느낌이 있습니다. 양의사 플레이어가 패배했다면 심심한 사과를, 만약 승리했다면 박수를 보내드리고 싶습니다. 이 게임의 재미는 양의사 플레이어와 사제가 얼마나 열심히 연기를 해주었는지에 따라 결정된다고 해도 과언이 아닙니다.</p>
+      </section>
+
+      <section class="script-block original-source-section final-block">
+        <p class="script-kicker">원문 5</p>
+        <h2>5. 마치며</h2>
+        <p>&lt;의사가 너무 많아&gt; 를 쓰는 내내, 그리고 지금도 안식처가 되어주고, 세상에 내 글을 남길 수 있게 도와준 보드게임 동아리와 Project DullG에 감사합니다. 동아리에서 마스터링했던 초짜 TRPG 세션을 믿고 참가해준 PL들, 특히 이 게임의 사제 NPC의 모티브가 된 PL '클라크'에게 감사합니다.</p>
+        <p>그리고 마지막으로 이 게임을 플레이해주시고, 저희를 믿고 후원해주신 후원자 여러분께 감사드립니다. 왕이 눈을 떴든, 끝내 뜨지 못했든 — 여러분이 즐긴 이야기가 기억에 남았으면 좋겠습니다. 플레이해주셔서 다시 한번 감사합니다.</p>
+      </section>
+
+      <details class="script-block spoiler-section" style="--section-color:var(--gold)">
+        <summary>
+          <span class="spoiler-summary-copy"><span class="script-kicker">이스터에그 · 약한 스포일러</span><span class="spoiler-summary-title">〈미식의 대가〉에 대한 약한 스포일러가 포함되어 있습니다</span></span>
+          <span class="spoiler-summary-action">본문 보기</span>
+        </summary>
+        <div class="spoiler-content">
+          <p>이 작품에 등장하는 왕궁 요리장의 증언이 꽤나 깜찍하지 않나요?</p>
+          <p>자세한 내용은 〈미식의 대가〉를 플레이한 뒤 확인해 보세요.</p>
+        </div>
+      </details>
+
+      <details class="script-block spoiler-section" style="--section-color:var(--red)">
+        <summary>
+          <span class="spoiler-summary-copy"><span class="script-kicker">이스터에그 · 강한 스포일러</span><span class="spoiler-summary-title">〈미식의 대가〉에 대한 강한 스포일러가 포함되어 있습니다</span></span>
+          <span class="spoiler-summary-action">본문 보기</span>
+        </summary>
+        <div class="spoiler-content">
+          <h2>〈미식의 대가〉와 〈의사가 너무 많아〉는 같은 세계관을 공유합니다.</h2>
+          <p>두 작품을 내고 나서 이야기하고 싶어 참을 수 없었던 부분 중 하나입니다. 떡볶이를 재차 요구하던 왕과 지금 쓰러져 있는 왕은 동일 인물입니다. 〈의사가 너무 많아〉는 전쟁 후 20년 차, 〈미식의 대가〉는 전쟁 후 8년 차, 즉 공주가 부활하기 2년 전을 다룹니다.</p>
+          <h2>1. 왕궁 요리장</h2>
+          <p>이 작품의 왕궁 요리장은 정본의 구속 성공 엔딩에 등장하는 캔디로 상정하고 글을 썼습니다. 캔디가 말끝마다 ★를 붙이는 습관도 컴포넌트에 반영했습니다.</p>
+          <h2>2. 요리사 A와 B</h2>
+          <p>A는 애쉬, B는 다른 요리사입니다. 이 글을 읽은 뒤에는 〈의사가 너무 많아〉의 ‘역병의사’ 시트와 〈미식의 대가〉의 ‘애쉬’ 시트를 읽어 보시기를 권합니다.</p>
+          <p>게임 내내 역병의사가 자신의 첫사랑을 찾는 바람에 테스트 플레이가 망가진 경우가 있어, 불가피하게 등장하는 의사들을 모두 남자로 설정해야 했습니다. 완전히 별개의 설정이지만, 풍수사는 여성으로 디자인했으나 정작 그 사실을 드러낼 기회가 없었습니다. 디자이너와 원활하게 소통했다면 마지막 장면에 머리를 풀어헤친 풍수사가 저 위에서 의사들을 지켜보는 일러스트를 넣고, 풍수사의 시점에서 사건의 진상을 풀어 보려 했습니다만, 이는 아쉽게도 이루어지지 못했습니다.</p>
+          <h2>3. 사제가 찾아 불태우던 검은 약</h2>
+          <p>맞습니다. 예상하신 대로 조살과의 과육을 이용한 마약성 진통제입니다. 전쟁 이후 동방에서 유입된 조살과와 흑진주는 양의사가 밀수입해 환자에게 투여한 진통제와 같은 계열의 약물입니다.</p>
+          <p>초안에서는 양의사를 동방의 ‘까마귀’ 출신으로 설정하고, 마약 거래로 작위를 얻었다는 이야기를 구상했습니다. 하지만 두 게임을 동시에 판매하는 입장에서는 너무 큰 도박이었기에, ‘진통제’라는 모호한 단어로 채워 넣어야 했습니다.</p>
+          <h2>4. 소명파와 까마귀의 관계</h2>
+          <p>앞서 말한 이유처럼, 두 집단이 같은 집단이었다면 메타 추리만으로 너무 쉽게 답을 찾는 문제가 생길 수 있었습니다. 동서양이 섞인 세계관을 〈의사가 너무 많아〉에서 적극적으로 드러내지 못한 것도 같은 이유입니다.</p>
+        </div>
+      </details>
     </article>
 
-    <a href="8-design.html" data-keep-query class="story-link" style="margin-top:34px">
-      <span class="story-link-copy"><strong>작가의 의도 읽기</strong><span>구도의 변화, 점수와 난이도, RP 설계와 맺음말로 이어집니다.</span></span>
+    <a href="9-flow.html" data-keep-query class="story-link" style="margin-top:34px">
+      <span class="story-link-copy"><strong>목록으로 돌아가기</strong><span>엔딩 목록에서 다른 페이지를 선택합니다.</span></span>
       <span class="ending-arrow">&#10095;</span>
     </a>
 
@@ -91,6 +166,6 @@
     </div>
     <footer class="footer">의사가 너무 많아! &middot; 사건의 진상</footer>
   </main>
-  <script src="state.js?v=8"></script>
+  <script src="state.js?v=9"></script>
 </body>
 </html>
