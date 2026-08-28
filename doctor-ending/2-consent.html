@@ -24,7 +24,7 @@
 
     <div data-session-recap hidden></div>
 
-    <section class="verdict is-open" style="--card-color:var(--plague)">
+    <section class="verdict is-open" id="consent-speech" style="--card-color:var(--plague)">
       <p class="verdict-kicker">역병의사 담당 플레이어가 소리 내어 읽습니다</p>
       <p>역병의사는 앞으로 나서며 이야기합니다.</p>
       <p style="color:var(--ink-strong);font-style:italic">"저는 10년 전 공주를 살리고 사라진 풍수사에게, 그가 소멸하기 전 마지막으로 기술을 직접 전수받은 사람입니다. <span id="speech-lead"></span>, 여기에 있는 최고의 의원들과 함께라면 우리가 힘을 합쳐 왕을 살릴 수 있을 겁니다. 이 노트에 적힌 단계를 따라 왕을 부활시켜야 합니다. 저 혼자서는 모든 일을 할 수 없으니, 의원 여러분의 도움이 절실합니다."</p>
@@ -38,7 +38,7 @@
       <p class="reading-order-note" id="bound-note">※ 포박된 <span id="bound-names"></span>는 재갈이 물린 채 결박되어 있으므로 <strong>이 논의와 결정에 참여하지 않습니다.</strong></p>
     </article>
 
-    <div class="ending-decision">
+    <div class="ending-decision" id="normal-decision">
       <p class="decision-kicker">논의 후 부활 절차를 진행할지 의사들이 답합니다</p>
       <h2>의식을 시작합니까?</h2>
       <p>논의를 마친 의사들의 뜻을 그대로 고릅니다. <strong style="color:var(--ink-strong)">끝까지 결론이 나지 않으면 포박되지 않은 사람들끼리, 역병의사를 포함한 다수결로 정합니다.</strong></p>
@@ -63,6 +63,18 @@
       </div>
     </div>
 
+    <section class="verdict is-blocked" id="plague-blocked" hidden>
+      <p class="verdict-kicker">부활 가능 여부 확인</p>
+      <h2>이 자리에서 왕을 되살릴 수 있는 사람이 있습니까?</h2>
+      <p>왕비가 의사들에게 묻지만, 부활의 비술을 선언하고 의식을 이끌 역병의사는 이미 포박되어 있습니다.</p>
+      <p><strong style="color:var(--red)">부활을 시작할 사람 자체가 없으므로, 이 판의 부활은 확정적으로 실패합니다.</strong></p>
+    </section>
+
+    <a href="#" id="plague-blocked-go" class="next-step-btn" hidden style="--card-color:var(--ash);--card-glow:var(--ash)">
+      <span class="next-kicker">확정 실패</span>엔딩으로 넘어가기 &#10095;
+      <span class="next-sub">역병의사 구속으로 부활이 무산된 결말을 확인합니다.</span>
+    </a>
+
     <div class="modal-backdrop" id="confirm-modal" hidden>
       <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="modal-q">
         <p class="modal-q" id="modal-q"><strong>역천의 의식</strong>을 시작하는 것이 맞습니까?</p>
@@ -84,8 +96,19 @@
   (function () {
     var DE = window.DoctorEnding;
     var st = DE.read();
-    if (DE.guardDirectPage('consent', st)) return;
     var arrested = st.arrested || [];
+    if (DE.guardDirectPage('consent', st)) return;
+
+    if (arrested.indexOf('plague') !== -1) {
+      document.getElementById('consent-speech').hidden = true;
+      document.getElementById('normal-decision').hidden = true;
+      document.getElementById('plague-blocked').hidden = false;
+      var blockedState = { arrested: arrested, revive: false };
+      var blockedGo = document.getElementById('plague-blocked-go');
+      blockedGo.href = DE.endingPage(blockedState) + DE.query(blockedState);
+      blockedGo.hidden = false;
+      return;
+    }
 
     // 역병의사의 대사 — 구속자 실명은 대지 않는다(의식에 필요한 손이 묶인 판에서
     // 캐릭터가 알 수 없는 말이 되므로). 무구속 판만 별도 문장을 쓴다.

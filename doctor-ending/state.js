@@ -381,10 +381,11 @@
       return out;
     };
 
-    // 역병의사가 묶인 판은 부활 선언·투표·의식 준비가 열리지 않는다.
-    if (['declare', 'consent', 'ritual'].indexOf(page) !== -1 && held('plague')) {
-      targetState = { arrested: A, revive: false };
-      target = endingPage(targetState);
+    // 역병의사가 묶인 판도 2-consent에서 부활 가능 여부와 확정 실패를 확인한다.
+    // 선언·의식 준비 화면으로 직접 들어온 경우에는 그 확인 화면으로 보낸다.
+    if (['declare', 'ritual'].indexOf(page) !== -1 && held('plague')) {
+      targetState = { arrested: A };
+      target = PAGES.consent;
     // 1단계 중앙의원회는 한의사가 묶인 판에서만 열린다.
     } else if (page === 'central' && !held('herbal')) {
       target = PAGES.step1Free;
@@ -451,8 +452,8 @@
 
   var FLOW = [
     { id: 'arrest', page: 'arrest', title: '지목', kicker: '누가 구속되었는가', picks: [
-      { id: 'blocked', label: '역병의사가 구속되었다', desc: '부활을 선포할 사람이 남지 않는다',
-        to: '@end', patch: { revive: false }, when: bound('plague') },
+      { id: 'blocked', label: '역병의사가 구속되었다', desc: '부활 가능 여부를 확인한 뒤 확정 실패로 간다',
+        to: 'consent', patch: {}, when: bound('plague') },
       { id: 'open', label: '역병의사는 자리에 있다',
         to: 'declare', patch: {}, when: free('plague') }
     ]},
@@ -464,13 +465,15 @@
     ]},
 
     { id: 'consent', page: 'consent', title: '의식 개시', kicker: '찬반 투표', picks: [
+      { id: 'blocked', label: '부활할 수 있는 사람이 없다', desc: '역병의사가 구속되어 부활을 시작할 수 없다',
+        to: '@end', patch: { revive: false }, when: bound('plague') },
       { id: 'no', label: '물러선다', desc: '대역죄를 감당할 수 없다',
-        to: '@end', patch: { revive: true, vote: false }, when: someBound },
+        to: '@end', patch: { revive: true, vote: false }, when: function (A) { return someBound(A) && A.indexOf('plague') === -1; } },
       // 아무도 지목하지 않은 판에서만 왕비가 한 번 더 묻는다 — 고할 것도 없고
       // 되살릴 뜻도 없다는 답을 그대로 받지 않기 때문이다.
       { id: 'asked', label: '물러선다', desc: '왕비가 한 번 더 묻는다',
         to: 'queen', patch: { revive: true, vote: false }, when: noneBound },
-      { id: 'yes', label: '위험을 감수한다', to: 'ritual', patch: { revive: true, vote: true } }
+      { id: 'yes', label: '위험을 감수한다', to: 'ritual', patch: { revive: true, vote: true }, when: free('plague') }
     ]},
 
     { id: 'queen', page: 'queen', title: '왕비의 되물음', kicker: '한 번 더 묻는다', depth: 1, picks: [

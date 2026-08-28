@@ -1828,6 +1828,10 @@ details.gm-note[open] > summary { margin-bottom: 12px; }
     font-size: .87rem;
   }
 
+  .score-table td:first-child {
+    white-space: normal;
+  }
+
   .recap .recap-reset {
     margin-left: 0;
   }

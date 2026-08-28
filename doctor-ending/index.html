@@ -94,11 +94,9 @@
     function confirm() {
       var arrested = noneBox.checked ? [] : picked();
       var v = DE.judge(arrested);
-      // 역병의사 구속 판은 추가 입력 없이 엔딩이 확정되므로 진실의 문을 거치지 않는다.
-      // 역병의사가 묶인 판은 선언할 사람 자체가 없으므로 곧바로 결말로 간다.
-      var blocked = { arrested: arrested, revive: false };
+      // 역병의사가 묶인 판도 2-consent에서 부활 가능 여부와 확정 실패를 확인한다.
       nextHref = v.reviveBlocked
-        ? DE.endingPage(blocked) + DE.query(blocked)
+        ? '2-consent.html' + DE.query({ arrested: arrested })
         : '1-declare.html' + DE.query({ arrested: arrested });
       modalQ.innerHTML = arrested.length
         ? '<strong>' + DE.names(arrested).join(', ') + '</strong>가 지목된 것이 맞습니까?'

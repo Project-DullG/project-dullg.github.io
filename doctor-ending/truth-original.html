@@ -29,6 +29,19 @@
     .spoiler-summary-action::after{margin-left:7px;content:'▸';font-size:1rem}
     .spoiler-section[open] .spoiler-summary-action::after{content:'▾'}
     .spoiler-content{margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+    @media (max-width:640px){
+      .original-table{min-width:0}
+      .original-table thead{display:none}
+      .original-table,.original-table tbody,.original-table tr,.original-table td{display:block}
+      .original-table tr{padding:12px 0;border-bottom:1px solid var(--line)}
+      .original-table tbody tr:last-child{border-bottom:0}
+      .original-table td{position:relative;padding:3px 0 3px 68px;border-bottom:0}
+      .original-table td::before{position:absolute;top:3px;left:0;color:var(--gold);font-size:.68rem;font-weight:800;line-height:1.55}
+      .original-table td:nth-child(1)::before{content:'시각'}
+      .original-table td:nth-child(2)::before{content:'진료자'}
+      .original-table td:nth-child(3)::before{content:'한 일'}
+      .original-table td:nth-child(4)::before{content:'실제 영향'}
+    }
   </style>
 </head>
 <body>
