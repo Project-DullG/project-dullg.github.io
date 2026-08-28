@@ -1495,6 +1495,134 @@ h1 {
   vertical-align: 1px;
 }
 
+/* --- 선택형 후일담 --- */
+.epilogue-list:has(.epilogue[data-secret-step]) {
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 0;
+  counter-reset: epilogue-question;
+}
+
+.epilogue[data-secret-step] {
+  position: relative;
+  padding: 24px 25px 25px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--card-color);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--card-color) 8%, transparent), transparent 42%),
+    rgba(13, 11, 9, .72);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
+  counter-increment: epilogue-question;
+}
+
+.epilogue[data-secret-step]::before {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--dim);
+  content: "후일담 질문 " counter(epilogue-question);
+  font-size: .67rem;
+  font-weight: 820;
+  letter-spacing: .12em;
+}
+
+.epilogue[data-secret-step].is-complete {
+  border-color: color-mix(in srgb, var(--card-color) 42%, var(--line));
+}
+
+.epilogue[data-secret-step] > .epilogue-name {
+  margin-bottom: 13px;
+  font-size: 1.12rem;
+}
+
+.epilogue[data-secret-step] > p:first-of-type {
+  margin-bottom: 17px;
+  color: var(--muted);
+  font-size: .92rem;
+  line-height: 1.65;
+}
+
+.epilogue[data-secret-step] > p:first-of-type strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ink-strong);
+  font-size: 1.03rem;
+}
+
+.picks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0 2px;
+}
+
+.picks .pick {
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 16px;
+  color: var(--ink);
+  font-size: .91rem;
+  font-weight: 780;
+  text-align: center;
+}
+
+.picks .pick.is-selected,
+.picks .pick.is-selected:hover {
+  color: var(--ink-strong);
+  border-color: var(--card-color);
+  background: color-mix(in srgb, var(--card-color) 15%, rgba(255, 255, 255, .02));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--card-color) 25%, transparent);
+  transform: none;
+}
+
+.picks .pick:disabled:not(.is-selected) {
+  opacity: .36;
+  cursor: default;
+  transform: none;
+}
+
+[data-secret-result]:not([hidden]),
+[data-choice-result]:not([hidden]),
+[data-after-answer]:not([hidden]) {
+  margin-top: 18px;
+  padding: 18px 19px;
+  border: 1px solid color-mix(in srgb, var(--card-color) 32%, var(--line));
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .028);
+  animation: epilogue-reveal .28s ease-out both;
+}
+
+[data-followup]:not([hidden]) {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-strong);
+  animation: epilogue-reveal .28s ease-out both;
+}
+
+[data-secret-result] p:last-child,
+[data-choice-result] p:last-child,
+[data-after-answer] p:last-child,
+[data-followup] p:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes epilogue-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .epilogue[data-secret-step] {
+    padding: 21px 18px 22px;
+  }
+
+  .picks {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* --- 조건/주의 박스 --- */
 .condition-note {
   margin: 0 0 22px;
