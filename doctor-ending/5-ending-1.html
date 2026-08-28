@@ -8,6 +8,27 @@
   <title>의사가 너무 많아! · 엔딩 1 완벽한 부활</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="style.css?v=8">
+  <style>
+    .epilogue[data-secret-step] > summary.epilogue-name {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .epilogue[data-secret-step] > summary.epilogue-name::-webkit-details-marker {
+      display: none;
+    }
+
+    .epilogue[data-secret-step] > summary.epilogue-name::after {
+      margin-left: auto;
+      color: var(--dim);
+      content: "펼치기";
+      font-size: .74rem;
+    }
+
+    .epilogue[data-secret-step][open] > summary.epilogue-name::after {
+      content: "접기";
+    }
+  </style>
 </head>
 <body>
   <main class="container reading-simple" style="--card-color:var(--gold);--card-glow:var(--gold-soft)">
@@ -43,6 +64,7 @@
             <p>몇몇 의사들은 뜨끔한 얼굴을 하고 있었지만 필사적으로 표정을 유지합니다.</p>
             <p>왕은 자세한 진상을 몸을 회복한 뒤 보고받기로 하고, 우선 자신을 되살리는 데 손을 보탠 모두에게 죄를 묻지 않겠다는 왕비의 약속을 그대로 적용합니다.</p>
             <p>여섯 의사는 <strong>왕을 되살린 영웅</strong>으로 역사에 기록될 것입니다.</p>
+            <div aria-hidden="true" style="height:17px"></div>
             <p>부활이라는 업적을 이룬 후에도 삶은 계속되기 마련입니다.</p>
             <p>양의사는 임무에 실패한 자신을 재상가가 곧 제거하리라고 판단하고, 재상가가 먼저 손을 쓰기 전에 왕자파의 명단과 자금 장부, 연락책을 왕실에 넘기고 신변 보호를 청합니다.</p>
             <p>왕궁은 누가 어느 단계에 손을 보탰는지 따로 가리지 않고, 그날 밤의 부활을 여섯 의사가 함께 이룬 일로 선포합니다. 여섯 사람을 모두 영웅으로 묶어야 왕비의 사면을 다른 귀족이나 교단이 뒤집을 수 없기 때문입니다.</p>
@@ -54,43 +76,43 @@
             <p class="script-kicker">EPILOGUE</p>
             <h2>캐릭터별 후일담</h2>
             <div class="epilogue-list">
-              <section class="epilogue c-plague" data-secret-step>
-                <div class="epilogue-name">역병의사</div>
+              <details class="epilogue c-plague" data-secret-step>
+                <summary class="epilogue-name">역병의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>침술사의 독침을 숨겼다가 돌려주려 한 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 살리기 전에 증거를 숨겼다는 사실까지 드러납니다. 하지만 왕은 역병의사가 독을 제거해 자신의 목숨을 한 차례 구한 일과 스승을 지키려 했던 이유를 함께 듣고, 그 죄를 사면합니다. 사람들은 그가 의원장 자리를 받아들인 선택을 의리라고도, 공사 구분을 못 한 처사라고도 부르지만, 빈민가에서 시작해 왕을 살린 영웅이라는 사실은 흔들리지 않습니다.</p></div>
                 <div data-secret-result="no" hidden><p>공식 기록에는 역병의사가 왕을 되살린 의사이며 침술사의 제자라는 사실만 남습니다. 독침을 숨겼던 일은 스승과 제자 사이에 묻힙니다. 그는 새 의원장이 된 뒤에도 그날의 판단이 옳았는지 가끔 생각하지만, 침술사에게 그 답을 묻지는 않습니다.</p></div>
-              </section>
-              <section class="epilogue c-acupunct" data-secret-step hidden>
-                <div class="epilogue-name">침술사</div>
+              </details>
+              <details class="epilogue c-acupunct" data-secret-step>
+                <summary class="epilogue-name">침술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>재상가의 명령을 받고 왕에게 독침을 놓은 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 해치려 한 손과 왕을 되살린 침술이 모두 그의 것이었다는 사실이 함께 기록됩니다. 왕은 약속대로 그를 용서하고, 역병의사는 자신의 스승을 해친다면 자신부터 상대해야 할 것이라고 왕자파의 잔당들에게 경고합니다. 협박에서 풀려난 침술사는 남은 날 동안 부적술사에게 소명파의 침술을 전합니다.</p></div>
                 <div data-secret-result="no" hidden><p>왕실 기록에는 부활 의식에서 아홉 번째 침을 놓은 공로만 남습니다. 재상가의 지령서는 끝내 세상에 나오지 않습니다. 왕자파가 무너진 뒤에도 그는 그 종이를 버리지 못하고 가지고 다니다가, 어느 날 아무도 없는 곳에서 조용히 불태웁니다.</p></div>
-              </section>
-              <section class="epilogue c-herbal" data-secret-step hidden>
-                <div class="epilogue-name">한의사</div>
+              </details>
+              <details class="epilogue c-herbal" data-secret-step>
+                <summary class="epilogue-name">한의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>호준 대신 쌍둥이 동생 호정이 왔다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕은 한 달 전에 약만 보내도 좋으니 동생이라도 직접 와 달라고 부탁했다는 사실을 확인해 줍니다. 대리 진료로 왕을 속였다는 혐의는 그 자리에서 사라집니다. 호정은 왕실의 확인 문서를 가지고 호련당으로 돌아가고, 아버지와 호준은 처음에는 기겁했다가 끝내 그를 끌어안습니다.</p></div>
                 <div data-secret-result="no" hidden><p>왕궁에는 한의사 호준이 왕을 되살린 영웅으로 기록됩니다. 호정은 그 이름이 적힌 포상과 기록을 들고 집으로 돌아갑니다. 이 공을 누구의 이름으로 남길지는 한의사 담당 플레이어가 정합니다.</p></div>
-              </section>
-              <section class="epilogue c-talisman" data-secret-step hidden>
-                <div class="epilogue-name">부적술사</div>
+              </details>
+              <details class="epilogue c-talisman" data-secret-step>
+                <summary class="epilogue-name">부적술사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>소명파의 당주이며 왕을 저주하려 했다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 죽이려 한 저주와 왕의 혼을 되찾은 부적이 모두 그의 손에서 나왔다는 사실이 밝혀집니다. 왕은 약속을 지키고 소명파의 과거를 다시 조사하라고 명합니다. 부적술사는 왕실의 보호를 받으며 소명파를 다시 세우지만, 이제 그 이름은 왕궁과 교단 모두가 지켜보는 기록 속에 남습니다.</p></div>
                 <div data-secret-result="no" hidden><p>세상에는 한 부적술사가 왕의 혼을 되찾았다는 이야기만 퍼집니다. 소명파의 당주라는 정체와 저주 시도는 드러나지 않습니다. 그는 숨어 지낼 자유를 지킨 채 도움이 필요한 사람들에게 다시 활명술을 가르치기 시작합니다.</p></div>
-              </section>
-              <section class="epilogue c-priest" data-secret-step hidden>
-                <div class="epilogue-name">사제</div>
+              </details>
+              <details class="epilogue c-priest" data-secret-step>
+                <summary class="epilogue-name">사제</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>과거 소명파를 불태우는 데 앞장섰다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 되살린 기적을 증언해야 할 사람이 그 의술을 이단이라 부르며 불태웠던 장본인이라는 사실이 교단 안팎에 알려집니다. 교단은 그를 영웅으로 내세울 수도, 간단히 파문할 수도 없게 됩니다. 이후 소명파를 찾아가 사죄할지, 교단 안에 남을지는 사제 담당 플레이어가 정합니다.</p></div>
                 <div data-secret-result="no" hidden><p>타사칼 교단은 그를 부활을 목격한 가장 중요한 증인으로 부릅니다. 교단의 일부는 그를 고위직에 올려 기적의 증인으로 삼자고 하고, 다른 쪽은 이단 의식에 참여한 책임부터 물어야 한다고 맞섭니다. 그가 어느 편에 설지는 사제 담당 플레이어가 정합니다.</p></div>
-              </section>
-              <section class="epilogue c-western" data-secret-step hidden>
-                <div class="epilogue-name">양의사</div>
+              </details>
+              <details class="epilogue c-western" data-secret-step>
+                <summary class="epilogue-name">양의사</summary>
                 <p><strong>비밀이 드러났습니까?</strong><br>한의사의 약을 훔치고 왕자파와 손잡았다는 사실</p>
                 <div class="picks"><button type="button" class="pick" data-secret-answer="yes">예</button><button type="button" class="pick" data-secret-answer="no">아니요</button></div>
                 <div data-secret-result="yes" hidden><p>왕을 해친 죄까지 드러났지만, 왕궁은 이미 그를 여섯 영웅 중 하나로 선포한 뒤입니다. 왕은 약속을 거두지 않고, 양의사가 넘긴 명단과 장부로 왕자파를 먼저 무너뜨립니다. 의원장 자리에서 물러난 뒤의 삶은 역병의사가 제시한 두 길 가운데 무엇을 고르느냐에 따라 달라집니다.</p></div>
@@ -101,13 +123,13 @@
                   <div data-choice-result="hide" hidden><p>그는 의원장이라는 이름도, 사람을 움직이던 권력도 버리고 왕궁이 마련한 외딴 저택에서 살아갑니다. 살아남았지만 문밖에서 발소리가 날 때마다 재상가의 사람이 찾아온 것은 아닌지 먼저 확인합니다.</p></div>
                   <div data-choice-result="learn" hidden><p>그는 역병의사의 지도를 받아 약품 장부와 병상 정리부터 다시 의사가 되는 길을 걷습니다. 역병의사는 그가 하루아침에 바뀌리라 기대하지 않지만, 사람을 살리는 일이 무엇인지 제대로 배울 기회를 줍니다.</p></div>
                 </div>
-              </section>
+              </details>
             </div>
           </section>
         </article>
 
 
-    <a id="truth-link" href="6-truth.html" data-keep-query class="next-step-btn" hidden><span class="next-kicker">다음 순서</span>진상 해설 확인하기 &#10095;<span class="next-sub">그날 왕의 침소에서 실제로 일어난 일을 확인합니다.</span></a>
+    <a id="truth-link" href="6-truth.html" data-keep-query class="next-step-btn"><span class="next-kicker">다음 순서</span>진상 해설 확인하기 &#10095;<span class="next-sub">그날 왕의 침소에서 실제로 일어난 일을 확인합니다.</span></a>
 
     <p class="next-aside"><a href="5-account.html" data-keep-query>이 판의 경과 다시 듣기</a></p>
 

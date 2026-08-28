@@ -5,6 +5,7 @@ notes/
 docs/spec*
 *.local.md
 *.draft.md
+doctor-ending/5-ending-[1-6]-rewrite-proposal.md
 
 # 편집기·OS 부산물
 .DS_Store
