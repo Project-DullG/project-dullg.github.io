@@ -99,8 +99,10 @@ function renderReaderToolbar() {
     <div class="reader-toolbar-inner">
       ${currentStage
         ? '<a class="reader-hub" href="index.html"><i data-lucide="layout-grid" aria-hidden="true"></i><span>엔딩 허브</span></a>'
-        : '<span class="reader-hub reader-hub--current">엔딩북</span>'}
-      <span class="reader-location">${currentStage ? stages[currentStage - 1] : '레드가 죽은 연구소'}</span>
+        : '<span class="reader-hub reader-hub--current"><i data-lucide="book-open" aria-hidden="true"></i>엔딩북</span>'}
+      ${currentStage
+        ? `<span class="reader-location">${stages[currentStage - 1]}</span>`
+        : '<a class="reader-location reader-truth" href="story.html">사건의 전말</a>'}
     </div>
   `;
   document.body.prepend(toolbar);

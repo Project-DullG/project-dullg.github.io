@@ -7,25 +7,20 @@
   <meta name="description" content="레드가 죽은 연구소 · 엔딩 선택">
   <title>[Red Lab] 레드가 죽은 연구소 - 엔딩 선택</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=66">
+  <link rel="stylesheet" href="style.css?v=67">
 </head>
 <body class="is-hub-page">
   <main class="container">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
-      <h1>레드가 죽은 연구소</h1>
+      <h1><span>레드가 죽은</span> <span>연구소</span></h1>
       <p class="subtitle">점수 계산을 마친 뒤 지목한 대상의 엔딩을 읽어 주세요.</p>
     </header>
 
-    <nav class="hub-shortcuts" aria-label="엔딩북 바로가기">
-      <a href="#score-guide"><i data-lucide="list-checks" aria-hidden="true"></i>점수 기준</a>
-      <a href="#ending-list"><i data-lucide="list" aria-hidden="true"></i>엔딩 선택</a>
-      <a href="story.html"><i data-lucide="book-open" aria-hidden="true"></i>사건의 전말</a>
-    </nav>
-
     <details class="guide-box compact-guide hub-guide score-disclosure" id="score-guide">
       <summary>
-        <span><small>1. 점수 계산</small><strong>인물별 점수 기준</strong></span>
+        <i class="score-icon" data-lucide="calculator" aria-hidden="true"></i>
+        <span class="score-summary-copy"><strong>점수 계산</strong><small>인물별 목표와 점수 기준</small></span>
         <span class="summary-action"><i data-lucide="chevron-down" aria-hidden="true"></i></span>
       </summary>
       <div class="score-disclosure-body">
@@ -75,12 +70,12 @@
 
     <div class="branch-toolbar" id="ending-list">
       <div>
-        <span>2. 엔딩 선택</span>
-        <strong>가장 많은 표를 받은 대상</strong>
+        <h2>엔딩 선택</h2>
+        <p>가장 많은 표를 받은 대상을 선택해 주세요.</p>
       </div>
     </div>
-    <p class="section-desc">두 번째 투표도 동률이었다면 ‘동률’을 선택해 주세요.</p>
     <nav class="ending-list" aria-label="엔딩 선택">
+      <div class="ranger-endings">
       <a href="ending-a.html" class="ending-card ending-a">
         <span class="ending-badge">ENDING A</span>
         <div class="ending-info">
@@ -113,6 +108,8 @@
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
 
+      </div>
+      <div class="other-endings">
       <a href="future-e.html" class="ending-card ending-e" id="ending-e">
         <span class="ending-badge">ENDING E-1</span>
         <div class="ending-info"><div class="ending-title">박사</div></div>
@@ -132,6 +129,7 @@
         </div>
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
+      </div>
     </nav>
 
     <a href="story.html" class="story-link" aria-label="사건의 전말 확인하기">
@@ -163,13 +161,10 @@
           else window.scrollTo({ top: 0, behavior: 'instant' });
         });
       };
-      document.querySelector('a[href="#score-guide"]').addEventListener('click', () => {
-        document.getElementById('score-guide').open = true;
-      });
       window.addEventListener('pageshow', resetHub);
       resetHub();
     })();
   </script>
-  <script src="bgm.js?v=9"></script>
+  <script src="bgm.js?v=10"></script>
 </body>
 </html>
