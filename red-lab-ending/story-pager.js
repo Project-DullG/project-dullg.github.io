@@ -273,6 +273,7 @@
       moveViewport();
       pages[currentPage].focus({ preventScroll: true });
     }
+    window.dispatchEvent(new Event('redlab:scenechange'));
   }
 
   previousButton.addEventListener('click', () => {

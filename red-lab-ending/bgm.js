@@ -124,6 +124,60 @@ audio.loop = true;
 audio.volume = 0.45;
 audio.preload = 'none';
 
+let volumeFrame = 0;
+let targetVolume = audio.volume;
+
+function sceneVolume() {
+  const scene = document.querySelector('[data-story-page]:not([hidden])')
+    || document.querySelector('.ending-script');
+  if (!scene) return 0.45;
+
+  const fin = scene.querySelector('.ending-fin');
+  if (fin) {
+    const bounds = fin.getBoundingClientRect();
+    if (bounds.height > 0 && bounds.top < window.innerHeight * 0.85 && bounds.bottom > 0) return 0.08;
+  }
+  if (scene.classList.contains('story-page--secret')) return 0.16;
+  if (scene.classList.contains('story-page--shutdown')) return 0.18;
+  if (scene.classList.contains('story-page--danger')) return 0.24;
+  if (scene.querySelector('.black-monologue, .dialogue--confession')) return 0.26;
+  if (scene.classList.contains('story-page--memory')) return 0.3;
+  return 0.45;
+}
+
+function updateSceneVolume({ immediate = false } = {}) {
+  const nextVolume = sceneVolume();
+  if (!immediate && nextVolume === targetVolume) return;
+  targetVolume = nextVolume;
+  cancelAnimationFrame(volumeFrame);
+  if (immediate || audio.paused || document.hidden) {
+    audio.volume = nextVolume;
+    return;
+  }
+
+  const initialVolume = audio.volume;
+  const startedAt = performance.now();
+  function fade(now) {
+    const progress = Math.min(1, (now - startedAt) / 900);
+    audio.volume = initialVolume + (nextVolume - initialVolume) * progress;
+    if (progress < 1) volumeFrame = requestAnimationFrame(fade);
+  }
+  volumeFrame = requestAnimationFrame(fade);
+}
+
+// Volume cues never start playback or change the reader's BGM preference.
+window.addEventListener('redlab:scenechange', () => updateSceneVolume());
+window.addEventListener('pageshow', () => updateSceneVolume({ immediate: true }));
+window.addEventListener('pagehide', () => cancelAnimationFrame(volumeFrame));
+if ('IntersectionObserver' in window) {
+  const finObserver = new IntersectionObserver(() => updateSceneVolume(), {
+    rootMargin: '0px 0px -15% 0px',
+    threshold: 0
+  });
+  document.querySelectorAll('.ending-fin').forEach((fin) => finObserver.observe(fin));
+}
+updateSceneVolume({ immediate: true });
+
 const savedTime = Number(readPreference(STORAGE_KEY_TIME));
 const shouldPlay = readPreference(STORAGE_KEY_PLAYING) === 'true';
 let wantsAudio = shouldPlay;
@@ -195,6 +249,7 @@ function toggleBGM() {
   wantsAudio = audio.paused;
   writePreference(STORAGE_KEY_PLAYING, String(wantsAudio));
   if (wantsAudio) {
+    updateSceneVolume({ immediate: true });
     audio.play()
       .then(() => {
         if (!wantsAudio) audio.pause();
