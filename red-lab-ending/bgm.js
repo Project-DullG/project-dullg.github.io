@@ -2,6 +2,14 @@ const BGM_URL = './red-lab-bgm.mp3';
 const STORAGE_KEY_TIME = 'red_lab_bgm_time';
 const STORAGE_KEY_PLAYING = 'red_lab_bgm_playing';
 
+function readPreference(key) {
+  try { return localStorage.getItem(key); } catch (_) { return null; }
+}
+
+function writePreference(key, value) {
+  try { localStorage.setItem(key, value); } catch (_) {}
+}
+
 function preserveVersionQuery() {
   const version = new URLSearchParams(window.location.search).get('v');
 
@@ -34,13 +42,25 @@ function restorePreviousChoiceLink() {
     link.href = `${previousPage}${query}${hash}`;
     link.hidden = false;
   });
+
+  const page = window.location.pathname.split('/').pop();
+  const returnLinks = page === 'future-a.html'
+    ? 'a[href^="future-a-stay.html"], a[href^="future-a-leave.html"]'
+    : /^(future-a-stay|future-a-leave)\.html$/.test(page)
+      ? 'a[href^="future-a.html"]'
+      : null;
+  if (returnLinks) document.querySelectorAll(returnLinks).forEach((link) => {
+    const url = new URL(link.href);
+    url.searchParams.set('from', previousPage);
+    link.href = `${url.pathname.split('/').pop()}${url.search}${url.hash}`;
+  });
 }
 
 restorePreviousChoiceLink();
 
-function renderFlowProgress() {
+function renderReaderToolbar() {
   const filename = window.location.pathname.split('/').pop() || 'index.html';
-  const stages = ['지목 결과', '선택', '후일담', '사건의 전말'];
+  const stages = ['지목 엔딩', '선택', '후일담', '사건의 전말'];
   const stageByPage = {
     'ending-a.html': 1,
     'ending-b.html': 1,
@@ -72,46 +92,52 @@ function renderFlowProgress() {
 
   document.body.classList.toggle('is-flow-page', Boolean(currentStage));
 
-  if (!currentStage || !header) return;
-
-  const progress = document.createElement('aside');
-  progress.className = 'flow-progress';
-  progress.setAttribute('aria-label', `전체 진행 ${currentStage}단계: ${stages[currentStage - 1]}`);
-  progress.innerHTML = `
-    <ol>
-      ${stages.map((stage, index) => {
-        const number = index + 1;
-        const state = number < currentStage ? ' is-complete' : number === currentStage ? ' is-current' : '';
-        const current = number === currentStage ? ' aria-current="step"' : '';
-        return `<li class="flow-step${state}"${current}><span class="flow-step-number">${number}</span><span class="flow-step-label">${stage}</span></li>`;
-      }).join('')}
-    </ol>
-    <p class="flow-progress-current"><span>현재 단계</span><strong>${currentStage} / ${stages.length} · ${stages[currentStage - 1]}</strong></p>
+  const toolbar = document.createElement('nav');
+  toolbar.className = 'reader-toolbar';
+  toolbar.setAttribute('aria-label', '엔딩북 메뉴');
+  toolbar.innerHTML = `
+    <div class="reader-toolbar-inner">
+      ${currentStage
+        ? '<a class="reader-hub" href="index.html"><i data-lucide="layout-grid" aria-hidden="true"></i><span>엔딩 허브</span></a>'
+        : '<span class="reader-hub reader-hub--current">엔딩북</span>'}
+      <span class="reader-location">${currentStage ? stages[currentStage - 1] : '레드가 죽은 연구소'}</span>
+    </div>
   `;
-  header.insertAdjacentElement('afterend', progress);
+  document.body.prepend(toolbar);
+  // The route badge identifies the ending; navigation uses the labelled hub link.
+  const tag = header?.querySelector('a.tag');
+  if (tag) {
+    const badge = document.createElement('span');
+    badge.className = tag.className;
+    badge.textContent = tag.textContent;
+    tag.replaceWith(badge);
+  }
 }
 
-renderFlowProgress();
+renderReaderToolbar();
+preserveVersionQuery();
 
 const audio = new Audio(BGM_URL);
 audio.loop = true;
 audio.volume = 0.45;
+audio.preload = 'none';
 
-const savedTime = localStorage.getItem(STORAGE_KEY_TIME);
-const shouldPlay = localStorage.getItem(STORAGE_KEY_PLAYING) === 'true';
+const savedTime = Number(readPreference(STORAGE_KEY_TIME));
+const shouldPlay = readPreference(STORAGE_KEY_PLAYING) === 'true';
+let wantsAudio = shouldPlay;
 
-if (savedTime) {
-  audio.currentTime = parseFloat(savedTime);
+if (Number.isFinite(savedTime) && savedTime > 0) {
+  audio.currentTime = savedTime;
 }
 
 const bgmToggle = document.createElement('div');
 bgmToggle.id = 'bgm-controller';
 bgmToggle.innerHTML = `
-  <button id="bgm-btn" type="button" aria-label="BGM 켜기">
+  <button id="bgm-btn" type="button" aria-label="BGM 켜기" aria-pressed="false" title="BGM 켜기">
     <span id="bgm-icon"><i data-lucide="music-2" aria-hidden="true"></i></span>
   </button>
 `;
-document.body.appendChild(bgmToggle);
+document.querySelector('.reader-toolbar-inner').appendChild(bgmToggle);
 
 const btn = document.getElementById('bgm-btn');
 const icon = document.getElementById('bgm-icon');
@@ -136,7 +162,7 @@ function loadIconLibrary() {
   }
 
   const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js';
+  script.src = 'assets/lucide.min.js';
   script.addEventListener('load', () => {
     renderInterfaceIcons();
     updateUI();
@@ -154,26 +180,31 @@ function updateUI() {
     btn.setAttribute('aria-label', 'BGM 끄기');
     btn.classList.add('is-playing');
   }
+  btn.setAttribute('aria-pressed', String(!audio.paused));
+  btn.title = btn.getAttribute('aria-label');
 }
 
 function saveBGMTime() {
-  localStorage.setItem(STORAGE_KEY_TIME, String(audio.currentTime));
+  writePreference(STORAGE_KEY_TIME, String(audio.currentTime));
 }
 
 function toggleBGM() {
-  if (audio.paused) {
+  clearResumeListeners();
+  wantsAudio = audio.paused;
+  writePreference(STORAGE_KEY_PLAYING, String(wantsAudio));
+  if (wantsAudio) {
     audio.play()
       .then(() => {
-        localStorage.setItem(STORAGE_KEY_PLAYING, 'true');
+        if (!wantsAudio) audio.pause();
         updateUI();
       })
       .catch(() => {
-        localStorage.setItem(STORAGE_KEY_PLAYING, 'false');
+        wantsAudio = false;
+        writePreference(STORAGE_KEY_PLAYING, 'false');
         updateUI();
       });
   } else {
     audio.pause();
-    localStorage.setItem(STORAGE_KEY_PLAYING, 'false');
     saveBGMTime();
     updateUI();
   }
@@ -184,27 +215,31 @@ btn.addEventListener('click', (event) => {
   toggleBGM();
 });
 
-if (shouldPlay) {
-  const startAudio = () => {
-    audio.play()
-      .then(() => {
-        updateUI();
-        window.removeEventListener('click', startAudio);
-        window.removeEventListener('touchstart', startAudio);
-      })
-      .catch(updateUI);
-  };
-
-  startAudio();
-  window.addEventListener('click', startAudio);
-  window.addEventListener('touchstart', startAudio);
-} else {
-  updateUI();
+function clearResumeListeners() {
+  window.removeEventListener('click', resumeAudio);
+  window.removeEventListener('keydown', resumeAudio);
 }
 
+function resumeAudio(event) {
+  if (!wantsAudio || event?.target?.closest('#bgm-btn')) return;
+  audio.play().then(() => {
+    if (!wantsAudio) audio.pause();
+    clearResumeListeners();
+    updateUI();
+  }).catch(updateUI);
+}
+
+if (shouldPlay) {
+  window.addEventListener('click', resumeAudio);
+  window.addEventListener('keydown', resumeAudio);
+  resumeAudio();
+}
+audio.addEventListener('play', updateUI);
+audio.addEventListener('pause', updateUI);
+updateUI();
 loadIconLibrary();
 
-window.addEventListener('visibilitychange', () => {
+document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') {
     saveBGMTime();
   }

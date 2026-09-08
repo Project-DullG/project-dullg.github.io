@@ -2,65 +2,89 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow">
   <meta name="description" content="레드가 죽은 연구소 · 엔딩 선택">
   <title>[Red Lab] 레드가 죽은 연구소 - 엔딩 선택</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=62">
+  <link rel="stylesheet" href="style.css?v=66">
 </head>
-<body>
+<body class="is-hub-page">
   <main class="container">
     <header class="header">
       <img class="lab-mark" src="../ScBQTDiRurU/이미지3.png" alt="미라클 레인저 연구소 심볼">
       <h1>레드가 죽은 연구소</h1>
-      <p class="subtitle">점수를 정리한 뒤 최종 투표 결과와 같은 엔딩을 선택해 주세요.</p>
+      <p class="subtitle">점수 계산을 마친 뒤 지목한 대상의 엔딩을 읽어 주세요.</p>
     </header>
 
-    <details class="guide-box compact-guide hub-guide score-disclosure">
+    <nav class="hub-shortcuts" aria-label="엔딩북 바로가기">
+      <a href="#score-guide"><i data-lucide="list-checks" aria-hidden="true"></i>점수 기준</a>
+      <a href="#ending-list"><i data-lucide="list" aria-hidden="true"></i>엔딩 선택</a>
+      <a href="story.html"><i data-lucide="book-open" aria-hidden="true"></i>사건의 전말</a>
+    </nav>
+
+    <details class="guide-box compact-guide hub-guide score-disclosure" id="score-guide">
       <summary>
-        <span><small>1. 점수 계산</small><strong>개인 목표 점수 확인</strong></span>
-        <span class="summary-action">기준 보기 <i data-lucide="chevron-down" aria-hidden="true"></i></span>
+        <span><small>1. 점수 계산</small><strong>인물별 점수 기준</strong></span>
+        <span class="summary-action"><i data-lucide="chevron-down" aria-hidden="true"></i></span>
       </summary>
       <div class="score-disclosure-body">
         <p class="score-intro">캐릭터 시트의 목적과 최종 투표 결과를 대조해 각자의 점수를 합산해 주세요.</p>
-        <div class="score-stack">
-          <div class="score-card culprit-card">
-            <p>레드를 살해한 범인은 <strong>블랙</strong>입니다.</p>
-            <span>블루·옐로·핑크가 블랙을 지목했다면 각자 범인 지목 목표 <strong>+3점</strong>을 얻습니다.</span>
-            <span>블랙이 블루를 지목했다면 <strong>+1점</strong>을 얻습니다.</span>
-          </div>
-          <div class="score-card nomination-card">
-            <p><strong>지목 결과 점수</strong></p>
-            <span>블랙은 자신을 지목하지 않은 플레이어 한 명마다 <strong>+3점</strong>을 얻습니다.</span>
-            <span>블루·옐로·핑크는 최다 지목을 받지 않았다면 각각 <strong>+3점</strong>을 얻습니다.</span>
-          </div>
-          <div class="score-card secret-card">
-            <p><strong>비밀 유지 점수</strong></p>
-            <span>블랙은 자신이 카오스에 잠입 중이라는 사실을 말하지 않았다면 <strong>+2점</strong>을 얻습니다.</span>
-            <span>블루는 금열쇠를 훔친 사실을 말하지 않았다면 <strong>+4점</strong>, 옐로와의 연애를 말하지 않았다면 <strong>+1점</strong>을 얻습니다.</span>
-            <span>옐로는 레드와의 연애를 말하지 않았다면 <strong>+4점</strong>, 블루와의 연애를 말하지 않았다면 <strong>+1점</strong>을 얻습니다.</span>
-            <span>핑크는 동료들의 물건을 모은 이유를 말하지 않았다면 <strong>+3점</strong>, 박사가 친할아버지라는 사실을 말하지 않았다면 <strong>+2점</strong>을 얻습니다.</span>
-            <span>다른 플레이어가 비밀을 밝혔더라도 본인이 인정하지 않았다면 점수를 얻습니다. 엔딩에서 공개되는 내용은 이미 계산한 점수에 영향을 주지 않습니다.</span>
-          </div>
+        <p class="score-answer">레드를 살해한 범인은 <strong>블랙</strong>입니다.</p>
+        <div class="score-people">
+          <details class="score-person ending-a">
+            <summary><strong>블랙</strong><i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+            <ul>
+              <li><span>자신을 지목하지 않은 플레이어 한 명마다</span><strong>+3점</strong></li>
+              <li><span>블루를 지목했다면</span><strong>+1점</strong></li>
+              <li><span>카오스에 잠입 중이라는 사실을 말하지 않았다면</span><strong>+2점</strong></li>
+            </ul>
+          </details>
+          <details class="score-person ending-b">
+            <summary><strong>블루</strong><i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+            <ul>
+              <li><span>블랙을 지목했다면</span><strong>+3점</strong></li>
+              <li><span>최다 지목을 받지 않았다면</span><strong>+3점</strong></li>
+              <li><span>금열쇠를 훔친 사실을 말하지 않았다면</span><strong>+4점</strong></li>
+              <li><span>옐로와의 연애를 말하지 않았다면</span><strong>+1점</strong></li>
+            </ul>
+          </details>
+          <details class="score-person ending-c">
+            <summary><strong>옐로</strong><i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+            <ul>
+              <li><span>블랙을 지목했다면</span><strong>+3점</strong></li>
+              <li><span>최다 지목을 받지 않았다면</span><strong>+3점</strong></li>
+              <li><span>레드와의 연애를 말하지 않았다면</span><strong>+4점</strong></li>
+              <li><span>블루와의 연애를 말하지 않았다면</span><strong>+1점</strong></li>
+            </ul>
+          </details>
+          <details class="score-person ending-d">
+            <summary><strong>핑크</strong><i data-lucide="chevron-down" aria-hidden="true"></i></summary>
+            <ul>
+              <li><span>블랙을 지목했다면</span><strong>+3점</strong></li>
+              <li><span>최다 지목을 받지 않았다면</span><strong>+3점</strong></li>
+              <li><span>동료들의 물건을 모은 이유를 말하지 않았다면</span><strong>+3점</strong></li>
+              <li><span>박사가 친할아버지라는 사실을 말하지 않았다면</span><strong>+2점</strong></li>
+            </ul>
+          </details>
         </div>
-        <p class="bgm-guide"><strong>BGM</strong> 화면 오른쪽 위 버튼으로 켜고 끌 수 있습니다.</p>
+        <p class="score-note">비밀 유지 점수는 다른 플레이어가 비밀을 밝혔더라도 본인이 인정하지 않았다면 얻습니다.</p>
+        <p class="score-note">엔딩에서 공개되는 내용은 이미 계산한 점수에 영향을 주지 않습니다.</p>
       </div>
     </details>
 
-    <div class="branch-toolbar">
+    <div class="branch-toolbar" id="ending-list">
       <div>
-        <span>2. 최종 투표</span>
-        <strong>가장 많은 표를 받은 대상을 선택해 주세요</strong>
+        <span>2. 엔딩 선택</span>
+        <strong>가장 많은 표를 받은 대상</strong>
       </div>
     </div>
-    <p class="section-desc">두 번의 투표가 모두 동률이었다면 마지막 항목을 선택해 주세요.</p>
+    <p class="section-desc">두 번째 투표도 동률이었다면 ‘동률’을 선택해 주세요.</p>
     <nav class="ending-list" aria-label="엔딩 선택">
       <a href="ending-a.html" class="ending-card ending-a">
         <span class="ending-badge">ENDING A</span>
         <div class="ending-info">
-          <div class="ending-title">블랙이 지목된 경우</div>
-          <div class="ending-desc">블랙의 답변과 이후 처분을 확인합니다.</div>
+          <div class="ending-title">블랙</div>
         </div>
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
@@ -68,8 +92,7 @@
       <a href="ending-b.html" class="ending-card ending-b">
         <span class="ending-badge">ENDING B</span>
         <div class="ending-info">
-          <div class="ending-title">블루가 지목된 경우</div>
-          <div class="ending-desc">블루의 부인과 구조 이후의 재조사를 확인합니다.</div>
+          <div class="ending-title">블루</div>
         </div>
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
@@ -77,8 +100,7 @@
       <a href="ending-c.html" class="ending-card ending-c">
         <span class="ending-badge">ENDING C</span>
         <div class="ending-info">
-          <div class="ending-title">옐로가 지목된 경우</div>
-          <div class="ending-desc">옐로의 부인과 구조 이후의 재조사를 확인합니다.</div>
+          <div class="ending-title">옐로</div>
         </div>
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
@@ -86,37 +108,27 @@
       <a href="ending-d.html" class="ending-card ending-d">
         <span class="ending-badge">ENDING D</span>
         <div class="ending-info">
-          <div class="ending-title">핑크가 지목된 경우</div>
-          <div class="ending-desc">핑크의 부인과 구조 이후의 재조사를 확인합니다.</div>
+          <div class="ending-title">핑크</div>
         </div>
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
 
-      <section class="ending-card ending-card--split ending-e" id="ending-e" aria-labelledby="ending-e-title">
-        <div class="ending-split-heading">
-          <span class="ending-badge">ENDING E</span>
-          <div class="ending-info">
-            <div class="ending-title" id="ending-e-title">대원 외의 대상을 지목한 경우</div>
-            <div class="ending-desc">박사, 시스템 또는 외부 인물을 지목한 경우입니다.</div>
-          </div>
-        </div>
-        <div class="ending-split-options">
-          <a href="future-e.html" class="ending-split-option">
-            <span><strong>박사를 지목했다</strong></span>
-            <i data-lucide="chevron-right" aria-hidden="true"></i>
-          </a>
-          <a href="future-e-stop.html" class="ending-split-option">
-            <span><strong>시스템·외부 인물을 지목했다</strong></span>
-            <i data-lucide="chevron-right" aria-hidden="true"></i>
-          </a>
-        </div>
-      </section>
+      <a href="future-e.html" class="ending-card ending-e" id="ending-e">
+        <span class="ending-badge">ENDING E-1</span>
+        <div class="ending-info"><div class="ending-title">박사</div></div>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
+      </a>
+      <a href="future-e-stop.html" class="ending-card ending-e">
+        <span class="ending-badge">ENDING E-2</span>
+        <div class="ending-info"><div class="ending-title">시스템·외부 인물</div></div>
+        <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
+      </a>
 
       <a href="ending-f.html" class="ending-card ending-f">
         <span class="ending-badge">ENDING F</span>
         <div class="ending-info">
-          <div class="ending-title">두 번째 투표도 동률인 경우</div>
-          <div class="ending-desc">두 번의 투표로도 한 사람을 지목하지 못한 경우입니다.</div>
+          <div class="ending-title">동률</div>
+          <div class="ending-desc">두 번째 투표도 동률인 경우</div>
         </div>
         <span class="ending-arrow"><i data-lucide="chevron-right" aria-hidden="true"></i></span>
       </a>
@@ -134,15 +146,30 @@
     (() => {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-      Object.keys(sessionStorage)
-        .filter((key) => key.startsWith('red-lab-story-page:'))
-        .forEach((key) => sessionStorage.removeItem(key));
+      try {
+        Object.keys(sessionStorage)
+          .filter((key) => key.startsWith('red-lab-story-page:'))
+          .forEach((key) => sessionStorage.removeItem(key));
+      } catch (_) {}
 
-      const resetHub = () => requestAnimationFrame(() => window.scrollTo(0, 0));
+      const resetHub = (event) => {
+        document.querySelectorAll('details').forEach((details) => { details.open = false; });
+        const returning = event?.persisted || performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+        if (returning) history.replaceState(null, '', location.pathname + location.search);
+        const target = document.getElementById(location.hash.slice(1));
+        if (target?.tagName === 'DETAILS') target.open = true;
+        requestAnimationFrame(() => {
+          if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
+          else window.scrollTo({ top: 0, behavior: 'instant' });
+        });
+      };
+      document.querySelector('a[href="#score-guide"]').addEventListener('click', () => {
+        document.getElementById('score-guide').open = true;
+      });
       window.addEventListener('pageshow', resetHub);
       resetHub();
     })();
   </script>
-  <script src="bgm.js?v=8"></script>
+  <script src="bgm.js?v=9"></script>
 </body>
 </html>
