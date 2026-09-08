@@ -36,6 +36,52 @@
   document.body.classList.add(isTruthPage ? 'truth-flow-page' : 'gourmet-flow-page');
 
   if (isTruthPage) {
+    const clueLinks = document.querySelectorAll('.clue-gallery a.clue-visual');
+    if (clueLinks.length) {
+      const viewer = document.createElement('dialog');
+      viewer.className = 'clue-viewer';
+      viewer.setAttribute('aria-labelledby', 'clue-viewer-title');
+      viewer.innerHTML = `
+        <header class="clue-viewer-header">
+          <h2 id="clue-viewer-title"></h2>
+          <button type="button" aria-label="단서 닫기" title="단서 닫기">
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </header>
+        <div class="clue-viewer-body"><img alt=""></div>
+      `;
+      document.body.appendChild(viewer);
+      const title = viewer.querySelector('h2');
+      const image = viewer.querySelector('img');
+      const closeButton = viewer.querySelector('button');
+      let trigger;
+      let previousOverflow = '';
+
+      clueLinks.forEach((link) => {
+        link.setAttribute('aria-haspopup', 'dialog');
+        link.addEventListener('click', (event) => {
+          if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          trigger = link;
+          title.textContent = link.querySelector('span').textContent;
+          image.alt = link.querySelector('img').alt;
+          image.src = link.href;
+          previousOverflow = document.body.style.overflow;
+          document.body.style.overflow = 'hidden';
+          viewer.showModal();
+          viewer.querySelector('.clue-viewer-body').scrollTop = 0;
+          closeButton.focus();
+        });
+      });
+      closeButton.addEventListener('click', () => viewer.close());
+      viewer.addEventListener('click', (event) => {
+        if (event.target === viewer) viewer.close();
+      });
+      viewer.addEventListener('close', () => {
+        document.body.style.overflow = previousOverflow;
+        trigger?.focus({ preventScroll: true });
+      });
+    }
     loadIcons();
     return;
   }
@@ -100,6 +146,7 @@
 
   function render(move = false) {
     const isFinalPage = currentPage === pages.length - 1;
+    header.hidden = currentPage > 0;
     pages.forEach((page, index) => {
       const active = index === currentPage;
       page.hidden = !active;
@@ -125,8 +172,9 @@
     });
     controls.classList.toggle('is-final', isFinalPage);
     if (move) {
-      const top = pager.getBoundingClientRect().top + window.scrollY - 18;
-      window.scrollTo({ top: Math.max(0, top - readingTools.offsetHeight), behavior: 'instant' });
+      const top = currentPage === 0 ? 0
+        : Math.max(0, pager.getBoundingClientRect().top + window.scrollY - readingTools.offsetHeight - 18);
+      window.scrollTo({ top, behavior: 'instant' });
       pages[currentPage].focus({ preventScroll: true });
     }
   }
