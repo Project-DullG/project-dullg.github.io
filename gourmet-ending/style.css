@@ -2070,3 +2070,77 @@ body {
     animation: none;
   }
 }
+
+/* Keep navigation outside the reading text, including on narrow screens. */
+.story-page:not([hidden]) { animation: none; }
+.reading-tools {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 900px;
+  margin: 0 auto 20px;
+  padding: env(safe-area-inset-top) 8px 4px;
+  background: #0c0c0f;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.reading-tools a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  color: #eee;
+  text-decoration: none;
+}
+.reading-tools a svg { width: 18px; height: 18px; }
+.reading-tools #bgm-controller { position: static; flex: 0 0 auto; }
+.reading-tools #bgm-btn { width: 44px; height: 44px; }
+.story-page-btn[hidden] { display: none; }
+.story-page-btn:focus-visible,
+.reading-tools a:focus-visible,
+.ending-card:focus-visible,
+summary:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.story-page { scroll-margin-top: 76px; }
+.ending-truth { margin-top: 24px; }
+
+@media (max-width: 600px) {
+  body, body.landing-page, body.gourmet-flow-page { padding-top: 0; }
+  .header, .guide-box, .branch-toolbar, .section-desc, .ending-card, .ending-script { animation: none; }
+  .reading-tools { margin-bottom: 24px; }
+  .hero-header .tag { display: none; }
+  .branch-toolbar { padding: 12px 0; border: 0; border-radius: 0; background: none; }
+  .ending-card { min-height: 86px; grid-template-rows: auto; gap: 10px; padding: 16px; }
+  .ending-card .ending-badge { display: none; }
+  .ending-card .ending-info, .ending-card .ending-avatar, .ending-card .ending-arrow { grid-row: 1; }
+  .ending-card .ending-title { font-size: 17px; line-height: 1.5; }
+  .ending-card .ending-desc { font-size: 14px; line-height: 1.65; }
+  .gourmet-flow-page .ending-script,
+  .truth-page .ending-script {
+    margin: 0;
+    padding: 22px 4px;
+    border: 0;
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .gourmet-flow-page .ending-script.is-paged { min-height: 0; }
+  .gourmet-flow-page .chapter p,
+  .truth-flow .chapter p,
+  .truth-flow .truth-intro,
+  .gourmet-epilogue .epilogue-scene p {
+    font-size: 16px;
+    line-height: 1.95;
+    overflow-wrap: anywhere;
+    margin-bottom: 24px;
+  }
+  .story-pager-controls { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding-top: 18px; margin-top: 12px; }
+  .story-page-btn { width: 100%; min-height: 48px; padding: 12px 8px; font-size: 14px; }
+  .story-page-btn span { position: static; width: auto; height: auto; clip: auto; white-space: normal; overflow: visible; }
+  .next-step-btn { min-height: 56px; }
+  .nav-links a { display: inline-flex; align-items: center; min-height: 48px; }
+}

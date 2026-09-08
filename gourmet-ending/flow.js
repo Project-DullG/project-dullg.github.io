@@ -2,6 +2,14 @@
   const filename = window.location.pathname.split('/').pop() || 'index.html';
   const header = document.querySelector('.header');
   const stages = ['지목 결과', '조사 결과', '후일담', '사건의 전말'];
+  const readingTools = document.createElement('nav');
+  readingTools.className = 'reading-tools';
+  readingTools.setAttribute('aria-label', '페이지 메뉴');
+  readingTools.innerHTML = filename === 'index.html'
+    ? '<span>미식의 대가</span>'
+    : '<a href="index.html"><i data-lucide="arrow-left" aria-hidden="true"></i>엔딩 목록</a>';
+  document.body.prepend(readingTools);
+  document.querySelector('.ending-index-back')?.remove();
 
   function loadIcons() {
     const render = () => window.lucide?.createIcons();
@@ -27,37 +35,6 @@
   const isTruthPage = filename === 'story.html';
   document.body.classList.add(isTruthPage ? 'truth-flow-page' : 'gourmet-flow-page');
 
-  const initialStage = isTruthPage ? 4 : 1;
-
-  const progress = document.createElement('aside');
-  progress.className = 'flow-progress';
-  progress.innerHTML = `
-    <ol>
-      ${stages.map((stage, index) => `
-        <li class="flow-step" data-flow-step="${index + 1}">
-          <span class="flow-step-number">${index + 1}</span>
-          <span class="flow-step-label">${stage}</span>
-        </li>
-      `).join('')}
-    </ol>
-    <p class="flow-progress-current"><span>현재 단계</span><strong data-flow-current></strong></p>
-  `;
-  header.insertAdjacentElement('afterend', progress);
-
-  function setStage(stage) {
-    progress.querySelectorAll('[data-flow-step]').forEach((step) => {
-      const number = Number(step.dataset.flowStep);
-      step.classList.toggle('is-complete', number < stage);
-      step.classList.toggle('is-current', number === stage);
-      if (number === stage) step.setAttribute('aria-current', 'step');
-      else step.removeAttribute('aria-current');
-    });
-    progress.setAttribute('aria-label', `전체 진행 ${stage}단계: ${stages[stage - 1]}`);
-    progress.querySelector('[data-flow-current]').textContent = `${stage} / ${stages.length} · ${stages[stage - 1]}`;
-  }
-
-  setStage(initialStage);
-
   if (isTruthPage) {
     loadIcons();
     return;
@@ -79,7 +56,6 @@
   }
 
   const afterStory = Array.from(document.querySelectorAll('main > .next-step-btn, main > .nav-links, main > .footer'));
-  const indexBack = document.querySelector('.ending-index-back');
   const controls = document.createElement('nav');
   controls.className = 'story-pager-controls';
   controls.setAttribute('aria-label', '엔딩 장면 이동');
@@ -95,8 +71,16 @@
 
   const previousButton = controls.querySelector('.story-page-prev');
   const nextButton = controls.querySelector('.story-page-next');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let currentPage = 0;
+  function pageFromHash() {
+    const match = window.location.hash.match(/^#scene-(\d+)$/);
+    const index = match ? Number(match[1]) - 1 : 0;
+    return index >= 0 && index < pages.length ? index : 0;
+  }
+  let currentPage = pageFromHash();
+  function pageLabel(page, index) {
+    if (page.querySelector('.epilogue-monologue') || /독백/.test(page.querySelector('h2')?.textContent || '')) return '애쉬의 독백';
+    return stages[stageForPage(page, index) - 1];
+  }
 
   pages.forEach((page, index) => {
     page.classList.add('story-page');
@@ -124,15 +108,25 @@
     });
     previousButton.disabled = currentPage === 0;
     nextButton.hidden = isFinalPage;
+    if (currentPage > 0) {
+      const label = pageLabel(pages[currentPage - 1], currentPage - 1);
+      previousButton.querySelector('span').textContent = label;
+      previousButton.setAttribute('aria-label', `${label} 다시 읽기`);
+      previousButton.title = `${label} 다시 읽기`;
+    }
+    if (!isFinalPage) {
+      const label = pageLabel(pages[currentPage + 1], currentPage + 1);
+      nextButton.querySelector('span').textContent = label;
+      nextButton.setAttribute('aria-label', `${label} 읽기`);
+      nextButton.title = `${label} 읽기`;
+    }
     afterStory.forEach((element) => {
       element.hidden = currentPage !== pages.length - 1;
     });
-    if (indexBack) indexBack.hidden = currentPage !== 0;
     controls.classList.toggle('is-final', isFinalPage);
-    setStage(stageForPage(pages[currentPage], currentPage));
     if (move) {
       const top = pager.getBoundingClientRect().top + window.scrollY - 18;
-      window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+      window.scrollTo({ top: Math.max(0, top - readingTools.offsetHeight), behavior: 'instant' });
       pages[currentPage].focus({ preventScroll: true });
     }
   }
@@ -140,17 +134,27 @@
   previousButton.addEventListener('click', () => {
     if (currentPage === 0) return;
     currentPage -= 1;
+    history.pushState(null, '', `#scene-${currentPage + 1}`);
     render(true);
   });
   nextButton.addEventListener('click', () => {
     if (currentPage === pages.length - 1) return;
     currentPage += 1;
+    history.pushState(null, '', `#scene-${currentPage + 1}`);
     render(true);
   });
 
+  window.addEventListener('popstate', () => {
+    currentPage = pageFromHash();
+    render(true);
+  });
+  document.querySelectorAll('main > .nav-links a[href="story.html"]').forEach(link => link.remove());
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   render();
   pager.classList.add('is-paged');
-  requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, 0)));
+  requestAnimationFrame(() => {
+    if (currentPage > 0) render(true);
+    else window.scrollTo({ top: 0, behavior: 'instant' });
+  });
   loadIcons();
 })();

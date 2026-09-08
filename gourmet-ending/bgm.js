@@ -17,7 +17,7 @@
       <span id="bgm-icon"><i data-lucide="music-2" aria-hidden="true"></i></span>
     </button>
   `;
-  document.body.appendChild(controller);
+  (document.querySelector('.reading-tools') || document.body).appendChild(controller);
 
   const button = controller.querySelector('#bgm-btn');
   const icon = controller.querySelector('#bgm-icon');
@@ -51,6 +51,7 @@
     setIcon(playing ? 'square' : 'music-2');
     button.setAttribute('aria-label', label);
     button.setAttribute('title', label);
+    button.setAttribute('aria-pressed', String(playing));
     button.classList.toggle('is-playing', playing);
   }
 
@@ -85,7 +86,12 @@
   });
 
   if (shouldPlay) {
-    const resume = () => {
+    const resume = (event) => {
+      if (event.target instanceof Element && event.target.closest('#bgm-btn')) {
+        window.removeEventListener('pointerdown', resume);
+        window.removeEventListener('keydown', resume);
+        return;
+      }
       play().then(() => {
         window.removeEventListener('pointerdown', resume);
         window.removeEventListener('keydown', resume);
