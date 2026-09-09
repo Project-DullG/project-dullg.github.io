@@ -155,12 +155,9 @@
     <button type="button" class="story-page-btn story-page-prev" aria-label="이전 장면" title="이전 장면">
       <i data-lucide="arrow-left" aria-hidden="true"></i>
     </button>
-    <div class="story-page-status" aria-live="polite">
-      <span class="story-page-steps" aria-hidden="true">
-        ${pages.map(() => '<span class="story-page-step"></span>').join('')}
-      </span>
-      <span class="story-page-scene" data-story-scene></span>
-      <span class="story-page-count">장면 <span data-story-current>1</span><span aria-hidden="true"> / </span><span>${pages.length}</span></span>
+    <div class="story-page-status" aria-live="polite" aria-atomic="true">
+      <span class="story-page-count" aria-hidden="true"><span data-story-current>1</span> / ${pages.length}</span>
+      <span class="reader-sr-only" data-story-scene></span>
     </div>
     <button type="button" class="story-page-btn story-page-next" aria-label="다음 장면" title="다음 장면">
       <span data-story-next-label>다음</span>
@@ -174,7 +171,8 @@
   const nextLabel = controls.querySelector('[data-story-next-label]');
   const currentLabel = controls.querySelector('[data-story-current]');
   const sceneLabel = controls.querySelector('[data-story-scene]');
-  const steps = Array.from(controls.querySelectorAll('.story-page-step'));
+  const finish = pager.querySelector('.ending-fin');
+  if (finish) finish.tabIndex = -1;
   const hadInitialHash = Boolean(window.location.hash);
 
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -228,7 +226,7 @@
     });
 
     currentLabel.textContent = String(currentPage + 1);
-    sceneLabel.textContent = pages[currentPage].dataset.storyLabel || `${currentPage + 1}번째 장면`;
+    sceneLabel.textContent = `${pages.length}개 장면 중 ${currentPage + 1}번째, ${pages[currentPage].dataset.storyLabel || ''}`;
 
     const current = pages[currentPage];
     const tone = current.classList.contains('story-page--child')
@@ -247,15 +245,6 @@
                   ? 'memory'
                   : 'default';
     document.body.dataset.storyTone = tone;
-    steps.forEach((step, index) => {
-      step.classList.toggle('is-current', index === currentPage);
-      step.classList.toggle('is-read', index < currentPage);
-      if (index === currentPage) {
-        step.setAttribute('aria-current', 'step');
-      } else {
-        step.removeAttribute('aria-current');
-      }
-    });
     previousButton.disabled = currentPage === 0;
     const isFinal = currentPage === pages.length - 1;
     nextButton.hidden = isFinal && !decision && !nextStep;
@@ -276,6 +265,18 @@
     window.dispatchEvent(new Event('redlab:scenechange'));
   }
 
+  // Once FIN is on screen, the links below it replace the final scroll button.
+  if (finish && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (currentPage !== pages.length - 1) return;
+      if (entry.isIntersecting && document.activeElement === nextButton) {
+        finish.focus({ preventScroll: true });
+      }
+      nextButton.hidden = entry.isIntersecting;
+    }, { threshold: 0.5, rootMargin: '0px 0px -80px 0px' });
+    observer.observe(finish);
+  }
+
   previousButton.addEventListener('click', () => {
     if (currentPage === 0) return;
     currentPage -= 1;
@@ -286,8 +287,9 @@
     if (currentPage === pages.length - 1) {
       if (decision) moveToDecision();
       else if (nextStep) {
-        scrollToElement(pages[currentPage].querySelector('.ending-fin') || nextStep, false);
-        nextStep.focus({ preventScroll: true });
+        const target = finish || nextStep;
+        scrollToElement(target, false);
+        target.focus({ preventScroll: true });
       }
       return;
     }
