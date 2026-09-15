@@ -1,0 +1,83 @@
+{
+  "source": "HeyGen web AI Studio",
+  "voice": "SunHi - Natural",
+  "engine": "Azure",
+  "clips": [
+    {
+      "file": "synopsis-01.mp3",
+      "duration": 28.92
+    },
+    {
+      "file": "synopsis-03.mp3",
+      "duration": 25.512
+    },
+    {
+      "file": "synopsis-02.mp3",
+      "duration": 13.632
+    },
+    {
+      "file": "synopsis-06.mp3",
+      "duration": 33.864
+    },
+    {
+      "file": "synopsis-07.mp3",
+      "duration": 38.712
+    },
+    {
+      "file": "synopsis-05.mp3",
+      "duration": 18.432
+    },
+    {
+      "file": "synopsis-04.mp3",
+      "duration": 30.048
+    },
+    {
+      "file": "rulebook-02.mp3",
+      "duration": 20.928
+    },
+    {
+      "file": "rulebook-03.mp3",
+      "duration": 23.928
+    },
+    {
+      "file": "rulebook-01.mp3",
+      "duration": 29.928
+    },
+    {
+      "file": "rulebook-04.mp3",
+      "duration": 28.368
+    },
+    {
+      "file": "rulebook-10.mp3",
+      "duration": 16.008
+    },
+    {
+      "file": "rulebook-05.mp3",
+      "duration": 19.656
+    },
+    {
+      "file": "rulebook-07.mp3",
+      "duration": 16.464
+    },
+    {
+      "file": "rulebook-06.mp3",
+      "duration": 26.496
+    },
+    {
+      "file": "rulebook-08.mp3",
+      "duration": 34.824
+    },
+    {
+      "file": "rulebook-09.mp3",
+      "duration": 15.984
+    },
+    {
+      "file": "synopsis-09.mp3",
+      "duration": 14.256
+    },
+    {
+      "file": "synopsis-08.mp3",
+      "duration": 25.536
+    }
+  ]
+}

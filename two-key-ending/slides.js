@@ -1,15 +1,32 @@
 "use strict";
-const slides=JSON.parse(document.getElementById('slides-data').textContent);const $=id=>document.getElementById(id);let index=0,playing=false,timer=null,generation=0;const supported='speechSynthesis'in window&&'SpeechSynthesisUtterance'in window;
+const slides=JSON.parse(document.getElementById('slides-data').textContent);
+const $=id=>document.getElementById(id);
+let index=0,playing=false,timer=null,request=0;
+const narration=document.createElement('audio');narration.id='narration';narration.preload='metadata';document.body.append(narration);
 function text(tag,value){const n=document.createElement(tag);n.textContent=value;return n;}
-function stopMedia(){generation++;clearTimeout(timer);if(supported)speechSynthesis.cancel();}
-function autoplay(){if(!playing)return;timer=setTimeout(()=>advance(),Math.max(8000,slides[index].paragraphs.join('').length*155));}
-function advance(){if(index<slides.length-1){index++;render();}else{playing=false;render();}}
-function narrate(){if(!$('voice').checked||!supported){autoplay();return;}const g=generation;const u=new SpeechSynthesisUtterance(slides[index].title+'。'+slides[index].paragraphs.join('。'));u.lang='ko-KR';u.rate=.95;u.voice=speechSynthesis.getVoices().find(v=>v.lang.startsWith('ko'))||null;u.onend=()=>{if(g===generation&&playing)timer=setTimeout(advance,900);};u.onerror=()=>{if(g===generation){$('speech-status').textContent='음성을 재생하지 못했습니다. 화면 내용과 다음 버튼으로 계속할 수 있습니다.';autoplay();}};speechSynthesis.speak(u);}
-function render(){stopMedia();const s=slides[index],a=$('slide');a.replaceChildren(text('div',String(index+1).padStart(2,'0')),text('h1',s.title));a.firstChild.className='eyebrow';s.paragraphs.forEach(p=>a.append(text('p',p)));if(s.visual==='map'){const im=document.createElement('img');im.src='floor_map_3f.svg';im.alt='학원 3층 지도. 핸드폰함은 아래쪽 책장 오른편에 있다.';im.className='map';a.append(im);}if(s.visual==='cast'){const wrap=document.createElement('div');wrap.className='cast';[['yoonjiwon','윤지원'],['parksejun','박세준'],['chaharin','차하린'],['handokyung','한도경']].forEach(([id,name])=>{const f=document.createElement('figure'),im=document.createElement('img');im.src='chr_export/'+id+'.png';im.alt=name;f.append(im,text('figcaption',name));wrap.append(f);});a.append(wrap);}appendDiagram(a,s.visual);$('count').textContent=(index+1)+' / '+slides.length;$('prev').disabled=index===0;$('next').disabled=index===slides.length-1;$('play').textContent=playing?'일시정지':'자동 재생';$('play').setAttribute('aria-pressed',String(playing));narrate();}
-$('prev').onclick=()=>{if(index>0){index--;render();window.scrollTo(0,0);}};$('next').onclick=()=>{if(index<slides.length-1){index++;render();window.scrollTo(0,0);}};$('play').onclick=()=>{playing=!playing;render();};$('voice').onchange=render;
-document.addEventListener('keydown',ev=>{if(['INPUT','BUTTON','SUMMARY'].includes(document.activeElement.tagName))return;if(ev.key==='ArrowRight')$('next').click();if(ev.key==='ArrowLeft')$('prev').click();});window.addEventListener('pagehide',stopMedia);document.addEventListener('visibilitychange',()=>{if(document.hidden){playing=false;stopMedia();$('play').textContent='자동 재생';$('play').setAttribute('aria-pressed','false');}});
-slides.forEach(s=>{const sec=document.createElement('section');sec.append(text('h2',s.title));s.paragraphs.forEach(p=>sec.append(text('p',p)));$('transcript').append(sec);});if(!supported){$('voice').disabled=true;$('speech-status').textContent='이 브라우저에서는 음성 읽기를 지원하지 않습니다. 슬라이드와 전체 내용을 읽어 주세요.';}render();
-
+function clearTimer(){clearTimeout(timer);timer=null;}
+function updateButtons(){ $('play').textContent=playing?'일시정지':'재생';$('play').setAttribute('aria-pressed',String(playing)); }
+function pause(){request++;playing=false;clearTimer();narration.pause();updateButtons();$('speech-status').textContent='일시정지했습니다. 재생을 누르면 이어서 들을 수 있습니다.';}
+function advance(){if(index<slides.length-1){index++;render();window.scrollTo({top:0,behavior:'instant'});}else{pause();$('speech-status').textContent='마지막 슬라이드입니다. 다시 들으려면 재생을 누르세요.';}}
+function play(){clearTimer();playing=true;updateButtons();if(!$('voice').checked){$('speech-status').textContent='음성 없이 자동으로 넘깁니다.';timer=setTimeout(advance,Math.max(10000,slides[index].paragraphs.join('').length*155));return;}
+ if(!slides[index].audio){pause();$('speech-status').textContent='이 슬라이드의 음성을 준비하지 못했습니다. 다음 버튼으로 계속 읽을 수 있습니다.';return;}
+ const token=++request;narration.playbackRate=Number($('speed').value);if(narration.ended)narration.currentTime=0;
+ narration.play().then(()=>{if(token!==request){if(!playing)narration.pause();return;}$('speech-status').textContent='내레이션 재생 중 · 음성이 끝나면 다음 슬라이드로 넘어갑니다.';}).catch(()=>{if(token!==request)return;pause();$('speech-status').textContent='음성을 재생하지 못했습니다. 재생 버튼을 다시 눌러 주세요.';});}
+function render(){request++;clearTimer();narration.pause();const s=slides[index];if(s.audio)narration.src=s.audio;else narration.removeAttribute('src');const a=$('slide');a.replaceChildren(text('div',String(index+1).padStart(2,'0')),text('h1',s.title));a.firstChild.className='eyebrow';s.paragraphs.forEach(p=>a.append(text('p',p)));
+ if(s.visual==='map'){const im=document.createElement('img');im.src='floor_map_3f.svg';im.alt='학원 3층 지도. 핸드폰함은 아래쪽 책장 오른편에 있다.';im.className='map';a.append(im);}
+ if(s.visual==='cast'){const wrap=document.createElement('div');wrap.className='cast';[['yoonjiwon','윤지원'],['parksejun','박세준'],['chaharin','차하린'],['handokyung','한도경']].forEach(([id,name])=>{const f=document.createElement('figure'),im=document.createElement('img');im.src='chr_export/'+id+'.png';im.alt=name;f.append(im,text('figcaption',name));wrap.append(f);});a.append(wrap);}
+ appendDiagram(a,s.visual);$('count').textContent=(index+1)+' / '+slides.length;$('jump').value=index;$('prev').disabled=index===0;$('next').disabled=index===slides.length-1;updateButtons();if(playing)play();else $('speech-status').textContent='재생 버튼을 누르면 이 슬라이드부터 들을 수 있습니다.';}
+$('prev').onclick=()=>{if(index>0){index--;render();window.scrollTo({top:0,behavior:'instant'});}};
+$('next').onclick=()=>{if(index<slides.length-1){index++;render();window.scrollTo({top:0,behavior:'instant'});}};
+$('play').onclick=()=>playing?pause():play();
+$('voice').onchange=()=>{request++;narration.pause();clearTimer();if(playing)play();};
+$('speed').onchange=()=>narration.playbackRate=Number($('speed').value);
+$('jump').onchange=()=>{index=Number($('jump').value);render();window.scrollTo({top:0,behavior:'instant'});};
+narration.onended=()=>{if(playing&&$('voice').checked)timer=setTimeout(advance,600);};
+narration.onerror=()=>{if(!playing)return;pause();$('speech-status').textContent='음성 파일을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 재생을 눌러 주세요.';};
+document.addEventListener('keydown',e=>{if(['INPUT','BUTTON','SUMMARY','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight')$('next').click();if(e.key==='ArrowLeft')$('prev').click();});
+window.addEventListener('pagehide',pause);document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+slides.forEach((s,i)=>{const opt=text('option',(i+1)+'. '+s.title);opt.value=i;$('jump').append(opt);const sec=document.createElement('section');sec.append(text('h2',s.title));s.paragraphs.forEach(p=>sec.append(text('p',p)));$('transcript').append(sec);});render();
 function appendDiagram(parent,type){
  const defs={
  setup:['준비물 배치', [['각 플레이어','인물 시트 1부','소지품 카드 3장 · 비공개'],['테이블 가운데','공통 단서 1 → 2 → 3','투표 안내 4 · 순서대로 놓기']]],
