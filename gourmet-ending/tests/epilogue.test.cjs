@@ -82,6 +82,35 @@ test('Candy custody branch preserves Daniel promotion, not Candy promotion', () 
   assert.doesNotMatch(html, /왕실 요리장이 된 <span class="character-name" data-character="캔디">|세 번째 도전/);
 });
 
+test('Unaccused Candy keeps her promotion in each applicable ending', () => {
+  for (const outcome of ['daniel-accused', 'ash-accused', 'ryu-accused', 'other-accused']) {
+    const html = render(outcome)[0].innerHTML;
+    assert.match(html, /캔디는 왕실 요리장으로 임명됐다/);
+    assert.match(html, /사건 12년 뒤/);
+  }
+});
+
+test('Epilogue dialogue retains the speaker needed for character colors', () => {
+  for (const outcome of ['daniel-accused', 'ash-accused', 'ryu-accused', 'candy-accused', 'other-accused', 'tie']) {
+    for (const page of render(outcome)) {
+      const dialogueTags = page.innerHTML.match(/<p class="dialogue\b[^>]*>/g) || [];
+      for (const tag of dialogueTags) {
+        assert.match(tag, /data-speaker="(?:다니엘|애쉬|류진환|캔디)"/);
+      }
+    }
+  }
+});
+
+test('Truth stays continuous and preserves the author-confirmed meal decisions', () => {
+  const truth = readFileSync(path.join(__dirname, '../story.html'), 'utf8');
+  assert.match(truth, /class="ending-script truth-flow"/);
+  assert.equal((truth.match(/<section class="chapter"/g) || []).length, 5);
+  assert.doesNotMatch(truth, /data-story-page(?:r|\b)/);
+  assert.match(truth, /왕실 요리장은 4년 전에도 다니엘의 요리를 먹지 않았다/);
+  assert.match(truth, /캔디가 부탁하지 않았더라도 왕실 요리장은 다니엘의 스테이크를 먹지 않았을 것이다/);
+  assert.match(truth, /자신의 생일을 축하하는 음식임을 알고 먹었다/);
+});
+
 test('Legacy outcomes still resolve to their canonical ending', () => {
   for (const [legacy, canonical] of Object.entries({
     daniel: 'daniel-accused',
