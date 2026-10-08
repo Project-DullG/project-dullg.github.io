@@ -21,8 +21,8 @@
 <g stroke="#263749" stroke-width="5">
   <rect x="140" y="44" width="50" height="46" fill="#773a08"/>
   <rect x="134" y="417" width="38" height="38" fill="#1764aa"/>
-  <!-- Shelf beside the director's lower-right door, accessible from the corridor. -->
-  <rect x="454" y="436" width="66" height="25" fill="#ef4545"/>
+  <!-- Original sheet map: pen storage and key hook on the inner upper wall of the director's office. -->
+  <rect x="269" y="43" width="90" height="38" fill="#ef4545"/>
   <!-- Phone locker beside the right end of the lower hallway bookcase. -->
   <rect x="506" y="552" width="38" height="38" fill="#f1d12c"/>
 </g>
@@ -48,6 +48,6 @@
   <text x="309" y="660" font-size="32">핸드폰함</text>
   <text x="659" y="660" font-size="32">문</text>
   <text x="99" y="723" font-size="32">자료함</text>
-  <text x="379" y="723" font-size="28">공용 볼펜 선반 / 열쇠고리</text>
+  <text x="379" y="723" font-size="28">공용 볼펜 보관대 / 열쇠고리</text>
 </g>
 </svg>
